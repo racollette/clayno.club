@@ -1,11 +1,10 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { api } from "~/utils/api";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const t1Herds = api.example.getT1Herds.useQuery();
   const t2Herds = api.example.getT2Herds.useQuery();
 
@@ -55,7 +54,7 @@ export default function Home() {
             <p className="p-4 text-4xl text-white">Tier 1 Herds</p>
             {t1Herds.data &&
               t1Herds.data?.map((herd) => (
-                <div className="mb-4 items-center text-center">
+                <div key={herd.id} className="mb-4 items-center text-center">
                   <div className="text-lg text-white">{herd.owner}</div>
                   <div className="flex" key={herd.id}>
                     {herd.herd.map((dino) => (
@@ -79,7 +78,7 @@ export default function Home() {
             <p className="p-4 text-4xl text-white">Tier 2 Herds</p>
             {t2Herds.data &&
               t2Herds.data?.map((herd) => (
-                <div className="mb-8 items-center text-center">
+                <div key={herd.id} className="mb-8 items-center text-center">
                   <div className="text-lg text-white">{herd.owner}</div>
                   <div className="flex" key={herd.id}>
                     {herd.herd.map((dino) => (
@@ -105,26 +104,26 @@ export default function Home() {
   );
 }
 
-function AuthShowcase() {
-  const { data: sessionData } = useSession();
+// function AuthShowcase() {
+//   const { data: sessionData } = useSession();
 
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
+//   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
+//     undefined, // no input
+//     { enabled: sessionData?.user !== undefined }
+//   );
 
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-}
+//   return (
+//     <div className="flex flex-col items-center justify-center gap-4">
+//       <p className="text-center text-2xl text-white">
+//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+//         {secretMessage && <span> - {secretMessage}</span>}
+//       </p>
+//       <button
+//         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+//         onClick={sessionData ? () => void signOut() : () => void signIn()}
+//       >
+//         {sessionData ? "Sign out" : "Sign in"}
+//       </button>
+//     </div>
+//   );
+// }
