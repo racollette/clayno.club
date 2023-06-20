@@ -1,12 +1,39 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
-// import Link from "next/link";
+import Link from "next/link";
 import { api } from "~/utils/api";
+
+const getBorderColor = (matches: string) => {
+  const color = matches.split("_")[1];
+  switch (color) {
+    case "Amethyst":
+      return "border-purple-500";
+    case "Aqua":
+      return "border-sky-600";
+    case "Charcoal":
+      return "border-stone-900";
+    case "Desert":
+      return "border-yellow-500";
+    case "Mist":
+      return "border-slate-300";
+    case "Spring":
+      return "border-rose-300";
+    case "Tropic":
+      return "border-emerald-500";
+    case "Volcanic":
+      return "border-red-600";
+
+    default:
+      return "border-slate-100";
+  }
+};
 
 export default function Home() {
   const t1Herds = api.example.getT1Herds.useQuery();
   const t2Herds = api.example.getT2Herds.useQuery();
+
+  console.log(t1Herds);
 
   return (
     <>
@@ -51,20 +78,40 @@ export default function Home() {
             <AuthShowcase />
           </div> */}
           <div className="flex flex-col items-center gap-2">
-            <p className="p-4 text-4xl text-white">Tier 1 Herds</p>
+            <p className="p-4 text-4xl text-white">3 Trait Herds</p>
             {t1Herds.data &&
               t1Herds.data?.map((herd) => (
                 <div key={herd.id} className="mb-4 items-center text-center">
-                  <div className="text-lg text-white">{herd.owner}</div>
-                  <div className="flex" key={herd.id}>
+                  <Link
+                    className="mb-1 flex flex-col rounded-md bg-white/10 p-4 text-white hover:bg-white/30"
+                    href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                    target="_blank"
+                  >
+                    <div className="text-lg font-bold text-white">
+                      {herd.owner}
+                    </div>
+                  </Link>
+                  <div
+                    className={`flex rounded-md border-2 ${getBorderColor(
+                      herd.matches
+                    )}`}
+                    key={herd.id}
+                  >
                     {herd.herd.map((dino) => (
-                      <div key={dino.mint}>
+                      <div
+                        key={dino.mint}
+                        className={`relative h-48 w-48 border-2 ${getBorderColor(
+                          herd.matches
+                        )}`}
+                      >
                         <Image
-                          className="flex-1"
+                          className="flex"
                           src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
                           alt="Clayno gif"
-                          width={100}
-                          height={100}
+                          quality={100}
+                          // width={200}
+                          // height={200}
+                          fill
                         ></Image>
                       </div>
                     ))}
@@ -75,20 +122,38 @@ export default function Home() {
               ))}
           </div>
           <div className="flex flex-col items-center gap-2">
-            <p className="p-4 text-4xl text-white">Tier 2 Herds</p>
+            <p className="p-4 text-4xl text-white">2 Trait Herds</p>
             {t2Herds.data &&
               t2Herds.data?.map((herd) => (
-                <div key={herd.id} className="mb-8 items-center text-center">
-                  <div className="text-lg text-white">{herd.owner}</div>
-                  <div className="flex" key={herd.id}>
+                <div key={herd.id} className="mb-4 items-center text-center">
+                  <Link
+                    className="mb-1 flex flex-col rounded-md bg-white/10 p-4 text-white hover:bg-white/30"
+                    href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                    target="_blank"
+                  >
+                    <div className="text-lg font-bold text-white">
+                      {herd.owner}
+                    </div>
+                  </Link>
+                  <div
+                    className={`flex rounded-md border-2 ${getBorderColor(
+                      herd.matches
+                    )}`}
+                    key={herd.id}
+                  >
                     {herd.herd.map((dino) => (
-                      <div key={dino.mint}>
+                      <div
+                        key={dino.mint}
+                        className={`relative h-48 w-48 border-2 ${getBorderColor(
+                          herd.matches
+                        )}`}
+                      >
                         <Image
-                          className="flex-1"
+                          className="flex"
                           src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
                           alt="Clayno gif"
-                          width={100}
-                          height={100}
+                          quality={100}
+                          fill
                         ></Image>
                       </div>
                     ))}
