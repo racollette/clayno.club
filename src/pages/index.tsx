@@ -3,31 +3,62 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "~/utils/api";
+import { truncateAccount } from "~/utils/addresses";
 
-const getBorderColor = (matches: string) => {
+const getColor = (matches: string, type: string) => {
   const color = matches.split("_")[1];
+  let code = "";
   switch (color) {
     case "Amethyst":
-      return "border-purple-500";
+      code = "purple-500";
+      break;
     case "Aqua":
-      return "border-sky-600";
+      code = "sky-600";
+      break;
     case "Charcoal":
-      return "border-stone-900";
+      code = "stone-900";
+      break;
     case "Desert":
-      return "border-yellow-500";
+      code = "yellow-500";
+      break;
     case "Mist":
-      return "border-slate-300";
+      code = "slate-300";
+      break;
     case "Spring":
-      return "border-rose-300";
+      code = "rose-300";
+      break;
     case "Tropic":
-      return "border-emerald-500";
+      code = "emerald-500";
+      break;
     case "Volcanic":
-      return "border-red-600";
-
+      code = "red-600";
+      break;
     default:
-      return "border-slate-100";
+      code = "slate-100";
+      break;
   }
+  return `${type}-${code}`;
 };
+
+// const getBackgroundColor = (matches: string) => {
+//   const color = matches.split("_")[2];
+//   switch (color) {
+//     case "Sky":
+//       return "bg-blue-300";
+//     case "Mint":
+//       return "bg-teal-100";
+//     case "Lavender":
+//       return "bg-fuchsia-400";
+//     case "Dune":
+//       return "bg-orange-300";
+//     case "Peach":
+//       return "bg-rose-300";
+//     case "Desert":
+//       return "bg-amber-200";
+//     default:
+//       return "";
+//   }
+// };
 
 export default function Home() {
   const t1Herds = api.example.getT1Herds.useQuery();
@@ -44,7 +75,7 @@ export default function Home() {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-black">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           {/* <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
@@ -83,33 +114,45 @@ export default function Home() {
             <p className="p-4 text-4xl text-white">3 Trait Herds</p>
             {t1Herds.data &&
               t1Herds.data?.map((herd) => (
-                <div key={herd.id} className="mb-4 items-center text-center">
-                  {/* <Link
-                    className="mb-1 flex flex-col rounded-md bg-white/10 p-4 text-white hover:bg-white/30"
+                <div
+                  key={herd.id}
+                  className="mb-4 flex flex-col items-center text-center"
+                >
+                  <Link
+                    className={`mb-1 w-full rounded-md border-2 bg-sky-600 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                      herd.matches,
+                      "border"
+                    )}`}
                     href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
                     target="_blank"
                   >
-                    <div className="md:text-large font-bold text-white">
+                    <div className={`md:text-large hidden font-bold  md:block`}>
                       {herd.owner}
                     </div>
-                  </Link> */}
+                    <div
+                      className={`text-large block font-bold text-white md:hidden`}
+                    >
+                      {truncateAccount(herd.owner)}
+                    </div>
+                  </Link>
                   <div
-                    className={`flex flex-wrap gap-1 rounded-md`}
+                    className={`flex flex-1 flex-wrap justify-center gap-1`}
                     key={herd.id}
                   >
                     {herd.herd.map((dino) => (
                       <div
                         key={dino.mint}
-                        className={`relative box-content h-48 w-48 border-4 ${getBorderColor(
-                          herd.matches
+                        className={`relative h-40 w-40 rounded-md border-4 md:h-48 md:w-48 ${getColor(
+                          herd.matches,
+                          "border"
                         )}`}
                       >
                         <Image
                           src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
                           alt="Clayno gif"
                           quality={100}
-                          // width={200}
-                          // height={200}
+                          // width={150}
+                          // height={150}
                           fill
                         ></Image>
                       </div>
@@ -120,7 +163,7 @@ export default function Home() {
                 </div>
               ))}
           </div>
-          <div className="flex flex-col items-center gap-2">
+          {/* <div className="flex flex-col items-center gap-2">
             <p className="p-4 text-4xl text-white">2 Trait Herds</p>
             {t2Herds.data &&
               t2Herds.data?.map((herd) => (
@@ -160,7 +203,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-          </div>
+          </div> */}
         </div>
       </main>
     </>
