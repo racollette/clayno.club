@@ -24,7 +24,14 @@ export const exampleRouter = createTRPCRouter({
         tier: 1,
       },
       include: {
-        herd: true,
+        herd: {
+          orderBy: {
+            name: "desc",
+          },
+          include: {
+            attributes: true,
+          },
+        },
       },
     });
   }),
@@ -35,7 +42,11 @@ export const exampleRouter = createTRPCRouter({
         tier: 2,
       },
       include: {
-        herd: true,
+        herd: {
+          orderBy: {
+            name: "desc",
+          },
+        },
       },
     });
   }),
