@@ -64,7 +64,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        <div className="container flex flex-col items-center justify-center px-4 py-8 ">
+        <div className="container flex flex-col items-center justify-center py-8 md:px-4 ">
           <div className="flex flex-row flex-wrap align-middle">
             <div className="relative p-4">
               <img
