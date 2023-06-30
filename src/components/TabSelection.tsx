@@ -34,7 +34,7 @@ const TabSelection = ({ labels, counts, children }: TabSelectionProps) => {
           />
         ))}
       </div>
-
+      {/* eslint-disable */}
       <div className="p-4">{children[activeTab]}</div>
     </div>
   );
