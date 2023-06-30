@@ -22,7 +22,8 @@ const config = {
     domains: [
       "nftstorage.link",
       "arweave.net",
-      "prod-image-cdn.tensor.trade"
+      "prod-image-cdn.tensor.trade",
+      "pbs.twimg.com"
     ]
   },
 };

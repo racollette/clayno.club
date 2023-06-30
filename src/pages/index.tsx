@@ -76,40 +76,30 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          {/* <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
+        <div className="container flex flex-col items-center justify-center px-4 py-16 ">
+          <div className="flex flex-row flex-wrap align-middle">
+            <div className="relative p-4">
+              <img
+                src="https://pbs.twimg.com/media/FqOrzzRXoAQ3yjV?format=jpg"
+                alt="Claynosaurz"
+                className="h-auto w-full rounded-2xl"
+              />
+              <div className="absolute left-0 top-0 hidden h-full w-full items-start justify-end md:flex">
+                <div className="m-6 flex max-w-lg flex-col gap-4 rounded-xl bg-black/70 p-8 text-white hover:bg-black/30">
+                  <h2 className="text-xl font-extrabold text-white md:text-3xl">
+                    Dino <span className="text-[hsl(280,100%,70%)]">Herds</span>
+                  </h2>
+                  <div className="text-sm md:text-lg">
+                    <p className="pb-2">
+                      A herd is a collector achievement consisting of one of
+                      each Claynosaur species.
+                    </p>
+                    <p>The more matching traits the better!</p>
+                  </div>
+                </div>
               </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div> */}
-          {/* <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-            </p>
-            <AuthShowcase />
-          </div> */}
+            </div>
+          </div>
           <div className="flex flex-col items-center gap-2">
             <p className="p-4 text-4xl text-white">3 Trait Herds</p>
             {t1Herds.data &&
