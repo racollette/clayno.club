@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import { truncateAccount } from "~/utils/addresses";
+import TabSelection from "~/components/TabSelection";
 
 const getColor = (matches: string) => {
   const color = matches.split("_")[1];
@@ -53,19 +54,17 @@ export default function Home() {
   const t1Herds = api.example.getT1Herds.useQuery();
   const t2Herds = api.example.getT2Herds.useQuery();
 
-  console.log(t1Herds);
-
   return (
     <>
       <Head>
-        <title>Clayno Herds</title>
-        <meta name="description" content="Created by AlphaDecay" />
+        <title>Dino Herds</title>
+        <meta name="description" content="Claynosaurz Herd Showcase" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        <div className="container flex flex-col items-center justify-center px-4 py-16 ">
+        <div className="container flex flex-col items-center justify-center px-4 py-8 ">
           <div className="flex flex-row flex-wrap align-middle">
             <div className="relative p-4">
               <img
@@ -89,98 +88,238 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="p-4 text-4xl text-white">3 Trait Herds</p>
-            {t1Herds.data &&
-              t1Herds.data?.map((herd) => (
-                <div
-                  key={herd.id}
-                  className="mb-4 flex flex-col items-center text-center"
-                >
-                  <Link
-                    className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
-                      herd.matches
-                    )}`}
-                    href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                    target="_blank"
+          <TabSelection
+            labels={["3 Trait", "2 Trait", "1 Trait", "0 Trait"]}
+            counts={[
+              t1Herds?.data?.length,
+              t2Herds?.data?.length,
+              t1Herds?.data?.length,
+              t1Herds?.data?.length,
+            ]}
+          >
+            <div className="flex flex-col items-center gap-2">
+              {t1Herds.data &&
+                t1Herds.data?.map((herd) => (
+                  <div
+                    key={herd.id}
+                    className="mb-4 flex flex-col items-center text-center"
                   >
-                    <div className={`md:text-large hidden font-bold  md:block`}>
-                      {herd.owner}
-                    </div>
-                    <div
-                      className={`text-large block font-bold text-white md:hidden`}
+                    <Link
+                      className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                        herd.matches
+                      )}`}
+                      href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                      target="_blank"
                     >
-                      {truncateAccount(herd.owner)}
-                    </div>
-                  </Link>
-                  <div
-                    className={`flex flex-1 flex-wrap justify-center gap-1`}
-                    key={herd.id}
-                  >
-                    {herd.herd.map((dino) => (
                       <div
-                        key={dino.mint}
-                        className={`relative h-40 w-40 rounded-md border-4 md:h-48 md:w-48 ${getColor(
+                        className={`md:text-large hidden font-bold  md:block`}
+                      >
+                        {herd.owner}
+                      </div>
+                      <div
+                        className={`text-large block font-bold text-white md:hidden`}
+                      >
+                        {truncateAccount(herd.owner)}
+                      </div>
+                    </Link>
+                    <div
+                      className={`flex flex-1 flex-wrap justify-center gap-1`}
+                      key={herd.id}
+                    >
+                      {herd.herd.map((dino) => (
+                        <div
+                          key={dino.mint}
+                          className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                            herd.matches
+                          )}`}
+                        >
+                          <Image
+                            src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                            alt="Clayno gif"
+                            quality={100}
+                            fill
+                          ></Image>
+                        </div>
+                      ))}
+
+                      <br />
+                    </div>
+                  </div>
+                ))}
+            </div>
+            <div>
+              <div className="flex flex-col items-center gap-2">
+                {t2Herds.data &&
+                  t2Herds.data?.map((herd) => (
+                    <div
+                      key={herd.id}
+                      className="mb-4 flex flex-col items-center text-center"
+                    >
+                      <Link
+                        className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
                           herd.matches
                         )}`}
+                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                        target="_blank"
                       >
-                        <Image
-                          src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                          alt="Clayno gif"
-                          quality={100}
-                          fill
-                        ></Image>
-                      </div>
-                    ))}
-
-                    <br />
-                  </div>
-                </div>
-              ))}
-          </div>
-          {/* <div className="flex flex-col items-center gap-2">
-            <p className="p-4 text-4xl text-white">2 Trait Herds</p>
-            {t2Herds.data &&
-              t2Herds.data?.map((herd) => (
-                <div key={herd.id} className="mb-4 items-center text-center">
-                  <Link
-                    className="mb-1 flex flex-col rounded-md bg-white/10 p-4 text-white hover:bg-white/30"
-                    href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                    target="_blank"
-                  >
-                    <div className="text-lg font-bold text-white">
-                      {herd.owner}
-                    </div>
-                  </Link>
-                  <div
-                    className={`flex rounded-md border-2 ${getBorderColor(
-                      herd.matches
-                    )}`}
-                    key={herd.id}
-                  >
-                    {herd.herd.map((dino) => (
+                        <div
+                          className={`md:text-large hidden font-bold  md:block`}
+                        >
+                          {herd.owner}
+                        </div>
+                        <div
+                          className={`text-large block font-bold text-white md:hidden`}
+                        >
+                          {truncateAccount(herd.owner)}
+                        </div>
+                      </Link>
                       <div
-                        key={dino.mint}
-                        className={`relative h-48 w-48 border-2 ${getBorderColor(
+                        className={`flex flex-1 flex-wrap justify-center gap-1`}
+                        key={herd.id}
+                      >
+                        {herd.herd.map((dino) => (
+                          <div
+                            key={dino.mint}
+                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                              herd.matches
+                            )}`}
+                          >
+                            <Image
+                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                              alt="Clayno gif"
+                              quality={100}
+                              fill
+                            ></Image>
+                          </div>
+                        ))}
+
+                        <br />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+            <div>
+              <div className="flex flex-col items-center gap-2">
+                {t1Herds.data &&
+                  t1Herds.data?.map((herd) => (
+                    <div
+                      key={herd.id}
+                      className="mb-4 flex flex-col items-center text-center"
+                    >
+                      <Link
+                        className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
                           herd.matches
                         )}`}
+                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                        target="_blank"
                       >
-                        <Image
-                          src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                          alt="Clayno gif"
-                          quality={100}
-                          fill
-                        ></Image>
-                      </div>
-                    ))}
+                        <div
+                          className={`md:text-large hidden font-bold  md:block`}
+                        >
+                          {herd.owner}
+                        </div>
+                        <div
+                          className={`text-large block font-bold text-white md:hidden`}
+                        >
+                          {truncateAccount(herd.owner)}
+                        </div>
+                      </Link>
+                      <div
+                        className={`flex flex-1 flex-wrap justify-center gap-1`}
+                        key={herd.id}
+                      >
+                        {herd.herd.map((dino) => (
+                          <div
+                            key={dino.mint}
+                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                              herd.matches
+                            )}`}
+                          >
+                            <Image
+                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                              alt="Clayno gif"
+                              quality={100}
+                              fill
+                            ></Image>
+                          </div>
+                        ))}
 
-                    <br />
-                  </div>
-                </div>
-              ))}
-          </div> */}
+                        <br />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+            <div>
+              <div className="flex flex-col items-center gap-2">
+                {t1Herds.data &&
+                  t1Herds.data?.map((herd) => (
+                    <div
+                      key={herd.id}
+                      className="mb-4 flex flex-col items-center text-center"
+                    >
+                      <Link
+                        className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                          herd.matches
+                        )}`}
+                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                        target="_blank"
+                      >
+                        <div
+                          className={`md:text-large hidden font-bold  md:block`}
+                        >
+                          {herd.owner}
+                        </div>
+                        <div
+                          className={`text-large block font-bold text-white md:hidden`}
+                        >
+                          {truncateAccount(herd.owner)}
+                        </div>
+                      </Link>
+                      <div
+                        className={`flex flex-1 flex-wrap justify-center gap-1`}
+                        key={herd.id}
+                      >
+                        {herd.herd.map((dino) => (
+                          <div
+                            key={dino.mint}
+                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                              herd.matches
+                            )}`}
+                          >
+                            <Image
+                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                              alt="Clayno gif"
+                              quality={100}
+                              fill
+                            ></Image>
+                          </div>
+                        ))}
+
+                        <br />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </TabSelection>
         </div>
       </main>
+      <footer className="flex flex-col items-center bg-black pb-6 text-center text-lg text-white">
+        <span className="flex flex-row gap-2">
+          <span>Made with</span>
+          <Image src="/icons/heart.svg" alt="Love" width={20} height={20} />
+          <span>by</span>
+          <Link
+            href={`https://twitter.com/AlphaDecay235`}
+            className="text-sky-500"
+            target="_blank"
+          >
+            <span>@AlphaDecay235</span>
+          </Link>
+        </span>
+      </footer>
     </>
   );
 }
