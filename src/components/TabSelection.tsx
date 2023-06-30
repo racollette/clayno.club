@@ -1,14 +1,20 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState } from "react";
 
-type TabProps = {
-  label: string[];
+type TabButtonProps = {
+  label: string;
   active: boolean;
-  count: number;
+  count: number | undefined;
   onClick: () => void;
 };
 
-const TabSelection = (props: any) => {
-  const { children, labels, counts } = props;
+type TabSelectionProps = {
+  labels: string[];
+  counts: number[];
+  children: any;
+};
+
+const TabSelection = ({ labels, counts, children }: TabSelectionProps) => {
+  //   const { labels, counts, children } = props;
   const [activeTab, setActiveTab] = useState<number>(0);
 
   const handleTabClick = (index: number) => {
@@ -18,7 +24,7 @@ const TabSelection = (props: any) => {
   return (
     <div>
       <div className="flex justify-center border-gray-300 p-10">
-        {labels.map((category: any, index: number) => (
+        {labels.map((category: string, index: number) => (
           <TabButton
             key={category}
             label={category}
@@ -34,7 +40,7 @@ const TabSelection = (props: any) => {
   );
 };
 
-const TabButton = ({ label, active, count, onClick }: TabProps) => {
+const TabButton = ({ label, active, count, onClick }: TabButtonProps) => {
   return (
     <button
       className={`px-10 py-2 text-2xl font-extrabold text-white focus:outline-none ${

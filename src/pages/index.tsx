@@ -91,10 +91,10 @@ export default function Home() {
           <TabSelection
             labels={["3 Trait", "2 Trait", "1 Trait", "0 Trait"]}
             counts={[
-              t1Herds?.data?.length,
-              t2Herds?.data?.length,
-              t1Herds?.data?.length,
-              t1Herds?.data?.length,
+              t1Herds?.data?.length ?? 0,
+              t2Herds?.data?.length ?? 0,
+              t1Herds?.data?.length ?? 0,
+              t1Herds?.data?.length ?? 0,
             ]}
           >
             <div className="flex flex-col items-center gap-2">
