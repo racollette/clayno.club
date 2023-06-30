@@ -5,39 +5,28 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import { truncateAccount } from "~/utils/addresses";
 
-const getColor = (matches: string, type: string) => {
+const getColor = (matches: string) => {
   const color = matches.split("_")[1];
-  let code = "";
   switch (color) {
     case "Amethyst":
-      code = "purple-500";
-      break;
+      return "border-purple-500";
     case "Aqua":
-      code = "sky-600";
-      break;
+      return "border-sky-600";
     case "Charcoal":
-      code = "stone-900";
-      break;
+      return "border-stone-900";
     case "Desert":
-      code = "yellow-500";
-      break;
+      return "border-yellow-500";
     case "Mist":
-      code = "slate-300";
-      break;
+      return "border-slate-300";
     case "Spring":
-      code = "rose-300";
-      break;
+      return "border-rose-300";
     case "Tropic":
-      code = "emerald-500";
-      break;
+      return "border-emerald-500";
     case "Volcanic":
-      code = "red-600";
-      break;
+      return "border-red-600";
     default:
-      code = "slate-100";
-      break;
+      return "border-slate-100";
   }
-  return `${type}-${code}`;
 };
 
 // const getBackgroundColor = (matches: string) => {
@@ -109,9 +98,8 @@ export default function Home() {
                   className="mb-4 flex flex-col items-center text-center"
                 >
                   <Link
-                    className={`mb-1 w-full rounded-md border-2 bg-sky-600 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
-                      herd.matches,
-                      "border"
+                    className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                      herd.matches
                     )}`}
                     href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
                     target="_blank"
@@ -133,16 +121,13 @@ export default function Home() {
                       <div
                         key={dino.mint}
                         className={`relative h-40 w-40 rounded-md border-4 md:h-48 md:w-48 ${getColor(
-                          herd.matches,
-                          "border"
+                          herd.matches
                         )}`}
                       >
                         <Image
                           src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
                           alt="Clayno gif"
                           quality={100}
-                          // width={150}
-                          // height={150}
                           fill
                         ></Image>
                       </div>
