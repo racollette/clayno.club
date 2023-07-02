@@ -1,104 +1,67 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Holder {
-    owner  String @id
-    amount Int
-    mints  Dino[]
+  owner  String @id
+  amount Int
+  mints  Dino[]
 }
 
 model Dino {
-    mint        String      @id
-    name        String
-    pfp         String
-    gif         String
-    attributes  Attributes?
-    herd        Herd[]
-    holder      Holder?     @relation(fields: [holderOwner], references: [owner])
-    holderOwner String?
+  mint        String      @id
+  name        String
+  pfp         String
+  gif         String
+  holderOwner String?
+  rarity      Int?
+  attributes  Attributes?
+  herd        Herd[]
+  holder      Holder?     @relation(fields: [holderOwner], references: [owner])
 
-    @@index([holderOwner])
+  @@index([holderOwner])
 }
 
 model Attributes {
-    mint       String @id
-    species    String
-    skin       String
-    color      String
-    motion     String
-    mood       String
-    background String
-    layerCount String
-    back       String
-    belly      String
-    pattern    String
-    details    String
-    dino       Dino   @relation(fields: [mint], references: [mint])
+  mint       String @id
+  species    String
+  skin       String
+  color      String
+  motion     String
+  mood       String
+  background String
+  layerCount String
+  back       String
+  belly      String
+  pattern    String
+  details    String
+  dino       Dino   @relation(fields: [mint], references: [mint])
 
-    @@index([mint])
+  @@index([mint])
 }
 
 model Herd {
-    id      String @id @default(uuid())
-    owner   String
-    tier    Int
-    type    String // i.e. matching background, color, skin, etc.
-    matches String // i.e. mint, tropic, aqua
-    herd    Dino[]
+  id      String @id @default(uuid())
+  owner   String
+  tier    Int
+  type    String
+  matches String
+  rarity  Int
+  herd    Dino[]
 }
 
-// Necessary for Next auth
-// model Account {
-//     id                String  @id @default(cuid())
-//     userId            String
-//     type              String
-//     provider          String
-//     providerAccountId String
-//     refresh_token     String? @db.Text
-//     access_token      String? @db.Text
-//     expires_at        Int?
-//     token_type        String?
-//     scope             String?
-//     id_token          String? @db.Text
-//     session_state     String?
-//     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+model DinoToHerd {
+  A String
+  B String
 
-//     @@unique([provider, providerAccountId])
-// }
-
-// model Session {
-//     id           String   @id @default(cuid())
-//     sessionToken String   @unique
-//     userId       String
-//     expires      DateTime
-//     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
-
-// model User {
-//     id            String    @id @default(cuid())
-//     name          String?
-//     email         String?   @unique
-//     emailVerified DateTime?
-//     image         String?
-//     accounts      Account[]
-//     sessions      Session[]
-// }
-
-// model VerificationToken {
-//     identifier String
-//     token      String   @unique
-//     expires    DateTime
-
-//     @@unique([identifier, token])
-// }
+  @@unique([A, B], map: "_DinoToHerd_AB_unique")
+  @@index([B], map: "_DinoToHerd_B_index")
+  @@map("_DinoToHerd")
+}

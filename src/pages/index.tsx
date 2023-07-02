@@ -6,6 +6,65 @@ import { api } from "~/utils/api";
 import { truncateAccount } from "~/utils/addresses";
 import TabSelection from "~/components/TabSelection";
 
+const getTraitBadgeColor = (trait: string) => {
+  switch (trait) {
+    // Colors
+    case "Amethyst":
+      return "bg-purple-500";
+    case "Aqua":
+      return "bg-sky-600";
+    case "Charcoal":
+      return "bg-zinc-700";
+    case "Desert":
+      return "bg-yellow-500";
+    case "Mist":
+      return "bg-slate-400";
+    case "Spring":
+      return "bg-rose-400";
+    case "Tropic":
+      return "bg-emerald-500";
+    case "Volcanic":
+      return "bg-red-600";
+    // Skins
+    case "Toxic":
+      return "bg-lime-600";
+    case "Jurassic":
+      return "bg-green-600";
+    case "Mirage":
+      return "bg-pink-400";
+    case "Amazonia":
+      return "bg-teal-600";
+    case "Elektra":
+      return "bg-indigo-600";
+    case "Cristalline":
+      return "bg-emerald-600";
+    case "Coral":
+      return "bg-cyan-600";
+    case "Apres":
+      return "bg-purple-800";
+    case "Savanna":
+      return "bg-orange-400";
+    case "Oceania":
+      return "bg-blue-700";
+    // Backgrounds
+    case "Peach":
+      return "bg-orange-400";
+    case "Mint":
+      return "bg-emerald-400";
+    case "Sky":
+      return "bg-sky-400";
+    case "Dune":
+      return "bg-orange-300";
+    case "Lavender":
+      return "bg-fuchsia-300";
+    case "Salmon":
+      return "bg-red-400";
+    // Default
+    default:
+      return "bg-slate-100";
+  }
+};
+
 const getColor = (matches: string) => {
   const color = matches.split("_")[1];
   switch (color) {
@@ -14,7 +73,7 @@ const getColor = (matches: string) => {
     case "Aqua":
       return "border-sky-600";
     case "Charcoal":
-      return "border-stone-900";
+      return "border-zinc-500";
     case "Desert":
       return "border-yellow-500";
     case "Mist":
@@ -29,6 +88,28 @@ const getColor = (matches: string) => {
       return "border-slate-100";
   }
 };
+
+const getRarityColor = (rank: number) => {
+  if (rank > 6088) return "bg-zinc-500";
+  if (rank > 3564) return "bg-emerald-600";
+  if (rank > 1531) return "bg-blue-400";
+  if (rank > 505) return "bg-purple-600";
+  if (rank > 102) return "bg-amber-500";
+  return "bg-rose-600";
+};
+
+// const getHerdRarity = (herd: any) => {
+//   const total = herd.herd.reduce((sum: number, obj: any) => {
+//     if (obj.attributes.species !== "Dactyl") {
+//       if (obj.rarity) {
+//         return sum + obj.rarity;
+//       }
+//     }
+//     return sum;
+//   }, 0);
+
+//   return (total / 6).toFixed(0);
+// };
 
 // const getBackgroundColor = (matches: string) => {
 //   const color = matches.split("_")[2];
@@ -53,6 +134,8 @@ const getColor = (matches: string) => {
 export default function Home() {
   const t1Herds = api.example.getT1Herds.useQuery();
   const t2Herds = api.example.getT2Herds.useQuery();
+  const t3Herds = api.example.getT3Herds.useQuery();
+  const t4Herds = api.example.getT4Herds.useQuery();
 
   return (
     <>
@@ -93,35 +176,54 @@ export default function Home() {
             counts={[
               t1Herds?.data?.length ?? 0,
               t2Herds?.data?.length ?? 0,
-              t1Herds?.data?.length ?? 0,
-              t1Herds?.data?.length ?? 0,
+              t3Herds?.data?.length ?? 0,
+              t4Herds?.data?.length ?? 0,
             ]}
           >
             <div className="flex flex-col items-center gap-2">
               {t1Herds.data &&
                 t1Herds.data?.map((herd) => (
-                  <div
-                    key={herd.id}
-                    className="mb-4 flex flex-col items-center text-center"
-                  >
-                    <Link
-                      className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                  <div key={herd.id} className="mb-4 flex flex-col">
+                    <div
+                      className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
                         herd.matches
                       )}`}
-                      href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                      target="_blank"
                     >
-                      <div
-                        className={`md:text-large hidden font-bold  md:block`}
+                      <Link
+                        className="rounded-md px-4 py-2 text-white hover:bg-white/20"
+                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                        target="_blank"
                       >
-                        {herd.owner}
+                        <div
+                          className={`md:text-md hidden font-bold  md:block`}
+                        >
+                          {herd.owner}
+                        </div>
+                        <div
+                          className={`text-md block font-bold text-white md:hidden`}
+                        >
+                          {truncateAccount(herd.owner)}
+                        </div>
+                      </Link>
+                      <div className="absolute left-0 m-2 flex flex-row">
+                        {herd.matches.split("_").map((trait) => (
+                          <div
+                            className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
+                              trait
+                            )}`}
+                          >
+                            {trait}
+                          </div>
+                        ))}
                       </div>
                       <div
-                        className={`text-large block font-bold text-white md:hidden`}
+                        className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
+                          herd.rarity
+                        )}`}
                       >
-                        {truncateAccount(herd.owner)}
+                        {herd.rarity}
                       </div>
-                    </Link>
+                    </div>
                     <div
                       className={`flex flex-1 flex-wrap justify-center gap-1`}
                       key={herd.id}
@@ -139,6 +241,15 @@ export default function Home() {
                             quality={100}
                             fill
                           ></Image>
+                          {/* {dino.rarity && (
+                            <div
+                              className={`absolute bottom-0 left-0 m-1 rounded-lg  px-2 py-1 text-xs text-white ${getRarityColor(
+                                dino.rarity
+                              )}`}
+                            >
+                              {dino.rarity}
+                            </div>
+                          )} */}
                         </div>
                       ))}
 
@@ -151,28 +262,47 @@ export default function Home() {
               <div className="flex flex-col items-center gap-2">
                 {t2Herds.data &&
                   t2Herds.data?.map((herd) => (
-                    <div
-                      key={herd.id}
-                      className="mb-4 flex flex-col items-center text-center"
-                    >
-                      <Link
-                        className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                    <div key={herd.id} className="mb-4 flex flex-col">
+                      <div
+                        className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
                           herd.matches
                         )}`}
-                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                        target="_blank"
                       >
-                        <div
-                          className={`md:text-large hidden font-bold  md:block`}
+                        <Link
+                          className="rounded-md px-4 py-2 text-white hover:bg-white/20"
+                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                          target="_blank"
                         >
-                          {herd.owner}
+                          <div
+                            className={`md:text-md hidden font-bold  md:block`}
+                          >
+                            {herd.owner}
+                          </div>
+                          <div
+                            className={`text-md block font-bold text-white md:hidden`}
+                          >
+                            {truncateAccount(herd.owner)}
+                          </div>
+                        </Link>
+                        <div className="absolute left-0 m-2 flex flex-row">
+                          {herd.matches.split("_").map((trait) => (
+                            <div
+                              className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
+                                trait
+                              )}`}
+                            >
+                              {trait}
+                            </div>
+                          ))}
                         </div>
                         <div
-                          className={`text-large block font-bold text-white md:hidden`}
+                          className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
+                            herd.rarity
+                          )}`}
                         >
-                          {truncateAccount(herd.owner)}
+                          {herd.rarity}
                         </div>
-                      </Link>
+                      </div>
                       <div
                         className={`flex flex-1 flex-wrap justify-center gap-1`}
                         key={herd.id}
@@ -201,30 +331,49 @@ export default function Home() {
             </div>
             <div>
               <div className="flex flex-col items-center gap-2">
-                {t1Herds.data &&
-                  t1Herds.data?.map((herd) => (
-                    <div
-                      key={herd.id}
-                      className="mb-4 flex flex-col items-center text-center"
-                    >
-                      <Link
-                        className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                {t3Herds.data &&
+                  t3Herds.data?.map((herd) => (
+                    <div key={herd.id} className="mb-4 flex flex-col">
+                      <div
+                        className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
                           herd.matches
                         )}`}
-                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                        target="_blank"
                       >
-                        <div
-                          className={`md:text-large hidden font-bold  md:block`}
+                        <Link
+                          className="rounded-md px-4 py-2 text-white hover:bg-white/20"
+                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                          target="_blank"
                         >
-                          {herd.owner}
+                          <div
+                            className={`md:text-md hidden font-bold  md:block`}
+                          >
+                            {herd.owner}
+                          </div>
+                          <div
+                            className={`text-md block font-bold text-white md:hidden`}
+                          >
+                            {truncateAccount(herd.owner)}
+                          </div>
+                        </Link>
+                        <div className="absolute left-0 m-2 flex flex-row">
+                          {herd.matches.split("_").map((trait) => (
+                            <div
+                              className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
+                                trait
+                              )}`}
+                            >
+                              {trait}
+                            </div>
+                          ))}
                         </div>
                         <div
-                          className={`text-large block font-bold text-white md:hidden`}
+                          className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
+                            herd.rarity
+                          )}`}
                         >
-                          {truncateAccount(herd.owner)}
+                          {herd.rarity}
                         </div>
-                      </Link>
+                      </div>
                       <div
                         className={`flex flex-1 flex-wrap justify-center gap-1`}
                         key={herd.id}
@@ -253,30 +402,38 @@ export default function Home() {
             </div>
             <div>
               <div className="flex flex-col items-center gap-2">
-                {t1Herds.data &&
-                  t1Herds.data?.map((herd) => (
-                    <div
-                      key={herd.id}
-                      className="mb-4 flex flex-col items-center text-center"
-                    >
-                      <Link
-                        className={`mb-1 w-full rounded-md border-2 bg-white/10 p-4 text-white hover:bg-white/20 ${getColor(
+                {t4Herds.data &&
+                  t4Herds.data?.map((herd) => (
+                    <div key={herd.id} className="mb-4 flex flex-col">
+                      <div
+                        className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
                           herd.matches
                         )}`}
-                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                        target="_blank"
                       >
-                        <div
-                          className={`md:text-large hidden font-bold  md:block`}
+                        <Link
+                          className="rounded-md px-4 py-2 text-white hover:bg-white/20"
+                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                          target="_blank"
                         >
-                          {herd.owner}
-                        </div>
+                          <div
+                            className={`md:text-md hidden font-bold  md:block`}
+                          >
+                            {herd.owner}
+                          </div>
+                          <div
+                            className={`text-md block font-bold text-white md:hidden`}
+                          >
+                            {truncateAccount(herd.owner)}
+                          </div>
+                        </Link>
                         <div
-                          className={`text-large block font-bold text-white md:hidden`}
+                          className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
+                            herd.rarity
+                          )}`}
                         >
-                          {truncateAccount(herd.owner)}
+                          {herd.rarity}
                         </div>
-                      </Link>
+                      </div>
                       <div
                         className={`flex flex-1 flex-wrap justify-center gap-1`}
                         key={herd.id}

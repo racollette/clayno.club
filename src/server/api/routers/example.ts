@@ -23,6 +23,9 @@ export const exampleRouter = createTRPCRouter({
       where: {
         tier: 1,
       },
+      orderBy: {
+        rarity: "asc",
+      },
       include: {
         herd: {
           orderBy: {
@@ -41,10 +44,55 @@ export const exampleRouter = createTRPCRouter({
       where: {
         tier: 2,
       },
+      orderBy: {
+        rarity: "asc",
+      },
       include: {
         herd: {
           orderBy: {
             name: "desc",
+          },
+        },
+      },
+    });
+  }),
+
+  getT3Herds: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.herd.findMany({
+      where: {
+        tier: 3,
+      },
+      orderBy: {
+        rarity: "asc",
+      },
+      include: {
+        herd: {
+          orderBy: {
+            name: "desc",
+          },
+          include: {
+            attributes: true,
+          },
+        },
+      },
+    });
+  }),
+
+  getT4Herds: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.herd.findMany({
+      where: {
+        tier: 4,
+      },
+      orderBy: {
+        rarity: "asc",
+      },
+      include: {
+        herd: {
+          orderBy: {
+            name: "desc",
+          },
+          include: {
+            attributes: true,
           },
         },
       },
