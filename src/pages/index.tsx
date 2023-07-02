@@ -189,8 +189,8 @@ export default function Home() {
               herds[3]?.data?.length ?? 0,
             ]}
           >
-            {herds.map((tier) => (
-              <div className="flex flex-col items-center gap-2">
+            {herds.map((tier, index) => (
+              <div key={index} className="flex flex-col items-center gap-2">
                 {tier.data &&
                   tier.data?.map((herd) => (
                     <div key={herd.id} className="mb-4 flex flex-col">
