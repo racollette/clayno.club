@@ -23,7 +23,7 @@ const TabSelection = ({ labels, counts, children }: TabSelectionProps) => {
 
   return (
     <div>
-      <div className="flex flex-wrap justify-center border-gray-300 p-10">
+      <div className="flex flex-wrap justify-center border-gray-300 p-4 md:p-10">
         {labels.map((category: string, index: number) => (
           <TabButton
             key={category}
@@ -43,14 +43,14 @@ const TabSelection = ({ labels, counts, children }: TabSelectionProps) => {
 const TabButton = ({ label, active, count, onClick }: TabButtonProps) => {
   return (
     <button
-      className={`texl-xl px-4 py-2 font-extrabold text-white focus:outline-none md:px-10 md:text-2xl ${
-        active ? "rounded-lg border-2 border-sky-600" : ""
+      className={`texl-xl m-2 px-3 py-1 font-extrabold text-white focus:outline-none md:px-6 md:text-2xl ${
+        active ? "rounded-lg border-2 " : ""
       }`}
       onClick={onClick}
     >
       <div className="flex items-center">
         {label}
-        <span className="align-self-middle ml-2 text-lg text-neutral-600 md:text-xl">
+        <span className="align-self-middle md:text-md ml-2 text-sm text-zinc-500">
           [{count}]
         </span>
       </div>

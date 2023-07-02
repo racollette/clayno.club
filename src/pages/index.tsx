@@ -132,10 +132,12 @@ const getRarityColor = (rank: number) => {
 // };
 
 export default function Home() {
-  const t1Herds = api.example.getT1Herds.useQuery();
-  const t2Herds = api.example.getT2Herds.useQuery();
-  const t3Herds = api.example.getT3Herds.useQuery();
-  const t4Herds = api.example.getT4Herds.useQuery();
+  const herds = [
+    api.example.getT1Herds.useQuery(),
+    api.example.getT2Herds.useQuery(),
+    api.example.getT3Herds.useQuery(),
+    api.example.getT4Herds.useQuery(),
+  ];
 
   return (
     <>
@@ -147,13 +149,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        <div className="container flex flex-col items-center justify-center py-8 md:px-4 ">
+        <div className="container flex flex-col items-center justify-center py-4 md:px-4 md:py-8 ">
           <div className="flex flex-row flex-wrap align-middle">
             <div className="relative p-4">
-              <Image
+              <img
                 src="https://pbs.twimg.com/media/FqOrzzRXoAQ3yjV?format=jpg"
                 alt="Claynosaurz"
-                className="h-auto w-full rounded-2xl"
+                className="h-auto w-full rounded-lg"
               />
               <div className="absolute left-0 top-0 hidden h-full w-full items-start justify-end md:flex">
                 <div className="m-6 flex max-w-lg flex-col gap-4 rounded-xl bg-black/70 p-8 text-white hover:bg-black/30">
@@ -162,11 +164,18 @@ export default function Home() {
                   </h2>
                   <div className="text-sm md:text-lg">
                     <p className="pb-2">
-                      A herd is a collector achievement consisting of one of
-                      each Claynosaur species.
+                      A herd is a collection containing one of each of the six
+                      original Claynosaurz species.
                     </p>
                     <p>The more matching traits the better!</p>
                   </div>
+                </div>
+              </div>
+              <div className="absolute left-0 top-0 flex h-full w-full items-start justify-end md:hidden">
+                <div className="m-5 flex max-w-lg flex-col rounded-xl bg-black/70 px-4 py-3 text-white hover:bg-black/30">
+                  <h2 className="text-xl font-extrabold text-white">
+                    Dino <span className="text-[hsl(280,100%,70%)]">Herds</span>
+                  </h2>
                 </div>
               </div>
             </div>
@@ -174,75 +183,79 @@ export default function Home() {
           <TabSelection
             labels={["3 Trait", "2 Trait", "1 Trait", "0 Trait"]}
             counts={[
-              t1Herds?.data?.length ?? 0,
-              t2Herds?.data?.length ?? 0,
-              t3Herds?.data?.length ?? 0,
-              t4Herds?.data?.length ?? 0,
+              herds[0]?.data?.length ?? 0,
+              herds[1]?.data?.length ?? 0,
+              herds[2]?.data?.length ?? 0,
+              herds[3]?.data?.length ?? 0,
             ]}
           >
-            <div className="flex flex-col items-center gap-2">
-              {t1Herds.data &&
-                t1Herds.data?.map((herd) => (
-                  <div key={herd.id} className="mb-4 flex flex-col">
-                    <div
-                      className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
-                        herd.matches
-                      )}`}
-                    >
-                      <Link
-                        className="rounded-md px-4 py-2 text-white hover:bg-white/20"
-                        href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                        target="_blank"
-                      >
-                        <div
-                          className={`md:text-md hidden font-bold  md:block`}
-                        >
-                          {herd.owner}
-                        </div>
-                        <div
-                          className={`text-md block font-bold text-white md:hidden`}
-                        >
-                          {truncateAccount(herd.owner)}
-                        </div>
-                      </Link>
-                      <div className="absolute left-0 m-2 flex flex-row">
-                        {herd.matches.split("_").map((trait, index) => (
-                          <div
-                            className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
-                              trait
-                            )}`}
-                            key={index}
-                          >
-                            {trait}
-                          </div>
-                        ))}
-                      </div>
+            {herds.map((tier) => (
+              <div className="flex flex-col items-center gap-2">
+                {tier.data &&
+                  tier.data?.map((herd) => (
+                    <div key={herd.id} className="mb-4 flex flex-col">
                       <div
-                        className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
-                          herd.rarity
+                        className={`mb-1 flex flex-wrap items-center justify-between rounded-md border-2 bg-white/10  ${getColor(
+                          herd.matches
                         )}`}
                       >
-                        {herd.rarity}
-                      </div>
-                    </div>
-                    <div
-                      className={`flex flex-1 flex-wrap justify-center gap-1`}
-                      key={herd.id}
-                    >
-                      {herd.herd.map((dino) => (
+                        {herd.tier !== 4 && (
+                          <div className="m-2 flex flex-row">
+                            {herd.matches.split("_").map((trait, index) => (
+                              <div
+                                className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
+                                  trait
+                                )}`}
+                                key={index}
+                              >
+                                {trait}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <Link
+                          className="m-1 rounded-md px-4 py-2 text-white hover:bg-white/20"
+                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+                          target="_blank"
+                        >
+                          <div
+                            className={`md:text-md hidden font-bold  md:block`}
+                          >
+                            {herd.owner}
+                          </div>
+                          <div
+                            className={`text-md block font-bold text-white md:hidden`}
+                          >
+                            {truncateAccount(herd.owner)}
+                          </div>
+                        </Link>
                         <div
-                          key={dino.mint}
-                          className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
-                            herd.matches
+                          className={`mx-3 my-2 ml-auto rounded-md px-2 py-1 text-xs text-white md:ml-3 ${getRarityColor(
+                            herd.rarity
                           )}`}
                         >
-                          <Image
-                            src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                            alt="Clayno gif"
-                            quality={100}
-                            fill
-                          ></Image>
-                          {/* {dino.rarity && (
+                          {herd.rarity}
+                        </div>
+                      </div>
+                      <div
+                        className={`flex flex-1 flex-wrap justify-center gap-1`}
+                        key={herd.id}
+                      >
+                        {herd.herd.map((dino) => (
+                          <div
+                            key={dino.mint}
+                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                              herd.matches
+                            )}`}
+                          >
+                            <Image
+                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                              alt="Clayno gif"
+                              quality={100}
+                              fill
+                            ></Image>
+                            {/* {dino.rarity && (
                             <div
                               className={`absolute bottom-0 left-0 m-1 rounded-lg  px-2 py-1 text-xs text-white ${getRarityColor(
                                 dino.rarity
@@ -251,77 +264,6 @@ export default function Home() {
                               {dino.rarity}
                             </div>
                           )} */}
-                        </div>
-                      ))}
-
-                      <br />
-                    </div>
-                  </div>
-                ))}
-            </div>
-            <div>
-              <div className="flex flex-col items-center gap-2">
-                {t2Herds.data &&
-                  t2Herds.data?.map((herd) => (
-                    <div key={herd.id} className="mb-4 flex flex-col">
-                      <div
-                        className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
-                          herd.matches
-                        )}`}
-                      >
-                        <Link
-                          className="rounded-md px-4 py-2 text-white hover:bg-white/20"
-                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                          target="_blank"
-                        >
-                          <div
-                            className={`md:text-md hidden font-bold  md:block`}
-                          >
-                            {herd.owner}
-                          </div>
-                          <div
-                            className={`text-md block font-bold text-white md:hidden`}
-                          >
-                            {truncateAccount(herd.owner)}
-                          </div>
-                        </Link>
-                        <div className="absolute left-0 m-2 flex flex-row">
-                          {herd.matches.split("_").map((trait, index) => (
-                            <div
-                              className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
-                                trait
-                              )}`}
-                              key={index}
-                            >
-                              {trait}
-                            </div>
-                          ))}
-                        </div>
-                        <div
-                          className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
-                            herd.rarity
-                          )}`}
-                        >
-                          {herd.rarity}
-                        </div>
-                      </div>
-                      <div
-                        className={`flex flex-1 flex-wrap justify-center gap-1`}
-                        key={herd.id}
-                      >
-                        {herd.herd.map((dino) => (
-                          <div
-                            key={dino.mint}
-                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
-                              herd.matches
-                            )}`}
-                          >
-                            <Image
-                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                              alt="Clayno gif"
-                              quality={100}
-                              fill
-                            ></Image>
                           </div>
                         ))}
 
@@ -330,139 +272,7 @@ export default function Home() {
                     </div>
                   ))}
               </div>
-            </div>
-            <div>
-              <div className="flex flex-col items-center gap-2">
-                {t3Herds.data &&
-                  t3Herds.data?.map((herd) => (
-                    <div key={herd.id} className="mb-4 flex flex-col">
-                      <div
-                        className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
-                          herd.matches
-                        )}`}
-                      >
-                        <Link
-                          className="rounded-md px-4 py-2 text-white hover:bg-white/20"
-                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                          target="_blank"
-                        >
-                          <div
-                            className={`md:text-md hidden font-bold  md:block`}
-                          >
-                            {herd.owner}
-                          </div>
-                          <div
-                            className={`text-md block font-bold text-white md:hidden`}
-                          >
-                            {truncateAccount(herd.owner)}
-                          </div>
-                        </Link>
-                        <div className="absolute left-0 m-2 flex flex-row">
-                          {herd.matches.split("_").map((trait, index) => (
-                            <div
-                              className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
-                                trait
-                              )}`}
-                              key={index}
-                            >
-                              {trait}
-                            </div>
-                          ))}
-                        </div>
-                        <div
-                          className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
-                            herd.rarity
-                          )}`}
-                        >
-                          {herd.rarity}
-                        </div>
-                      </div>
-                      <div
-                        className={`flex flex-1 flex-wrap justify-center gap-1`}
-                        key={herd.id}
-                      >
-                        {herd.herd.map((dino) => (
-                          <div
-                            key={dino.mint}
-                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
-                              herd.matches
-                            )}`}
-                          >
-                            <Image
-                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                              alt="Clayno gif"
-                              quality={100}
-                              fill
-                            ></Image>
-                          </div>
-                        ))}
-
-                        <br />
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-            <div>
-              <div className="flex flex-col items-center gap-2">
-                {t4Herds.data &&
-                  t4Herds.data?.map((herd) => (
-                    <div key={herd.id} className="mb-4 flex flex-col">
-                      <div
-                        className={`relative mb-1 flex items-center justify-center rounded-md border-2 bg-white/10 p-2  ${getColor(
-                          herd.matches
-                        )}`}
-                      >
-                        <Link
-                          className="rounded-md px-4 py-2 text-white hover:bg-white/20"
-                          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-                          target="_blank"
-                        >
-                          <div
-                            className={`md:text-md hidden font-bold  md:block`}
-                          >
-                            {herd.owner}
-                          </div>
-                          <div
-                            className={`text-md block font-bold text-white md:hidden`}
-                          >
-                            {truncateAccount(herd.owner)}
-                          </div>
-                        </Link>
-                        <div
-                          className={`absolute right-0 m-4 rounded-md px-2 py-1 text-xs text-white ${getRarityColor(
-                            herd.rarity
-                          )}`}
-                        >
-                          {herd.rarity}
-                        </div>
-                      </div>
-                      <div
-                        className={`flex flex-1 flex-wrap justify-center gap-1`}
-                        key={herd.id}
-                      >
-                        {herd.herd.map((dino) => (
-                          <div
-                            key={dino.mint}
-                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
-                              herd.matches
-                            )}`}
-                          >
-                            <Image
-                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                              alt="Clayno gif"
-                              quality={100}
-                              fill
-                            ></Image>
-                          </div>
-                        ))}
-
-                        <br />
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
+            ))}
           </TabSelection>
         </div>
       </main>
