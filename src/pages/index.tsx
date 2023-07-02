@@ -150,7 +150,7 @@ export default function Home() {
         <div className="container flex flex-col items-center justify-center py-8 md:px-4 ">
           <div className="flex flex-row flex-wrap align-middle">
             <div className="relative p-4">
-              <img
+              <Image
                 src="https://pbs.twimg.com/media/FqOrzzRXoAQ3yjV?format=jpg"
                 alt="Claynosaurz"
                 className="h-auto w-full rounded-2xl"
@@ -206,11 +206,12 @@ export default function Home() {
                         </div>
                       </Link>
                       <div className="absolute left-0 m-2 flex flex-row">
-                        {herd.matches.split("_").map((trait) => (
+                        {herd.matches.split("_").map((trait, index) => (
                           <div
                             className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
                               trait
                             )}`}
+                            key={index}
                           >
                             {trait}
                           </div>
@@ -285,11 +286,12 @@ export default function Home() {
                           </div>
                         </Link>
                         <div className="absolute left-0 m-2 flex flex-row">
-                          {herd.matches.split("_").map((trait) => (
+                          {herd.matches.split("_").map((trait, index) => (
                             <div
                               className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
                                 trait
                               )}`}
+                              key={index}
                             >
                               {trait}
                             </div>
@@ -356,11 +358,12 @@ export default function Home() {
                           </div>
                         </Link>
                         <div className="absolute left-0 m-2 flex flex-row">
-                          {herd.matches.split("_").map((trait) => (
+                          {herd.matches.split("_").map((trait, index) => (
                             <div
                               className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
                                 trait
                               )}`}
+                              key={index}
                             >
                               {trait}
                             </div>
