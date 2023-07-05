@@ -264,21 +264,23 @@ export default function Home() {
                       >
                         {herd.herd.map((dino) => (
                           <div key={dino.mint}>
-                            {/* @ts-ignore */}
-                            {coreSpecies.includes(dino.attributes?.species) && (
-                              <div
-                                key={dino.mint}
-                                className={`relative m-0.5 h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
-                                  herd.matches
-                                )}`}
-                              >
-                                <Image
-                                  src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                                  alt="Clayno gif"
-                                  quality={100}
-                                  fill
-                                ></Image>
-                                {/* {dino.rarity && (
+                            {dino.attributes &&
+                              coreSpecies.includes(
+                                dino.attributes?.species
+                              ) && (
+                                <div
+                                  key={dino.mint}
+                                  className={`relative m-0.5 h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                                    herd.matches
+                                  )}`}
+                                >
+                                  <Image
+                                    src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                                    alt="Clayno gif"
+                                    quality={100}
+                                    fill
+                                  ></Image>
+                                  {/* {dino.rarity && (
                                 <div
                                 className={`absolute bottom-0 left-0 m-1 rounded-lg  px-2 py-1 text-xs text-white ${getRarityColor(
                                   dino.rarity
@@ -287,10 +289,9 @@ export default function Home() {
                                   {dino.rarity}
                                   </div>
                                 )} */}
-                              </div>
-                            )}
+                                </div>
+                              )}
                             {showDactyl &&
-                            /* @ts-ignore */
                             dino.attributes?.species === "Dactyl" ? (
                               <div
                                 key={dino.mint}
@@ -307,9 +308,7 @@ export default function Home() {
                               </div>
                             ) : null}
                             {showSaga &&
-                              /* @ts-ignore */
                               (dino.attributes?.species === "Para" ||
-                                /* @ts-ignore */
                                 dino.attributes?.species === "Spino") && (
                                 <div
                                   key={dino.mint}
