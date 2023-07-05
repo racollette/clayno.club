@@ -5,6 +5,9 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import { truncateAccount } from "~/utils/addresses";
 import TabSelection from "~/components/TabSelection";
+import { useState } from "react";
+
+const coreSpecies = ["Rex", "Bronto", "Ankylo", "Raptor", "Trice", "Stego"];
 
 const getTraitBadgeColor = (trait: string) => {
   switch (trait) {
@@ -132,6 +135,17 @@ const getRarityColor = (rank: number) => {
 // };
 
 export default function Home() {
+  const [showDactyl, setShowDactyl] = useState(true);
+  const [showSaga, setShowSaga] = useState(true);
+
+  const toggleDactyl = (newToggleState: boolean) => {
+    setShowDactyl(newToggleState);
+  };
+
+  const toggleSaga = (newToggleState: boolean) => {
+    setShowSaga(newToggleState);
+  };
+
   const herds = [
     api.example.getT1Herds.useQuery(),
     api.example.getT2Herds.useQuery(),
@@ -180,6 +194,7 @@ export default function Home() {
               </div>
             </div>
           </div>
+
           <TabSelection
             labels={["3 Trait", "2 Trait", "1 Trait", "0 Trait"]}
             counts={[
@@ -188,6 +203,10 @@ export default function Home() {
               herds[2]?.data?.length ?? 0,
               herds[3]?.data?.length ?? 0,
             ]}
+            showDactyl={showDactyl}
+            showSaga={showSaga}
+            toggleDactyl={toggleDactyl}
+            toggleSaga={toggleSaga}
           >
             {herds.map((tier, index) => (
               <div key={index} className="flex flex-col items-center gap-2">
@@ -238,36 +257,76 @@ export default function Home() {
                           {herd.rarity}
                         </div>
                       </div>
+
                       <div
-                        className={`flex flex-1 flex-wrap justify-center gap-1`}
+                        className={`flex flex-1 flex-wrap justify-center`}
                         key={herd.id}
                       >
                         {herd.herd.map((dino) => (
-                          <div
-                            key={dino.mint}
-                            className={`relative h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
-                              herd.matches
-                            )}`}
-                          >
-                            <Image
-                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
-                              alt="Clayno gif"
-                              quality={100}
-                              fill
-                            ></Image>
-                            {/* {dino.rarity && (
-                            <div
-                              className={`absolute bottom-0 left-0 m-1 rounded-lg  px-2 py-1 text-xs text-white ${getRarityColor(
-                                dino.rarity
-                              )}`}
-                            >
-                              {dino.rarity}
-                            </div>
-                          )} */}
+                          <div key={dino.mint}>
+                            {/* @ts-ignore */}
+                            {coreSpecies.includes(dino.attributes?.species) && (
+                              <div
+                                key={dino.mint}
+                                className={`relative m-0.5 h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                                  herd.matches
+                                )}`}
+                              >
+                                <Image
+                                  src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                                  alt="Clayno gif"
+                                  quality={100}
+                                  fill
+                                ></Image>
+                                {/* {dino.rarity && (
+                                <div
+                                className={`absolute bottom-0 left-0 m-1 rounded-lg  px-2 py-1 text-xs text-white ${getRarityColor(
+                                  dino.rarity
+                                  )}`}
+                                  >
+                                  {dino.rarity}
+                                  </div>
+                                )} */}
+                              </div>
+                            )}
+                            {showDactyl &&
+                            /* @ts-ignore */
+                            dino.attributes?.species === "Dactyl" ? (
+                              <div
+                                key={dino.mint}
+                                className={`relative m-0.5 h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                                  herd.matches
+                                )}`}
+                              >
+                                <Image
+                                  src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                                  alt="Clayno gif"
+                                  quality={100}
+                                  fill
+                                ></Image>
+                              </div>
+                            ) : null}
+                            {showSaga &&
+                              /* @ts-ignore */
+                              (dino.attributes?.species === "Para" ||
+                                /* @ts-ignore */
+                                dino.attributes?.species === "Spino") && (
+                                <div
+                                  key={dino.mint}
+                                  className={`relative m-0.5 h-40 w-40 overflow-clip rounded-md border-2 md:h-48 md:w-48 ${getColor(
+                                    herd.matches
+                                  )}`}
+                                >
+                                  <Image
+                                    src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`}
+                                    alt="Clayno gif"
+                                    quality={100}
+                                    fill
+                                  ></Image>
+                                </div>
+                              )}
                           </div>
                         ))}
-
-                        <br />
                       </div>
                     </div>
                   ))}

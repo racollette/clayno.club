@@ -52,6 +52,9 @@ export const exampleRouter = createTRPCRouter({
           orderBy: {
             name: "desc",
           },
+          include: {
+            attributes: true,
+          },
         },
       },
     });

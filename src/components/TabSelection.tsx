@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ToggleSwitch from "./ToggleSwitch";
 
 type TabButtonProps = {
   label: string;
@@ -11,10 +12,21 @@ type TabSelectionProps = {
   labels: string[];
   counts: number[];
   children: any;
+  showDactyl: boolean;
+  showSaga: boolean;
+  toggleDactyl: (toggleState: boolean) => void;
+  toggleSaga: (toggleState: boolean) => void;
 };
 
-const TabSelection = ({ labels, counts, children }: TabSelectionProps) => {
-  //   const { labels, counts, children } = props;
+const TabSelection = ({
+  labels,
+  counts,
+  children,
+  showDactyl,
+  showSaga,
+  toggleDactyl,
+  toggleSaga,
+}: TabSelectionProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   const handleTabClick = (index: number) => {
@@ -33,6 +45,18 @@ const TabSelection = ({ labels, counts, children }: TabSelectionProps) => {
             onClick={() => handleTabClick(index)}
           />
         ))}
+      </div>
+      <div className="mt-2 flex justify-center gap-6">
+        <ToggleSwitch
+          toggleState={showDactyl}
+          label={"Show Dactyls"}
+          onToggle={toggleDactyl}
+        />
+        <ToggleSwitch
+          toggleState={showSaga}
+          label={"Show Saga Species"}
+          onToggle={toggleSaga}
+        />
       </div>
       {/* eslint-disable */}
       <div className="p-4">{children[activeTab]}</div>
@@ -59,30 +83,3 @@ const TabButton = ({ label, active, count, onClick }: TabButtonProps) => {
 };
 
 export default TabSelection;
-
-{
-  /* <TabButton
-          label={labels[0]}
-          active={activeTab === 0}
-          count={counts[0]}
-          onClick={() => handleTabClick(0)}
-        />
-        <TabButton
-          label={labels[1]}
-          active={activeTab === 1}
-          count={counts[1]}
-          onClick={() => handleTabClick(1)}
-        />
-        <TabButton
-          label={labels[2]}
-          active={activeTab === 2}
-          count={counts[2]}
-          onClick={() => handleTabClick(2)}
-        />
-        <TabButton
-          label={labels[3]}
-          active={activeTab === 3}
-          count={counts[3]}
-          onClick={() => handleTabClick(3)}
-        /> */
-}
