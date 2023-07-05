@@ -149,7 +149,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        <div className="container flex flex-col items-center justify-center py-4 md:px-4 md:py-8 ">
+        <div className="flex flex-col items-center justify-center py-4 md:px-4 md:py-8 ">
           <div className="flex flex-row flex-wrap align-middle">
             <div className="relative p-4">
               <img
@@ -193,9 +193,9 @@ export default function Home() {
               <div key={index} className="flex flex-col items-center gap-2">
                 {tier.data &&
                   tier.data?.map((herd) => (
-                    <div key={herd.id} className="mb-4 flex flex-col">
+                    <div key={herd.id} className="mb-6 flex flex-col">
                       <div
-                        className={`mb-1 flex flex-wrap items-center justify-between rounded-md border-2 bg-white/10  ${getColor(
+                        className={`mb-1 flex flex-none flex-wrap items-center justify-between rounded-md border-2 bg-white/10  ${getColor(
                           herd.matches
                         )}`}
                       >
