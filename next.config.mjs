@@ -23,9 +23,14 @@ const config = {
       "nftstorage.link",
       "arweave.net",
       "prod-image-cdn.tensor.trade",
-      "pbs.twimg.com"
+      "pbs.twimg.com",
+      "cdn.discordapp.com",
+      "ui-avatars.com"
     ]
   },
+  publicRuntimeConfig: {
+    myRPC: process.env.RPC
+  }
 };
 
 export default config;

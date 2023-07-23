@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -64,4 +63,60 @@ model DinoToHerd {
   @@unique([A, B], map: "_DinoToHerd_AB_unique")
   @@index([B], map: "_DinoToHerd_B_index")
   @@map("_DinoToHerd")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  defaultAddress String    @unique
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  discord        Discord?
+  twitter        Twitter?
+  wallets        Wallet[]
+}
+
+model Discord {
+  username    String @unique
+  global_name String
+  image_url   String
+  User        User   @relation(fields: [userId], references: [id])
+  userId      String @unique
+}
+
+model Twitter {
+  username    String @unique
+  global_name String
+  image_url   String
+  User        User   @relation(fields: [userId], references: [id])
+  userId      String @unique
+}
+
+model Wallet {
+  address String  @id @unique
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+
+  @@index([userId])
 }

@@ -4,3 +4,8 @@ export function truncateAccount(str: string) {
 
   return `${firstFive}...${lastFive}`;
 }
+
+export function shortAccount(str: string) {
+  const firstFive = str.slice(0, 5);
+  return `${firstFive}`;
+}
