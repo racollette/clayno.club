@@ -21,8 +21,8 @@ import Herd from "~/components/Herd";
 // };
 
 export default function Home() {
-  const [showDactyl, setShowDactyl] = useState(true);
-  const [showSaga, setShowSaga] = useState(true);
+  const [showDactyl, setShowDactyl] = useState(false);
+  const [showSaga, setShowSaga] = useState(false);
 
   function toggleDactyl(newToggleState: boolean) {
     setShowDactyl(newToggleState);
@@ -33,10 +33,10 @@ export default function Home() {
   };
 
   const herds = [
-    api.example.getT1Herds.useQuery(),
-    api.example.getT2Herds.useQuery(),
-    api.example.getT3Herds.useQuery(),
-    api.example.getT4Herds.useQuery(),
+    api.herd.getT1Herds.useQuery(),
+    api.herd.getT2Herds.useQuery(),
+    api.herd.getT3Herds.useQuery(),
+    api.herd.getT4Herds.useQuery(),
   ];
 
   return (
@@ -110,20 +110,6 @@ export default function Home() {
           </TabSelection>
         </div>
       </main>
-      <footer className="flex flex-col items-center bg-black pb-6 text-center text-lg text-white">
-        <span className="flex flex-row gap-2">
-          <span>Made with</span>
-          <Image src="/icons/heart.svg" alt="Love" width={20} height={20} />
-          <span>by</span>
-          <Link
-            href={`https://twitter.com/AlphaDecay235`}
-            className="text-sky-500"
-            target="_blank"
-          >
-            <span>@AlphaDecay235</span>
-          </Link>
-        </span>
-      </footer>
     </>
   );
 }
@@ -131,7 +117,7 @@ export default function Home() {
 // function AuthShowcase() {
 //   const { data: sessionData } = useSession();
 
-//   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
+//   const { data: secretMessage } = api.herd.getSecretMessage.useQuery(
 //     undefined, // no input
 //     { enabled: sessionData?.user !== undefined }
 //   );

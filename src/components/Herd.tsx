@@ -1,7 +1,8 @@
-import { Dino, Herd } from "@prisma/client";
+import { Dino, Discord, Herd } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { truncateAccount } from "~/utils/addresses";
+import { api } from "~/utils/api";
 
 const coreSpecies = ["Rex", "Bronto", "Ankylo", "Raptor", "Trice", "Stego"];
 
@@ -13,6 +14,13 @@ type HerdProps = {
 
 export default function Herd(props: HerdProps) {
   const { herd, showDactyl, showSaga } = props;
+
+  const { data: owner, isLoading } = api.binding.getUser.useQuery({
+    type: "wallet",
+    id: herd.owner,
+  });
+
+  // const discord: Discord = owner?.discord ? owner.discord : ""
 
   return (
     <div key={herd.id} className="mb-6 flex flex-col">
@@ -36,18 +44,89 @@ export default function Herd(props: HerdProps) {
           </div>
         )}
 
-        <Link
-          className="m-1 rounded-md px-4 py-2 text-white hover:bg-white/20"
-          href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
-          target="_blank"
-        >
-          <div className={`md:text-md hidden font-bold  md:block`}>
-            {herd.owner}
+        {owner ? (
+          <div className="mx-3 flex flex-row justify-center align-middle">
+            {owner.discord && (
+              <div className="mr-2 flex">
+                <Link
+                  className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
+                  href={`/profile/${owner.discord.global_name}`}
+                >
+                  <Image
+                    className="mr-2 self-center rounded-md"
+                    src={owner.discord.image_url}
+                    alt="Avatar"
+                    width={24}
+                    height={24}
+                  />
+                  <div className="self-center text-white">
+                    {owner.discord.global_name}
+                  </div>
+                </Link>
+                {/* <Link
+                    href={`https://discordapp.com/users/${owner.discord.username}`}
+                    >
+                    <Image
+                    src="/icons/discord.svg"
+                    alt="Discord"
+                    width={24}
+                    height={24}
+                    />
+                  </Link> */}
+              </div>
+            )}
+            {owner.twitter && (
+              <>
+                {/* <Image
+                    className="mr-2 rounded-md"
+                    src={owner.twitter.image_url}
+                    alt="Avatar"
+                    width={24}
+                    height={24}
+                  />
+                  <div className="text-white">{owner.twitter.global_name}</div> */}
+                <Link
+                  className="self-center rounded-md px-2 py-2 text-white hover:bg-white/20"
+                  href={`https://twitter.com/${owner.twitter.username}`}
+                  target="_blank"
+                >
+                  <Image
+                    src="/icons/twitter.svg"
+                    alt="Twitter"
+                    width={20}
+                    height={20}
+                  />
+                </Link>
+              </>
+            )}
+            <Link
+              className="self-center rounded-md px-2 py-2 text-white hover:bg-white/20"
+              href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+              target="_blank"
+            >
+              <Image
+                src="/icons/tensor.svg"
+                alt="Tensor Profile"
+                height={20}
+                width={20}
+              />
+            </Link>
           </div>
-          <div className={`text-md block font-bold text-white md:hidden`}>
-            {truncateAccount(herd.owner)}
-          </div>
-        </Link>
+        ) : (
+          <Link
+            className="m-1 rounded-md px-4 py-2 text-white hover:bg-white/20"
+            href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
+            target="_blank"
+          >
+            <div className={`md:text-md hidden font-bold  md:block`}>
+              {herd.owner}
+            </div>
+            <div className={`text-md block font-bold text-white md:hidden`}>
+              {truncateAccount(herd.owner)}
+            </div>
+          </Link>
+        )}
+
         <div
           className={`mx-3 my-2 ml-auto rounded-md px-2 py-1 text-xs text-white md:ml-3 ${getRarityColor(
             herd.rarity

@@ -1,6 +1,7 @@
-import { exampleRouter } from "~/server/api/routers/example";
+import { herdRouter } from "~/server/api/routers/herd";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { bindingRouter } from "./routers/binding";
+import { daoRouter } from "./routers/dao";
 
 /**
  * This is the primary router for your server.
@@ -8,8 +9,9 @@ import { bindingRouter } from "./routers/binding";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
+  herd: herdRouter,
   binding: bindingRouter,
+  dao: daoRouter,
 });
 
 // export type definition of API

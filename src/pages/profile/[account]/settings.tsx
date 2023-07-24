@@ -9,6 +9,7 @@ import { Spinner } from "flowbite-react";
 import { getSessionDetails } from "~/utils/session";
 import AddWalletModal from "~/components/AddWalletModal";
 import { truncateAccount } from "~/utils/addresses";
+import useLocalStorage from "~/utils/storage";
 
 const Settings = () => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const Settings = () => {
   const [userId, setUserId] = useState<string | undefined>();
   const [unlinkedDiscord, setUnlinkedDiscord] = useState<boolean>(false);
   const [unlinkedTwitter, setUnlinkedTwitter] = useState<boolean>(false);
+  const [storedUserId, setStoredUserId] = useLocalStorage("userId", "");
 
   const {
     data: user,
@@ -31,7 +33,6 @@ const Settings = () => {
 
   console.log(session);
   console.log(user);
-  // const { account } = router.query;
 
   const linkDiscord = api.binding.linkDiscord.useMutation();
   const linkTwitter = api.binding.linkTwitter.useMutation();
@@ -59,9 +60,10 @@ const Settings = () => {
           // @ts-ignore
           const { profile } = session.user;
           if (profile.image_url) {
-            if (userId) {
+            if (userId || storedUserId) {
+              if (user?.discord) return;
               linkDiscord.mutate({
-                id: userId,
+                id: userId || storedUserId,
                 data: {
                   username: profile.username,
                   global_name: profile.global_name,
@@ -71,9 +73,10 @@ const Settings = () => {
               setUnlinkedDiscord(false);
             }
           } else {
-            if (userId) {
+            if (userId || storedUserId) {
+              if (user?.twitter) return;
               linkTwitter.mutate({
-                id: userId,
+                id: userId || storedUserId,
                 data: {
                   username: profile.data.username,
                   global_name: profile.data.name,
@@ -117,7 +120,7 @@ const Settings = () => {
       <div className="lg:w-1/2">
         <div className="text-xl font-extrabold">Social Accounts</div>
         <div className="py-2 text-sm text-zinc-500">
-          Verify your identity so we can display your name next to your herds!
+          Verify your identity so we can display your name next to your dinos!
         </div>
         <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
           {user?.discord && !unlinkedDiscord ? (
@@ -155,6 +158,7 @@ const Settings = () => {
                   className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
                   disabled={linkDiscord.isLoading}
                   onClick={() => {
+                    setStoredUserId(userId);
                     signIn("discord");
                   }}
                 >
@@ -208,6 +212,7 @@ const Settings = () => {
                   className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
                   disabled={linkTwitter.isLoading}
                   onClick={() => {
+                    setStoredUserId(userId);
                     signIn("twitter");
                   }}
                 >
@@ -231,8 +236,8 @@ const Settings = () => {
       <div className="mt-8 lg:w-1/2">
         <div className="text-xl font-extrabold">Wallets</div>
         <div className="py-2 text-sm text-zinc-500">
-          You can connect multiple wallets if you keep your herds separate. All
-          of these wallets will be able to access your profile.
+          You can connect multiple wallets. All of these wallets will be able to
+          access your profile.
         </div>
         <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
           {user?.defaultAddress && (

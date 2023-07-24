@@ -37,10 +37,10 @@ export default function Profile() {
 
   const wallets = user?.wallets ?? [];
   const userHerds = api.useQueries((t) =>
-    wallets.map((wallet) => t.example.getUserHerds(wallet.address))
+    wallets.map((wallet) => t.herd.getUserHerds(wallet.address))
   );
 
-  const walletHerds = api.example.getUserHerds.useQuery(queryString);
+  const walletHerds = api.herd.getUserHerds.useQuery(queryString);
 
   useEffect(() => {
     setTimeout(async () => {

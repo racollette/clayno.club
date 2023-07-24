@@ -51,17 +51,6 @@ export default function LoginModal() {
   // const loading = status === "loading";
   const signedIn = status === "authenticated";
 
-  console.log(session);
-
-  // const {
-  //   data: user,
-  //   isLoading,
-  //   refetch,
-  // } = api.binding.getUser.useQuery({
-  //   type: sessionType,
-  //   id: id,
-  // });
-
   const {
     data: user,
     isLoading,
@@ -75,6 +64,12 @@ export default function LoginModal() {
     setSigning(false);
     setUseLedger(false);
   }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      setUserId(user.id);
+    }
+  }, [user?.id]);
 
   const handleSignIn = async (useLedger: boolean) => {
     try {
@@ -122,7 +117,6 @@ export default function LoginModal() {
       }
 
       setSigning(false);
-      // router.push(`/profile/${publicKey.toString()}`);
       router.push(
         `profile/${
           user?.discord?.username ??

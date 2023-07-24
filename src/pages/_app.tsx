@@ -17,6 +17,7 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import Header from "~/components/Header";
+import Footer from "~/components/Footer";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -61,6 +62,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <SessionProvider session={session}>
             <Header />
             <Component {...pageProps} />
+            <Footer />
           </SessionProvider>
         </WalletModalProvider>
       </WalletProvider>
