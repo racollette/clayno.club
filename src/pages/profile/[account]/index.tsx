@@ -210,7 +210,7 @@ export default function Profile() {
                 ))}
               </div>
             ) : (
-              <div className="relative flex aspect-square w-4/5 justify-center self-center md:w-1/2">
+              <div className="relative flex aspect-square w-72 justify-center self-center">
                 <Image
                   src="/gifs/raptorSus_01.gif"
                   alt="Sus"
@@ -244,7 +244,7 @@ export default function Profile() {
                 </div>
               ))}
             {totalHerds === 0 && (
-              <div className="relative flex aspect-square w-4/5 justify-center self-center md:w-1/2">
+              <div className="relative flex aspect-square w-72 justify-center self-center">
                 <Image
                   src="/gifs/raptorSus_01.gif"
                   alt="Sus"

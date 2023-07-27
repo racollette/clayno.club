@@ -10,7 +10,7 @@ import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
-import { api } from "~/utils/api";
+import { api, getBaseUrl } from "~/utils/api";
 import ProfileButton from "./ProfileButton";
 import { shortAccount } from "~/utils/addresses";
 import { getSessionDetails } from "~/utils/session";
@@ -101,7 +101,7 @@ export default function LoginModal() {
         });
       } else {
         const message = new SigninMessage({
-          domain: window.location.host,
+          domain: getBaseUrl(),
           publicKey: publicKey?.toBase58(),
           statement: `Rawr!\n \n Sign this message to log in to the app.\n`,
           nonce: csrf,

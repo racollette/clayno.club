@@ -1,6 +1,6 @@
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Button, type CustomFlowbiteTheme, Modal } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 import bs58 from "bs58";
@@ -8,7 +8,7 @@ import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
-import type { api } from "~/utils/api";
+import { getBaseUrl, type api } from "~/utils/api";
 import { truncateAccount } from "~/utils/addresses";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
@@ -67,7 +67,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
         }
       } else {
         const message = new SigninMessage({
-          domain: window.location.host,
+          domain: getBaseUrl(),
           publicKey: publicKey?.toBase58(),
           statement: `Rawr!\n \n Sign this message to log in to the app.\n`,
           nonce: csrf,
