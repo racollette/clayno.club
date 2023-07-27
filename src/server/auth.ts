@@ -112,11 +112,12 @@ export const authOptions: NextAuthOptions = {
           );
 
           // const nextAuthUrl = new URL(env.NEXTAUTH_URL);
-          if (
-            signinMessage.domain !== ("localhost:3000" || "www.dinoherd.cc")
-          ) {
-            return null;
-          }
+          console.log(signinMessage.domain);
+          // if (
+          //   signinMessage.domain !== ("localhost:3000" || "www.dinoherd.cc")
+          // ) {
+          //   return null;
+          // }
 
           const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
           if (signinMessage.nonce !== csrfToken) {
