@@ -10,7 +10,7 @@ import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
-import { api, getBaseUrl } from "~/utils/api";
+import { api } from "~/utils/api";
 import ProfileButton from "./ProfileButton";
 import { shortAccount } from "~/utils/addresses";
 import { getSessionDetails } from "~/utils/session";
@@ -32,6 +32,7 @@ export default function LoginModal() {
   const router = useRouter();
   const { publicKey, signMessage, disconnect, connected, signTransaction } =
     useWallet();
+  const [host, setHost] = useState<string>();
   const [openModal, setOpenModal] = useState<string | undefined>();
   // const [signing, setSigning] = useState<boolean>(false);
   const [useLedger, setUseLedger] = useState<boolean>(false);
@@ -43,6 +44,8 @@ export default function LoginModal() {
 
   // const loading = status === "loading";
   const signedIn = status === "authenticated";
+
+  console.log(session);
 
   const { data: user, isLoading } = api.binding.getUser.useQuery({
     type: userId ? "id" : connected ? "wallet" : sessionType,
@@ -56,6 +59,7 @@ export default function LoginModal() {
   useEffect(() => {
     // setSigning(false);
     setUseLedger(false);
+    setHost(window.location.host);
   }, []);
 
   useEffect(() => {
@@ -101,7 +105,7 @@ export default function LoginModal() {
         });
       } else {
         const message = new SigninMessage({
-          domain: getBaseUrl(),
+          domain: host || "",
           publicKey: publicKey?.toBase58(),
           statement: `Rawr!\n \n Sign this message to log in to the app.\n`,
           nonce: csrf,
@@ -110,15 +114,11 @@ export default function LoginModal() {
         const signature = await signMessage(data);
         const serializedSignature = bs58.encode(signature);
 
-        signIn(
-          "signMessage",
-          {
-            message: JSON.stringify(message),
-            signature: serializedSignature,
-            redirect: false,
-          },
-          "hello"
-        );
+        signIn("signMessage", {
+          message: JSON.stringify(message),
+          signature: serializedSignature,
+          redirect: false,
+        });
       }
 
       // setSigning(false);
