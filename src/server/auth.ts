@@ -111,15 +111,12 @@ export const authOptions: NextAuthOptions = {
             JSON.parse(credentials?.message || "{}")
           );
 
-          console.log(req);
-          console.log(signinMessage.domain);
-
-          const nextAuthUrl = new URL(env.NEXTAUTH_URL);
-          console.log(nextAuthUrl.host);
-
-          // if (signinMessage.domain !== nextAuthUrl.host) {
-          //   return null;
-          // }
+          // const nextAuthUrl = new URL(env.NEXTAUTH_URL);
+          if (
+            signinMessage.domain !== ("localhost:3000" || "www.dinoherd.cc")
+          ) {
+            return null;
+          }
 
           const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
           if (signinMessage.nonce !== csrfToken) {
