@@ -79,6 +79,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
@@ -108,15 +111,12 @@ export const authOptions: NextAuthOptions = {
             JSON.parse(credentials?.message || "{}")
           );
 
-          console.log(
-            "????????????????????????????????????????????????????????"
-          );
           console.log(req);
 
           const nextAuthUrl = new URL(env.NEXTAUTH_URL);
-          // if (signinMessage.domain !== nextAuthUrl.host) {
-          //   return null;
-          // }
+          if (signinMessage.domain !== nextAuthUrl.host) {
+            return null;
+          }
 
           console.log(signinMessage.domain);
           console.log(nextAuthUrl.host);
@@ -125,9 +125,9 @@ export const authOptions: NextAuthOptions = {
 
           console.log(signinMessage.nonce);
           console.log(csrfToken);
-          // if (signinMessage.nonce !== csrfToken) {
-          //   return null;
-          // }
+          if (signinMessage.nonce !== csrfToken) {
+            return null;
+          }
 
           const validationResult = signinMessage.validate(
             credentials?.signature || ""
