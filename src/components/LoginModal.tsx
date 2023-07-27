@@ -45,8 +45,6 @@ export default function LoginModal() {
   // const loading = status === "loading";
   const signedIn = status === "authenticated";
 
-  console.log(session);
-
   const { data: user, isLoading } = api.binding.getUser.useQuery({
     type: userId ? "id" : connected ? "wallet" : sessionType,
     id: userId

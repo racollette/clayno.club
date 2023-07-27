@@ -109,9 +109,12 @@ export const authOptions: NextAuthOptions = {
           );
 
           const nextAuthUrl = new URL(env.NEXTAUTH_URL);
-          if (signinMessage.domain !== nextAuthUrl.host) {
-            return null;
-          }
+          // if (signinMessage.domain !== nextAuthUrl.host) {
+          //   return null;
+          // }
+
+          console.log(signinMessage.domain);
+          console.log(nextAuthUrl.host);
 
           const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
 
