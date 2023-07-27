@@ -35,13 +35,6 @@ export default function Home() {
     setShowPFP(newToggleState);
   };
 
-  // const herds = [
-  //   api.herd.getTHerds.useQuery(),
-  //   api.herd.getT2Herds.useQuery(),
-  //   api.herd.getT3Herds.useQuery(),
-  //   api.herd.getT4Herds.useQuery(),
-  // ];
-
   const herds = api.useQueries((t) =>
     [1, 2, 3, 4].map((tier) => t.herd.getHerdTier({ tier: tier }))
   );
@@ -72,7 +65,7 @@ export default function Home() {
                   quality={100}
                   fill
                 />
-                <div className="absolute left-0 top-0 hidden h-full w-full items-start justify-end md:flex">
+                <div className="absolute right-0 top-0 hidden h-full w-3/5 items-start justify-end md:flex">
                   <div className="m-4 flex max-w-lg flex-col gap-4 rounded-xl bg-black/70 p-8 text-white hover:bg-black/30">
                     <h2 className="text-xl font-extrabold text-white md:text-2xl">
                       Dino{" "}

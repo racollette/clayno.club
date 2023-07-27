@@ -37,7 +37,7 @@ export const bindingRouter = createTRPCRouter({
       return createdUser;
     }),
 
-  getUser: protectedProcedure
+  getUser: publicProcedure
     .input(z.object({ type: z.string(), id: z.string() }))
     .query(async ({ input }) => {
       if (input.type === "id") {

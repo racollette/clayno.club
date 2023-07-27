@@ -47,11 +47,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
     [network]
   );
 
-  const herds = api.useQueries((t) =>
-    [1, 2, 3, 4].map((tier) => t.herd.getHerdTier({ tier: tier }))
-  );
-  const isLoading = herds.some((queryResult) => queryResult.isLoading);
-
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>

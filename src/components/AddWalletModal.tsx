@@ -9,7 +9,6 @@ import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
 import { truncateAccount } from "~/utils/addresses";
-import { setHttpClientAndAgentOptions } from "next/dist/server/config";
 import { api } from "~/utils/api";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {

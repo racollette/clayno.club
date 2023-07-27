@@ -91,7 +91,16 @@ const Settings = () => {
     };
 
     linkSocial();
-  }, [isLoading]);
+  }, [
+    isLoading,
+    linkDiscord,
+    linkTwitter,
+    session?.user?.profile,
+    storedUserId,
+    user?.discord,
+    user?.twitter,
+    userId,
+  ]);
 
   const handleUnlink = (provider: string) => {
     if (user?.discord && provider === "discord") {
