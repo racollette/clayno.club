@@ -121,13 +121,14 @@ export const authOptions: NextAuthOptions = {
           console.log(signinMessage.domain);
           console.log(nextAuthUrl.host);
 
-          const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
+          // const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
+          // const csrfToken = await getCsrfToken({ req });
 
-          console.log(signinMessage.nonce);
-          console.log(csrfToken);
-          if (signinMessage.nonce !== csrfToken) {
-            return null;
-          }
+          // console.log(signinMessage.nonce);
+          // console.log(csrfToken);
+          // if (signinMessage.nonce !== csrfToken) {
+          //   return null;
+          // }
 
           const validationResult = signinMessage.validate(
             credentials?.signature || ""
