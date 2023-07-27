@@ -102,22 +102,29 @@ export const authOptions: NextAuthOptions = {
           type: "text",
         },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         try {
           const signinMessage = new SigninMessage(
             JSON.parse(credentials?.message || "{}")
           );
 
-          // const nextAuthUrl = new URL(env.NEXTAUTH_URL);
+          console.log(
+            "????????????????????????????????????????????????????????"
+          );
+          console.log(req);
+
+          const nextAuthUrl = new URL(env.NEXTAUTH_URL);
           // if (signinMessage.domain !== nextAuthUrl.host) {
           //   return null;
           // }
 
-          // console.log(signinMessage.domain);
-          // console.log(nextAuthUrl.host);
+          console.log(signinMessage.domain);
+          console.log(nextAuthUrl.host);
 
-          // const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
+          const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
 
+          console.log(signinMessage.nonce);
+          console.log(csrfToken);
           // if (signinMessage.nonce !== csrfToken) {
           //   return null;
           // }
