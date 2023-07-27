@@ -102,19 +102,19 @@ export const authOptions: NextAuthOptions = {
           type: "text",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
           const signinMessage = new SigninMessage(
             JSON.parse(credentials?.message || "{}")
           );
 
-          const nextAuthUrl = new URL(env.NEXTAUTH_URL);
+          // const nextAuthUrl = new URL(env.NEXTAUTH_URL);
           // if (signinMessage.domain !== nextAuthUrl.host) {
           //   return null;
           // }
 
-          console.log(signinMessage.domain);
-          console.log(nextAuthUrl.host);
+          // console.log(signinMessage.domain);
+          // console.log(nextAuthUrl.host);
 
           // const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
 
@@ -155,7 +155,7 @@ export const authOptions: NextAuthOptions = {
               data: {
                 userId: user.id,
                 type: "credentials",
-                provider: "Ethereum",
+                provider: "Solana",
                 providerAccountId: signinMessage.publicKey,
               },
             });
