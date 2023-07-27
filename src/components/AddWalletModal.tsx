@@ -8,8 +8,9 @@ import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
-import { getBaseUrl, type api } from "~/utils/api";
 import { truncateAccount } from "~/utils/addresses";
+import { setHttpClientAndAgentOptions } from "next/dist/server/config";
+import { api } from "~/utils/api";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -33,6 +34,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
   const { publicKey, signMessage, disconnect, connected, signTransaction } =
     useWallet();
   const [openModal, setOpenModal] = useState<string | undefined>();
+  const [host, setHost] = useState<string>();
   // const [signing, setSigning] = useState<boolean>(false);
   const [useLedger, setUseLedger] = useState<boolean>(false);
   const walletModal = useWalletModal();
@@ -67,7 +69,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
         }
       } else {
         const message = new SigninMessage({
-          domain: getBaseUrl(),
+          domain: host || "",
           publicKey: publicKey?.toBase58(),
           statement: `Rawr!\n \n Sign this message to log in to the app.\n`,
           nonce: csrf,
@@ -94,6 +96,10 @@ export default function AddWalletModal(props: AddWalletModalProps) {
   const handleDisconnect = () => {
     disconnect();
   };
+
+  useEffect(() => {
+    setHost(window.location.host);
+  }, []);
 
   return (
     <>
