@@ -114,21 +114,21 @@ export const authOptions: NextAuthOptions = {
           console.log(req);
 
           const nextAuthUrl = new URL(env.NEXTAUTH_URL);
-          if (signinMessage.domain !== nextAuthUrl.host) {
-            return null;
-          }
-
           console.log(signinMessage.domain);
           console.log(nextAuthUrl.host);
 
-          // const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
-          // const csrfToken = await getCsrfToken({ req });
-
-          // console.log(signinMessage.nonce);
-          // console.log(csrfToken);
-          // if (signinMessage.nonce !== csrfToken) {
+          // if (signinMessage.domain !== nextAuthUrl.host) {
           //   return null;
           // }
+
+          // const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
+          const csrfToken = await getCsrfToken({ req });
+
+          console.log(signinMessage.nonce);
+          console.log(csrfToken);
+          if (signinMessage.nonce !== csrfToken) {
+            return null;
+          }
 
           const validationResult = signinMessage.validate(
             credentials?.signature || ""
