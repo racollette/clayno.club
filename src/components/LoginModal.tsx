@@ -164,6 +164,7 @@ export default function LoginModal() {
     <>
       {!signedIn ? (
         <Button
+          className="bg-cyan-700"
           onClick={() => {
             handleDisconnect();
             setOpenModal("dismissible");
@@ -239,7 +240,7 @@ export default function LoginModal() {
                 <label className="relative mb-5 inline-flex cursor-pointer items-center">
                   <input
                     type="checkbox"
-                    value=""
+                    checked={useLedger}
                     className="peer sr-only"
                     onChange={() => setUseLedger(!useLedger)}
                   />
@@ -284,7 +285,9 @@ export default function LoginModal() {
                 Signing in allows you to bind your name and socials to your
                 herd.
               </div>
-              <WalletMultiButtonDynamic />
+              <WalletMultiButtonDynamic
+                style={{ backgroundColor: "#0369a1", borderRadius: "8px" }}
+              />
               {/* <Spinner aria-label="Info spinner example" color="info" /> */}
               <div className="mt-6 flex flex-col">
                 <div className="text-lg font-extrabold">
