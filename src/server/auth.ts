@@ -116,18 +116,18 @@ export const authOptions: NextAuthOptions = {
           console.log(signinMessage.domain);
           console.log(nextAuthUrl.host);
 
-          const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
+          // const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
 
-          if (signinMessage.nonce !== csrfToken) {
-            return null;
-          }
+          // if (signinMessage.nonce !== csrfToken) {
+          //   return null;
+          // }
 
-          const validationResult = await signinMessage.validate(
-            credentials?.signature || ""
-          );
+          // const validationResult = signinMessage.validate(
+          //   credentials?.signature || ""
+          // );
 
-          if (!validationResult)
-            throw new Error("Could not validate the signed message");
+          // if (!validationResult)
+          //   throw new Error("Could not validate the signed message");
 
           // Check if user exists
           let user = await prisma.user.findFirst({
@@ -169,7 +169,6 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
-
     CredentialsProvider({
       id: "sendMemo",
       name: "Solana Ledger",
