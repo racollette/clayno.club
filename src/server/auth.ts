@@ -122,12 +122,12 @@ export const authOptions: NextAuthOptions = {
           //   return null;
           // }
 
-          // const validationResult = signinMessage.validate(
-          //   credentials?.signature || ""
-          // );
+          const validationResult = signinMessage.validate(
+            credentials?.signature || ""
+          );
 
-          // if (!validationResult)
-          //   throw new Error("Could not validate the signed message");
+          if (!validationResult)
+            throw new Error("Could not validate the signed message");
 
           // Check if user exists
           let user = await prisma.user.findFirst({
