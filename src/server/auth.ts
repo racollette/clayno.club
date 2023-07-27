@@ -112,7 +112,7 @@ export const authOptions: NextAuthOptions = {
           );
 
           // const nextAuthUrl = new URL(env.NEXTAUTH_URL);
-          console.log(signinMessage.domain);
+          // console.log(signinMessage.domain);
           // if (
           //   signinMessage.domain !== ("localhost:3000" || "www.dinoherd.cc")
           // ) {

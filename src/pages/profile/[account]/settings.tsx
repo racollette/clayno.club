@@ -124,137 +124,142 @@ const Settings = () => {
   return (
     <Layout>
       <div className="lg:w-1/2">
-        <div className="text-xl font-extrabold">Social Accounts</div>
-        <div className="py-2 text-sm text-zinc-500">
-          Verify your identity so we can display your name next to your dinos!
-        </div>
-        <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
-          {user?.discord && !unlinkedDiscord ? (
-            <div className="flex flex-row justify-between gap-4 md:gap-12">
-              <div className="flex flex-row">
-                <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
-                  <Image src={user?.discord.image_url} fill alt="Avatar" />
-                </div>
-                <span className="self-center">{user?.discord.global_name}</span>
-              </div>
-              <button
-                className="self-end rounded-lg bg-zinc-900 px-4 py-3"
-                onClick={() => handleUnlink("discord")}
-              >
-                <div className="flex flex-row gap-2">
-                  <Image
-                    src="/icons/discord.svg"
-                    alt="Discord"
-                    width={24}
-                    height={24}
-                  />
-                  <div className="text-md flex flex-row whitespace-nowrap">
-                    <span>Unlink</span>{" "}
-                    <span className="hidden md:block">&nbsp;Discord</span>
+        <div>
+          <div className="text-xl font-extrabold">Social Accounts</div>
+          <div className="py-2 text-sm text-zinc-500">
+            Verify your identity so we can display your name next to your dinos!
+          </div>
+          <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
+            {user?.discord && !unlinkedDiscord ? (
+              <div className="flex flex-row justify-between gap-4 md:gap-12">
+                <div className="flex flex-row">
+                  <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
+                    <Image src={user?.discord.image_url} fill alt="Avatar" />
                   </div>
+                  <span className="self-center">
+                    {user?.discord.global_name}
+                  </span>
                 </div>
-              </button>
-            </div>
-          ) : (
-            <div className="flex align-middle">
-              {linkDiscord.isLoading ? (
-                <Spinner className="self-center" />
-              ) : (
                 <button
-                  className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
-                  disabled={linkDiscord.isLoading}
-                  onClick={() => {
-                    setStoredUserId(userId);
-                    signIn("discord");
-                  }}
+                  className="self-end rounded-lg bg-zinc-900 px-4 py-3"
+                  onClick={() => handleUnlink("discord")}
                 >
-                  <div className="flex flex-row gap-4">
+                  <div className="flex flex-row gap-2">
                     <Image
                       src="/icons/discord.svg"
                       alt="Discord"
                       width={24}
                       height={24}
                     />
-                    <div className="text-md whitespace-nowrap">
-                      Connect Discord
+                    <div className="text-md flex flex-row whitespace-nowrap">
+                      <span>Unlink</span>{" "}
+                      <span className="hidden md:block">&nbsp;Discord</span>
                     </div>
                   </div>
                 </button>
-              )}
-            </div>
-          )}
-          {user?.twitter && !unlinkedTwitter ? (
-            <div className="flex flex-row justify-between gap-12">
-              <div className="flex flex-row">
-                <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
-                  <Image src={user?.twitter.image_url} fill alt="Avatar" />
-                </div>
-                <span className="self-center">{user?.twitter.global_name}</span>
               </div>
-              <button
-                className="self-end rounded-lg bg-zinc-900 px-4 py-3"
-                onClick={() => handleUnlink("twitter")}
-              >
-                <div className="flex flex-row gap-2">
-                  <Image
-                    src="/icons/twitter.svg"
-                    alt="Twitter"
-                    width={24}
-                    height={24}
-                  />
-                  <div className="text-md flex flex-row whitespace-nowrap">
-                    <span>Unlink</span>
-                    <span className="hidden md:block">&nbsp;Twitter</span>
+            ) : (
+              <div className="flex align-middle">
+                {linkDiscord.isLoading ? (
+                  <Spinner className="self-center" />
+                ) : (
+                  <button
+                    className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
+                    disabled={linkDiscord.isLoading}
+                    onClick={() => {
+                      setStoredUserId(userId);
+                      signIn("discord");
+                    }}
+                  >
+                    <div className="flex flex-row gap-4">
+                      <Image
+                        src="/icons/discord.svg"
+                        alt="Discord"
+                        width={24}
+                        height={24}
+                      />
+                      <div className="text-md whitespace-nowrap">
+                        Connect Discord
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            )}
+            {user?.twitter && !unlinkedTwitter ? (
+              <div className="flex flex-row justify-between gap-12">
+                <div className="flex flex-row">
+                  <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
+                    <Image src={user?.twitter.image_url} fill alt="Avatar" />
                   </div>
+                  <span className="self-center">
+                    {user?.twitter.global_name}
+                  </span>
                 </div>
-              </button>
-            </div>
-          ) : (
-            <div className="flex align-middle">
-              {linkTwitter.isLoading ? (
-                <Spinner className="self-center" />
-              ) : (
                 <button
-                  className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
-                  disabled={linkTwitter.isLoading}
-                  onClick={() => {
-                    setStoredUserId(userId);
-                    signIn("twitter");
-                  }}
+                  className="self-end rounded-lg bg-zinc-900 px-4 py-3"
+                  onClick={() => handleUnlink("twitter")}
                 >
-                  <div className="flex flex-row gap-4">
+                  <div className="flex flex-row gap-2">
                     <Image
                       src="/icons/twitter.svg"
                       alt="Twitter"
                       width={24}
                       height={24}
                     />
-                    <div className="text-md whitespace-nowrap">
-                      Connect Twitter
+                    <div className="text-md flex flex-row whitespace-nowrap">
+                      <span>Unlink</span>
+                      <span className="hidden md:block">&nbsp;Twitter</span>
                     </div>
                   </div>
                 </button>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="mt-8 lg:w-1/2">
-        <div className="text-xl font-extrabold">Wallets</div>
-        <div className="py-2 text-sm text-zinc-500">
-          You can connect multiple wallets. All of these wallets will be able to
-          access your profile.
-        </div>
-        <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
-          {user?.defaultAddress && (
-            <div className="flex flex-row justify-between">
-              <div className="self-center">
-                {truncateAccount(user.defaultAddress)}
-                <span className="ml-2 rounded-md bg-emerald-500 px-2 py-1 text-xs text-black">
-                  Default
-                </span>
               </div>
-              {/* <button
+            ) : (
+              <div className="flex align-middle">
+                {linkTwitter.isLoading ? (
+                  <Spinner className="self-center" />
+                ) : (
+                  <button
+                    className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
+                    disabled={linkTwitter.isLoading}
+                    onClick={() => {
+                      setStoredUserId(userId);
+                      signIn("twitter");
+                    }}
+                  >
+                    <div className="flex flex-row gap-4">
+                      <Image
+                        src="/icons/twitter.svg"
+                        alt="Twitter"
+                        width={24}
+                        height={24}
+                      />
+                      <div className="text-md whitespace-nowrap">
+                        Connect Twitter
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="mt-8">
+          <div className="text-xl font-extrabold">Wallets</div>
+          <div className="py-2 text-sm text-zinc-500">
+            You can connect multiple wallets. All of these wallets will be able
+            to access your profile.
+          </div>
+          <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
+            {user?.defaultAddress && (
+              <div className="flex flex-row justify-between">
+                <div className="self-center">
+                  {truncateAccount(user.defaultAddress)}
+                  <span className="ml-2 rounded-md bg-emerald-500 px-2 py-1 text-xs text-black">
+                    Default
+                  </span>
+                </div>
+                {/* <button
                 className="rounded-md bg-red-500 px-2 py-1 text-sm"
                 onClick={() => {
                   deleteWallet.mutate({
@@ -265,44 +270,47 @@ const Settings = () => {
               >
                 Remove Wallet
               </button> */}
-            </div>
-          )}
-          {user?.wallets.map(
-            (wallet: { address: string }, index: Key | null | undefined) => {
-              if (wallet.address !== user.defaultAddress) {
-                return (
-                  <div key={index} className="flex flex-row justify-between">
-                    <div className="self-center">
-                      {truncateAccount(wallet.address)}
-                      <span
-                        className="ml-2 cursor-pointer  text-xs text-zinc-500"
+              </div>
+            )}
+            {user?.wallets.map(
+              (wallet: { address: string }, index: Key | null | undefined) => {
+                if (wallet.address !== user.defaultAddress) {
+                  return (
+                    <div key={index} className="flex flex-row justify-between">
+                      <div className="self-center">
+                        {truncateAccount(wallet.address)}
+                        <span
+                          className="ml-2 cursor-pointer  text-xs text-zinc-500"
+                          onClick={() => {
+                            setDefaultWallet.mutate({
+                              id: user.id,
+                              wallet: wallet.address,
+                            });
+                          }}
+                        >
+                          Set Default
+                        </span>
+                      </div>
+                      <button
+                        className="rounded-md bg-red-500 px-2 py-1 text-sm"
                         onClick={() => {
-                          setDefaultWallet.mutate({
+                          deleteWallet.mutate({
                             id: user.id,
                             wallet: wallet.address,
                           });
                         }}
                       >
-                        Set Default
-                      </span>
+                        Remove Wallet
+                      </button>
                     </div>
-                    <button
-                      className="rounded-md bg-red-500 px-2 py-1 text-sm"
-                      onClick={() => {
-                        deleteWallet.mutate({
-                          id: user.id,
-                          wallet: wallet.address,
-                        });
-                      }}
-                    >
-                      Remove Wallet
-                    </button>
-                  </div>
-                );
+                  );
+                }
               }
-            }
-          )}
-          {userId && <AddWalletModal linkWallet={linkWallet} userId={userId} />}
+            )}
+            {userId && (
+              <AddWalletModal linkWallet={linkWallet} userId={userId} />
+            )}
+          </div>
         </div>
       </div>
     </Layout>
