@@ -21,7 +21,7 @@ export default function Header() {
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
-        <LoginModal />
+        {/* <LoginModal /> */}
         <Navbar.Toggle />
       </div>
       {/* <Navbar.Collapse>
