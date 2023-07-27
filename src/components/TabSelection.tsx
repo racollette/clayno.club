@@ -14,8 +14,10 @@ type TabSelectionProps = {
   children: any;
   showDactyl: boolean;
   showSaga: boolean;
+  showPFP: boolean;
   toggleDactyl: (toggleState: boolean) => void;
   toggleSaga: (toggleState: boolean) => void;
+  togglePFP: (toggleState: boolean) => void;
 };
 
 const TabSelection = ({
@@ -24,8 +26,10 @@ const TabSelection = ({
   children,
   showDactyl,
   showSaga,
+  showPFP,
   toggleDactyl,
   toggleSaga,
+  togglePFP,
 }: TabSelectionProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
@@ -46,7 +50,7 @@ const TabSelection = ({
           />
         ))}
       </div>
-      <div className="mt-2 flex justify-center gap-6">
+      <div className="mt-2 grid grid-cols-2 justify-center gap-x-4 gap-y-2 px-4 md:flex md:flex-row">
         <ToggleSwitch
           toggleState={showDactyl}
           label={"Show Dactyls"}
@@ -56,6 +60,11 @@ const TabSelection = ({
           toggleState={showSaga}
           label={"Show Saga Species"}
           onToggle={toggleSaga}
+        />
+        <ToggleSwitch
+          toggleState={showPFP}
+          label={"PFP Mode"}
+          onToggle={togglePFP}
         />
       </div>
       {/* eslint-disable */}
@@ -67,7 +76,7 @@ const TabSelection = ({
 const TabButton = ({ label, active, count, onClick }: TabButtonProps) => {
   return (
     <button
-      className={`texl-xl m-2 px-3 py-1 font-extrabold text-white focus:outline-none md:px-6 md:text-2xl ${
+      className={`texl-lg m-2 px-3 py-1 font-extrabold text-white focus:outline-none md:px-6 ${
         active ? "rounded-lg border-2 " : ""
       }`}
       onClick={onClick}

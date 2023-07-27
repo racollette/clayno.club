@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const useLocalStorage = (key: string, initialValue: any) => {
+const useLocalStorage = (key: string, initialValue: string) => {
   const [state, setState] = useState(() => {
     // Initialize the state
     try {
@@ -15,12 +15,12 @@ const useLocalStorage = (key: string, initialValue: any) => {
     }
   });
 
-  const setValue = (value: any) => {
+  const setValue = (value: string) => {
     try {
       // If the passed value is a callback function,
       //  then call it with the existing state.
-      const valueToStore = value instanceof Function ? value(state) : value;
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      // const valueToStore = value instanceof Function ? value(state) : value;
+      window.localStorage.setItem(key, JSON.stringify(value));
       setState(value);
     } catch (error) {
       console.log(error);

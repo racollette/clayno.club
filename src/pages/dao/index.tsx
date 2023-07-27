@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useState } from "react";
 import { api } from "~/utils/api";
 import Layout from "~/components/Layout";
 

@@ -1,7 +1,6 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { type Key, useEffect, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
 import Image from "next/image";
@@ -12,8 +11,7 @@ import { truncateAccount } from "~/utils/addresses";
 import useLocalStorage from "~/utils/storage";
 
 const Settings = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const { publicKey, connected } = useWallet();
   // const { user, sessionType, isLoading, refetch } = getUserSession();
   const { sessionType, id } = getSessionDetails(session);
@@ -28,11 +26,15 @@ const Settings = () => {
     isLoading,
   } = api.binding.getUser.useQuery({
     type: userId ? "id" : connected ? "wallet" : sessionType,
-    id: userId ? userId : connected ? publicKey?.toString() : id,
+    id: userId
+      ? userId
+      : connected && publicKey
+      ? publicKey.toString()
+      : id ?? "",
   });
 
-  console.log(session);
-  console.log(user);
+  // console.log(session);
+  // console.log(user);
 
   const linkDiscord = api.binding.linkDiscord.useMutation();
   const linkTwitter = api.binding.linkTwitter.useMutation();
@@ -50,50 +52,45 @@ const Settings = () => {
 
   useEffect(() => {
     refetch();
-  }, [linkTwitter, linkDiscord, linkWallet]);
+  }, [linkTwitter, linkDiscord, linkWallet, refetch]);
 
   useEffect(() => {
-    // @ts-ignore
-    if (session?.user.profile) {
-      const linkSocial = async () => {
-        try {
-          // @ts-ignore
-          const { profile } = session.user;
-          if (profile.image_url) {
-            if (userId || storedUserId) {
-              if (user?.discord) return;
-              linkDiscord.mutate({
-                id: userId || storedUserId,
-                data: {
-                  username: profile.username,
-                  global_name: profile.global_name,
-                  image_url: profile.image_url,
-                },
-              });
-              setUnlinkedDiscord(false);
-            }
-          } else {
-            if (userId || storedUserId) {
-              if (user?.twitter) return;
-              linkTwitter.mutate({
-                id: userId || storedUserId,
-                data: {
-                  username: profile.data.username,
-                  global_name: profile.data.name,
-                  image_url: profile.data.profile_image_url,
-                },
-              });
-              setUnlinkedTwitter(false);
-            }
+    const linkSocial = async () => {
+      try {
+        const profile = session?.user?.profile;
+        if (profile?.image_url) {
+          if (userId || storedUserId) {
+            if (user?.discord) return;
+            linkDiscord.mutate({
+              id: userId || storedUserId,
+              data: {
+                username: profile.username,
+                global_name: profile.global_name,
+                image_url: profile.image_url,
+              },
+            });
+            setUnlinkedDiscord(false);
           }
-          router.push(router.asPath);
-        } catch (error) {
-          console.error("Error writing data:", error);
+        } else if (profile?.data) {
+          if (userId || storedUserId) {
+            if (user?.twitter) return;
+            linkTwitter.mutate({
+              id: userId || storedUserId,
+              data: {
+                username: profile.data.username,
+                global_name: profile.data.name,
+                image_url: profile.data.profile_image_url,
+              },
+            });
+            setUnlinkedTwitter(false);
+          }
         }
-      };
-      //
-      linkSocial();
-    }
+      } catch (error) {
+        console.error("Error writing data:", error);
+      }
+    };
+
+    linkSocial();
   }, [isLoading]);
 
   const handleUnlink = (provider: string) => {
@@ -261,39 +258,41 @@ const Settings = () => {
               </button> */}
             </div>
           )}
-          {user?.wallets.map((wallet, index) => {
-            if (wallet.address !== user.defaultAddress) {
-              return (
-                <div key={index} className="flex flex-row justify-between">
-                  <div className="self-center">
-                    {truncateAccount(wallet.address)}
-                    <span
-                      className="ml-2 cursor-pointer  text-xs text-zinc-500"
+          {user?.wallets.map(
+            (wallet: { address: string }, index: Key | null | undefined) => {
+              if (wallet.address !== user.defaultAddress) {
+                return (
+                  <div key={index} className="flex flex-row justify-between">
+                    <div className="self-center">
+                      {truncateAccount(wallet.address)}
+                      <span
+                        className="ml-2 cursor-pointer  text-xs text-zinc-500"
+                        onClick={() => {
+                          setDefaultWallet.mutate({
+                            id: user.id,
+                            wallet: wallet.address,
+                          });
+                        }}
+                      >
+                        Set Default
+                      </span>
+                    </div>
+                    <button
+                      className="rounded-md bg-red-500 px-2 py-1 text-sm"
                       onClick={() => {
-                        setDefaultWallet.mutate({
+                        deleteWallet.mutate({
                           id: user.id,
                           wallet: wallet.address,
                         });
                       }}
                     >
-                      Set Default
-                    </span>
+                      Remove Wallet
+                    </button>
                   </div>
-                  <button
-                    className="rounded-md bg-red-500 px-2 py-1 text-sm"
-                    onClick={() => {
-                      deleteWallet.mutate({
-                        id: user.id,
-                        wallet: wallet.address,
-                      });
-                    }}
-                  >
-                    Remove Wallet
-                  </button>
-                </div>
-              );
+                );
+              }
             }
-          })}
+          )}
           {userId && <AddWalletModal linkWallet={linkWallet} userId={userId} />}
         </div>
       </div>

@@ -1,10 +1,5 @@
-import { Input } from "postcss";
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const daoRouter = createTRPCRouter({
   getSubDAO: publicProcedure

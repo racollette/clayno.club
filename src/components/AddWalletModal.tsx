@@ -1,28 +1,15 @@
-import {
-  WalletModal,
-  WalletModalButton,
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
-import Image from "next/image";
-import { Button, CustomFlowbiteTheme, Modal } from "flowbite-react";
-import { useCallback, useEffect, useState } from "react";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useRouter } from "next/router";
-import { Spinner } from "flowbite-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { Button, type CustomFlowbiteTheme, Modal } from "flowbite-react";
+import { useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 import bs58 from "bs58";
-import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
-import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
+import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
-import { api } from "~/utils/api";
-import ProfileButton from "./ProfileButton";
-import { shortAccount, truncateAccount } from "~/utils/addresses";
-import { getSessionDetails } from "~/utils/session";
-import DefaultToast from "./Toast";
-import { User } from "@prisma/client";
+import type { api } from "~/utils/api";
+import { truncateAccount } from "~/utils/addresses";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -37,35 +24,18 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 type AddWalletModalProps = {
-  linkWallet: any;
+  linkWallet: ReturnType<typeof api.binding.linkWallet.useMutation>;
   userId: string;
 };
 
 export default function AddWalletModal(props: AddWalletModalProps) {
   const { linkWallet, userId } = props;
-  const router = useRouter();
   const { publicKey, signMessage, disconnect, connected, signTransaction } =
     useWallet();
   const [openModal, setOpenModal] = useState<string | undefined>();
-  const [signing, setSigning] = useState<boolean>(false);
+  // const [signing, setSigning] = useState<boolean>(false);
   const [useLedger, setUseLedger] = useState<boolean>(false);
   const walletModal = useWalletModal();
-
-  const { data: session, status } = useSession();
-  const { sessionType, id } = getSessionDetails(session);
-  // const loading = status === "loading";
-  const signedIn = status === "authenticated";
-
-  console.log(session);
-
-  // const {
-  //   data: user,
-  //   isLoading,
-  //   refetch,
-  // } = api.binding.getUser.useQuery({
-  //   type: sessionType,
-  //   id: id,
-  // });
 
   const handleAddWallet = async (useLedger: boolean) => {
     try {
@@ -76,7 +46,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
       const csrf = await getCsrfToken();
       if (!publicKey || !csrf || !signMessage || !signTransaction) return;
 
-      setSigning(true);
+      // setSigning(true);
 
       let validSignature;
       if (useLedger) {
@@ -88,6 +58,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
         const signedTx = await signTransaction(tx);
         // Encode, send back, decode and verify signedTx signature
         validSignature = validateAuthTx(signedTx, "test-nonce");
+
         if (userId && validSignature) {
           linkWallet.mutate({
             id: userId,
@@ -112,19 +83,23 @@ export default function AddWalletModal(props: AddWalletModalProps) {
         }
       }
 
-      setSigning(false);
+      // setSigning(false);
       setOpenModal(undefined);
     } catch (error) {
       console.log(error);
-      setSigning(false);
+      // setSigning(false);
     }
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
   };
 
   return (
     <>
       <Button
         onClick={() => {
-          disconnect();
+          handleDisconnect();
           setOpenModal("dismissible");
         }}
       >
@@ -171,7 +146,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
               {connected ? (
                 <button
                   className="rounded-lg bg-violet-900 px-4 py-3 font-medium"
-                  onClick={() => disconnect()}
+                  onClick={() => handleDisconnect()}
                 >
                   Change Wallet
                 </button>

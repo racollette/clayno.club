@@ -1,25 +1,16 @@
-// @ts-nocheck
-
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import { PublicKey, Transaction } from "@solana/web3.js";
 import { prisma } from "~/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCsrfToken, getSession, useSession } from "next-auth/react";
+import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "../utils/SigninMessage";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
-
 import { env } from "~/env.mjs";
-import { userAgent } from "next/server";
-import { profile } from "console";
-
-// import { PrismaClient } from "@prisma/client";
-// const prisma = new PrismaClient();
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -31,15 +22,23 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+      profile: Profile;
+    } & DefaultSession["user"] &
+      Profile;
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface Profile {
+    id: string;
+    username: string;
+    global_name: string;
+    image_url: string;
+    data: {
+      id: string;
+      name: string;
+      profile_image_url: string;
+      username: string;
+    };
+  }
 }
 
 /**
@@ -49,23 +48,27 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (session.user) {
+        // @ts-expect-error unknown type
         session.user.profile = token.profile;
+        // @ts-expect-error unknown type
         if (token?.profile?.data) {
+          // @ts-expect-error unknown type
           session.user.name = token.profile.data.username;
         } else {
+          // @ts-expect-error unknown type
           session.user.name = token?.profile?.username;
         }
       }
+      // @ts-expect-error unknown type
       if (token.account.type === "credentials") {
         session.user.name = token.sub;
         session.user.image = `https://ui-avatars.com/api/?name=${token.sub}&background=random`;
       }
-      return session;
+      return Promise.resolve(session);
     },
     async jwt({ token, account, profile }) {
-      console.log(profile);
       if (account) {
         token.account = account;
       }
@@ -105,8 +108,7 @@ export const authOptions: NextAuthOptions = {
             JSON.parse(credentials?.message || "{}")
           );
 
-          // @ts-ignore
-          const nextAuthUrl = new URL(process.env.NEXTAUTH_URL);
+          const nextAuthUrl = new URL(env.NEXTAUTH_URL);
           if (signinMessage.domain !== nextAuthUrl.host) {
             return null;
           }
@@ -124,17 +126,16 @@ export const authOptions: NextAuthOptions = {
           if (!validationResult)
             throw new Error("Could not validate the signed message");
 
-          console.log("HIIIIIIIIIIIIIIIIIIIIIII");
           // Check if user exists
-          let user = await prisma.wallet.findUnique({
+          let user = await prisma.user.findFirst({
             where: {
-              address: signinMessage.publicKey,
+              wallets: {
+                some: {
+                  address: signinMessage.publicKey,
+                },
+              },
             },
           });
-
-          // let user = false;
-
-          console.log("hi", user);
 
           // Create new user if doesn't exist
           if (!user) {
@@ -165,10 +166,23 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+
     CredentialsProvider({
       id: "sendMemo",
       name: "Solana Ledger",
       credentials: {
+        programId: {
+          label: "Program",
+          type: "text",
+        },
+        verifySignatures: {
+          label: "Verified Signatures",
+          type: "text",
+        },
+        nonce: {
+          label: "Nonce",
+          type: "text",
+        },
         valid: {
           label: "Valid Signature",
           type: "text",
@@ -178,22 +192,35 @@ export const authOptions: NextAuthOptions = {
           type: "text",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
-          if (!credentials?.valid)
+          if (
+            !credentials?.valid ||
+            credentials?.programId !==
+              "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" ||
+            credentials?.nonce != "test-nonce" ||
+            !credentials?.verifySignatures
+          )
             throw new Error("Could not validate the signed message");
 
           // Check if user exists
-          let user = await prisma.user.findUnique({
+          let user = await prisma.user.findFirst({
             where: {
-              address: credentials?.address,
+              wallets: {
+                some: {
+                  address: credentials?.address,
+                },
+              },
             },
           });
           // Create new user if doesn't exist
           if (!user) {
             user = await prisma.user.create({
               data: {
-                address: credentials?.address,
+                defaultAddress: credentials?.address,
+                wallets: {
+                  create: { address: credentials?.address },
+                },
               },
             });
             // create account

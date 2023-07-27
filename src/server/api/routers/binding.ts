@@ -10,11 +10,6 @@ const createUserRequestSchema = z.object({
   address: z.string(),
 });
 
-const userResponseSchema = z.object({
-  id: z.string(),
-  address: z.string(),
-});
-
 const linkSocialProfileRequestSchema = z.object({
   id: z.string(),
   data: z.object({
@@ -125,8 +120,6 @@ export const bindingRouter = createTRPCRouter({
   linkDiscord: protectedProcedure
     .input(linkSocialProfileRequestSchema)
     .mutation(async ({ input }) => {
-      console.log("link discord");
-      console.log(input);
       const providerExists = await prisma.discord.findUnique({
         where: {
           username: input.id,

@@ -3,18 +3,13 @@ import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
-import React, { FC, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-// import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
-import {
-  WalletModalProvider,
-  WalletDisconnectButton,
-  WalletMultiButton,
-} from "@solana/wallet-adapter-react-ui";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
@@ -51,6 +46,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network]
   );
+
+  const herds = api.useQueries((t) =>
+    [1, 2, 3, 4].map((tier) => t.herd.getHerdTier({ tier: tier }))
+  );
+  const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
   return (
     <ConnectionProvider endpoint={endpoint}>

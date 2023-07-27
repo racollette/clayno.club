@@ -1,18 +1,11 @@
-import {
-  WalletModal,
-  WalletModalButton,
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import Image from "next/image";
-import { Button, CustomFlowbiteTheme, Modal } from "flowbite-react";
-import { useCallback, useEffect, useState } from "react";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { Button, type CustomFlowbiteTheme, Modal } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
-import { Spinner } from "flowbite-react";
 import dynamic from "next/dynamic";
 import bs58 from "bs58";
-import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
@@ -40,7 +33,7 @@ export default function LoginModal() {
   const { publicKey, signMessage, disconnect, connected, signTransaction } =
     useWallet();
   const [openModal, setOpenModal] = useState<string | undefined>();
-  const [signing, setSigning] = useState<boolean>(false);
+  // const [signing, setSigning] = useState<boolean>(false);
   const [useLedger, setUseLedger] = useState<boolean>(false);
   const walletModal = useWalletModal();
 
@@ -51,17 +44,17 @@ export default function LoginModal() {
   // const loading = status === "loading";
   const signedIn = status === "authenticated";
 
-  const {
-    data: user,
-    isLoading,
-    refetch,
-  } = api.binding.getUser.useQuery({
+  const { data: user, isLoading } = api.binding.getUser.useQuery({
     type: userId ? "id" : connected ? "wallet" : sessionType,
-    id: userId ? userId : connected ? publicKey?.toString() : id,
+    id: userId
+      ? userId
+      : connected && publicKey
+      ? publicKey.toString()
+      : id ?? "",
   });
 
   useEffect(() => {
-    setSigning(false);
+    // setSigning(false);
     setUseLedger(false);
   }, []);
 
@@ -80,7 +73,7 @@ export default function LoginModal() {
       const csrf = await getCsrfToken();
       if (!publicKey || !csrf || !signMessage || !signTransaction) return;
 
-      setSigning(true);
+      // setSigning(true);
 
       let validSignature;
 
@@ -93,7 +86,15 @@ export default function LoginModal() {
         const signedTx = await signTransaction(tx);
         // Encode, send back, decode and verify signedTx signature
         validSignature = validateAuthTx(signedTx, "test-nonce");
+        const inx = signedTx.instructions[2];
+        const programId = inx?.programId.toString();
+        const nonce = inx?.data.toString() || "";
+        const verifySignatures = !tx.verifySignatures();
+
         signIn("sendMemo", {
+          programId: programId,
+          verifySignatures: verifySignatures,
+          nonce: nonce,
           valid: validSignature,
           address: publicKey.toString(),
           redirect: false,
@@ -109,16 +110,20 @@ export default function LoginModal() {
         const signature = await signMessage(data);
         const serializedSignature = bs58.encode(signature);
 
-        signIn("signMessage", {
-          message: JSON.stringify(message),
-          signature: serializedSignature,
-          redirect: false,
-        });
+        signIn(
+          "signMessage",
+          {
+            message: JSON.stringify(message),
+            signature: serializedSignature,
+            redirect: false,
+          },
+          "hello"
+        );
       }
 
-      setSigning(false);
+      // setSigning(false);
       router.push(
-        `profile/${
+        `/profile/${
           user?.discord?.username ??
           user?.twitter?.username ??
           user?.defaultAddress
@@ -127,7 +132,7 @@ export default function LoginModal() {
       setOpenModal(undefined);
     } catch (error) {
       console.log(error);
-      setSigning(false);
+      // setSigning(false);
     }
   };
 
@@ -135,6 +140,10 @@ export default function LoginModal() {
     router.push("/");
     await signOut({ redirect: false });
     walletModal.setVisible(false);
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
   };
 
   // useEffect(() => {
@@ -148,7 +157,7 @@ export default function LoginModal() {
       {!signedIn ? (
         <Button
           onClick={() => {
-            disconnect();
+            handleDisconnect();
             setOpenModal("dismissible");
           }}
         >
@@ -166,15 +175,12 @@ export default function LoginModal() {
               username={
                 user?.discord?.global_name ??
                 user?.twitter?.global_name ??
-                // @ts-ignore
                 shortAccount(user?.defaultAddress)
               }
               handleSignout={handleSignOut}
-              // @ts-ignore
               sessionKey={
                 user?.discord?.username ??
                 user?.twitter?.username ??
-                // @ts-ignore
                 user?.defaultAddress
               }
             />
@@ -189,7 +195,7 @@ export default function LoginModal() {
               {/* <Button onClick={handleSignOut}>Sign Out</Button> */}
               <Button
                 onClick={() => {
-                  disconnect();
+                  handleDisconnect();
                   setOpenModal("dismissible");
                 }}
               >
@@ -238,7 +244,7 @@ export default function LoginModal() {
               <div className="flex gap-4">
                 <button
                   className="rounded-lg bg-violet-900 px-4 py-3 font-medium"
-                  onClick={() => disconnect()}
+                  onClick={() => handleDisconnect()}
                 >
                   Change Wallet
                 </button>

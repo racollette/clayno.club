@@ -1,8 +1,7 @@
 import { Dropdown } from "flowbite-react";
-import { HiCog, HiCurrencyDollar, HiLogout, HiViewGrid } from "react-icons/hi";
+import { HiCog, HiLogout, HiViewGrid } from "react-icons/hi";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 
 type ProfileButtonProps = {
   imageURL: string;

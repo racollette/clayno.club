@@ -9,10 +9,10 @@ type SignMessage = {
 };
 
 export class SigninMessage {
-  domain: any;
-  publicKey: any;
-  nonce: any;
-  statement: any;
+  domain: string;
+  publicKey: string;
+  nonce: string;
+  statement: string;
 
   constructor({ domain, publicKey, nonce, statement }: SignMessage) {
     this.domain = domain;
@@ -25,7 +25,7 @@ export class SigninMessage {
     return `${this.statement}${this.nonce}`;
   }
 
-  async validate(signature: string) {
+  validate(signature: string) {
     const msg = this.prepare();
     const signatureUint8 = bs58.decode(signature);
     const msgUint8 = new TextEncoder().encode(msg);

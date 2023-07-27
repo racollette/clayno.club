@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { Session } from "next-auth/core/types";
+import type { Session } from "next-auth/core/types";
 
 export const getSessionDetails = (session: Session | null) => {
   const sessionType = session?.user?.image?.includes("discordapp")
