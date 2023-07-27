@@ -46,13 +46,17 @@ export default function LoginModal() {
   const signedIn = status === "authenticated";
 
   const { data: user, isLoading } = api.binding.getUser.useQuery({
-    type: userId ? "id" : connected ? "wallet" : sessionType,
-    id: userId
-      ? userId
-      : connected && publicKey
-      ? publicKey.toString()
-      : id ?? "",
+    type: connected ? "wallet" : userId ? "id" : sessionType,
+    id:
+      connected && publicKey
+        ? publicKey.toString()
+        : userId
+        ? userId
+        : id ?? "",
   });
+
+  console.log(session);
+  console.log(user);
 
   useEffect(() => {
     // setSigning(false);
@@ -64,7 +68,7 @@ export default function LoginModal() {
     if (user?.id) {
       setUserId(user.id);
     }
-  }, [user?.id]);
+  }, [user]);
 
   const handleSignIn = async (useLedger: boolean) => {
     try {
@@ -126,6 +130,12 @@ export default function LoginModal() {
           user?.twitter?.username ??
           user?.defaultAddress
         }`
+      );
+
+      console.log(
+        user?.discord?.username ??
+          user?.twitter?.username ??
+          user?.defaultAddress
       );
       setOpenModal(undefined);
     } catch (error) {
