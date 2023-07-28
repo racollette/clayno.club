@@ -1,4 +1,8 @@
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import {
+  WalletModal,
+  WalletMultiButton,
+  useWalletModal,
+} from "@solana/wallet-adapter-react-ui";
 import { Button, type CustomFlowbiteTheme, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -30,8 +34,15 @@ type AddWalletModalProps = {
 
 export default function AddWalletModal(props: AddWalletModalProps) {
   const { linkWallet, userId } = props;
-  const { publicKey, signMessage, disconnect, connected, signTransaction } =
-    useWallet();
+  const {
+    publicKey,
+    signMessage,
+    disconnect,
+    connected,
+    connecting,
+    disconnecting,
+    signTransaction,
+  } = useWallet();
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [host, setHost] = useState<string>();
   // const [signing, setSigning] = useState<boolean>(false);
@@ -156,8 +167,7 @@ export default function AddWalletModal(props: AddWalletModalProps) {
                   Change Wallet
                 </button>
               ) : (
-                <WalletMultiButtonDynamic />
-                // <WalletModal />
+                <WalletMultiButton />
               )}
 
               {useLedger ? (

@@ -105,7 +105,7 @@ model Discord {
   global_name String
   image_url   String
   userId      String @unique
-  User        User   @relation(fields: [userId], references: [id])
+  User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Twitter {
@@ -113,13 +113,13 @@ model Twitter {
   global_name String
   image_url   String
   userId      String @unique
-  User        User   @relation(fields: [userId], references: [id])
+  User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Wallet {
-  address String  @id @unique
-  userId  String?
-  User    User?   @relation(fields: [userId], references: [id])
+  address String @id @unique
+  userId  String
+  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

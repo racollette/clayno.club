@@ -1,6 +1,11 @@
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import Image from "next/image";
-import { Button, type CustomFlowbiteTheme, Modal } from "flowbite-react";
+import {
+  Button,
+  type CustomFlowbiteTheme,
+  Modal,
+  Spinner,
+} from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
@@ -12,13 +17,14 @@ import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
 import { api } from "~/utils/api";
 import ProfileButton from "./ProfileButton";
-import { shortAccount } from "~/utils/addresses";
+import { shortAccount, truncateAccount } from "~/utils/addresses";
 import { getSessionDetails } from "~/utils/session";
 import DefaultToast from "./Toast";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
     inner: "bg-zinc-900 rounded-lg",
+    base: "relative w-full p-4 h-auto",
   },
 };
 
@@ -55,8 +61,8 @@ export default function LoginModal() {
         : id ?? "",
   });
 
-  console.log(session);
-  console.log(user);
+  // console.log(session);
+  // console.log(user);
 
   useEffect(() => {
     // setSigning(false);
@@ -128,15 +134,12 @@ export default function LoginModal() {
         `/profile/${
           user?.discord?.username ??
           user?.twitter?.username ??
-          user?.defaultAddress
+          user?.defaultAddress ??
+          session?.user.name ??
+          publicKey.toString()
         }`
       );
 
-      console.log(
-        user?.discord?.username ??
-          user?.twitter?.username ??
-          user?.defaultAddress
-      );
       setOpenModal(undefined);
     } catch (error) {
       console.log(error);
@@ -164,13 +167,20 @@ export default function LoginModal() {
     <>
       {!signedIn ? (
         <Button
-          className="bg-cyan-700"
+          size="sm"
           onClick={() => {
             handleDisconnect();
             setOpenModal("dismissible");
           }}
         >
-          Sign In
+          {isLoading ? (
+            <div className="flex flex-row gap-2 align-middle">
+              <Spinner size="sm" />
+              <div>Signing In</div>
+            </div>
+          ) : (
+            <div>Sign In</div>
+          )}
         </Button>
       ) : (
         <>
@@ -179,18 +189,26 @@ export default function LoginModal() {
               imageURL={
                 user?.discord?.image_url ??
                 user?.twitter?.image_url ??
-                `https://ui-avatars.com/api/?name=${user?.defaultAddress}&background=random`
+                `https://ui-avatars.com/api/?name=${
+                  user?.defaultAddress ??
+                  session?.user.name ??
+                  publicKey?.toString()
+                }&background=random`
               }
               username={
                 user?.discord?.global_name ??
                 user?.twitter?.global_name ??
-                shortAccount(user?.defaultAddress)
+                shortAccount(user?.defaultAddress) ??
+                session?.user.name ??
+                publicKey?.toString()
               }
               handleSignout={handleSignOut}
               sessionKey={
                 user?.discord?.username ??
                 user?.twitter?.username ??
-                user?.defaultAddress
+                user?.defaultAddress ??
+                session?.user.name ??
+                publicKey?.toString()
               }
             />
           ) : (
@@ -217,6 +235,7 @@ export default function LoginModal() {
       <Modal
         theme={customTheme}
         dismissible
+        position={"center"}
         show={openModal === "dismissible"}
         onClose={() => setOpenModal(undefined)}
       >
@@ -273,6 +292,14 @@ export default function LoginModal() {
                   </button>
                 )}
               </div>
+              <div>
+                <span className="text-sm font-bold">Current Wallet: </span>
+                <span className="ml-2 text-sm text-zinc-500">
+                  {connected
+                    ? truncateAccount(publicKey?.toString() || "")
+                    : "Not Connected"}
+                </span>
+              </div>
             </div>
           </Modal.Body>
         ) : (
@@ -296,33 +323,39 @@ export default function LoginModal() {
                 <div className="mb-3 text-zinc-500">
                   Log in with your linked Twitter or Discord account.
                 </div>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-row justify-start gap-4">
                   <button
                     className="rounded-lg bg-zinc-800 px-4 py-3 text-white"
                     onClick={() => signIn("discord")}
                   >
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row justify-center gap-2">
                       <Image
                         src="/icons/discord.svg"
                         alt="Discord"
                         width={24}
                         height={24}
                       />
-                      <div className="font-medium">Discord Login</div>
+                      <div className="flex flex-row font-medium">
+                        Discord
+                        <span className="hidden md:block">&nbsp;Login</span>
+                      </div>
                     </div>
                   </button>
                   <button
                     className="rounded-lg bg-zinc-800 px-4 py-3 text-white"
                     onClick={() => signIn("twitter")}
                   >
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row justify-center gap-2">
                       <Image
                         src="/icons/twitter.svg"
                         alt="Twitter"
                         width={24}
                         height={24}
                       />
-                      <div className="font-medium">Twitter Login</div>
+                      <div className="flex flex-row font-medium">
+                        Twitter
+                        <span className="hidden md:block">&nbsp;Login</span>
+                      </div>
                     </div>
                   </button>
                 </div>

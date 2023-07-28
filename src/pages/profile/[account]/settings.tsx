@@ -1,5 +1,5 @@
 import { useWallet } from "@solana/wallet-adapter-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { type Key, useEffect, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
@@ -9,6 +9,8 @@ import { getSessionDetails } from "~/utils/session";
 import AddWalletModal from "~/components/AddWalletModal";
 import { truncateAccount } from "~/utils/addresses";
 import useLocalStorage from "~/utils/storage";
+import AlertModal from "~/components/AlertModal";
+import router from "next/router";
 
 const Settings = () => {
   const { data: session } = useSession();
@@ -43,6 +45,7 @@ const Settings = () => {
   const setDefaultWallet = api.binding.setDefaultWallet.useMutation();
   const deleteWallet = api.binding.deleteWallet.useMutation();
   const linkWallet = api.binding.linkWallet.useMutation();
+  const deleteAccount = api.binding.deleteUser.useMutation();
 
   useEffect(() => {
     if (user?.id) {
@@ -55,52 +58,43 @@ const Settings = () => {
   }, [linkTwitter, linkDiscord, linkWallet, refetch]);
 
   useEffect(() => {
-    const linkSocial = async () => {
-      try {
-        const profile = session?.user?.profile;
-        if (profile?.image_url) {
-          if (userId || storedUserId) {
-            if (user?.discord) return;
-            linkDiscord.mutate({
-              id: userId || storedUserId,
-              data: {
-                username: profile.username,
-                global_name: profile.global_name,
-                image_url: profile.image_url,
-              },
-            });
-            setUnlinkedDiscord(false);
-          }
-        } else if (profile?.data) {
-          if (userId || storedUserId) {
-            if (user?.twitter) return;
-            linkTwitter.mutate({
-              id: userId || storedUserId,
-              data: {
-                username: profile.data.username,
-                global_name: profile.data.name,
-                image_url: profile.data.profile_image_url,
-              },
-            });
-            setUnlinkedTwitter(false);
-          }
-        }
-      } catch (error) {
-        console.error("Error writing data:", error);
-      }
-    };
-
     linkSocial();
-  }, [
-    isLoading,
-    linkDiscord,
-    linkTwitter,
-    session?.user?.profile,
-    storedUserId,
-    user?.discord,
-    user?.twitter,
-    userId,
-  ]);
+  }, [isLoading]);
+
+  const linkSocial = async () => {
+    try {
+      const profile = session?.user?.profile;
+      if (profile?.image_url) {
+        if (userId || storedUserId) {
+          if (user?.discord) return;
+          linkDiscord.mutate({
+            id: userId || storedUserId,
+            data: {
+              username: profile.username,
+              global_name: profile.global_name,
+              image_url: profile.image_url,
+            },
+          });
+          setUnlinkedDiscord(false);
+        }
+      } else if (profile?.data) {
+        if (userId || storedUserId) {
+          if (user?.twitter) return;
+          linkTwitter.mutate({
+            id: userId || storedUserId,
+            data: {
+              username: profile.data.username,
+              global_name: profile.data.name,
+              image_url: profile.data.profile_image_url,
+            },
+          });
+          setUnlinkedTwitter(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error writing data:", error);
+    }
+  };
 
   const handleUnlink = (provider: string) => {
     if (user?.discord && provider === "discord") {
@@ -118,6 +112,18 @@ const Settings = () => {
       } catch (error) {
         console.error("Error deleting data:", error);
       }
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      if (user) {
+        deleteAccount.mutate({ id: user?.id });
+        router.push("/");
+        await signOut({ redirect: false });
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
     }
   };
 
@@ -269,7 +275,15 @@ const Settings = () => {
                 }}
               >
                 Remove Wallet
+        
               </button> */}
+                <AlertModal
+                  button="Delete Account"
+                  title="Are you absolutely sure?"
+                  message="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+                  accept="Yes, delete account"
+                  onDelete={onDelete}
+                />
               </div>
             )}
             {user?.wallets.map(

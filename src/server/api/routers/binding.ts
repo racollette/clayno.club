@@ -183,24 +183,29 @@ export const bindingRouter = createTRPCRouter({
   linkTwitter: protectedProcedure
     .input(linkSocialProfileRequestSchema)
     .mutation(async ({ input }) => {
-      const providerExists = await prisma.twitter.findUnique({
-        where: {
-          username: input.id,
-        },
-      });
-
-      if (!providerExists) {
-        const linkedSocial = await prisma.user.update({
+      try {
+        const providerExists = await prisma.twitter.findUnique({
           where: {
-            id: input.id,
-          },
-          data: {
-            twitter: {
-              create: input.data,
-            },
+            username: input.id,
           },
         });
-        return linkedSocial;
+
+        if (!providerExists) {
+          const linkedSocial = await prisma.user.update({
+            where: {
+              id: input.id,
+            },
+            data: {
+              twitter: {
+                create: input.data,
+              },
+            },
+          });
+          return linkedSocial;
+        }
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        throw new Error("Failed to link Twitter account");
       }
     }),
 
@@ -231,22 +236,27 @@ export const bindingRouter = createTRPCRouter({
   linkWallet: protectedProcedure
     .input(z.object({ id: z.string(), wallet: z.string() }))
     .mutation(async ({ input }) => {
-      const linkedWallet = await prisma.user.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          wallets: {
-            create: { address: input.wallet },
+      try {
+        const linkedWallet = await prisma.user.update({
+          where: {
+            id: input.id,
           },
-        },
-        include: {
-          wallets: true,
-          discord: true,
-          twitter: true,
-        },
-      });
-      return linkedWallet;
+          data: {
+            wallets: {
+              create: { address: input.wallet },
+            },
+          },
+          include: {
+            wallets: true,
+            discord: true,
+            twitter: true,
+          },
+        });
+        return linkedWallet;
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        throw new Error("Failed to link wallet");
+      }
     }),
 
   setDefaultWallet: protectedProcedure
@@ -277,6 +287,23 @@ export const bindingRouter = createTRPCRouter({
         },
       });
       return deletedWallet;
+    }),
+
+  deleteUser: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      try {
+        const deleteUser = await prisma.user.delete({
+          where: {
+            id: input.id,
+          },
+        });
+
+        return deleteUser;
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        throw new Error("Failed to delete user.");
+      }
     }),
 
   getSecretMessage: protectedProcedure.query(() => {

@@ -51,8 +51,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          {/* <WalletMultiButton /> */}
-          {/* <WalletDisconnectButton /> */}
           {/* Your app's components go here, nested within the context providers. */}
           <SessionProvider session={session}>
             <Header />
