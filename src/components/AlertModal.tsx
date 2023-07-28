@@ -29,7 +29,7 @@ export default function AlertModal({
   return (
     <>
       <button
-        className="flex flex-row justify-center rounded-md bg-red-800 px-2 py-1 align-middle text-sm hover:bg-red-700"
+        className="flex flex-row justify-center rounded-md bg-red-700 px-2 py-1 align-middle text-sm hover:bg-red-800"
         onClick={() => {
           setOpenModal("dismissible");
         }}
@@ -53,13 +53,13 @@ export default function AlertModal({
             </div>
             <div className="flex flex-row justify-end gap-4">
               <button
-                className="rounded-lg bg-zinc-800 px-4 py-2 text-sm font-extrabold hover:bg-zinc-700"
+                className="rounded-lg bg-zinc-700 px-4 py-2 text-sm font-extrabold hover:bg-zinc-800"
                 onClick={() => setOpenModal(undefined)}
               >
                 Cancel
               </button>
               <button
-                className="rounded-lg bg-red-800 px-4 py-2 text-sm font-extrabold hover:bg-red-700"
+                className="rounded-lg bg-red-700 px-4 py-2 text-sm font-extrabold hover:bg-red-800"
                 onClick={onDelete}
               >
                 {accept}
