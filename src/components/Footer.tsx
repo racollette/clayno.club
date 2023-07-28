@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="flex flex-col items-center bg-black pb-6 text-center text-lg text-white">
+    <footer className="flex flex-col items-center bg-black pb-6 text-center text-sm text-white md:text-lg">
       <span className="flex flex-row gap-2">
         <span>Made with</span>
         <Image src="/icons/heart.svg" alt="Love" width={20} height={20} />

@@ -4,18 +4,25 @@ type ToggleSwitchProps = {
   toggleState: boolean;
   label: string;
   onToggle: (toggleState: boolean) => void;
+  className: string;
 };
 
-const ToggleSwitch = ({ toggleState, onToggle, label }: ToggleSwitchProps) => {
+const ToggleSwitch = ({
+  toggleState,
+  onToggle,
+  label,
+  className,
+}: ToggleSwitchProps) => {
   const handleToggle = () => {
     onToggle(!toggleState);
   };
 
   return (
-    <label className="relative inline-flex cursor-pointer items-center">
+    <label
+      className={`relative inline-flex cursor-pointer items-center ${className}`}
+    >
       <input
         type="checkbox"
-        value=""
         className="peer sr-only"
         checked={toggleState}
         onChange={handleToggle}

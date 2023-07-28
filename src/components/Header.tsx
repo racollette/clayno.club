@@ -14,7 +14,7 @@ export default function Header() {
           src="/favicon.svg"
         /> */}
         <span
-          className="cursor-pointer self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+          className="cursor-pointer self-center whitespace-nowrap px-2 text-xl font-semibold dark:text-white"
           onClick={() => router.push(`/`)}
         >
           DinoHerd.cc
@@ -22,7 +22,7 @@ export default function Header() {
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
         <LoginModal />
-        <Navbar.Toggle />
+        {/* <Navbar.Toggle /> */}
       </div>
       {/* <Navbar.Collapse>
         <Navbar.Link

@@ -50,18 +50,21 @@ const TabSelection = ({
           />
         ))}
       </div>
-      <div className="mt-2 grid grid-cols-2 justify-center gap-x-4 gap-y-2 px-4 md:flex md:flex-row">
+      <div className="mx-10 mt-2 grid grid-cols-2 justify-center gap-y-2 align-middle md:flex md:flex-row md:gap-x-6">
         <ToggleSwitch
+          className="justify-self-start"
           toggleState={showDactyl}
           label={"Show Dactyls"}
           onToggle={toggleDactyl}
         />
         <ToggleSwitch
+          className="justify-self-end"
           toggleState={showSaga}
-          label={"Show Saga Species"}
+          label={"Show Saga"}
           onToggle={toggleSaga}
         />
         <ToggleSwitch
+          className="justify-self-start"
           toggleState={showPFP}
           label={"PFP Mode"}
           onToggle={togglePFP}
