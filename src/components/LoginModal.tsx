@@ -61,8 +61,8 @@ export default function LoginModal() {
         : id ?? "",
   });
 
-  console.log(session);
-  console.log(signedIn);
+  // console.log(session);
+  // console.log(signedIn);
 
   useEffect(() => {
     // setSigning(false);
@@ -306,7 +306,7 @@ export default function LoginModal() {
           <Modal.Body>
             <div className="bg-zinc-900 text-white">
               <div className="text-lg font-extrabold ">
-                Create Account or Log In
+                Create Account or Log in
               </div>
               <div className="mb-3 text-zinc-500">
                 Signing in allows you to bind your name and socials to your
