@@ -306,7 +306,7 @@ const Settings = () => {
                         </span>
                       </div>
                       <button
-                        className="rounded-md bg-red-500 px-2 py-1 text-sm"
+                        className="rounded-md bg-amber-600 px-2 py-1 text-sm font-extrabold hover:bg-amber-500"
                         onClick={() => {
                           deleteWallet.mutate({
                             id: user.id,
