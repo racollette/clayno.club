@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Dino Herds</title>
+        <title>DinoHerd | Home</title>
         <meta name="description" content="Claynosaurz Herd Showcase" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

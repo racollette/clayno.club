@@ -61,8 +61,8 @@ export default function LoginModal() {
         : id ?? "",
   });
 
-  // console.log(session);
-  // console.log(user);
+  console.log(session);
+  console.log(signedIn);
 
   useEffect(() => {
     // setSigning(false);
