@@ -66,8 +66,22 @@ export const bindingRouter = createTRPCRouter({
                 },
               },
               {
+                discord: {
+                  global_name: {
+                    contains: input.id,
+                  },
+                },
+              },
+              {
                 twitter: {
                   username: {
+                    contains: input.id,
+                  },
+                },
+              },
+              {
+                twitter: {
+                  global_name: {
                     contains: input.id,
                   },
                 },
