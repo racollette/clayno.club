@@ -24,20 +24,20 @@ export default function Header() {
         <LoginModal />
         {/* <Navbar.Toggle /> */}
       </div>
-      {/* <Navbar.Collapse>
+      <Navbar.Collapse>
         <Navbar.Link
           className="text-md cursor-pointer text-zinc-500"
           onClick={() => router.push(`/`)}
         >
-          Gallery
+          Herds
         </Navbar.Link>
         <Navbar.Link
           className="cursor-pointer text-zinc-500"
-          onClick={() => router.push(`/dao`)}
+          onClick={() => router.push(`/tribes`)}
         >
-          DAOs
+          Tribes
         </Navbar.Link>
-      </Navbar.Collapse> */}
+      </Navbar.Collapse>
     </Navbar>
   );
 }

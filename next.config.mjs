@@ -25,7 +25,8 @@ const config = {
       "prod-image-cdn.tensor.trade",
       "pbs.twimg.com",
       "cdn.discordapp.com",
-      "ui-avatars.com"
+      "ui-avatars.com",
+      "www.dinoherd.cc"
     ]
   },
   publicRuntimeConfig: {

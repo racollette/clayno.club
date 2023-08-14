@@ -69,7 +69,7 @@ export default function Home() {
                   <div className="m-4 flex max-w-lg flex-col gap-4 rounded-xl bg-black/70 p-8 text-white hover:bg-black/30">
                     <h2 className="text-xl font-extrabold text-white md:text-2xl">
                       Dino{" "}
-                      <span className="text-[hsl(280,100%,70%)]">Herds</span>
+                      <span className="text-[hsl(192,100%,70%)]">Herds</span>
                     </h2>
                     <div className="md:text-md text-sm">
                       <p className="pb-2">

@@ -9,9 +9,10 @@ datasource db {
 }
 
 model Holder {
-  owner  String @id
-  amount Int
-  mints  Dino[]
+  owner   String   @id
+  amount  Int
+  mints   Dino[]
+  subdaos SubDAO[]
 }
 
 model Dino {
@@ -25,10 +26,9 @@ model Dino {
   attributes  Attributes?
   herd        Herd[]
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
-  SubDAO      SubDAO?     @relation(fields: [subDAOId], references: [id])
+  subdaos     SubDAO[]
 
   @@index([holderOwner])
-  @@index([subDAOId])
 }
 
 model Attributes {
@@ -125,9 +125,38 @@ model Wallet {
 }
 
 model SubDAO {
-  id           String  @id @default(cuid())
-  name         String  @unique
-  description  String?
-  requirements String?
-  dinos        Dino[]
+  id                String   @id @default(cuid())
+  name              String   @unique
+  description       String?
+  requirements      String?
+  acronym           String?
+  banner_url        String?
+  discord           String?
+  twitter           String?
+  website           String?
+  thumbnail         String?
+  qualifyingCount   Int?
+  type              String?
+  uniqueAddresses   Int?
+  verifiedAddresses Int?
+  dinos             Dino[]
+  holders           Holder[]
+}
+
+model DinoToSubDAO {
+  A String
+  B String
+
+  @@unique([A, B], map: "_DinoToSubDAO_AB_unique")
+  @@index([B], map: "_DinoToSubDAO_B_index")
+  @@map("_DinoToSubDAO")
+}
+
+model HolderToSubDAO {
+  A String
+  B String
+
+  @@unique([A, B], map: "_HolderToSubDAO_AB_unique")
+  @@index([B], map: "_HolderToSubDAO_B_index")
+  @@map("_HolderToSubDAO")
 }

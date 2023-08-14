@@ -10,6 +10,7 @@ import Image from "next/image";
 import { truncateAccount } from "~/utils/addresses";
 import { Spinner } from "flowbite-react";
 import Head from "next/head";
+import { getQueryString } from "~/utils/routes";
 
 // const WalletMultiButtonDynamic = dynamic(
 //   async () =>
@@ -22,13 +23,8 @@ export default function Profile() {
   const router = useRouter();
   const { account } = router.query;
 
-  const queryString = account
-    ? Array.isArray(account)
-      ? account.join(",")
-      : account
-    : "";
   const isWallet = account && account.length > 32;
-
+  const queryString = getQueryString(account);
   const {
     data: user,
     isLoading,
@@ -149,7 +145,7 @@ export default function Profile() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2">
-                    <div className="mr-2 flex flex-col justify-center">
+                    <div className="flex flex-col justify-center">
                       <Image
                         className="self-center rounded-full"
                         src={`https://ui-avatars.com/api/?name=${queryString}&background=random`}

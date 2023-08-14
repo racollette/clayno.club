@@ -320,6 +320,33 @@ export const bindingRouter = createTRPCRouter({
       }
     }),
 
+  getUsersByWalletAddresses: publicProcedure
+    .input(z.object({ walletAddresses: z.array(z.string()) }))
+    .query(async ({ input }) => {
+      return prisma.user.findMany({
+        where: {
+          wallets: {
+            some: {
+              address: {
+                in: input.walletAddresses,
+              },
+            },
+          },
+        },
+        include: {
+          wallets: true,
+        },
+      });
+    }),
+
+  getAllUsers: publicProcedure.query(async ({}) => {
+    return prisma.user.findMany({
+      include: {
+        wallets: true,
+      },
+    });
+  }),
+
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
