@@ -1,4 +1,11 @@
-import { Attributes, Dino } from "@prisma/client";
+import {
+  Attributes,
+  Dino,
+  Discord,
+  Twitter,
+  User,
+  Wallet,
+} from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -10,14 +17,15 @@ import { fetchOtherWallets } from "~/utils/subdaos";
 
 type MemberProps = {
   owner: string;
-  dinos: Dino[] &
-    {
-      attributes: Attributes | null;
-    }[];
+  data: {
+    dinos: Dino[] & { attributes: Attributes[] };
+    user: User & { wallets: Wallet[]; discord: Discord; twitter: Twitter };
+  };
   acronym: string;
 };
 
-export const Member = ({ dinos, owner, acronym }: MemberProps) => {
+export const Member = ({ data, owner, acronym }: MemberProps) => {
+  const { dinos, user } = data;
   const [expanded, setExpanded] = useState(false);
   const [userDinos, setUserDinos] = useState<any>(dinos);
 
@@ -25,15 +33,10 @@ export const Member = ({ dinos, owner, acronym }: MemberProps) => {
     setExpanded(!expanded);
   };
 
-  const { data: user, isLoading } = api.binding.getUser.useQuery({
-    type: "wallet",
-    id: owner,
-  });
-
   const wallets =
     user?.wallets
-      .map((wallet) => wallet.address)
-      .filter((address) => user?.defaultAddress !== address) ?? [];
+      .map((wallet: any) => wallet.address)
+      .filter((address: any) => user?.defaultAddress !== address) ?? [];
 
   const otherWallets = fetchOtherWallets(wallets, acronym);
 
@@ -47,15 +50,10 @@ export const Member = ({ dinos, owner, acronym }: MemberProps) => {
     }
   }, [wallets]);
 
-  if (user?.discord?.username === "alpha_decay") {
-    console.log(dinos);
-    console.log(user);
-    console.log(userDinos);
-  }
-
   const isRegistered = user?.discord || user?.twitter;
   const expandable = userDinos ? userDinos.length > 1 : dinos.length > 1;
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
+  const isUnowned = owner === "unowned";
 
   const avatar = user?.discord
     ? user.discord.image_url
@@ -73,6 +71,8 @@ export const Member = ({ dinos, owner, acronym }: MemberProps) => {
     ? user?.discord.global_name
     : user?.twitter
     ? user?.twitter.global_name
+    : isUnowned
+    ? "Unowned/Listed"
     : shortAccount(owner);
 
   return (
@@ -81,66 +81,58 @@ export const Member = ({ dinos, owner, acronym }: MemberProps) => {
         isRegistered && `order-first`
       } ${!expanded && `transform-gpu transition-transform hover:scale-95`} ${
         expanded && `col-span-2 py-4 md:col-span-3 lg:col-span-5`
-      } `}
+      }`}
     >
       <ImageExpander
         dinos={userDinos ? userDinos : dinos}
         expanded={expanded}
       />
       <div className={`${expanded ? `mt-2` : `mt-0 md:mt-1`}`}>
-        {!isLoading ? (
-          <div
-            className={`flex flex-col flex-wrap items-center md:flex-row ${
-              expanded ? `justify-center` : `justify-between`
-            } gap-1 py-1 md:gap-4 md:py-2`}
+        <div
+          className={`flex flex-col flex-wrap items-center md:flex-row ${
+            expanded ? `justify-center` : `justify-between`
+          } gap-1 py-1 md:gap-4 md:pt-2`}
+        >
+          <Link
+            href={`/profile/${profile}`}
+            className="flex flex-row items-center justify-center gap-1 rounded-lg px-2 py-1 hover:bg-stone-700"
           >
-            <Link
-              href={`/profile/${profile}`}
-              className="flex flex-row items-center justify-center gap-1 rounded-lg px-2 py-1 hover:bg-stone-700"
-            >
-              <div className="relative aspect-square h-6 w-6 md:h-8 md:w-8">
-                <Image
-                  className="self-center rounded-full"
-                  src={avatar}
-                  alt="Avatar"
-                  fill
-                />
-              </div>
-              <div className="md:text-md self-center p-1 text-sm font-extrabold text-white">
-                {name}
-              </div>
-            </Link>
-            {expandable && (
-              <>
-                {expanded ? (
-                  <button
-                    onClick={toggleExpand}
-                    className="flex h-8 flex-row flex-nowrap justify-center gap-1 rounded-lg bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600"
-                  >
-                    <div className="self-center">Hide</div>
-                    <HiChevronUp className="self-center" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={toggleExpand}
-                    className="flex h-8 w-full flex-nowrap justify-center gap-1 rounded-md bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600 md:w-fit"
-                  >
-                    <div className="self-center whitespace-nowrap">
-                      {additionalDinos} more
-                    </div>
-                    <HiChevronDown className="self-center" />
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="flex flex-row justify-center gap-1 py-1">
-            <div className="self-center p-1 font-extrabold text-white">
-              {/* Listed */}
+            <div className="relative aspect-square h-6 w-6 md:h-8 md:w-8">
+              <Image
+                className="self-center rounded-full"
+                src={avatar}
+                alt="Avatar"
+                fill
+              />
             </div>
-          </div>
-        )}
+            <div className="md:text-md self-center p-1 text-sm font-extrabold text-white">
+              {name}
+            </div>
+          </Link>
+          {expandable && (
+            <>
+              {expanded ? (
+                <button
+                  onClick={toggleExpand}
+                  className="flex h-8 flex-row flex-nowrap justify-center gap-1 rounded-lg bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600"
+                >
+                  <div className="self-center">Hide</div>
+                  <HiChevronUp className="self-center" />
+                </button>
+              ) : (
+                <button
+                  onClick={toggleExpand}
+                  className="flex h-8 w-full flex-nowrap justify-center gap-1 rounded-md bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600 md:w-fit"
+                >
+                  <div className="self-center whitespace-nowrap">
+                    {additionalDinos} more
+                  </div>
+                  <HiChevronDown className="self-center" />
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

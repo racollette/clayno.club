@@ -22,7 +22,7 @@ export default function Header() {
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
         <LoginModal />
-        {/* <Navbar.Toggle /> */}
+        <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
         <Navbar.Link
@@ -32,7 +32,7 @@ export default function Header() {
           Herds
         </Navbar.Link>
         <Navbar.Link
-          className="cursor-pointer text-zinc-500"
+          className="text-md cursor-pointer text-zinc-500"
           onClick={() => router.push(`/tribes`)}
         >
           Tribes

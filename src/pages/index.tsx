@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { api } from "~/utils/api";
 import TabSelection from "~/components/TabSelection";
 import Herd from "~/components/Herd";
@@ -51,8 +51,13 @@ export default function Home() {
       </Head>
       <main className="relative flex min-h-screen flex-col items-center justify-center bg-black">
         {isLoading ? (
-          <div className="relative mb-24 aspect-square w-1/2 text-white md:w-1/4">
-            <Image src="/gifs/TTT.gif" alt="Loading" fill />
+          <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full border-2 border-zinc-700 text-white md:w-1/4">
+            <Image
+              src="/gifs/TTT.gif"
+              alt="Loading"
+              fill
+              className="rounded-full"
+            />
           </div>
         ) : (
           <div className=" flex flex-col items-center justify-center py-2 md:px-4">

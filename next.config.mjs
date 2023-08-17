@@ -24,6 +24,7 @@ const config = {
       "arweave.net",
       "prod-image-cdn.tensor.trade",
       "pbs.twimg.com",
+      "ton.twitter.com",
       "cdn.discordapp.com",
       "ui-avatars.com",
       "www.dinoherd.cc"

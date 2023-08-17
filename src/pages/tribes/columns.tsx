@@ -25,15 +25,12 @@ export const columns: ColumnDef<SubDAO>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <div className="flex flex-row items-center justify-start gap-1">
+        <div
+          className={`flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white`}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           <div>Name</div>
-          <Button
-            variant="ghost"
-            className="p-2"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
+          <ArrowUpDown className="h-4 w-4" />
         </div>
       );
     },
@@ -42,11 +39,11 @@ export const columns: ColumnDef<SubDAO>[] = [
         <div className="flex flex-row items-center">
           {row.original.thumbnail && (
             <div className="relative mr-2 aspect-square w-10 overflow-clip rounded-md md:w-12">
-              <Image src={row.original.thumbnail} alt="Thumbnail" fill />
+              <Image src={row.original.thumbnail} alt="" fill />
             </div>
           )}
           <div className="flex flex-col justify-start">
-            <div className="self-center overflow-hidden text-ellipsis  whitespace-nowrap font-bold">
+            <div className="self-center overflow-hidden text-ellipsis  whitespace-nowrap font-medium">
               {row.original.name}
             </div>
             <div className="text-sm text-zinc-500">
@@ -61,27 +58,28 @@ export const columns: ColumnDef<SubDAO>[] = [
     accessorKey: "type",
     header: ({ column }) => {
       return (
-        <div className="flex flex-row items-center justify-start gap-1">
+        <div
+          className={`flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white`}
+        >
           <div>Type</div>
-          <Button
-            variant="ghost"
-            className="p-2"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
         </div>
       );
     },
     cell: ({ row }) => {
-      return <div className="self-center">{row.original.type}</div>;
+      return <div className="self-center font-medium">{row.original.type}</div>;
     },
     // cell: (info) => info.row,
   },
   {
     accessorKey: "requirements",
     header: ({ column }) => {
-      return <div>Requirements</div>;
+      return (
+        <div
+          className={`flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white`}
+        >
+          <div>Requirements</div>
+        </div>
+      );
     },
     cell: ({ row }) => {
       const { requirements } = row?.original;
@@ -90,7 +88,7 @@ export const columns: ColumnDef<SubDAO>[] = [
           {requirements?.split("_").map((requirement, index) => (
             <div
               key={index}
-              className={`rounded-md px-2 py-1 text-sm font-semibold ${getTraitBadgeColor(
+              className={`rounded-md px-2 py-1 text-sm font-medium ${getTraitBadgeColor(
                 requirement
               )}`}
             >
@@ -105,50 +103,75 @@ export const columns: ColumnDef<SubDAO>[] = [
     accessorKey: "uniqueAddresses",
     header: ({ column }) => {
       return (
-        <div className="flex flex-row items-center justify-start gap-1">
+        <div
+          className={`flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white`}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           <div>Unique Addresses</div>
-          <Button
-            variant="ghost"
-            className="p-2"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
+          <ArrowUpDown className="h-4 w-4" />
         </div>
       );
     },
     cell: ({ row }) => {
-      const { uniqueAddresses } = row?.original;
-      return <div className="self-center">{uniqueAddresses}</div>;
+      const { uniqueAddresses, qualifyingCount } = row?.original;
+      const ownershipPercentage =
+        uniqueAddresses &&
+        qualifyingCount &&
+        ((uniqueAddresses / qualifyingCount) * 100).toFixed(0);
+      return (
+        <div className="self-center font-medium">
+          {uniqueAddresses}
+          <span className="ml-1 font-medium text-zinc-500">{`(${ownershipPercentage}%)`}</span>
+        </div>
+      );
     },
   },
   {
-    accessorKey: "verifiedAddresses",
+    accessorKey: "qualifyingCount",
     header: ({ column }) => {
       return (
-        <div className="flex flex-row items-center justify-start gap-1">
-          <div>Verified</div>
-          <Button
-            variant="ghost"
-            className="p-2"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
+        <div
+          className={`flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white`}
+        >
+          <div>Dinos per Address</div>
         </div>
       );
     },
     cell: ({ row }) => {
-      const { uniqueAddresses } = row?.original;
-      const { verifiedAddresses } = row?.original;
+      const { uniqueAddresses, qualifyingCount } = row?.original;
+      const NFTPerMember =
+        uniqueAddresses &&
+        qualifyingCount &&
+        (qualifyingCount / uniqueAddresses).toFixed(2);
+      return <div className="self-center font-medium">{NFTPerMember}</div>;
+    },
+  },
+  {
+    id: "verified",
+    accessorKey: "verifiedAddresses",
+    header: ({ column }) => {
+      return (
+        <div
+          className={`flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white`}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <div>Verified</div>
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const { uniqueAddresses, verifiedAddresses } = row?.original;
       const verifiedPercentage =
         uniqueAddresses &&
         verifiedAddresses &&
         Math.ceil((verifiedAddresses / uniqueAddresses) * 100);
       return (
-        <div className="self-center">
+        <div className="self-center font-medium">
           {verifiedPercentage}%
-          <span className="ml-1 text-zinc-500">({verifiedAddresses})</span>
+          <span className="ml-1 font-medium text-zinc-500">
+            ({verifiedAddresses})
+          </span>
         </div>
       );
     },

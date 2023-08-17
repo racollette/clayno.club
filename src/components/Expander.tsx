@@ -2,25 +2,32 @@ import { Dino, Attributes } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
 import { getRarityColor } from "~/utils/colors";
+import { TraitHover } from "./TraitHover";
 
 type ImageExpanderProps = {
-  dinos: Dino[] &
-    {
-      attributes: Attributes | null;
-    }[];
+  dinos: Dino[] & { attributes: Attributes }[];
   expanded: boolean;
 };
 
 const ImageExpander = ({ dinos, expanded }: ImageExpanderProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const firstDino =
-    dinos?.find(
-      (dino: any) =>
-        dino.attributes &&
-        dino.attributes.species !== "Spino" &&
-        dino.attributes.species !== "Para"
-    ) ?? dinos[0];
+  // const firstDino =
+  //   (dinos &&
+  //     dinos?.find(
+  //       (dino) =>
+  //         dino.attributes &&
+  //         dino.attributes.species !== "Spino" &&
+  //         dino.attributes.species !== "Para"
+  //     )) ??
+  //   dinos[0];
+
+  const dinoIndex = dinos.findIndex(
+    (dino) =>
+      dino?.attributes?.species !== "Spino" &&
+      dino?.attributes?.species !== "Para"
+  );
+  const firstDino = dinos[dinoIndex] ?? dinos[0];
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -61,6 +68,11 @@ const ImageExpander = ({ dinos, expanded }: ImageExpanderProps) => {
                 className={`absolute bottom-1 right-1 rounded-md bg-black px-2 py-1 text-xs text-white`}
               >
                 {firstDino.name.split(" ").pop()}
+              </div>
+              <div
+                className={`right-left absolute top-1 rounded-md px-2 py-1 text-xs text-white`}
+              >
+                <TraitHover attributes={firstDino?.attributes} />
               </div>
             </>
           )}
@@ -119,6 +131,11 @@ const ImageContainer = ({ item }: any) => {
             className={`absolute bottom-1 right-1 rounded-md bg-black px-2 py-1 text-xs text-white`}
           >
             {item.name.split(" ").pop()}
+          </div>
+          <div
+            className={`right-left absolute top-1 rounded-md px-2 py-1 text-xs text-white`}
+          >
+            <TraitHover attributes={item.attributes} />
           </div>
         </>
       )}

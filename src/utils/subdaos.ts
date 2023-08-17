@@ -1,3 +1,4 @@
+import { Dino } from "@prisma/client";
 import { api } from "./api";
 
 export const groupAndFilter = (acronym: string) => {
@@ -53,11 +54,18 @@ function processTraitAndSpeciesData(data: any, isLoading: boolean, users: any) {
     combinedDinosMap &&
     new Map(
       [...combinedDinosMap.entries()].sort(
-        ([keyA, dinosA], [keyB, dinosB]) => dinosB.length - dinosA.length
+        ([keyA, walletA], [keyB, walletB]) =>
+          walletB.dinos.length - walletA.dinos.length
       )
     );
 
   const sagaSortedMap = processSortedGroupedDinos(sortedGroupedDinos);
+
+  if (sagaSortedMap.has("unowned")) {
+    const listedDinos: any = sagaSortedMap.get("unowned");
+    sagaSortedMap.delete("unowned");
+    sagaSortedMap.set("unowned", { dinos: listedDinos?.dinos });
+  }
 
   return { data: data, isLoading: isLoading, sortedMap: sagaSortedMap };
 }
@@ -71,16 +79,34 @@ function processDinosMap(dinosMap: any, users: any) {
         u.wallets.some((w: any) => w.address === walletAddress)
       );
 
+      // if (user) {
+      //   const userKey = user.defaultAddress;
+      //   const existingCombinedDinos = combinedDinosMap.get(userKey) || [];
+      //   combinedDinosMap.set(userKey, {
+      //     user,
+      //     dinos: existingCombinedDinos.concat(dinos),
+      //   });
+      // } else {
+      //   combinedDinosMap.set(walletAddress, { dinos });
+      // }
+
       if (user) {
         const userKey = user.defaultAddress;
         const existingCombinedDinos = combinedDinosMap.get(userKey) || [];
-        if (existingCombinedDinos.length === 0) {
-          combinedDinosMap.set(userKey, dinos);
+        // if (existingCombinedDinos.length === 0) {
+        if (combinedDinosMap.has(userKey)) {
+          combinedDinosMap.set(userKey, {
+            user,
+            dinos: existingCombinedDinos.dinos.concat(dinos),
+          });
         } else {
-          combinedDinosMap.set(userKey, existingCombinedDinos.concat(dinos));
+          combinedDinosMap.set(userKey, {
+            user,
+            dinos: dinos,
+          });
         }
       } else {
-        combinedDinosMap.set(walletAddress, dinos);
+        combinedDinosMap.set(walletAddress, { dinos });
       }
     }
   }
@@ -100,7 +126,7 @@ function processSortedGroupedDinos(sortedGroupedDinos: any) {
           singleDino.attributes.species === "Para"
         ) {
           sagaSortedMap.delete(key);
-          sagaSortedMap.set(key, [singleDino, ...sortedGroupedDinos.get(key)]);
+          sagaSortedMap.set(key, [singleDino]);
         }
       }
     }

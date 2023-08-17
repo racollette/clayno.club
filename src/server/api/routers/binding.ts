@@ -341,8 +341,12 @@ export const bindingRouter = createTRPCRouter({
 
   getAllUsers: publicProcedure.query(async ({}) => {
     return prisma.user.findMany({
-      include: {
+      select: {
+        id: true,
+        defaultAddress: true,
         wallets: true,
+        discord: true,
+        twitter: true,
       },
     });
   }),
