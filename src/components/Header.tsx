@@ -31,12 +31,12 @@ export default function Header() {
         >
           Herds
         </Navbar.Link>
-        <Navbar.Link
+        {/* <Navbar.Link
           className="text-md cursor-pointer text-zinc-500"
           onClick={() => router.push(`/tribes`)}
         >
           Tribes
-        </Navbar.Link>
+        </Navbar.Link> */}
       </Navbar.Collapse>
     </Navbar>
   );
