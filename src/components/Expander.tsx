@@ -17,7 +17,7 @@ const ImageExpander = ({ dinos, expanded }: ImageExpanderProps) => {
       dino?.attributes?.species !== "Spino" &&
       dino?.attributes?.species !== "Para"
   );
-  const firstDino = dinos[dinoIndex];
+  const firstDino = dinos[dinoIndex] ?? dinos[0];
 
   const handleMouseEnter = () => {
     setIsHovered(true);

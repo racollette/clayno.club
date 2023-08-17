@@ -80,4 +80,37 @@ export const subdaoRouter = createTRPCRouter({
         },
       });
     }),
+
+  getUserSubDAOs: publicProcedure
+    .input(
+      z.object({
+        wallets: z.array(z.string()),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.subDAO.findMany({
+        where: {
+          OR: [
+            {
+              dinos: {
+                some: {
+                  holderOwner: {
+                    in: input.wallets,
+                  },
+                },
+              },
+            },
+            {
+              holders: {
+                some: {
+                  owner: {
+                    in: input.wallets,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+    }),
 });

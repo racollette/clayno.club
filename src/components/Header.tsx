@@ -22,21 +22,23 @@ export default function Header() {
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
         <LoginModal />
-        {/* <Navbar.Toggle /> */}
+        <Navbar.Toggle className="bg-transparent text-zinc-500 hover:bg-transparent hover:text-white focus:ring-zinc-500" />
       </div>
       <Navbar.Collapse>
-        {/* <Navbar.Link
-          className="text-md cursor-pointer text-zinc-500"
-          onClick={() => router.push(`/`)}
+        <Navbar.Link
+          className="text-md cursor-pointer text-zinc-500 hover:bg-zinc-800 hover:text-white"
+          // onClick={() => router.push(`/`)}
+          href={`/`}
         >
           Herds
-        </Navbar.Link> */}
-        {/* <Navbar.Link
-          className="text-md cursor-pointer text-zinc-500"
-          onClick={() => router.push(`/tribes`)}
+        </Navbar.Link>
+        <Navbar.Link
+          className="text-md cursor-pointer text-zinc-500 hover:bg-zinc-800 hover:text-white"
+          // onClick={() => router.push(`/tribes`)}
+          href={`/tribes`}
         >
           Tribes
-        </Navbar.Link> */}
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );

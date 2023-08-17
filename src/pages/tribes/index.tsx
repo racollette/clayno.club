@@ -26,7 +26,7 @@ export default function TribesPage() {
             className="rounded-lg"
           />
           <div className="absolute left-0 top-0 h-full items-start justify-end md:flex md:w-1/3">
-            <div className="m-2 flex max-w-lg flex-col gap-4 rounded-xl bg-black/70 p-2 text-white hover:bg-black/30 md:m-4 md:p-8">
+            <div className="m-2 flex max-w-lg flex-col gap-4 rounded-xl bg-black/70 p-2 px-4 text-white hover:bg-black/30 md:m-4 md:p-4 lg:p-6">
               <h2 className="text-md font-extrabold text-white md:text-2xl">
                 <span className="text-[hsl(280,100%,70%)]">Tribes</span>
               </h2>

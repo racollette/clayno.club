@@ -119,14 +119,15 @@ function processSortedGroupedDinos(sortedGroupedDinos: any) {
 
   if (sortedGroupedDinos) {
     for (const [key, value] of sortedGroupedDinos.entries()) {
-      if (value.length === 1) {
-        const singleDino = value[0];
+      if (value.dinos.length === 1) {
+        const singleDino = value.dinos[0];
         if (
           singleDino.attributes.species === "Spino" ||
           singleDino.attributes.species === "Para"
         ) {
+          const value = sagaSortedMap.get(key);
           sagaSortedMap.delete(key);
-          sagaSortedMap.set(key, [singleDino]);
+          sagaSortedMap.set(key, value);
         }
       }
     }

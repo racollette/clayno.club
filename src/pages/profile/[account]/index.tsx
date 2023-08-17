@@ -54,13 +54,17 @@ export default function Profile() {
     refetch();
   }, [session, refetch]);
 
+  const { data: userTribes } = api.subdao.getUserSubDAOs.useQuery({
+    wallets: wallets.map((wallet) => wallet.address),
+  });
+
   return (
     <>
       <Head>
         <title>DinoHerd | Profile</title>
       </Head>
       <Layout>
-        <div className="flex w-full flex-col items-center justify-center py-4 md:px-4 md:py-8">
+        <section className="flex w-full flex-col items-center justify-center py-4 md:px-4 md:py-8">
           <div className="flex flex-row flex-wrap justify-center rounded-xl bg-stone-800 p-4 align-middle">
             {isLoading ? (
               <Spinner className="self-center" />
@@ -192,9 +196,37 @@ export default function Profile() {
               </div>
             )}
           </div>
-        </div>
-        <div className="flex w-full flex-col items-center gap-2">
-          <div className="mt-8 p-2 text-xl font-extrabold">Collected Herds</div>
+        </section>
+        <section className="flex w-full flex-col items-center gap-2">
+          <div className="mt-8 p-2 text-xl font-extrabold">Tribes</div>
+          {userTribes && (
+            <div className="flex w-full flex-col gap-2 rounded-lg bg-stone-800 p-4 sm:w-96">
+              {userTribes.map((tribe, index) => (
+                <Link
+                  href={`/tribes/${tribe.acronym}`}
+                  className="cursor-pointer rounded-lg p-3 hover:bg-stone-700"
+                >
+                  <div
+                    key={index}
+                    className="flex flex-row items-center justify-start gap-x-3"
+                  >
+                    <div className="relative h-12 w-12 overflow-clip">
+                      <Image
+                        src={tribe.thumbnail ?? ""}
+                        alt=""
+                        fill
+                        className="rounded-md"
+                      />
+                    </div>
+                    <div className="font-bold">{tribe.name}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+        <section className="flex w-full flex-col items-center gap-2">
+          <div className="mt-8 p-2 text-xl font-extrabold">Herds</div>
           {isWallet ? (
             <>
               {walletHerds && walletHerds.length > 0 ? (
@@ -259,7 +291,7 @@ export default function Profile() {
               )}
             </>
           )}
-        </div>
+        </section>
       </Layout>
     </>
   );

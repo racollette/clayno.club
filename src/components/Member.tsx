@@ -72,7 +72,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
     : user?.twitter
     ? user?.twitter.global_name
     : isUnowned
-    ? "Unowned/Listed"
+    ? "Listed/Unowned"
     : shortAccount(owner);
 
   return (
