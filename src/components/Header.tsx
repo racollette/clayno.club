@@ -22,15 +22,15 @@ export default function Header() {
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
         <LoginModal />
-        <Navbar.Toggle />
+        {/* <Navbar.Toggle /> */}
       </div>
       <Navbar.Collapse>
-        <Navbar.Link
+        {/* <Navbar.Link
           className="text-md cursor-pointer text-zinc-500"
           onClick={() => router.push(`/`)}
         >
           Herds
-        </Navbar.Link>
+        </Navbar.Link> */}
         {/* <Navbar.Link
           className="text-md cursor-pointer text-zinc-500"
           onClick={() => router.push(`/tribes`)}
