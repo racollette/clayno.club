@@ -59,11 +59,11 @@ const ImageExpander = ({ dinos, expanded }: ImageExpanderProps) => {
               >
                 {firstDino.name.split(" ").pop()}
               </div>
-              <div
+              {/* <div
                 className={`right-left absolute top-1 rounded-md px-2 py-1 text-xs text-white`}
               >
                 <TraitHover attributes={firstDino?.attributes} />
-              </div>
+              </div> */}
             </>
           )}
         </div>
@@ -123,7 +123,7 @@ const ImageContainer = ({ item }: any) => {
             {item.name.split(" ").pop()}
           </div>
           <div
-            className={`right-left absolute top-1 rounded-md px-2 py-1 text-xs text-white`}
+            className={`right-left absolute top-1 z-20 rounded-md px-2 py-1 text-xs text-white`}
           >
             <TraitHover attributes={item.attributes} />
           </div>
