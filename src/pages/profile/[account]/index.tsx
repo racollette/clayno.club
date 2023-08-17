@@ -197,19 +197,17 @@ export default function Profile() {
             )}
           </div>
         </section>
-        <section className="flex w-full flex-col items-center gap-2">
-          <div className="mt-8 p-2 text-xl font-extrabold">Tribes</div>
-          {userTribes && (
+        {userTribes && (
+          <section className="flex w-full flex-col items-center gap-2">
+            <div className="mt-8 p-2 text-xl font-extrabold">Tribes</div>
             <div className="flex w-full flex-col gap-2 rounded-lg bg-stone-800 p-4 sm:w-96">
               {userTribes.map((tribe, index) => (
                 <Link
+                  key={index}
                   href={`/tribes/${tribe.acronym}`}
                   className="cursor-pointer rounded-lg p-3 hover:bg-stone-700"
                 >
-                  <div
-                    key={index}
-                    className="flex flex-row items-center justify-start gap-x-3"
-                  >
+                  <div className="flex flex-row items-center justify-start gap-x-3">
                     <div className="relative h-12 w-12 overflow-clip">
                       <Image
                         src={tribe.thumbnail ?? ""}
@@ -223,8 +221,8 @@ export default function Profile() {
                 </Link>
               ))}
             </div>
-          )}
-        </section>
+          </section>
+        )}
         <section className="flex w-full flex-col items-center gap-2">
           <div className="mt-8 p-2 text-xl font-extrabold">Herds</div>
           {isWallet ? (
