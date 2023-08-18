@@ -33,7 +33,7 @@ const Settings = () => {
       ? userId
       : connected && publicKey
       ? publicKey.toString()
-      : id ?? "",
+      : id ?? "none",
   });
 
   // console.log(session);
