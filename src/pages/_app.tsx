@@ -10,6 +10,7 @@ import {
 } from "@solana/wallet-adapter-react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { Analytics } from "@vercel/analytics/react";
 import { clusterApiUrl } from "@solana/web3.js";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
@@ -55,6 +56,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <SessionProvider session={session}>
             <Header />
             <Component {...pageProps} />
+            <Analytics />
             <Footer />
           </SessionProvider>
         </WalletModalProvider>

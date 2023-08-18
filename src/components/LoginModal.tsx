@@ -58,7 +58,7 @@ export default function LoginModal() {
         ? publicKey.toString()
         : userId
         ? userId
-        : id ?? "",
+        : id ?? "none",
   });
 
   // console.log(session);
@@ -96,6 +96,8 @@ export default function LoginModal() {
         tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
         // Encode and send tx to signer, decode and sign
         const signedTx = await signTransaction(tx);
+
+        console.log(signedTx);
         // Encode, send back, decode and verify signedTx signature
         validSignature = validateAuthTx(signedTx, "test-nonce");
         const inx = signedTx.instructions[2];
