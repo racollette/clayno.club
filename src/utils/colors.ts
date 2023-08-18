@@ -82,9 +82,13 @@ export const getTraitBadgeColor = (trait: string) => {
       return "";
     case "BellyOn":
       return "bg-rose-600";
+    case "Midas":
+      return "bg-amber-500";
+    case "GoldClay/Maker":
+      return "bg-yellow-500";
     // Default
     default:
-      return "bg-slate-100";
+      return "bg-slate-800";
   }
 };
 
