@@ -75,7 +75,7 @@ export const getTraitBadgeColor = (trait: string) => {
     case "5":
       return "bg-red-500";
     case "Ancient":
-      return "bg-amber-500";
+      return "bg-violet-500";
     case "Layer 0":
       return "bg-slate-600";
     case "OR":
