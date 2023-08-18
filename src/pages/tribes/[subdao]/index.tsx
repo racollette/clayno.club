@@ -32,7 +32,7 @@ export default function SubDAO() {
                   <Image
                     src={data.banner_url}
                     alt={data?.name}
-                    className="object-contain"
+                    className="rounded-lg object-contain"
                     fill
                   />
                 )}
