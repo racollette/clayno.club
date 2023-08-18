@@ -80,6 +80,8 @@ export const getTraitBadgeColor = (trait: string) => {
       return "bg-slate-600";
     case "OR":
       return "";
+    case "BellyOn":
+      return "bg-emerald-600";
     // Default
     default:
       return "bg-slate-100";
