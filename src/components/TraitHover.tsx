@@ -18,7 +18,7 @@ export function TraitHover({ attributes }: TraitHoverProps) {
         <TooltipTrigger>
           <HiInformationCircle className="border-1 h-6 w-6 rounded-full bg-white/20 text-black" />
         </TooltipTrigger>
-        <TooltipContent className="z-10">
+        <TooltipContent className="absolute">
           <section className="m-1 w-64 items-center justify-center rounded-md border-2 border-zinc-500 bg-black p-4">
             <h1 className="mb-4 text-left text-lg">Traits</h1>
             <ul className="flex flex-col divide-y divide-zinc-700">

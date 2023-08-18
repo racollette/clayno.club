@@ -197,7 +197,7 @@ export default function Profile() {
             )}
           </div>
         </section>
-        {userTribes && (
+        {userTribes && userTribes?.length > 0 && (
           <section className="flex w-full flex-col items-center gap-2">
             <div className="mt-8 p-2 text-xl font-extrabold">Tribes</div>
             <div className="flex w-full flex-col gap-2 rounded-lg bg-stone-800 p-4 sm:w-96">
