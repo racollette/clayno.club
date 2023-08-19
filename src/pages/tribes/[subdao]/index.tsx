@@ -27,14 +27,20 @@ export default function SubDAO() {
         <div className="flex w-full flex-col justify-center gap-8 align-middle lg:w-full xl:w-11/12 2xl:w-10/12">
           {!isLoading && data ? (
             <>
-              <div className="relative aspect-[3/1] overflow-clip rounded-lg md:mx-8">
+              <div
+                className={`relative 
+                aspect-[3/1]
+                overflow-hidden rounded-lg md:mx-8`}
+              >
                 {data.banner_url && (
-                  <Image
-                    src={data.banner_url}
-                    alt={data?.name}
-                    className="rounded-lg object-contain"
-                    fill
-                  />
+                  <div className="overflow-hidden">
+                    <Image
+                      src={data.banner_url}
+                      alt={data?.name}
+                      className="rounded-lg object-cover"
+                      fill
+                    />
+                  </div>
                 )}
                 <div className="absolute bottom-2 left-4 flex flex-row gap-2">
                   {data.website && (

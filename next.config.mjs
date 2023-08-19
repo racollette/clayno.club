@@ -19,16 +19,51 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: [
-      "nftstorage.link",
-      "arweave.net",
-      "prod-image-cdn.tensor.trade",
-      "pbs.twimg.com",
-      "ton.twitter.com",
-      "cdn.discordapp.com",
-      "ui-avatars.com",
-      "www.dinoherd.cc"
-    ]
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.nftstorage.link',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.arweave.net',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.prod-image-cdn.tensor.trade',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.pbs.twimg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.ton.twitter.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cdn.discordapp.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.ui-avatars.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.www.dinoherd.cc',
+      },
+    ],
+    // domains: [
+    //   "nftstorage.link",
+    //   "arweave.net",
+    //   "prod-image-cdn.tensor.trade",
+    //   "pbs.twimg.com",
+    //   "ton.twitter.com",
+    //   "cdn.discordapp.com",
+    //   "ui-avatars.com",
+    //   "www.dinoherd.cc"
+    // ],
+    unoptimized: true
   },
   publicRuntimeConfig: {
     myRPC: process.env.RPC

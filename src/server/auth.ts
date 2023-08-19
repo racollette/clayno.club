@@ -198,6 +198,12 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          console.log(credentials?.valid);
+          console.log(credentials?.programId);
+
+          console.log(credentials?.nonce);
+
+          console.log(credentials?.verifySignatures);
           if (
             !credentials?.valid ||
             credentials?.programId !==

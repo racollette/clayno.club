@@ -36,6 +36,11 @@ const Settings = () => {
       : id ?? "none",
   });
 
+  console.log(
+    userId ? userId : connected && publicKey ? publicKey.toString() : id ?? ""
+  );
+  console.log(user);
+
   // console.log(session);
   // console.log(user);
 
