@@ -86,6 +86,7 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+      authorization: "https://discord.com/api/oauth2/authorize?scope=identify",
     }),
     TwitterProvider({
       clientId: env.TWITTER_CLIENT_ID,
