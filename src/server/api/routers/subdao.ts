@@ -103,6 +103,24 @@ export const subdaoRouter = createTRPCRouter({
               },
             },
             {
+              claymakers: {
+                some: {
+                  holderOwner: {
+                    in: input.wallets,
+                  },
+                },
+              },
+            },
+            {
+              clay: {
+                some: {
+                  holderOwner: {
+                    in: input.wallets,
+                  },
+                },
+              },
+            },
+            {
               holders: {
                 some: {
                   owner: {
