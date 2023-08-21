@@ -262,8 +262,6 @@ export default function DataTable<TData, TValue>({
     },
   });
 
-  console.log(table.getRowModel().rows.length);
-
   return (
     <div>
       {/* <div className="flex items-center py-4"> */}

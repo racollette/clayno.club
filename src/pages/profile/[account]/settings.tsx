@@ -36,14 +36,6 @@ const Settings = () => {
       : id ?? "none",
   });
 
-  console.log(
-    userId ? userId : connected && publicKey ? publicKey.toString() : id ?? ""
-  );
-  console.log(user);
-
-  // console.log(session);
-  // console.log(user);
-
   const linkDiscord = api.binding.linkDiscord.useMutation();
   const linkTwitter = api.binding.linkTwitter.useMutation();
   const unlinkDiscord = api.binding.unlinkDiscord.useMutation();

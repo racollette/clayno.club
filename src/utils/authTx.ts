@@ -21,8 +21,6 @@ export const buildAuthTx = (nonce: string): Transaction => {
 };
 
 export const validateAuthTx = (tx: Transaction, nonce: string): boolean => {
-  console.log(tx);
-  console.log(nonce);
   try {
     const inx = tx.instructions[2];
     if (!inx?.programId.equals(MEMO_PROGRAM_ID)) return false;

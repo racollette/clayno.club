@@ -97,7 +97,6 @@ export default function LoginModal() {
         // Encode and send tx to signer, decode and sign
         const signedTx = await signTransaction(tx);
 
-        console.log(signedTx);
         // Encode, send back, decode and verify signedTx signature
         validSignature = validateAuthTx(signedTx, "test-nonce");
         const inx = signedTx.instructions[2];
