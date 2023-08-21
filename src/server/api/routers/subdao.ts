@@ -19,6 +19,8 @@ export const subdaoRouter = createTRPCRouter({
               attributes: true,
             },
           },
+          claymakers: true,
+          clay: true,
           holders: {
             orderBy: {
               amount: "desc",

@@ -9,10 +9,12 @@ datasource db {
 }
 
 model Holder {
-  owner   String   @id
-  amount  Int
-  mints   Dino[]
-  subdaos SubDAO[]
+  owner      String      @id
+  amount     Int
+  mints      Dino[]
+  subdaos    SubDAO[]
+  claymakers Claymaker[]
+  clay       Clay[]
 }
 
 model Dino {
@@ -123,8 +125,8 @@ model Wallet {
 }
 
 model SubDAO {
-  id                String   @id @default(cuid())
-  name              String   @unique
+  id                String      @id @default(cuid())
+  name              String      @unique
   description       String?
   requirements      String?
   acronym           String?
@@ -139,6 +141,36 @@ model SubDAO {
   verifiedAddresses Int?
   dinos             Dino[]
   holders           Holder[]
+  claymakers        Claymaker[]
+  clay              Clay[]
+}
+
+model Clay {
+  mint        String   @id
+  name        String
+  gif         String
+  color       String
+  holderOwner String?
+  rarity      Int?
+  subDAOId    String?
+  holder      Holder?  @relation(fields: [holderOwner], references: [owner])
+  subdaos     SubDAO[]
+
+  @@index([holderOwner])
+}
+
+model Claymaker {
+  mint        String   @id
+  name        String
+  gif         String
+  edition     String
+  holderOwner String?
+  rarity      Int?
+  subDAOId    String?
+  holder      Holder?  @relation(fields: [holderOwner], references: [owner])
+  subdaos     SubDAO[]
+
+  @@index([holderOwner])
 }
 
 model DinoToSubDAO {

@@ -40,11 +40,13 @@ function processQuantityTypeData(data: any, isLoading: boolean, users: any) {
 }
 
 function processTraitAndSpeciesData(data: any, isLoading: boolean, users: any) {
-  const groupedDinos = data?.dinos.reduce((groupsMap: any, dino: any) => {
-    const key = dino.holderOwner || "unowned";
-    const dinos = groupsMap.get(key) || [];
-    dinos.push(dino);
-    groupsMap.set(key, dinos);
+  const items = data?.dinos.concat(data?.clay).concat(data?.claymakers);
+
+  const groupedDinos = items?.reduce((groupsMap: any, item: any) => {
+    const key = item.holderOwner || "unowned";
+    const items = groupsMap.get(key) || [];
+    items.push(item);
+    groupsMap.set(key, items);
     return groupsMap;
   }, new Map());
 
@@ -66,6 +68,14 @@ function processTraitAndSpeciesData(data: any, isLoading: boolean, users: any) {
     sagaSortedMap.delete("unowned");
     sagaSortedMap.set("unowned", { dinos: listedDinos?.dinos });
   }
+
+  // if (data?.clays && data.clays.length > 0) {
+  //   sagaSortedMap.set("clays", { dinos: data.clays });
+  // }
+
+  // if (data?.clays && data.claymakers.length > 0) {
+  //   sagaSortedMap.set("claymakers", { dinos: data.claymakers });
+  // }
 
   return { data: data, isLoading: isLoading, sortedMap: sagaSortedMap };
 }
@@ -121,6 +131,7 @@ function processSortedGroupedDinos(sortedGroupedDinos: any) {
     for (const [key, value] of sortedGroupedDinos.entries()) {
       if (value.dinos.length === 1) {
         const singleDino = value.dinos[0];
+        if (!singleDino.attributes) continue;
         if (
           singleDino.attributes.species === "Spino" ||
           singleDino.attributes.species === "Para"

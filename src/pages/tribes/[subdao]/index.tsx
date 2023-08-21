@@ -14,6 +14,9 @@ export default function SubDAO() {
   const acronym = getQueryString(subdao);
   const { data, isLoading, sortedMap } = groupAndFilter(acronym);
 
+  console.log(data);
+  console.log(sortedMap);
+
   return (
     <>
       <Head>
