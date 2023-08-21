@@ -90,6 +90,7 @@ const ImageContainer = ({ item }: any) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
+
   return (
     <div
       className={`relative aspect-square overflow-clip rounded-md ${
@@ -102,7 +103,7 @@ const ImageContainer = ({ item }: any) => {
     >
       <Image
         src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-          isHovered ? item.pfp : item.gif
+          !item.attributes ? item.gif : isHovered ? item.pfp : item.gif
         }`}
         alt={item.name}
         fill
@@ -122,11 +123,13 @@ const ImageContainer = ({ item }: any) => {
           >
             {item.name.split(" ").pop()}
           </div>
-          <div
-            className={`right-left absolute top-1 z-20 rounded-md px-2 py-1 text-xs text-white`}
-          >
-            <TraitHover attributes={item.attributes} />
-          </div>
+          {item.attributes && (
+            <div
+              className={`right-left absolute top-1 z-20 rounded-md px-2 py-1 text-xs text-white`}
+            >
+              <TraitHover attributes={item.attributes} />
+            </div>
+          )}
         </>
       )}
     </div>
