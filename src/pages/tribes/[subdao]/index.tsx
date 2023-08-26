@@ -7,6 +7,8 @@ import Link from "next/link";
 import { getTraitBadgeColor } from "~/utils/colors";
 import { groupAndFilter } from "~/utils/subdaos";
 import Head from "next/head";
+import { Fragment } from "react";
+import { Attributes, Dino } from "@prisma/client";
 
 export default function SubDAO() {
   const router = useRouter();
@@ -167,7 +169,7 @@ export default function SubDAO() {
                 </div>
               </section>
 
-              <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              {/* <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {!isLoading &&
                   sortedMap &&
                   Array.from(sortedMap.entries()).map(([owner, data]) => (
@@ -179,6 +181,44 @@ export default function SubDAO() {
                     />
                   ))}
                 <div className="flex"></div>
+              </div> */}
+              <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {!isLoading && sortedMap && (
+                  <>
+                    {!data.grouping ? (
+                      <>
+                        {Array.from(sortedMap.entries()).map(
+                          ([owner, data]) => (
+                            <Fragment key={owner}>
+                              {data.dinos.map((dino: any, index: number) => (
+                                <Member
+                                  key={`${owner}_${index}`} // Use a unique key for each dino
+                                  owner={owner}
+                                  // @ts-ignore
+                                  data={{ dinos: [dino], user: data.user }}
+                                  acronym={getQueryString(subdao)}
+                                />
+                              ))}
+                            </Fragment>
+                          )
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {Array.from(sortedMap.entries()).map(
+                          ([owner, data]) => (
+                            <Member
+                              key={owner}
+                              owner={owner}
+                              data={data}
+                              acronym={getQueryString(subdao)}
+                            />
+                          )
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </>
           ) : null}

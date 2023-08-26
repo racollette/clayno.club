@@ -127,7 +127,7 @@ model Wallet {
 model SubDAO {
   id                String      @id @default(cuid())
   name              String      @unique
-  description       String?
+  description       String?     @db.VarChar(500)
   requirements      String?
   acronym           String?
   banner_url        String?
@@ -139,6 +139,7 @@ model SubDAO {
   type              String?
   uniqueAddresses   Int?
   verifiedAddresses Int?
+  grouping          Boolean?
   dinos             Dino[]
   holders           Holder[]
   claymakers        Claymaker[]
@@ -189,4 +190,22 @@ model HolderToSubDAO {
   @@unique([A, B], map: "_HolderToSubDAO_AB_unique")
   @@index([B], map: "_HolderToSubDAO_B_index")
   @@map("_HolderToSubDAO")
+}
+
+model ClayToSubDAO {
+  A String
+  B String
+
+  @@unique([A, B], map: "_ClayToSubDAO_AB_unique")
+  @@index([B], map: "_ClayToSubDAO_B_index")
+  @@map("_ClayToSubDAO")
+}
+
+model ClaymakerToSubDAO {
+  A String
+  B String
+
+  @@unique([A, B], map: "_ClaymakerToSubDAO_AB_unique")
+  @@index([B], map: "_ClaymakerToSubDAO_B_index")
+  @@map("_ClaymakerToSubDAO")
 }
