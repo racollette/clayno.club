@@ -169,19 +169,6 @@ export default function SubDAO() {
                 </div>
               </section>
 
-              {/* <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                {!isLoading &&
-                  sortedMap &&
-                  Array.from(sortedMap.entries()).map(([owner, data]) => (
-                    <Member
-                      key={owner}
-                      owner={owner}
-                      data={data}
-                      acronym={getQueryString(subdao)}
-                    />
-                  ))}
-                <div className="flex"></div>
-              </div> */}
               <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {!isLoading && sortedMap && (
                   <>
@@ -190,15 +177,19 @@ export default function SubDAO() {
                         {Array.from(sortedMap.entries()).map(
                           ([owner, data]) => (
                             <Fragment key={owner}>
-                              {data.dinos.map((dino: any, index: number) => (
-                                <Member
-                                  key={`${owner}_${index}`} // Use a unique key for each dino
-                                  owner={owner}
-                                  // @ts-ignore
-                                  data={{ dinos: [dino], user: data.user }}
-                                  acronym={getQueryString(subdao)}
-                                />
-                              ))}
+                              {data.dinos.map(
+                                (
+                                  dino: Dino & { attributes: Attributes },
+                                  index: number
+                                ) => (
+                                  <Member
+                                    key={`${owner}_${index}`} // Use a unique key for each dino
+                                    owner={owner}
+                                    data={{ dinos: [dino], user: data.user }}
+                                    acronym={getQueryString(subdao)}
+                                  />
+                                )
+                              )}
                             </Fragment>
                           )
                         )}

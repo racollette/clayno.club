@@ -18,7 +18,7 @@ import { fetchOtherWallets } from "~/utils/subdaos";
 type MemberProps = {
   owner: string;
   data: {
-    dinos: Dino[] & { attributes: Attributes[] };
+    dinos: (Dino & { attributes: Attributes })[];
     user: User & { wallets: Wallet[]; discord: Discord; twitter: Twitter };
   };
   acronym: string;
@@ -42,7 +42,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
 
   useEffect(() => {
     if (wallets) {
-      if (acronym !== "CC" || "VClayns") return;
+      if (acronym !== "CC") return;
       const mintArray = otherWallets?.flatMap((item) => item.mints);
       if (mintArray) {
         setUserDinos([...dinos, ...mintArray]);
