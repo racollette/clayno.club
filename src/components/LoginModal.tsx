@@ -20,6 +20,7 @@ import ProfileButton from "./ProfileButton";
 import { shortAccount, truncateAccount } from "~/utils/addresses";
 import { getSessionDetails } from "~/utils/session";
 import DefaultToast from "./Toast";
+import { useUser } from "~/hooks/useUser";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -40,41 +41,19 @@ export default function LoginModal() {
     useWallet();
   const [host, setHost] = useState<string>();
   const [openModal, setOpenModal] = useState<string | undefined>();
-  // const [signing, setSigning] = useState<boolean>(false);
   const [useLedger, setUseLedger] = useState<boolean>(false);
   const walletModal = useWalletModal();
 
   const { data: session, status } = useSession();
-  const [userId, setUserId] = useState<string | undefined>();
-  const { sessionType, id } = getSessionDetails(session);
 
-  // const loading = status === "loading";
   const signedIn = status === "authenticated";
 
-  const { data: user, isLoading } = api.binding.getUser.useQuery({
-    type: connected ? "wallet" : userId ? "id" : sessionType,
-    id:
-      connected && publicKey
-        ? publicKey.toString()
-        : userId
-        ? userId
-        : id ?? "none",
-  });
-
-  // console.log(session);
-  // console.log(signedIn);
+  const { user, isLoading } = useUser();
 
   useEffect(() => {
-    // setSigning(false);
     setUseLedger(false);
     setHost(window.location.host);
   }, []);
-
-  useEffect(() => {
-    if (user?.id) {
-      setUserId(user.id);
-    }
-  }, [user]);
 
   const handleSignIn = async (useLedger: boolean) => {
     try {
@@ -84,8 +63,6 @@ export default function LoginModal() {
 
       const csrf = await getCsrfToken();
       if (!publicKey || !csrf || !signMessage || !signTransaction) return;
-
-      // setSigning(true);
 
       let validSignature;
 
@@ -130,7 +107,6 @@ export default function LoginModal() {
         });
       }
 
-      // setSigning(false);
       router.push(
         `/profile/${
           user?.discord?.username ??
@@ -144,7 +120,6 @@ export default function LoginModal() {
       setOpenModal(undefined);
     } catch (error) {
       console.log(error);
-      // setSigning(false);
     }
   };
 

@@ -27,17 +27,21 @@ export default function Header() {
       <Navbar.Collapse>
         <Navbar.Link
           className="text-md cursor-pointer text-zinc-500 hover:bg-zinc-800 hover:text-white"
-          // onClick={() => router.push(`/`)}
           href={`/`}
         >
           Herds
         </Navbar.Link>
         <Navbar.Link
           className="text-md cursor-pointer text-zinc-500 hover:bg-zinc-800 hover:text-white"
-          // onClick={() => router.push(`/tribes`)}
           href={`/tribes`}
         >
           Tribes
+        </Navbar.Link>
+        <Navbar.Link
+          className="text-md cursor-pointer text-zinc-500 hover:bg-zinc-800 hover:text-white"
+          href={`/fuser`}
+        >
+          Fuser
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
