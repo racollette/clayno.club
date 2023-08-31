@@ -22,6 +22,37 @@ const initialGrid = (columns: number, rows: number) => {
   return grid;
 };
 
+const updateGrid = (
+  grid: GridItemProps[],
+  currentColumns: number,
+  currentRows: number,
+  newColumns: number,
+  newRows: number
+) => {
+  const updatedGrid: GridItemProps[] = [];
+
+  // Loop through the new number of rows and columns
+  for (let i = 0; i < newColumns * newRows; i++) {
+    // Calculate the corresponding index in the current grid
+    const currentRowIndex = Math.floor(i / currentColumns);
+    const currentColIndex = i % currentColumns;
+    const currentGridIndex = currentRowIndex * currentColumns + currentColIndex;
+
+    if (i < grid.length) {
+      // If the index is within the existing grid size, keep the existing data
+      const data = grid[currentGridIndex];
+      if (data) {
+        updatedGrid.push(data);
+      }
+    } else {
+      // If the index is beyond the existing grid size, add new data
+      updatedGrid.push({ index: i, imageURL: "" });
+    }
+  }
+
+  return updatedGrid;
+};
+
 type AssetImageProps = {
   imageURL: string;
 };
@@ -53,17 +84,24 @@ export default function FuserPage() {
   const [rows, setRows] = useState<number>(2);
   const [cols, setCols] = useState<number>(3);
 
+  console.log(rows);
+  console.log(cols);
+
   const [grid, setGrid] = useState<GridItemProps[]>(initialGrid(cols, rows));
   // const [images, setImages] = useState([]);
   const [droppedImages, setDroppedImages] = useState<string[]>();
 
   const handleSlideRows = (v: number[]) => {
     if (!v[0]) return;
+    setGrid((prevGrid) => updateGrid(prevGrid, cols, rows, cols, v[0] ?? rows));
+
     setRows(v[0]);
   };
 
   const handleSlideColumns = (v: number[]) => {
     if (!v[0]) return;
+    setGrid((prevGrid) => updateGrid(prevGrid, cols, rows, v[0] ?? cols, rows));
+
     setCols(v[0]);
   };
 
@@ -114,7 +152,7 @@ export default function FuserPage() {
               />
             </div>
             <div
-              className={classnames("grid", `grid-cols-4`, "gap-2")}
+              className={classnames("grid", "gap-2")}
               style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
             >
               {/* {Array.from({ length: rows * cols }).map((_, index) => (
