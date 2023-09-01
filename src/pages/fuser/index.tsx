@@ -14,43 +14,32 @@ type GridItemProps = {
   imageURL: string;
 };
 
-const initialGrid = (columns: number, rows: number) => {
-  const grid = [];
-  for (let i = 0; i < columns * rows; i++) {
-    grid.push({ index: i, imageURL: "" });
+const updateGrid = (type: string, size: number, grid: GridItemProps[][]) => {
+  const empty = { index: 0, imageURL: "" };
+  const difference = size - (type === "col" ? grid[0].length : grid.length);
+
+  if (type === "row") {
+    if (difference > 0) {
+      grid.push(
+        ...Array.from({ length: difference }, () =>
+          new Array(grid[0]?.length).fill(empty)
+        )
+      );
+    } else if (difference < 0) {
+      grid.splice(size);
+    }
+    return grid;
   }
-  return grid;
-};
 
-const updateGrid = (
-  grid: GridItemProps[],
-  currentColumns: number,
-  currentRows: number,
-  newColumns: number,
-  newRows: number
-) => {
-  const updatedGrid: GridItemProps[] = [];
-
-  // Loop through the new number of rows and columns
-  for (let i = 0; i < newColumns * newRows; i++) {
-    // Calculate the corresponding index in the current grid
-    const currentRowIndex = Math.floor(i / currentColumns);
-    const currentColIndex = i % currentColumns;
-    const currentGridIndex = currentRowIndex * currentColumns + currentColIndex;
-
-    if (i < grid.length) {
-      // If the index is within the existing grid size, keep the existing data
-      const data = grid[currentGridIndex];
-      if (data) {
-        updatedGrid.push(data);
-      }
-    } else {
-      // If the index is beyond the existing grid size, add new data
-      updatedGrid.push({ index: i, imageURL: "" });
+  for (let r = 0; r < grid.length; r++) {
+    if (difference > 0) {
+      grid[r]?.push(...Array.from({ length: difference }, () => empty));
+    } else if (difference < 0) {
+      grid[r]?.splice(size);
     }
   }
 
-  return updatedGrid;
+  return grid;
 };
 
 type AssetImageProps = {
@@ -78,49 +67,60 @@ const ImageTest = ({ imageURL }: AssetImageProps) => {
 };
 
 export default function FuserPage() {
-  // const dragUrl = useRef();
-  // const stageRef = useRef();
-  const slider = useRef();
   const [rows, setRows] = useState<number>(2);
   const [cols, setCols] = useState<number>(3);
 
-  console.log(rows);
-  console.log(cols);
-
-  const [grid, setGrid] = useState<GridItemProps[]>(initialGrid(cols, rows));
-  // const [images, setImages] = useState([]);
-  const [droppedImages, setDroppedImages] = useState<string[]>();
+  const initialGrid = Array.from({ length: rows }, () =>
+    Array.from({ length: cols }, (_, index) => ({
+      index: index,
+      imageURL: "",
+    }))
+  );
+  const [grid, setGrid] = useState<GridItemProps[][]>(initialGrid);
 
   const handleSlideRows = (v: number[]) => {
     if (!v[0]) return;
-    setGrid((prevGrid) => updateGrid(prevGrid, cols, rows, cols, v[0] ?? rows));
-
+    const newRows = v[0];
+    setGrid((prevGrid) => updateGrid("row", newRows, prevGrid));
     setRows(v[0]);
   };
 
   const handleSlideColumns = (v: number[]) => {
     if (!v[0]) return;
-    setGrid((prevGrid) => updateGrid(prevGrid, cols, rows, v[0] ?? cols, rows));
-
+    const newCols = v[0];
+    setGrid((prevGrid) => updateGrid("col", newCols, prevGrid));
     setCols(v[0]);
+  };
+
+  const handleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    rowIndex: number,
+    colIndex: number
+  ) => {
+    e.preventDefault();
+
+    // Get the dropped image's URL from the dataTransfer object
+    const droppedImageUrl = e.dataTransfer.getData("text/plain");
+
+    // Update the imageURL of the specific cell in the grid
+    setGrid((prevGrid) =>
+      prevGrid.map((row, rIndex) =>
+        rIndex === rowIndex
+          ? row.map((cell, cIndex) =>
+              cIndex === colIndex
+                ? { ...cell, imageURL: droppedImageUrl }
+                : cell
+            )
+          : row
+      )
+    );
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    e.preventDefault();
-
-    // Get the dropped image's URL from the dataTransfer object
-    const droppedImageUrl = e.dataTransfer.getData("text/plain");
-    // setDroppedImages((prevImages) => [...prevImages, droppedImageUrl]);
-    setGrid((prevGrid) =>
-      prevGrid.map((item) =>
-        item.index === index ? { ...item, imageURL: droppedImageUrl } : item
-      )
-    );
-  };
+  let gridCount = 0;
 
   return (
     <>
@@ -152,48 +152,33 @@ export default function FuserPage() {
               />
             </div>
             <div
-              className={classnames("grid", "gap-2")}
+              className="grid gap-2"
               style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
             >
-              {/* {Array.from({ length: rows * cols }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex h-32 w-32 items-center justify-center bg-stone-800"
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, index)}
-                >
-                  {index + 1}
-                  {droppedImages.map((imageUrl, index) => (
-                    <img
-                      key={index}
-                      src={imageUrl}
-                      alt={`Dropped Image ${index}`}
-                    />
-                  ))}
-                </div>
-              ))} */}
-              {grid.map((item, index) => {
-                console.log(item);
-                return (
-                  <div
-                    key={index}
-                    className="relative flex h-32 w-32 items-center justify-center bg-stone-800"
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, index)}
-                  >
-                    {item.imageURL ? (
-                      <Image
-                        key={index}
-                        src={item.imageURL}
-                        alt={`Dropped Image ${index}`}
-                        fill
-                      />
-                    ) : (
-                      <div>{index + 1}</div>
-                    )}
-                  </div>
-                );
-              })}
+              {grid.map((row, rowIndex) =>
+                row.map((item, colIndex) => {
+                  gridCount++;
+                  return (
+                    <div
+                      key={`${rowIndex}_${colIndex}`}
+                      className="relative flex h-32 w-32 items-center justify-center bg-stone-800"
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
+                    >
+                      {item.imageURL ? (
+                        <Image
+                          key={`${rowIndex}_${colIndex}`}
+                          src={item.imageURL}
+                          alt={`Dropped Image ${rowIndex}_${colIndex}`}
+                          fill
+                        />
+                      ) : (
+                        <div>{gridCount}</div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <SliderBase
