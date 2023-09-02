@@ -8,6 +8,8 @@ import classnames from "classnames";
 import { Slider as SliderBase } from "~/@/components/ui/slider";
 import * as Slider from "@radix-ui/react-slider";
 import sliderStyles from "./slider.module.css";
+import DinoSlide from "~/components/DinoSlide";
+import { HiXCircle } from "react-icons/hi";
 
 type GridItemProps = {
   index: number;
@@ -116,6 +118,19 @@ export default function FuserPage() {
     );
   };
 
+  const handleClear = (rowIndex: number, colIndex: number) => {
+    // Update the imageURL of the specific cell in the grid
+    setGrid((prevGrid) =>
+      prevGrid.map((row, rIndex) =>
+        rIndex === rowIndex
+          ? row.map((cell, cIndex) =>
+              cIndex === colIndex ? { ...cell, imageURL: "" } : cell
+            )
+          : row
+      )
+    );
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
@@ -134,23 +149,6 @@ export default function FuserPage() {
       <Layout>
         <section className="flex flex-row items-center justify-center gap-x-8">
           <div className="flex flex-col items-center gap-y-4">
-            <div className="flex flex-row">
-              <ImageTest
-                imageURL={
-                  "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/https://nftstorage.link/ipfs/bafybeiaknhrblb6ss4ds7fxzlrvg2zkvr2dfjq4adde73ykxjj3nnh6fju/3410.gif"
-                }
-              />
-              <ImageTest
-                imageURL={
-                  "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/https://nftstorage.link/ipfs/bafybeiai4m34547vw7gegj3zzxtwjkovualbeuaiwknnjx5vjifh5ghofe/9078.gif"
-                }
-              />
-              <ImageTest
-                imageURL={
-                  "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/https://nftstorage.link/ipfs/bafybeia44fro6wzbakusvilso6775yvgnlwaqdxebvek2uiudffnvuknqi/8865.gif"
-                }
-              />
-            </div>
             <div
               className="grid gap-2"
               style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
@@ -161,17 +159,25 @@ export default function FuserPage() {
                   return (
                     <div
                       key={`${rowIndex}_${colIndex}`}
-                      className="relative flex h-32 w-32 items-center justify-center bg-stone-800"
+                      className="relative flex h-32 w-32 cursor-grab items-center justify-center bg-stone-800"
                       onDragOver={handleDragOver}
                       onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
                     >
                       {item.imageURL ? (
-                        <Image
-                          key={`${rowIndex}_${colIndex}`}
-                          src={item.imageURL}
-                          alt={`Dropped Image ${rowIndex}_${colIndex}`}
-                          fill
-                        />
+                        <>
+                          <Image
+                            key={`${rowIndex}_${colIndex}`}
+                            src={item.imageURL}
+                            alt={`Dropped Image ${rowIndex}_${colIndex}`}
+                            fill
+                          />
+                          <div
+                            onClick={(e) => handleClear(rowIndex, colIndex)}
+                            className="flex transform cursor-pointer items-center justify-center opacity-0 transition-opacity hover:opacity-100"
+                          >
+                            <HiXCircle size={50} />
+                          </div>
+                        </>
                       ) : (
                         <div>{gridCount}</div>
                       )}
@@ -209,6 +215,9 @@ export default function FuserPage() {
               <Slider.Thumb className={sliderStyles.SliderThumb} />
             </Slider.Root>
           </div>
+        </section>
+        <section>
+          <DinoSlide />
         </section>
       </Layout>
     </>

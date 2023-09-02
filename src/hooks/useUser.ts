@@ -27,5 +27,5 @@ export const useUser = () => {
     }
   }, [user]);
 
-  return { user: user, isLoading: isLoading };
+  return { user: user, isLoading: isLoading, session: session };
 };
