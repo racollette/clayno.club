@@ -56,8 +56,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <SessionProvider session={session}>
             <Header />
             <Component {...pageProps} />
-            <Analytics />
-            <Footer />
+            <Analytics /> <Footer />
           </SessionProvider>
         </WalletModalProvider>
       </WalletProvider>

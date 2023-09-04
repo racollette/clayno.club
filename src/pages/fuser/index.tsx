@@ -11,6 +11,12 @@ import sliderStyles from "./slider.module.css";
 import DinoSlide from "~/components/DinoSlide";
 import { HiXCircle } from "react-icons/hi";
 
+import { AdvancedImage } from "@cloudinary/react";
+import { Cloudinary } from "@cloudinary/url-gen";
+
+// Import any actions required for transformations.
+import { fill } from "@cloudinary/url-gen/actions/resize";
+
 type GridItemProps = {
   index: number;
   imageURL: string;
@@ -49,6 +55,20 @@ type AssetImageProps = {
 };
 
 const ImageTest = ({ imageURL }: AssetImageProps) => {
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: "dncw1tebs",
+    },
+  });
+  // https://res.cloudinary.com/dncw1tebs/image/upload/v1693789077/docs/models.gif
+  const myImage = cld.image("docs/models");
+
+  // 4. Transform your image
+  //=========================
+
+  // Resize to 250 x 250 pixels using the 'fill' crop mode.
+  myImage.resize(fill().width(250).height(250));
+
   const handleDragStart = (
     e: React.DragEvent<HTMLImageElement>,
     imageURL: string
@@ -57,14 +77,15 @@ const ImageTest = ({ imageURL }: AssetImageProps) => {
   };
 
   return (
-    <Image
-      src={imageURL}
-      alt=""
-      width={96}
-      height={96}
-      draggable="true"
-      onDragStart={(e) => handleDragStart(e, e.currentTarget.src)}
-    />
+    // <Image
+    //   src={imageURL}
+    //   alt=""
+    //   width={96}
+    //   height={96}
+    //   draggable="true"
+    //   onDragStart={(e) => handleDragStart(e, e.currentTarget.src)}
+    // />
+    <AdvancedImage cldImg={myImage} />
   );
 };
 
@@ -131,6 +152,21 @@ export default function FuserPage() {
     );
   };
 
+  const handlePlace = (imageURL: string) => {
+    let setItem = false;
+    setGrid((prevGrid) =>
+      prevGrid.map((row) =>
+        row.map((cell) => {
+          if (cell.imageURL === "" && !setItem) {
+            setItem = true;
+            return { ...cell, imageURL: imageURL };
+          }
+          return { ...cell };
+        })
+      )
+    );
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
@@ -159,7 +195,7 @@ export default function FuserPage() {
                   return (
                     <div
                       key={`${rowIndex}_${colIndex}`}
-                      className="relative flex h-32 w-32 cursor-grab items-center justify-center bg-stone-800"
+                      className="relative flex aspect-square h-48 w-48 cursor-grab items-center justify-center bg-stone-800"
                       onDragOver={handleDragOver}
                       onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
                     >
@@ -217,7 +253,7 @@ export default function FuserPage() {
           </div>
         </section>
         <section>
-          <DinoSlide />
+          <DinoSlide handlePlace={handlePlace} />
         </section>
       </Layout>
     </>
