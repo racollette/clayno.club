@@ -16,6 +16,7 @@ import { Cloudinary } from "@cloudinary/url-gen";
 
 // Import any actions required for transformations.
 import { fill } from "@cloudinary/url-gen/actions/resize";
+import ColorPicker from "~/components/ColorPicker";
 
 type GridItemProps = {
   index: number;
@@ -92,6 +93,8 @@ const ImageTest = ({ imageURL }: AssetImageProps) => {
 export default function FuserPage() {
   const [rows, setRows] = useState<number>(2);
   const [cols, setCols] = useState<number>(3);
+  const [outlineWidth, setOutlineWidth] = useState<number>(2);
+  const [color, setColor] = useState<string>("#aabbcc");
 
   const initialGrid = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, (_, index) => ({
@@ -100,6 +103,11 @@ export default function FuserPage() {
     }))
   );
   const [grid, setGrid] = useState<GridItemProps[][]>(initialGrid);
+
+  const handleOutlineWidth = (v: number[]) => {
+    if (v[0] === undefined) return;
+    setOutlineWidth(v[0]);
+  };
 
   const handleSlideRows = (v: number[]) => {
     if (!v[0]) return;
@@ -171,6 +179,10 @@ export default function FuserPage() {
     e.preventDefault();
   };
 
+  const handleReset = () => {
+    setGrid(initialGrid);
+  };
+
   let gridCount = 0;
 
   return (
@@ -183,58 +195,69 @@ export default function FuserPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <section className="flex flex-row items-center justify-center gap-x-8">
-          <div className="flex flex-col items-center gap-y-4">
-            <div
-              className="grid gap-2"
-              style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+        <section className="my-10 flex flex-col items-start justify-center gap-y-4">
+          <div className="flex flex-row justify-center rounded-lg bg-stone-800 px-8 py-2">
+            <button
+              onClick={handleReset}
+              className="rounded-lg bg-sky-700 px-3 py-1 hover:bg-sky-600"
             >
-              {grid.map((row, rowIndex) =>
-                row.map((item, colIndex) => {
-                  gridCount++;
-                  return (
-                    <div
-                      key={`${rowIndex}_${colIndex}`}
-                      className="relative flex aspect-square h-48 w-48 cursor-grab items-center justify-center bg-stone-800"
-                      onDragOver={handleDragOver}
-                      onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
-                    >
-                      {item.imageURL ? (
-                        <>
-                          <Image
-                            key={`${rowIndex}_${colIndex}`}
-                            src={item.imageURL}
-                            alt={`Dropped Image ${rowIndex}_${colIndex}`}
-                            fill
-                          />
-                          <div
-                            onClick={(e) => handleClear(rowIndex, colIndex)}
-                            className="flex transform cursor-pointer items-center justify-center opacity-0 transition-opacity hover:opacity-100"
-                          >
-                            <HiXCircle size={50} />
-                          </div>
-                        </>
-                      ) : (
-                        <div>{gridCount}</div>
-                      )}
-                    </div>
-                  );
-                })
-              )}
-            </div>
-            <div className="flex flex-col gap-1">
-              <SliderBase
-                onValueChange={(v) => handleSlideColumns(v)}
-                defaultValue={[3]}
-                min={2}
-                max={8}
-                step={1}
-                className="w-48"
-              />
-            </div>
-            <div>Columns</div>
+              Clear
+            </button>
           </div>
-          <div className="">
+          <div className="flex flex-row items-start gap-x-4">
+            <div className="flex flex-col items-center gap-y-4">
+              <div
+                className="grid"
+                style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+              >
+                {grid.map((row, rowIndex) =>
+                  row.map((item, colIndex) => {
+                    gridCount++;
+                    return (
+                      <div
+                        key={`${rowIndex}_${colIndex}`}
+                        style={{
+                          outlineWidth: `${outlineWidth}px`,
+                          outlineColor: color,
+                        }}
+                        className={`relative flex aspect-square ${
+                          cols * rows > 36
+                            ? `h-20 w-20`
+                            : cols * rows > 24 || cols > 8
+                            ? `h-28 w-28`
+                            : cols * rows > 12 || cols > 6
+                            ? `h-36 w-36`
+                            : `h-48 w-48`
+                        } cursor-grab items-center justify-center bg-stone-800 outline`}
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
+                      >
+                        {item.imageURL ? (
+                          <>
+                            <Image
+                              key={`${rowIndex}_${colIndex}`}
+                              src={item.imageURL}
+                              alt={`Dropped Image ${rowIndex}_${colIndex}`}
+                              fill
+                            />
+                            <div
+                              onClick={(e) => handleClear(rowIndex, colIndex)}
+                              className="flex transform cursor-pointer items-center justify-center opacity-0 transition-opacity hover:opacity-100"
+                            >
+                              <HiXCircle size={50} />
+                            </div>
+                          </>
+                        ) : (
+                          <div>{gridCount}</div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
+            {/* <div className="">
             <div>Rows</div>
             <Slider.Root
               onValueChange={(v) => handleSlideRows(v)}
@@ -250,6 +273,45 @@ export default function FuserPage() {
               </Slider.Track>
               <Slider.Thumb className={sliderStyles.SliderThumb} />
             </Slider.Root>
+          </div> */}
+            <div className="flex flex-col justify-start gap-4 rounded-md bg-stone-800 p-6">
+              <div className="flex flex-col gap-1">
+                <div>Columns</div>
+                <SliderBase
+                  onValueChange={(v) => handleSlideColumns(v)}
+                  defaultValue={[3]}
+                  min={1}
+                  max={10}
+                  step={1}
+                  className="w-48"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <div>Rows</div>
+                <SliderBase
+                  onValueChange={(v) => handleSlideRows(v)}
+                  defaultValue={[2]}
+                  min={1}
+                  max={10}
+                  step={1}
+                  className="w-48"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <div>Border Width</div>
+                <SliderBase
+                  onValueChange={(v) => handleOutlineWidth(v)}
+                  defaultValue={[2]}
+                  min={0}
+                  max={8}
+                  step={1}
+                  className="w-48"
+                />
+              </div>
+              <div>
+                <ColorPicker onChange={setColor} color={color} />
+              </div>
+            </div>
           </div>
         </section>
         <section>
