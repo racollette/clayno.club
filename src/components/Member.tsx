@@ -89,13 +89,13 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
       />
       <div className={`${expanded ? `mt-2` : `mt-0 md:mt-1`}`}>
         <div
-          className={`flex flex-col flex-nowrap items-center md:flex-row ${
+          className={`flex flex-col flex-nowrap items-start md:flex-row md:items-center ${
             expanded ? `justify-center` : `justify-between`
           } gap-1 py-1 md:gap-4 md:pt-2`}
         >
           <Link
             href={`/profile/${profile}`}
-            className="flex w-2/3 flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700"
+            className="flex w-11/12 flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700 md:w-2/3"
           >
             <div className="relative aspect-square h-6 w-6 md:h-8 md:w-8">
               <Image
