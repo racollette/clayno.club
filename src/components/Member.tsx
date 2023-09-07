@@ -97,7 +97,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
             href={`/profile/${profile}`}
             className={`flex ${
               !expanded && `w-2/3`
-            } flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700`}
+            } w-fit flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700`}
           >
             <div className="relative aspect-square h-6 w-6 md:h-8 md:w-8">
               <Image
