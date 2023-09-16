@@ -1,31 +1,30 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import Image from "next/image";
 import Head from "next/head";
-import classnames from "classnames";
 import { Slider as SliderBase } from "~/@/components/ui/slider";
-import * as Slider from "@radix-ui/react-slider";
-import sliderStyles from "./slider.module.css";
 import DinoSlide from "~/components/DinoSlide";
 import { HiXCircle } from "react-icons/hi";
 
 import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
-
-// Import any actions required for transformations.
-import { fill } from "@cloudinary/url-gen/actions/resize";
 import ColorPicker from "~/components/ColorPicker";
+import { Attributes, Dino } from "@prisma/client";
+import useFusion from "~/hooks/useFusion";
 
 type GridItemProps = {
   index: number;
   imageURL: string;
+  motion: string;
+  mint: string;
 };
 
 const updateGrid = (type: string, size: number, grid: GridItemProps[][]) => {
-  const empty = { index: 0, imageURL: "" };
-  const difference = size - (type === "col" ? grid[0].length : grid.length);
+  const empty = { index: 0, imageURL: "", motion: "", mint: "" };
+  const cols = grid[0]?.length ?? 0;
+  const difference = size - (type === "col" ? cols : grid.length);
 
   if (type === "row") {
     if (difference > 0) {
@@ -68,7 +67,7 @@ const ImageTest = ({ imageURL }: AssetImageProps) => {
   //=========================
 
   // Resize to 250 x 250 pixels using the 'fill' crop mode.
-  myImage.resize(fill().width(250).height(250));
+  // myImage.resize(fill().width(250).height(250));
 
   const handleDragStart = (
     e: React.DragEvent<HTMLImageElement>,
@@ -95,11 +94,17 @@ export default function FuserPage() {
   const [cols, setCols] = useState<number>(3);
   const [outlineWidth, setOutlineWidth] = useState<number>(2);
   const [color, setColor] = useState<string>("#aabbcc");
+  const collageRef = useRef<HTMLDivElement>(null);
+  const { doFusion, isLoading, error } = useFusion();
+  const [videoURL, setVideoURL] = useState<string | null>(null);
+  const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
 
   const initialGrid = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, (_, index) => ({
       index: index,
       imageURL: "",
+      motion: "",
+      mint: "",
     }))
   );
   const [grid, setGrid] = useState<GridItemProps[][]>(initialGrid);
@@ -123,6 +128,23 @@ export default function FuserPage() {
     setCols(v[0]);
   };
 
+  const handleDragStart = (
+    e: React.DragEvent<HTMLImageElement>,
+    imageURL: string,
+    motion: string,
+    mint: string
+  ) => {
+    // e.dataTransfer.setData("text/plain", imageURL);
+    e.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({
+        imageURL,
+        motion,
+        mint,
+      })
+    );
+  };
+
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
     rowIndex: number,
@@ -130,8 +152,13 @@ export default function FuserPage() {
   ) => {
     e.preventDefault();
 
-    // Get the dropped image's URL from the dataTransfer object
-    const droppedImageUrl = e.dataTransfer.getData("text/plain");
+    const customDataString = e.dataTransfer.getData("text/plain");
+    const customData = JSON.parse(customDataString);
+
+    // Access the individual data properties
+    const imageURL = customData.imageURL;
+    const motion = customData.motion;
+    const mint = customData.mint;
 
     // Update the imageURL of the specific cell in the grid
     setGrid((prevGrid) =>
@@ -139,7 +166,12 @@ export default function FuserPage() {
         rIndex === rowIndex
           ? row.map((cell, cIndex) =>
               cIndex === colIndex
-                ? { ...cell, imageURL: droppedImageUrl }
+                ? {
+                    ...cell,
+                    imageURL,
+                    mint,
+                    motion,
+                  }
                 : cell
             )
           : row
@@ -147,27 +179,36 @@ export default function FuserPage() {
     );
   };
 
-  const handleClear = (rowIndex: number, colIndex: number) => {
+  const handleClear = useCallback((rowIndex: number, colIndex: number) => {
     // Update the imageURL of the specific cell in the grid
     setGrid((prevGrid) =>
       prevGrid.map((row, rIndex) =>
         rIndex === rowIndex
           ? row.map((cell, cIndex) =>
-              cIndex === colIndex ? { ...cell, imageURL: "" } : cell
+              cIndex === colIndex
+                ? { ...cell, imageURL: "", motion: "", mint: "" }
+                : cell
             )
           : row
       )
     );
-  };
+  }, []);
 
-  const handlePlace = (imageURL: string) => {
+  const handlePlace = (imageURL: string, motion: string, mint: string) => {
+    console.log(motion);
+    console.log(mint);
     let setItem = false;
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
         row.map((cell) => {
           if (cell.imageURL === "" && !setItem) {
             setItem = true;
-            return { ...cell, imageURL: imageURL };
+            return {
+              ...cell,
+              imageURL: imageURL,
+              mint,
+              motion,
+            };
           }
           return { ...cell };
         })
@@ -184,6 +225,78 @@ export default function FuserPage() {
   };
 
   let gridCount = 0;
+
+  const handleSave = async () => {
+    // if (collageRef.current === null) {
+    //   return;
+    // }
+
+    // const imageElements = collageRef.current.querySelectorAll("img");
+
+    // imageElements.forEach((imageElement) => {
+    //   const storageLink = imageElement.src.replace(
+    //     "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
+    //     ""
+    //   );
+    //   imageElement.src = storageLink;
+    // });
+
+    const dataArray: { motion: string; mint: string }[] = [];
+    grid.forEach((row) => {
+      row.forEach((cell) => {
+        // Check if the cell has values for imageURL, motion, and mint
+        if (cell.imageURL && cell.motion && cell.mint) {
+          dataArray.push({
+            motion: cell.motion,
+            mint: cell.mint,
+          });
+        }
+      });
+    });
+
+    const payload = {
+      columns: cols,
+      rows: rows,
+      borderWidth: outlineWidth,
+      borderColor: color,
+      data: dataArray,
+    };
+
+    try {
+      const response = await doFusion(payload);
+      if (response?.statusText === "OK") {
+        // Assuming the response contains the video URL as text
+        console.log(response);
+
+        // const videoURL = await response.text();
+
+        // console.log(videoURL);
+        // setVideoURL(videoURL);
+
+        const videoData = await response.arrayBuffer();
+        const blob = new Blob([videoData], { type: "video/mp4" });
+        setVideoBlob(blob);
+      } else {
+        throw new Error("Collage upload failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      // Handle errors
+    }
+  };
+
+  const handleDownload = () => {
+    if (videoBlob) {
+      const url = URL.createObjectURL(videoBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "video.mp4";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
 
   return (
     <>
@@ -203,12 +316,31 @@ export default function FuserPage() {
             >
               Clear
             </button>
+            <button onClick={handleSave}>Save</button>
+            {videoBlob && (
+              <div>
+                <p>Video Preview:</p>
+                <video controls width="400">
+                  <source
+                    src={URL.createObjectURL(videoBlob)}
+                    type="video/mp4"
+                  />
+                </video>
+                <button onClick={handleDownload}>Download Video</button>
+              </div>
+            )}
           </div>
           <div className="flex flex-row items-start gap-x-4">
-            <div className="flex flex-col items-center gap-y-4">
+            <div
+              className="flex flex-col items-center gap-y-4"
+              ref={collageRef}
+            >
               <div
                 className="grid"
-                style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+                style={{
+                  gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                  margin: `${outlineWidth}px`,
+                }}
               >
                 {grid.map((row, rowIndex) =>
                   row.map((item, colIndex) => {
@@ -228,7 +360,7 @@ export default function FuserPage() {
                             : cols * rows > 12 || cols > 6
                             ? `h-36 w-36`
                             : `h-48 w-48`
-                        } cursor-grab items-center justify-center bg-stone-800 outline`}
+                        } box-border cursor-grab items-center justify-center bg-stone-800 outline`}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
                       >
@@ -236,9 +368,17 @@ export default function FuserPage() {
                           <>
                             <Image
                               key={`${rowIndex}_${colIndex}`}
-                              src={item.imageURL}
+                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${item.imageURL}`}
                               alt={`Dropped Image ${rowIndex}_${colIndex}`}
                               fill
+                              onDragStart={(e) =>
+                                handleDragStart(
+                                  e,
+                                  e.currentTarget.src,
+                                  item.motion,
+                                  item.mint
+                                )
+                              }
                             />
                             <div
                               onClick={(e) => handleClear(rowIndex, colIndex)}
@@ -256,24 +396,6 @@ export default function FuserPage() {
                 )}
               </div>
             </div>
-
-            {/* <div className="">
-            <div>Rows</div>
-            <Slider.Root
-              onValueChange={(v) => handleSlideRows(v)}
-              className={sliderStyles.SliderRoot}
-              min={1}
-              max={10}
-              step={1}
-              defaultValue={[2]}
-              orientation="vertical"
-            >
-              <Slider.Track className={sliderStyles.SliderTrack}>
-                <Slider.Range className={sliderStyles.SliderRange} />
-              </Slider.Track>
-              <Slider.Thumb className={sliderStyles.SliderThumb} />
-            </Slider.Root>
-          </div> */}
             <div className="flex flex-col justify-start gap-4 rounded-md bg-stone-800 p-6">
               <div className="flex flex-col gap-1">
                 <div>Columns</div>
@@ -315,7 +437,10 @@ export default function FuserPage() {
           </div>
         </section>
         <section>
-          <DinoSlide handlePlace={handlePlace} />
+          <DinoSlide
+            handlePlace={handlePlace}
+            handleDragStart={handleDragStart}
+          />
         </section>
       </Layout>
     </>
