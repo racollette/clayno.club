@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios"; // Import Axios library
 
 type PayloadProps = {
   columns: number;
@@ -19,26 +20,30 @@ const useFusion = () => {
     console.log(payload);
 
     try {
-      const response = await fetch("https://api.dinoherd.cc/collage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await axios.post(
+        "https://api.dinoherd.cc/collage",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 300000, // Set the timeout to 6 seconds (adjust as needed)
+          signal: AbortSignal.timeout(300000),
+          responseType: "arraybuffer", // Specify the response type as arraybuffer
+        }
+      );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Collage upload failed.");
       }
 
-      // You can handle the response here if needed
-
-      return response;
-
       setIsLoading(false);
+
+      return response; // Return the Axios response object
     } catch (err: any) {
       setError(err.message);
       setIsLoading(false);
+      throw err; // Re-throw the error for the caller to handle
     }
   };
 

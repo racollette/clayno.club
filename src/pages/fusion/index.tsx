@@ -13,6 +13,9 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import ColorPicker from "~/components/ColorPicker";
 import { Attributes, Dino } from "@prisma/client";
 import useFusion from "~/hooks/useFusion";
+import { api } from "~/utils/api";
+import { useUser } from "~/hooks/useUser";
+import CollageModal from "~/components/CollageModal";
 
 type GridItemProps = {
   index: number;
@@ -89,7 +92,8 @@ const ImageTest = ({ imageURL }: AssetImageProps) => {
   );
 };
 
-export default function FuserPage() {
+export default function FusionPage() {
+  const { user, session } = useUser();
   const [rows, setRows] = useState<number>(2);
   const [cols, setCols] = useState<number>(3);
   const [outlineWidth, setOutlineWidth] = useState<number>(2);
@@ -98,6 +102,7 @@ export default function FuserPage() {
   const { doFusion, isLoading, error } = useFusion();
   const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
+  const saveCollage = api.fusion.saveCollage.useMutation();
 
   const initialGrid = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, (_, index) => ({
@@ -195,8 +200,10 @@ export default function FuserPage() {
   }, []);
 
   const handlePlace = (imageURL: string, motion: string, mint: string) => {
+    console.log(imageURL);
     console.log(motion);
     console.log(mint);
+
     let setItem = false;
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
@@ -227,32 +234,9 @@ export default function FuserPage() {
   let gridCount = 0;
 
   const handleSave = async () => {
-    // if (collageRef.current === null) {
-    //   return;
-    // }
+    const dataArray = convertToArray(grid);
 
-    // const imageElements = collageRef.current.querySelectorAll("img");
-
-    // imageElements.forEach((imageElement) => {
-    //   const storageLink = imageElement.src.replace(
-    //     "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
-    //     ""
-    //   );
-    //   imageElement.src = storageLink;
-    // });
-
-    const dataArray: { motion: string; mint: string }[] = [];
-    grid.forEach((row) => {
-      row.forEach((cell) => {
-        // Check if the cell has values for imageURL, motion, and mint
-        if (cell.imageURL && cell.motion && cell.mint) {
-          dataArray.push({
-            motion: cell.motion,
-            mint: cell.mint,
-          });
-        }
-      });
-    });
+    console.log(dataArray);
 
     const payload = {
       columns: cols,
@@ -264,16 +248,10 @@ export default function FuserPage() {
 
     try {
       const response = await doFusion(payload);
-      if (response?.statusText === "OK") {
-        // Assuming the response contains the video URL as text
-        console.log(response);
 
-        // const videoURL = await response.text();
-
-        // console.log(videoURL);
-        // setVideoURL(videoURL);
-
-        const videoData = await response.arrayBuffer();
+      // Check for successful response status
+      if (response && response.status === 200) {
+        const videoData = response.data;
         const blob = new Blob([videoData], { type: "video/mp4" });
         setVideoBlob(blob);
       } else {
@@ -283,6 +261,20 @@ export default function FuserPage() {
       console.error(err);
       // Handle errors
     }
+  };
+
+  const handleSaveCollage = async () => {
+    if (!user) return;
+    console.log(grid[0]);
+
+    saveCollage.mutate({
+      userId: user?.id,
+      columns: cols,
+      rows: rows,
+      borderWidth: outlineWidth,
+      borderColor: color,
+      data: grid,
+    });
   };
 
   const handleDownload = () => {
@@ -301,7 +293,7 @@ export default function FuserPage() {
   return (
     <>
       <Head>
-        <title>DinoHerd | Fuser</title>
+        <title>DinoHerd | Fusion</title>
         <meta name="description" content="Claynosaurz Herd Showcase" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -309,14 +301,26 @@ export default function FuserPage() {
       </Head>
       <Layout>
         <section className="my-10 flex flex-col items-start justify-center gap-y-4">
-          <div className="flex flex-row justify-center rounded-lg bg-stone-800 px-8 py-2">
+          <div className="flex flex-row justify-center gap-4 rounded-lg bg-stone-800 px-8 py-2">
             <button
               onClick={handleReset}
               className="rounded-lg bg-sky-700 px-3 py-1 hover:bg-sky-600"
             >
               Clear
             </button>
-            <button onClick={handleSave}>Save</button>
+            <button
+              className="rounded-lg bg-cyan-500 px-3 py-1"
+              onClick={handleSaveCollage}
+            >
+              Save Collage
+            </button>
+            <button
+              className="rounded-lg bg-rose-500 px-3 py-1"
+              onClick={handleSave}
+            >
+              Create Video
+            </button>
+            <CollageModal title="Test" content="Blah" />
             {videoBlob && (
               <div>
                 <p>Video Preview:</p>
@@ -368,7 +372,11 @@ export default function FuserPage() {
                           <>
                             <Image
                               key={`${rowIndex}_${colIndex}`}
-                              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${item.imageURL}`}
+                              src={
+                                item.mint === "clayno_logo_vertical_1024x1024"
+                                  ? `${item.imageURL}`
+                                  : `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${item.imageURL}`
+                              }
                               alt={`Dropped Image ${rowIndex}_${colIndex}`}
                               fill
                               onDragStart={(e) =>
@@ -403,7 +411,7 @@ export default function FuserPage() {
                   onValueChange={(v) => handleSlideColumns(v)}
                   defaultValue={[3]}
                   min={1}
-                  max={10}
+                  max={6}
                   step={1}
                   className="w-48"
                 />
@@ -414,7 +422,7 @@ export default function FuserPage() {
                   onValueChange={(v) => handleSlideRows(v)}
                   defaultValue={[2]}
                   min={1}
-                  max={10}
+                  max={4}
                   step={1}
                   className="w-48"
                 />
@@ -445,4 +453,22 @@ export default function FuserPage() {
       </Layout>
     </>
   );
+}
+
+function convertToArray(grid: GridItemProps[][]) {
+  const dataArray: { motion: string; mint: string; imageURL: string }[] = [];
+  grid.forEach((row: any) => {
+    row.forEach((cell: any) => {
+      // Check if the cell has values for imageURL, motion, and mint
+      if (cell.imageURL && cell.motion && cell.mint) {
+        dataArray.push({
+          motion: cell.motion,
+          mint: cell.mint,
+          imageURL: cell.imageURL,
+        });
+      }
+    });
+  });
+
+  return dataArray;
 }

@@ -39,9 +39,9 @@ export default function Header() {
         </Navbar.Link>
         <Navbar.Link
           className="text-md cursor-pointer text-zinc-500 hover:bg-zinc-800 hover:text-white"
-          href={`/fuser`}
+          href={`/fusion`}
         >
-          Fuser
+          Fusion
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>

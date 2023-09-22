@@ -2,7 +2,7 @@ import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import { HiArrowCircleUp } from "react-icons/hi";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import ToggleSwitch from "./ToggleSwitch";
 
 type DinoSlideProps = {
@@ -15,18 +15,34 @@ type DinoSlideProps = {
   ) => void;
 };
 
+const CLAYNO_LOGO = {
+  mint: "clayno_logo_vertical_1024x1024",
+  species: "",
+  skin: "",
+  color: "",
+  motion: "PFP",
+  gif: "/images/clayno_logo_vertical_1024x1024.png",
+  holderOwner: "Claynosaurz",
+  name: "Claynosaurz",
+  pfp: "/images/clayno_logo_vertical_1024x1024.png",
+  rarity: 0,
+  subDAOId: null,
+};
+
 export default function DinoSlide({
   handlePlace,
   handleDragStart,
 }: DinoSlideProps) {
-  const { user, session, isLoading } = useUser();
+  const { user, session } = useUser();
   const [showPFP, setShowPFP] = useState(false);
 
   const wallets = user?.wallets.map((wallet: any) => wallet.address) ?? [];
 
-  const { data: holders } = api.fuser.getUserDinos.useQuery({
+  const { data: holders, isLoading } = api.fusion.getUserDinos.useQuery({
     wallets: wallets,
   });
+
+  const holdersWithDefaults = holders && [...holders, { mints: [CLAYNO_LOGO] }];
 
   const togglePFP = (newToggleState: boolean) => {
     setShowPFP(newToggleState);
@@ -46,7 +62,7 @@ export default function DinoSlide({
               />
             </div>
             <div className="flex flex-row flex-wrap gap-2">
-              {holders?.map((holder) => (
+              {holdersWithDefaults?.map((holder) => (
                 <Fragment key={holder.owner}>
                   {holder.mints.map((dino) => (
                     <div
@@ -54,9 +70,13 @@ export default function DinoSlide({
                       className="relative flex h-36 w-36 cursor-grab justify-center overflow-clip rounded-md"
                     >
                       <Image
-                        src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                          showPFP ? dino.pfp : dino.gif
-                        }`}
+                        src={
+                          dino.mint !== "clayno_logo_vertical_1024x1024"
+                            ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
+                                showPFP ? dino.pfp : dino.gif
+                              }`
+                            : dino.pfp
+                        }
                         alt=""
                         fill
                         quality={75}
@@ -73,7 +93,7 @@ export default function DinoSlide({
                         onClick={() =>
                           handlePlace(
                             showPFP ? dino.pfp : dino.gif,
-                            showPFP ? "PFP" : dino.attributes?.motion || "None",
+                            showPFP ? "PFP" : dino.attributes?.motion || "PFP",
                             dino.mint
                           )
                         }

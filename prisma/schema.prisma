@@ -98,6 +98,7 @@ model User {
   discord        Discord?
   twitter        Twitter?
   wallets        Wallet[]
+  collages       Collage[]
 }
 
 model Discord {
@@ -172,6 +173,19 @@ model Claymaker {
   subdaos     SubDAO[]
 
   @@index([holderOwner])
+}
+
+model Collage {
+  id          String  @id @default(cuid())
+  columns     Int
+  rows        Int
+  borderColor String
+  borderWidth Int
+  data        Json
+  User        User?   @relation(fields: [userId], references: [id])
+  userId      String?
+
+  @@index([userId])
 }
 
 model DinoToSubDAO {
