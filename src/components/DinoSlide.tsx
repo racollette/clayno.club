@@ -4,6 +4,7 @@ import Image from "next/image";
 import { HiArrowCircleUp } from "react-icons/hi";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import ToggleSwitch from "./ToggleSwitch";
+import { Dino } from "@prisma/client";
 
 type DinoSlideProps = {
   handlePlace: (imageURL: string, motion: string, mint: string) => void;
@@ -13,6 +14,7 @@ type DinoSlideProps = {
     motion: string,
     mint: string
   ) => void;
+  handleFillCells: (dinos: any, showPFP: boolean) => void;
 };
 
 const CLAYNO_LOGO = {
@@ -32,6 +34,7 @@ const CLAYNO_LOGO = {
 export default function DinoSlide({
   handlePlace,
   handleDragStart,
+  handleFillCells,
 }: DinoSlideProps) {
   const { user, session } = useUser();
   const [showPFP, setShowPFP] = useState(false);
@@ -42,11 +45,17 @@ export default function DinoSlide({
     wallets: wallets,
   });
 
+  console.log(holders);
+
   const holdersWithDefaults = holders && [...holders, { mints: [CLAYNO_LOGO] }];
 
   const togglePFP = (newToggleState: boolean) => {
     setShowPFP(newToggleState);
   };
+
+  const extractedMints: any = holders
+    ?.flatMap((holder) => holder.mints)
+    .filter((dino) => dino.attributes !== null);
 
   return (
     <div className="fixed bottom-0 left-0 h-48 w-full overflow-y-scroll border-t border-stone-400 bg-stone-600">
@@ -60,10 +69,16 @@ export default function DinoSlide({
                 label={"PFP Mode"}
                 onToggle={togglePFP}
               />
+              <button
+                className="rounded-lg bg-fuchsia-500 px-2 py-1"
+                onClick={() => handleFillCells(extractedMints, showPFP)}
+              >
+                Fill Cells
+              </button>
             </div>
             <div className="flex flex-row flex-wrap gap-2">
-              {holdersWithDefaults?.map((holder) => (
-                <Fragment key={holder.owner}>
+              {holdersWithDefaults?.map((holder, index) => (
+                <Fragment key={index}>
                   {holder.mints.map((dino) => (
                     <div
                       key={dino.mint}

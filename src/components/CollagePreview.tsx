@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Fragment, useRef } from "react";
+import { HiTrash, HiPencilAlt } from "react-icons/hi";
 
 type GridItemProps = {
   index: number;
@@ -10,25 +10,25 @@ type GridItemProps = {
 };
 
 type CollageGridProps = {
+  id: string;
   rows: number;
   cols: number;
   borderColor: string;
   borderWidth: number;
   grid: GridItemProps[][];
+  onDelete: (event: React.MouseEvent<SVGElement>, id: string) => void;
+  onLoad: (collage: any) => void;
 };
 
 export const CollagePreview = (props: CollageGridProps) => {
-  const { rows, cols, borderColor, borderWidth, grid } = props;
+  const { rows, cols, borderColor, borderWidth, grid, id, onDelete, onLoad } =
+    props;
   const collageRef = useRef<HTMLDivElement>(null);
-  let gridCount = 0;
-
-  console.log(grid);
-  // const gridArray: GridItemProps[][] = JSON.parse(JSON.stringify(grid));
 
   return (
-    <div className="flex flex-col items-center gap-y-4" ref={collageRef}>
+    <div className="flex flex-col items-center pr-4" ref={collageRef}>
       <div
-        className="grid"
+        className="relative grid"
         style={{
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
           margin: `${borderWidth}px`,
@@ -37,7 +37,6 @@ export const CollagePreview = (props: CollageGridProps) => {
         {grid.map((row, rowIndex) => (
           <Fragment key={rowIndex}>
             {row.map((item, colIndex) => {
-              gridCount++;
               return (
                 <div
                   key={`${rowIndex}_${colIndex}`}
@@ -46,18 +45,16 @@ export const CollagePreview = (props: CollageGridProps) => {
                     outlineColor: borderColor,
                   }}
                   className={`relative flex aspect-square ${
-                    cols * rows > 36
-                      ? `h-20 w-20`
-                      : cols * rows > 24 || cols > 8
-                      ? `h-28 w-28`
-                      : cols * rows > 12 || cols > 6
-                      ? `h-36 w-36`
-                      : `h-48 w-48`
-                  } box-border cursor-grab items-center justify-center bg-stone-800 outline`}
-                  //   onDragOver={handleDragOver}
-                  //   onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
+                    cols * rows >= 36
+                      ? `h-10 w-10`
+                      : cols * rows >= 24 || cols >= 8
+                      ? `h-14 w-14`
+                      : cols * rows >= 12 || cols >= 6
+                      ? `h-18 w-18`
+                      : `h-24 w-24`
+                  } box-border items-center justify-center bg-stone-800 outline`}
                 >
-                  {item.imageURL ? (
+                  {item.imageURL && (
                     <>
                       <Image
                         key={`${rowIndex}_${colIndex}`}
@@ -68,30 +65,37 @@ export const CollagePreview = (props: CollageGridProps) => {
                         }
                         alt={`Dropped Image ${rowIndex}_${colIndex}`}
                         fill
-                        // onDragStart={(e) =>
-                        //   handleDragStart(
-                        //     e,
-                        //     e.currentTarget.src,
-                        //     item.motion,
-                        //     item.mint
-                        //   )
-                        // }
                       />
-                      <div
-                        // onClick={(e) => handleClear(rowIndex, colIndex)}
-                        className="flex transform cursor-pointer items-center justify-center opacity-0 transition-opacity hover:opacity-100"
-                      >
-                        {/* <HiXCircle size={50} /> */}
-                      </div>
                     </>
-                  ) : (
-                    <div>{gridCount}</div>
                   )}
                 </div>
               );
             })}
           </Fragment>
         ))}
+        <div className="absolute left-1/2 top-1/2 flex h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center gap-12 opacity-0 transition-opacity hover:opacity-100">
+          <HiPencilAlt
+            className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
+            color="black"
+            size={65}
+            onClick={(e) =>
+              onLoad({
+                rows,
+                cols,
+                borderColor,
+                borderWidth,
+                grid,
+              })
+            }
+          />
+
+          <HiTrash
+            className="cursor-pointer rounded-full bg-red-700/75 p-2"
+            color="black"
+            size={65}
+            onClick={(e) => onDelete(e, id)}
+          />
+        </div>
       </div>
     </div>
   );

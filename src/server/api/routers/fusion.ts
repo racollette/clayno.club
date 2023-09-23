@@ -75,6 +75,7 @@ export const fusionRouter = createTRPCRouter({
     .input(createUserCollageSchema)
     .mutation(async ({ input }) => {
       console.log(input);
+
       // Create a new collage in the database
       const savedCollage = await prisma.collage.create({
         data: {
@@ -88,5 +89,17 @@ export const fusionRouter = createTRPCRouter({
       });
 
       return savedCollage;
+    }),
+
+  deleteCollage: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      const deletedCollage = await prisma.collage.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return deletedCollage;
     }),
 });

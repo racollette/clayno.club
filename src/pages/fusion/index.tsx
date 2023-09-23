@@ -7,11 +7,7 @@ import Head from "next/head";
 import { Slider as SliderBase } from "~/@/components/ui/slider";
 import DinoSlide from "~/components/DinoSlide";
 import { HiXCircle } from "react-icons/hi";
-
-import { AdvancedImage } from "@cloudinary/react";
-import { Cloudinary } from "@cloudinary/url-gen";
 import ColorPicker from "~/components/ColorPicker";
-import { Attributes, Dino } from "@prisma/client";
 import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
@@ -22,6 +18,14 @@ type GridItemProps = {
   imageURL: string;
   motion: string;
   mint: string;
+};
+
+type EditableCollage = {
+  rows: number;
+  cols: number;
+  borderWidth: number;
+  borderColor: string;
+  grid: GridItemProps[][];
 };
 
 const updateGrid = (type: string, size: number, grid: GridItemProps[][]) => {
@@ -53,45 +57,6 @@ const updateGrid = (type: string, size: number, grid: GridItemProps[][]) => {
   return grid;
 };
 
-type AssetImageProps = {
-  imageURL: string;
-};
-
-const ImageTest = ({ imageURL }: AssetImageProps) => {
-  const cld = new Cloudinary({
-    cloud: {
-      cloudName: "dncw1tebs",
-    },
-  });
-  // https://res.cloudinary.com/dncw1tebs/image/upload/v1693789077/docs/models.gif
-  const myImage = cld.image("docs/models");
-
-  // 4. Transform your image
-  //=========================
-
-  // Resize to 250 x 250 pixels using the 'fill' crop mode.
-  // myImage.resize(fill().width(250).height(250));
-
-  const handleDragStart = (
-    e: React.DragEvent<HTMLImageElement>,
-    imageURL: string
-  ) => {
-    e.dataTransfer.setData("text/plain", imageURL);
-  };
-
-  return (
-    // <Image
-    //   src={imageURL}
-    //   alt=""
-    //   width={96}
-    //   height={96}
-    //   draggable="true"
-    //   onDragStart={(e) => handleDragStart(e, e.currentTarget.src)}
-    // />
-    <AdvancedImage cldImg={myImage} />
-  );
-};
-
 export default function FusionPage() {
   const { user, session } = useUser();
   const [rows, setRows] = useState<number>(2);
@@ -99,10 +64,14 @@ export default function FusionPage() {
   const [outlineWidth, setOutlineWidth] = useState<number>(2);
   const [color, setColor] = useState<string>("#aabbcc");
   const collageRef = useRef<HTMLDivElement>(null);
-  const { doFusion, isLoading, error } = useFusion();
+  const { doFusion, error } = useFusion();
   const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
+
+  const { data, isLoading, refetch } = api.fusion.getUserCollages.useQuery({
+    userId: user?.id || "None",
+  });
 
   const initialGrid = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, (_, index) => ({
@@ -200,10 +169,6 @@ export default function FusionPage() {
   }, []);
 
   const handlePlace = (imageURL: string, motion: string, mint: string) => {
-    console.log(imageURL);
-    console.log(motion);
-    console.log(mint);
-
     let setItem = false;
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
@@ -265,7 +230,8 @@ export default function FusionPage() {
 
   const handleSaveCollage = async () => {
     if (!user) return;
-    console.log(grid[0]);
+
+    console.log(grid);
 
     saveCollage.mutate({
       userId: user?.id,
@@ -275,6 +241,10 @@ export default function FusionPage() {
       borderColor: color,
       data: grid,
     });
+
+    setTimeout(async () => {
+      refetch();
+    }, 2000);
   };
 
   const handleDownload = () => {
@@ -288,6 +258,41 @@ export default function FusionPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
+  };
+
+  const handleLoadCollage = (collage: EditableCollage) => {
+    console.log(collage);
+    const collageCopy = { ...collage };
+
+    // setRows(collageCopy.rows);
+    handleSlideRows([collageCopy.rows]);
+    setCols(collageCopy.cols);
+    setOutlineWidth(collageCopy.borderWidth);
+    setColor(collageCopy.borderColor);
+    setGrid([...collageCopy.grid]);
+  };
+
+  const handleFillCells = (mints: any, showPFP: boolean) => {
+    let gridIndex = -1;
+    setGrid((prevGrid) =>
+      prevGrid.map((row) =>
+        row.map((cell) => {
+          console.log(gridIndex);
+          gridIndex++;
+          if (cell.imageURL === "") {
+            return {
+              ...cell,
+              imageURL: showPFP ? mints[gridIndex].pfp : mints[gridIndex].gif,
+              mint: mints[gridIndex].mint,
+              motion: showPFP
+                ? "PFP"
+                : mints[gridIndex].attributes?.motion || "PFP",
+            };
+          }
+          return { ...cell };
+        })
+      )
+    );
   };
 
   return (
@@ -320,7 +325,12 @@ export default function FusionPage() {
             >
               Create Video
             </button>
-            <CollageModal title="Test" content="Blah" />
+            <CollageModal
+              title="My Collages"
+              content=""
+              data={data}
+              onLoad={handleLoadCollage}
+            />
             {videoBlob && (
               <div>
                 <p>Video Preview:</p>
@@ -388,6 +398,7 @@ export default function FusionPage() {
                                 )
                               }
                             />
+
                             <div
                               onClick={(e) => handleClear(rowIndex, colIndex)}
                               className="flex transform cursor-pointer items-center justify-center opacity-0 transition-opacity hover:opacity-100"
@@ -396,7 +407,10 @@ export default function FusionPage() {
                             </div>
                           </>
                         ) : (
-                          <div>{gridCount}</div>
+                          <div>
+                            {gridCount}
+                            {/* {item.index} */}
+                          </div>
                         )}
                       </div>
                     );
@@ -409,7 +423,8 @@ export default function FusionPage() {
                 <div>Columns</div>
                 <SliderBase
                   onValueChange={(v) => handleSlideColumns(v)}
-                  defaultValue={[3]}
+                  defaultValue={[cols]}
+                  value={[cols]}
                   min={1}
                   max={6}
                   step={1}
@@ -421,6 +436,7 @@ export default function FusionPage() {
                 <SliderBase
                   onValueChange={(v) => handleSlideRows(v)}
                   defaultValue={[2]}
+                  value={[rows]}
                   min={1}
                   max={4}
                   step={1}
@@ -432,6 +448,7 @@ export default function FusionPage() {
                 <SliderBase
                   onValueChange={(v) => handleOutlineWidth(v)}
                   defaultValue={[2]}
+                  value={[outlineWidth]}
                   min={0}
                   max={8}
                   step={1}
@@ -448,6 +465,7 @@ export default function FusionPage() {
           <DinoSlide
             handlePlace={handlePlace}
             handleDragStart={handleDragStart}
+            handleFillCells={handleFillCells}
           />
         </section>
       </Layout>
