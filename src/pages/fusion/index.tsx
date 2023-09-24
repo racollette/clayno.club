@@ -12,6 +12,15 @@ import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
 import CollageModal from "~/components/CollageModal";
+import { HiSave, HiBan, HiVideoCamera } from "react-icons/hi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/@/components/ui/tooltip";
+import { useToast } from "~/@/components/ui/use-toast";
+import { date } from "zod";
 
 type GridItemProps = {
   index: number;
@@ -68,6 +77,8 @@ export default function FusionPage() {
   const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
+  const [pulse, setPulse] = useState(false);
+  const { toast } = useToast();
 
   const { data, isLoading, refetch } = api.fusion.getUserCollages.useQuery({
     userId: user?.id || "None",
@@ -82,6 +93,11 @@ export default function FusionPage() {
     }))
   );
   const [grid, setGrid] = useState<GridItemProps[][]>(initialGrid);
+  const gridFull = grid
+    .flatMap((row) => row)
+    .every(
+      (cell) => cell.imageURL !== "" && cell.mint !== "" && cell.motion !== ""
+    );
 
   const handleOutlineWidth = (v: number[]) => {
     if (v[0] === undefined) return;
@@ -198,36 +214,6 @@ export default function FusionPage() {
 
   let gridCount = 0;
 
-  const handleSave = async () => {
-    const dataArray = convertToArray(grid);
-
-    console.log(dataArray);
-
-    const payload = {
-      columns: cols,
-      rows: rows,
-      borderWidth: outlineWidth,
-      borderColor: color,
-      data: dataArray,
-    };
-
-    try {
-      const response = await doFusion(payload);
-
-      // Check for successful response status
-      if (response && response.status === 200) {
-        const videoData = response.data;
-        const blob = new Blob([videoData], { type: "video/mp4" });
-        setVideoBlob(blob);
-      } else {
-        throw new Error("Collage upload failed.");
-      }
-    } catch (err) {
-      console.error(err);
-      // Handle errors
-    }
-  };
-
   const handleSaveCollage = async () => {
     if (!user) return;
 
@@ -242,9 +228,19 @@ export default function FusionPage() {
       data: grid,
     });
 
+    setPulse(true);
+    toast({
+      title: "Collage saved successfully",
+      // description: new Date(),
+    });
+
     setTimeout(async () => {
       refetch();
     }, 2000);
+
+    setTimeout(async () => {
+      setPulse(false);
+    }, 10000);
   };
 
   const handleDownload = () => {
@@ -295,6 +291,41 @@ export default function FusionPage() {
     );
   };
 
+  const handleRecord = async () => {
+    toast({
+      title: "Job Request Submitted",
+      description: "Position in Queue: 1",
+    });
+
+    // const dataArray = convertToArray(grid);
+
+    // console.log(dataArray);
+
+    // const payload = {
+    //   columns: cols,
+    //   rows: rows,
+    //   borderWidth: outlineWidth,
+    //   borderColor: color,
+    //   data: dataArray,
+    // };
+
+    // try {
+    //   const response = await doFusion(payload);
+
+    //   // Check for successful response status
+    //   if (response && response.status === 200) {
+    //     const videoData = response.data;
+    //     const blob = new Blob([videoData], { type: "video/mp4" });
+    //     setVideoBlob(blob);
+    //   } else {
+    //     throw new Error("Collage upload failed.");
+    //   }
+    // } catch (err) {
+    //   console.error(err);
+    //   // Handle errors
+    // }
+  };
+
   return (
     <>
       <Head>
@@ -306,31 +337,46 @@ export default function FusionPage() {
       </Head>
       <Layout>
         <section className="my-10 flex flex-col items-start justify-center gap-y-4">
-          <div className="flex flex-row justify-center gap-4 rounded-lg bg-stone-800 px-8 py-2">
-            <button
-              onClick={handleReset}
-              className="rounded-lg bg-sky-700 px-3 py-1 hover:bg-sky-600"
-            >
-              Clear
-            </button>
-            <button
-              className="rounded-lg bg-cyan-500 px-3 py-1"
-              onClick={handleSaveCollage}
-            >
-              Save Collage
-            </button>
-            <button
-              className="rounded-lg bg-rose-500 px-3 py-1"
-              onClick={handleSave}
-            >
-              Create Video
-            </button>
-            <CollageModal
-              title="My Collages"
-              content=""
-              data={data}
-              onLoad={handleLoadCollage}
-            />
+          <div className="flex flex-row justify-start gap-4 rounded-lg bg-stone-800 px-4 py-2">
+            <TooltipProvider>
+              <CollageModal
+                title="My Collages"
+                content=""
+                data={data}
+                pulse={pulse}
+                onLoad={handleLoadCollage}
+                onRecord={handleRecord}
+              />
+              <Tooltip>
+                <TooltipTrigger
+                  className={`rounded-lg px-3 py-2 ${
+                    !gridFull
+                      ? "cursor-not-allowed bg-gray-400 hover:bg-gray-500"
+                      : "cursor-pointer bg-cyan-600 hover:bg-cyan-500"
+                  }`}
+                  onClick={!gridFull ? undefined : handleSaveCollage}
+                >
+                  <HiSave size={24} />
+                </TooltipTrigger>
+
+                <TooltipContent>
+                  <p>Save</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger
+                  onClick={handleReset}
+                  className="rounded-lg bg-amber-500 px-3 py-2 hover:bg-amber-400"
+                >
+                  <HiBan size={24} />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Clear</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             {videoBlob && (
               <div>
                 <p>Video Preview:</p>

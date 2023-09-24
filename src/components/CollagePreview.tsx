@@ -1,6 +1,12 @@
 import Image from "next/image";
 import { Fragment, useRef } from "react";
-import { HiTrash, HiPencilAlt } from "react-icons/hi";
+import { HiTrash, HiPencilAlt, HiVideoCamera } from "react-icons/hi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/@/components/ui/tooltip";
 
 type GridItemProps = {
   index: number;
@@ -18,11 +24,21 @@ type CollageGridProps = {
   grid: GridItemProps[][];
   onDelete: (event: React.MouseEvent<SVGElement>, id: string) => void;
   onLoad: (collage: any) => void;
+  onRecord: (id: string) => void;
 };
 
 export const CollagePreview = (props: CollageGridProps) => {
-  const { rows, cols, borderColor, borderWidth, grid, id, onDelete, onLoad } =
-    props;
+  const {
+    rows,
+    cols,
+    borderColor,
+    borderWidth,
+    grid,
+    id,
+    onDelete,
+    onLoad,
+    onRecord,
+  } = props;
   const collageRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -73,28 +89,62 @@ export const CollagePreview = (props: CollageGridProps) => {
             })}
           </Fragment>
         ))}
-        <div className="absolute left-1/2 top-1/2 flex h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center gap-12 opacity-0 transition-opacity hover:opacity-100">
-          <HiPencilAlt
-            className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
-            color="black"
-            size={65}
-            onClick={(e) =>
-              onLoad({
-                rows,
-                cols,
-                borderColor,
-                borderWidth,
-                grid,
-              })
-            }
-          />
-
-          <HiTrash
-            className="cursor-pointer rounded-full bg-red-700/75 p-2"
-            color="black"
-            size={65}
-            onClick={(e) => onDelete(e, id)}
-          />
+        <div
+          className={`absolute left-1/2 top-1/2 flex ${
+            cols < 2 ? `flex-col` : `flex-row`
+          } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
+            cols < 3 ? `gap-4` : `gap-12`
+          } opacity-0 transition-opacity hover:opacity-100`}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <HiPencilAlt
+                  className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
+                  color="black"
+                  size={50}
+                  onClick={(e) =>
+                    onLoad({
+                      rows,
+                      cols,
+                      borderColor,
+                      borderWidth,
+                      grid,
+                    })
+                  }
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs font-semibold">Load</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <HiVideoCamera
+                  className="cursor-pointer rounded-full bg-amber-700/75 p-2"
+                  color="black"
+                  size={50}
+                  onClick={(e) => onRecord(id)}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs font-semibold">Create Video</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <HiTrash
+                  className="cursor-pointer rounded-full bg-red-700/75 p-2"
+                  color="black"
+                  size={50}
+                  onClick={(e) => onDelete(e, id)}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs font-semibold">Delete</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>

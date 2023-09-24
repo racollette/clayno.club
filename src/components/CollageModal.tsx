@@ -3,6 +3,14 @@ import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import { CollagePreview } from "./CollagePreview";
 import { Collage } from "@prisma/client";
+import { HiCollection } from "react-icons/hi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/@/components/ui/tooltip";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 
 type GridItemProps = {
   index: number;
@@ -14,11 +22,13 @@ type GridItemProps = {
 interface ModalProps {
   title: string;
   content: string;
+  pulse: boolean;
   data: Collage[] | undefined;
   onLoad: (collage: any) => void;
+  onRecord: (id: string) => void;
 }
 
-const CollageModal = ({ title, content, data, onLoad }: ModalProps) => {
+const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const { user } = useUser();
@@ -80,19 +90,28 @@ const CollageModal = ({ title, content, data, onLoad }: ModalProps) => {
 
   return (
     <div>
-      <button
-        onClick={handleButtonClick}
-        className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-      >
-        Open Modal
-      </button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            onClick={handleButtonClick}
+            className={`${
+              pulse ? `animate-pulse` : `animate-none`
+            } rounded-lg bg-indigo-500 px-3 py-2 hover:bg-indigo-700`}
+          >
+            <HiCollection size={24} />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>My Collages</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
 
           <div
-            className="modal-container z-50 mx-auto w-2/3 overflow-y-auto rounded-lg bg-stone-800 px-4 py-2 shadow-lg"
+            className="modal-container z-50 mx-auto w-3/4 overflow-y-auto rounded-lg bg-stone-800 px-4 py-2 shadow-lg"
             ref={modalRef}
           >
             <div className="modal-content px-6 py-4 text-left">
@@ -119,6 +138,7 @@ const CollageModal = ({ title, content, data, onLoad }: ModalProps) => {
                           handleDeleteCollage(event, collage.id)
                         }
                         onLoad={onLoad}
+                        onRecord={onRecord}
                       />
                     ))}
                   </>
