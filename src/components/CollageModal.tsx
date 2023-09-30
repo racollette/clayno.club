@@ -10,7 +10,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
 
 type GridItemProps = {
   index: number;
@@ -110,7 +109,7 @@ const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
           <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
 
           <div
-            className="modal-container z-50 mx-auto max-h-[85vh] w-11/12 overflow-y-auto rounded-lg bg-stone-800 px-4 py-2 shadow-lg lg:w-3/4 lg:px-4 lg:py-2"
+            className="modal-container z-50 mx-auto max-h-[85vh] w-11/12 overflow-y-auto rounded-lg bg-neutral-800 px-4 py-2 shadow-lg lg:w-3/4 lg:px-4 lg:py-2"
             ref={modalRef}
           >
             <div className="modal-content px-2 py-2 text-left lg:px-6 lg:py-4">
