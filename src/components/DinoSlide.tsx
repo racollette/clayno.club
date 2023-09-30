@@ -24,6 +24,18 @@ type DinoSlideProps = {
     mint: string
   ) => void;
   handleFillCells: (dinos: any, showPFP: boolean) => void;
+  selected: {
+    imageURL: string;
+    motion: string;
+    mint: string;
+  };
+  setSelected: React.Dispatch<
+    React.SetStateAction<{
+      imageURL: string;
+      motion: string;
+      mint: string;
+    }>
+  >;
 };
 
 const CLAYNO_LOGO = {
@@ -44,6 +56,8 @@ export default function DinoSlide({
   handlePlace,
   handleDragStart,
   handleFillCells,
+  selected,
+  setSelected,
 }: DinoSlideProps) {
   const { user, session } = useUser();
   const [showPFP, setShowPFP] = useState(false);
@@ -70,9 +84,11 @@ export default function DinoSlide({
     .filter((dino) => dino.attributes !== null);
 
   return (
-    <div className={`fixed bottom-0 left-0 select-none px-2 transition-all`}>
+    <div
+      className={`fixed bottom-0 left-0 w-full select-none px-2 transition-all`}
+    >
       <div
-        className="flex w-full cursor-pointer justify-center"
+        className="flex  cursor-pointer justify-center"
         onClick={toggleMinimize}
       >
         {isMinimized ? (
@@ -82,20 +98,24 @@ export default function DinoSlide({
         )}
       </div>
       <ScrollArea
-        className={`w-full rounded-md border bg-black ${
-          isMinimized ? "h-[50px]" : "h-[240px]"
+        className={`rounded-md border bg-black ${
+          isMinimized ? "h-[60px]" : "h-[240px]"
         }`}
       >
         <div className="flex p-2 lg:p-4">
           {user && session ? (
-            <div className="flex flex-row">
+            <div className="flex flex-grow flex-row">
               <div className="flex flex-row flex-wrap gap-2">
                 {holdersWithDefaults?.map((holder, index) => (
                   <Fragment key={index}>
                     {holder.mints.map((dino: any) => (
                       <div
                         key={dino.mint}
-                        className="relative flex h-28 w-28 cursor-grab justify-center overflow-clip rounded-md lg:h-36 lg:w-36"
+                        className={` ${
+                          selected.mint === dino.mint
+                            ? `border-4 border-emerald-500`
+                            : ``
+                        } relative flex h-28 w-28 cursor-grab justify-center overflow-clip rounded-md lg:h-36 lg:w-36`}
                       >
                         <Image
                           className="transform-gpu transition-transform hover:scale-125"
@@ -117,6 +137,13 @@ export default function DinoSlide({
                               dino.mint
                             )
                           }
+                          onClick={(e) =>
+                            setSelected({
+                              mint: dino.mint,
+                              motion: dino.attributes?.motion || "",
+                              imageURL: e.currentTarget.src,
+                            })
+                          } // Set selected image
                         />
                         <div
                           onClick={() =>
@@ -167,8 +194,8 @@ export default function DinoSlide({
               </div>
             </div>
           ) : (
-            <div className="w-full">
-              <LoginModal />
+            <div className="flex flex-grow items-center justify-center">
+              <LoginModal loginMessage="Sign in to see NFTs" />
             </div>
           )}
         </div>

@@ -137,7 +137,7 @@ export const CollagePreview = (props: CollageGridProps) => {
         className="relative grid w-full"
         style={{
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          margin: `${borderWidth}px`,
+          // margin: `${borderWidth}px`,
         }}
       >
         {grid.map((row, rowIndex) => (

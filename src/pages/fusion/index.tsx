@@ -77,6 +77,11 @@ export default function FusionPage() {
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
   const [pulse, setPulse] = useState(false);
+  const [selected, setSelected] = useState({
+    imageURL: "",
+    motion: "",
+    mint: "",
+  });
 
   const { data, isLoading, refetch } = api.fusion.getUserCollages.useQuery({
     userId: user?.id || "None",
@@ -202,6 +207,27 @@ export default function FusionPage() {
     );
   };
 
+  const handleClickSelected = (rowIndex: number, colIndex: number) => {
+    setGrid((prevGrid) =>
+      prevGrid.map((row, rIndex) =>
+        rIndex === rowIndex
+          ? row.map((cell, cIndex) =>
+              cIndex === colIndex
+                ? {
+                    ...cell,
+                    imageURL: selected.imageURL,
+                    mint: selected.mint,
+                    motion: selected.motion,
+                  }
+                : cell
+            )
+          : row
+      )
+    );
+
+    setSelected({ imageURL: "", motion: "", mint: "" });
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
@@ -289,27 +315,11 @@ export default function FusionPage() {
   };
 
   const handleRecord = async (id: string) => {
-    // const dataArray = convertToArray(grid);
-
-    // console.log(dataArray);
-
-    // const payload = {
-    //   columns: cols,
-    //   rows: rows,
-    //   borderWidth: outlineWidth,
-    //   borderColor: color,
-    //   data: dataArray,
-    // };
-
     try {
       const response = await doFusion(id);
       const { jobId } = response.data;
 
-      // Check for successful response status
       if (response && response.status === 200) {
-        // const videoData = response.data;
-        // const blob = new Blob([videoData], { type: "video/mp4" });
-        // setVideoBlob(blob);
         toast({
           title: "Job Request Submitted",
           description: `Job ID: ${jobId}`,
@@ -470,9 +480,13 @@ export default function FusionPage() {
                             </div>
                           </>
                         ) : (
-                          <div className="aspect-square">
+                          <div
+                            className="flex aspect-square w-full items-center justify-center"
+                            onClick={() =>
+                              handleClickSelected(rowIndex, colIndex)
+                            }
+                          >
                             {gridCount}
-                            {/* {item.index} */}
                           </div>
                         )}
                       </div>
@@ -498,6 +512,8 @@ export default function FusionPage() {
         </section>
         <section className="mt-48">
           <DinoSlide
+            selected={selected}
+            setSelected={setSelected}
             handlePlace={handlePlace}
             handleDragStart={handleDragStart}
             handleFillCells={handleFillCells}

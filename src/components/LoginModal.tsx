@@ -35,7 +35,11 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-export default function LoginModal() {
+export default function LoginModal({
+  loginMessage = "Sign In",
+}: {
+  loginMessage?: string;
+}) {
   const router = useRouter();
   const { publicKey, signMessage, disconnect, connected, signTransaction } =
     useWallet();
@@ -155,7 +159,7 @@ export default function LoginModal() {
               <div>Signing In</div>
             </div>
           ) : (
-            <div>Sign In</div>
+            <div>{loginMessage}</div>
           )}
         </Button>
       ) : (
