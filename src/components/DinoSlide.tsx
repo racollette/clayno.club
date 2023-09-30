@@ -1,12 +1,15 @@
 import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import { HiArrowCircleUp } from "react-icons/hi";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import ToggleSwitch from "./ToggleSwitch";
-import { Dino } from "@prisma/client";
 import { ScrollArea } from "~/@/components/ui/scroll-area";
-import { HiChevronDown, HiChevronUp, HiViewGridAdd } from "react-icons/hi";
+import {
+  HiChevronDown,
+  HiChevronUp,
+  HiViewGridAdd,
+  HiArrowCircleUp,
+} from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -145,7 +148,8 @@ export default function DinoSlide({
                             })
                           } // Set selected image
                         />
-                        <div
+
+                        <HiArrowCircleUp
                           onClick={() =>
                             handlePlace(
                               showPFP ? dino.pfp : dino.gif,
@@ -155,10 +159,9 @@ export default function DinoSlide({
                               dino.mint
                             )
                           }
-                          className="flex transform cursor-pointer items-center justify-center opacity-0 transition-opacity hover:opacity-100"
-                        >
-                          <HiArrowCircleUp size={50} />
-                        </div>
+                          className="flex transform cursor-pointer place-self-center opacity-0 transition-opacity hover:opacity-100"
+                          size={50}
+                        />
                       </div>
                     ))}
                   </Fragment>
