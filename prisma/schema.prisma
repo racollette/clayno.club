@@ -176,14 +176,18 @@ model Claymaker {
 }
 
 model Collage {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   columns     Int
   rows        Int
   borderColor String
   borderWidth Int
   data        Json
-  User        User?   @relation(fields: [userId], references: [id])
   userId      String?
+  createdAt   DateTime  @default(now())
+  generatedAt DateTime?
+  status      String?
+  url         String?
+  User        User?     @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
