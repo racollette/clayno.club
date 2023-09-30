@@ -13,23 +13,20 @@ const useFusion = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const doFusion = async (payload: PayloadProps) => {
+  const doFusion = async (id: string) => {
     setIsLoading(true);
     setError(null);
 
-    console.log(payload);
-
     try {
       const response = await axios.post(
-        "https://api.dinoherd.cc/collage",
-        payload,
+        `https://api.dinoherd.cc/queue-job/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
           },
-          timeout: 300000, // Set the timeout to 6 seconds (adjust as needed)
-          signal: AbortSignal.timeout(300000),
-          responseType: "arraybuffer", // Specify the response type as arraybuffer
+          // timeout: 300000, // Set the timeout to 6 seconds (adjust as needed)
+          // signal: AbortSignal.timeout(300000),
+          // responseType: "arraybuffer", // Specify the response type as arraybuffer
         }
       );
 
@@ -47,7 +44,29 @@ const useFusion = () => {
     }
   };
 
-  return { doFusion, isLoading, error };
+  const jobStatus = async (id: string) => {
+    try {
+      const response = await axios.get(
+        `https://api.dinoherd.cc/job-progress/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Job status check failed");
+      }
+
+      return response; // Return the Axios response object
+    } catch (err: any) {
+      setError(err.message);
+      throw err; // Re-throw the error for the caller to handle
+    }
+  };
+
+  return { doFusion, jobStatus, isLoading, error };
 };
 
 export default useFusion;
