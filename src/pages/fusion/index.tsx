@@ -362,7 +362,7 @@ export default function FusionPage() {
                 <TooltipTrigger
                   className={`rounded-lg px-3 py-2 ${
                     !gridFull
-                      ? "cursor-not-allowed bg-gray-400 hover:bg-gray-500"
+                      ? "cursor-not-allowed bg-neutral-400 hover:bg-neutral-500"
                       : "cursor-pointer bg-cyan-600 hover:bg-cyan-500"
                   }`}
                   onClick={!gridFull ? undefined : handleSaveCollage}
