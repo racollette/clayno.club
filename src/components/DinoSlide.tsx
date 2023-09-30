@@ -70,7 +70,7 @@ export default function DinoSlide({
     .filter((dino) => dino.attributes !== null);
 
   return (
-    <div className={`fixed bottom-0 left-0 px-3 transition-all`}>
+    <div className={`fixed bottom-0 left-0 select-none px-3 transition-all`}>
       <ScrollArea
         className={`w-full rounded-md border bg-black ${
           isMinimized ? "h-[40px]" : "h-[220px]"
@@ -92,12 +92,13 @@ export default function DinoSlide({
               <div className="flex flex-row flex-wrap gap-2">
                 {holdersWithDefaults?.map((holder, index) => (
                   <Fragment key={index}>
-                    {holder.mints.map((dino) => (
+                    {holder.mints.map((dino: any) => (
                       <div
                         key={dino.mint}
                         className="relative flex h-36 w-36 cursor-grab justify-center overflow-clip rounded-md"
                       >
                         <Image
+                          className="transform-gpu transition-transform hover:scale-125"
                           src={
                             dino.mint !== "clayno_logo_vertical_1024x1024"
                               ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
@@ -141,7 +142,7 @@ export default function DinoSlide({
                   <Tooltip>
                     <TooltipTrigger>
                       <ToggleSwitch
-                        className="w-32"
+                        className="mr-8 w-32"
                         toggleState={showPFP}
                         label={"PFP"}
                         onToggle={togglePFP}
