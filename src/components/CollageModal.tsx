@@ -31,7 +31,6 @@ interface ModalProps {
 const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const { user } = useUser();
   const [collages, setCollages] = useState<Collage[] | undefined>(undefined);
 
   const openModal = () => {
@@ -89,7 +88,7 @@ const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
   };
 
   return (
-    <div>
+    <div className="select-none">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger
@@ -139,6 +138,7 @@ const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
                         }
                         onLoad={onLoad}
                         onRecord={onRecord}
+                        collage={collage}
                       />
                     ))}
                   </>
