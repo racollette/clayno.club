@@ -54,6 +54,7 @@
     "react-colorful": "^5.6.1",
     "react-dom": "18.2.0",
     "react-query": "^3.39.3",
+    "socket.io-client": "^4.7.2",
     "superjson": "1.12.2",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",

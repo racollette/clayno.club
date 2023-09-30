@@ -4,15 +4,13 @@ import React, { useCallback, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import Image from "next/image";
 import Head from "next/head";
-import { Slider as SliderBase } from "~/@/components/ui/slider";
 import DinoSlide from "~/components/DinoSlide";
 import { HiXCircle } from "react-icons/hi";
-import ColorPicker from "~/components/ColorPicker";
 import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
 import CollageModal from "~/components/CollageModal";
-import { HiSave, HiBan, HiVideoCamera } from "react-icons/hi";
+import { HiSave, HiBan, HiCog } from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -20,7 +18,7 @@ import {
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
 import { useToast } from "~/@/components/ui/use-toast";
-import { date } from "zod";
+import { CollageSettings } from "~/components/CollageSettings";
 
 type GridItemProps = {
   index: number;
@@ -68,17 +66,17 @@ const updateGrid = (type: string, size: number, grid: GridItemProps[][]) => {
 
 export default function FusionPage() {
   const { user, session } = useUser();
+  const { toast } = useToast();
   const [rows, setRows] = useState<number>(2);
   const [cols, setCols] = useState<number>(3);
   const [outlineWidth, setOutlineWidth] = useState<number>(2);
-  const [color, setColor] = useState<string>("#aabbcc");
+  const [color, setColor] = useState<string>("#ffffff");
   const collageRef = useRef<HTMLDivElement>(null);
   const { doFusion, error } = useFusion();
   const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
   const [pulse, setPulse] = useState(false);
-  const { toast } = useToast();
 
   const { data, isLoading, refetch } = api.fusion.getUserCollages.useQuery({
     userId: user?.id || "None",
@@ -231,7 +229,6 @@ export default function FusionPage() {
     setPulse(true);
     toast({
       title: "Collage saved successfully",
-      // description: new Date(),
     });
 
     setTimeout(async () => {
@@ -291,12 +288,7 @@ export default function FusionPage() {
     );
   };
 
-  const handleRecord = async () => {
-    toast({
-      title: "Job Request Submitted",
-      description: "Position in Queue: 1",
-    });
-
+  const handleRecord = async (id: string) => {
     // const dataArray = convertToArray(grid);
 
     // console.log(dataArray);
@@ -309,21 +301,26 @@ export default function FusionPage() {
     //   data: dataArray,
     // };
 
-    // try {
-    //   const response = await doFusion(payload);
+    try {
+      const response = await doFusion(id);
+      const { jobId } = response.data;
 
-    //   // Check for successful response status
-    //   if (response && response.status === 200) {
-    //     const videoData = response.data;
-    //     const blob = new Blob([videoData], { type: "video/mp4" });
-    //     setVideoBlob(blob);
-    //   } else {
-    //     throw new Error("Collage upload failed.");
-    //   }
-    // } catch (err) {
-    //   console.error(err);
-    //   // Handle errors
-    // }
+      // Check for successful response status
+      if (response && response.status === 200) {
+        // const videoData = response.data;
+        // const blob = new Blob([videoData], { type: "video/mp4" });
+        // setVideoBlob(blob);
+        toast({
+          title: "Job Request Submitted",
+          description: `Job ID: ${jobId}`,
+        });
+      } else {
+        throw new Error("Job submission failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      // Handle errors
+    }
   };
 
   return (
@@ -336,7 +333,21 @@ export default function FusionPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <section className="my-10 flex flex-col items-start justify-center gap-y-4">
+        <section
+          className={`my-10 flex ${
+            cols === 6
+              ? `w-full lg:w-full`
+              : cols === 5
+              ? `w-full lg:w-4/5`
+              : cols === 4
+              ? `w-full lg:w-2/3`
+              : cols === 3
+              ? `w-full lg:w-1/2`
+              : cols === 2
+              ? `w-full lg:w-1/3`
+              : `w-full lg:w-1/4`
+          } select-none flex-col items-start justify-center gap-y-4`}
+        >
           <div className="flex flex-row justify-start gap-4 rounded-lg bg-stone-800 px-4 py-2">
             <TooltipProvider>
               <CollageModal
@@ -377,6 +388,20 @@ export default function FusionPage() {
               </Tooltip>
             </TooltipProvider>
 
+            <div className="block lg:hidden">
+              <CollageSettings
+                cols={cols}
+                rows={rows}
+                outlineWidth={outlineWidth}
+                handleSlideColumns={handleSlideColumns}
+                handleSlideRows={handleSlideRows}
+                handleOutlineWidth={handleOutlineWidth}
+                color={color}
+                setColor={setColor}
+                modalMode={true}
+              />
+            </div>
+
             {videoBlob && (
               <div>
                 <p>Video Preview:</p>
@@ -390,13 +415,13 @@ export default function FusionPage() {
               </div>
             )}
           </div>
-          <div className="flex flex-row items-start gap-x-4">
+          <div className="flex w-full flex-row items-start gap-x-4">
             <div
-              className="flex flex-col items-center gap-y-4"
+              className="flex w-full flex-col items-center gap-y-4"
               ref={collageRef}
             >
               <div
-                className="grid"
+                className={`grid w-full`}
                 style={{
                   gridTemplateColumns: `repeat(${cols}, 1fr)`,
                   margin: `${outlineWidth}px`,
@@ -412,15 +437,7 @@ export default function FusionPage() {
                           outlineWidth: `${outlineWidth}px`,
                           outlineColor: color,
                         }}
-                        className={`relative flex aspect-square ${
-                          cols * rows > 36
-                            ? `h-20 w-20`
-                            : cols * rows > 24 || cols > 8
-                            ? `h-28 w-28`
-                            : cols * rows > 12 || cols > 6
-                            ? `h-36 w-36`
-                            : `h-48 w-48`
-                        } box-border cursor-grab items-center justify-center bg-stone-800 outline`}
+                        className={`relative box-border flex aspect-square cursor-grab items-center justify-center bg-stone-800 outline  `}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
                       >
@@ -453,7 +470,7 @@ export default function FusionPage() {
                             </div>
                           </>
                         ) : (
-                          <div>
+                          <div className="aspect-square">
                             {gridCount}
                             {/* {item.index} */}
                           </div>
@@ -464,46 +481,18 @@ export default function FusionPage() {
                 )}
               </div>
             </div>
-            <div className="flex flex-col justify-start gap-4 rounded-md bg-stone-800 p-6">
-              <div className="flex flex-col gap-1">
-                <div>Columns</div>
-                <SliderBase
-                  onValueChange={(v) => handleSlideColumns(v)}
-                  defaultValue={[cols]}
-                  value={[cols]}
-                  min={1}
-                  max={6}
-                  step={1}
-                  className="w-48"
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div>Rows</div>
-                <SliderBase
-                  onValueChange={(v) => handleSlideRows(v)}
-                  defaultValue={[2]}
-                  value={[rows]}
-                  min={1}
-                  max={4}
-                  step={1}
-                  className="w-48"
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div>Border Width</div>
-                <SliderBase
-                  onValueChange={(v) => handleOutlineWidth(v)}
-                  defaultValue={[2]}
-                  value={[outlineWidth]}
-                  min={0}
-                  max={8}
-                  step={1}
-                  className="w-48"
-                />
-              </div>
-              <div>
-                <ColorPicker onChange={setColor} color={color} />
-              </div>
+            <div className="hidden lg:block">
+              <CollageSettings
+                cols={cols}
+                rows={rows}
+                outlineWidth={outlineWidth}
+                handleSlideColumns={handleSlideColumns}
+                handleSlideRows={handleSlideRows}
+                handleOutlineWidth={handleOutlineWidth}
+                color={color}
+                setColor={setColor}
+                modalMode={false}
+              />
             </div>
           </div>
         </section>
