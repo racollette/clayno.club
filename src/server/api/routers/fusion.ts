@@ -85,6 +85,7 @@ export const fusionRouter = createTRPCRouter({
           borderWidth: input.borderWidth,
           borderColor: input.borderColor,
           data: input.data,
+          status: "new",
         },
       });
 
