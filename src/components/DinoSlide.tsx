@@ -70,22 +70,22 @@ export default function DinoSlide({
     .filter((dino) => dino.attributes !== null);
 
   return (
-    <div className={`fixed bottom-0 left-0 select-none px-3 transition-all`}>
+    <div className={`fixed bottom-0 left-0 select-none px-2 transition-all`}>
+      <div
+        className="flex w-full cursor-pointer justify-center"
+        onClick={toggleMinimize}
+      >
+        {isMinimized ? (
+          <HiChevronUp color="white" size={36} />
+        ) : (
+          <HiChevronDown color="white" size={36} />
+        )}
+      </div>
       <ScrollArea
         className={`w-full rounded-md border bg-black ${
-          isMinimized ? "h-[40px]" : "h-[220px]"
+          isMinimized ? "h-[50px]" : "h-[240px]"
         }`}
       >
-        <button
-          className="absolute right-2 top-0 p-2 text-gray-500 hover:text-gray-700"
-          onClick={toggleMinimize}
-        >
-          {isMinimized ? (
-            <HiChevronUp color="white" size={28} />
-          ) : (
-            <HiChevronDown color="white" size={28} />
-          )}
-        </button>
         <div className="flex p-4">
           {user && session ? (
             <div className="flex flex-row">
@@ -95,7 +95,7 @@ export default function DinoSlide({
                     {holder.mints.map((dino: any) => (
                       <div
                         key={dino.mint}
-                        className="relative flex h-36 w-36 cursor-grab justify-center overflow-clip rounded-md"
+                        className="relative flex h-28 w-28 cursor-grab justify-center overflow-clip rounded-md lg:h-36 lg:w-36"
                       >
                         <Image
                           className="transform-gpu transition-transform hover:scale-125"
@@ -137,12 +137,12 @@ export default function DinoSlide({
                   </Fragment>
                 ))}
               </div>
-              <div className="flex flex-col justify-start gap-3">
+              <div className="flex flex-col justify-start gap-3 lg:px-3">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
                       <ToggleSwitch
-                        className="mr-8 w-32"
+                        className="self-end"
                         toggleState={showPFP}
                         label={"PFP"}
                         onToggle={togglePFP}
@@ -154,7 +154,7 @@ export default function DinoSlide({
                   </Tooltip>
                   <Tooltip>
                     <TooltipTrigger
-                      className="self-start rounded-lg bg-fuchsia-500 px-2 py-1 hover:bg-fuchsia-400"
+                      className="self-end rounded-lg bg-fuchsia-500 px-2 py-1 hover:bg-fuchsia-400"
                       onClick={() => handleFillCells(extractedMints, showPFP)}
                     >
                       <HiViewGridAdd size={24} />

@@ -132,9 +132,9 @@ export const CollagePreview = (props: CollageGridProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center pr-4" ref={collageRef}>
+    <div className="flex flex-col items-center lg:pr-4" ref={collageRef}>
       <div
-        className="relative grid"
+        className="relative grid w-full"
         style={{
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
           margin: `${borderWidth}px`,
@@ -150,15 +150,7 @@ export const CollagePreview = (props: CollageGridProps) => {
                     outlineWidth: `${borderWidth / 2}px`,
                     outlineColor: borderColor,
                   }}
-                  className={`relative flex aspect-square h-10 w-10
-                  ${
-                    cols * rows >= 36
-                      ? `h-10 w-10`
-                      : cols * rows >= 24 || cols >= 8
-                      ? `h-14 w-14`
-                      : `h-20 w-20`
-                  } 
-                  box-border items-center justify-center bg-stone-800 outline`}
+                  className={`relative box-border flex aspect-square items-center justify-center bg-stone-800 outline lg:w-24`}
                 >
                   {item.imageURL && (
                     <>
@@ -262,7 +254,7 @@ export const CollagePreview = (props: CollageGridProps) => {
             </div>
           )}
           {jobProgress.state === "waiting" && (
-            <div className="flex flex-row justify-between gap-4">
+            <div className="flex flex-row justify-between gap-2">
               <Image
                 src="/icons/Blocks-5s-200px.svg"
                 alt="In Queue"
@@ -283,26 +275,24 @@ export const CollagePreview = (props: CollageGridProps) => {
       )}
 
       {videoURL && (
-        <div className="mt-2">
-          <div className="flex flex-row justify-around gap-4">
-            <p className="self-center font-semibold">Video ready!</p>
-            <Tooltip>
-              <TooltipTrigger onClick={() => handlePreviewClick(videoURL)}>
-                <HiFilm className="self-center" color="#00ff99" size={32} />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs font-semibold">Preview</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger onClick={() => downloadVideo(videoURL)}>
-                <HiDownload className="self-center" color="#9999ff" size={32} />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs font-semibold">Download</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+        <div className="flex flex-row justify-around gap-2">
+          <p className="self-center font-semibold">Video ready!</p>
+          <Tooltip>
+            <TooltipTrigger onClick={() => handlePreviewClick(videoURL)}>
+              <HiFilm className="self-center" color="#00ff99" size={32} />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs font-semibold">Preview</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger onClick={() => downloadVideo(videoURL)}>
+              <HiDownload className="self-center" color="#9999ff" size={32} />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs font-semibold">Download</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       )}
     </div>
