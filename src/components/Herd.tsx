@@ -63,7 +63,7 @@ export default function Herd(props: HerdProps) {
   return (
     <div
       key={filteredHerd.id}
-      className="mb-6 flex w-full flex-col rounded-lg bg-stone-800 p-4 md:p-6"
+      className="mb-6 flex w-full flex-col rounded-lg bg-neutral-800 p-4 md:p-6"
     >
       <div
         className={`mb-1 flex flex-none flex-wrap items-center justify-between rounded-md  ${getBorderColor(

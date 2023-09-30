@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
-    inner: "bg-zinc-900 rounded-lg",
+    inner: "bg-neutral-900 rounded-lg",
     base: "relative w-full p-4 h-auto",
   },
 };
@@ -45,7 +45,7 @@ export default function AlertModal({
         position={"center"}
       >
         {/* <Modal.Header>Create Account or Log In</Modal.Header> */}
-        <Modal.Body className="rounded-lg bg-zinc-900">
+        <Modal.Body className="rounded-lg bg-neutral-900">
           <div className="m-2 flex flex-col space-y-4 text-white">
             <div className="flex flex-col">
               <div className="text-lg font-extrabold">{title}</div>
@@ -53,7 +53,7 @@ export default function AlertModal({
             </div>
             <div className="flex flex-row justify-end gap-4">
               <button
-                className="rounded-lg bg-zinc-700 px-4 py-2 text-sm font-extrabold hover:bg-zinc-800"
+                className="rounded-lg bg-neutral-700 px-4 py-2 text-sm font-extrabold hover:bg-neutral-800"
                 onClick={() => setOpenModal(undefined)}
               >
                 Cancel

@@ -76,9 +76,9 @@ export default function DinoSlide({
         onClick={toggleMinimize}
       >
         {isMinimized ? (
-          <HiChevronUp color="white" size={36} />
+          <HiChevronUp color="white" size={32} />
         ) : (
-          <HiChevronDown color="white" size={36} />
+          <HiChevronDown color="white" size={32} />
         )}
       </div>
       <ScrollArea

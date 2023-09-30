@@ -348,7 +348,7 @@ export default function FusionPage() {
               : `w-full lg:w-1/3 xl:w-1/3`
           } select-none flex-col items-start justify-center gap-y-4`}
         >
-          <div className="flex flex-row justify-start gap-4 rounded-lg bg-stone-800 px-4 py-2">
+          <div className="flex flex-row justify-start gap-4 rounded-lg bg-neutral-800 px-4 py-2">
             <TooltipProvider>
               <CollageModal
                 title="My Collages"
@@ -437,7 +437,7 @@ export default function FusionPage() {
                           outlineWidth: `${outlineWidth}px`,
                           outlineColor: color,
                         }}
-                        className={`relative box-border flex aspect-square cursor-grab items-center justify-center bg-stone-800 outline  `}
+                        className={`relative box-border flex aspect-square cursor-grab items-center justify-center bg-neutral-800 outline  `}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
                       >

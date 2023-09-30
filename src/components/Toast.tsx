@@ -20,7 +20,7 @@ export default function DefaultToast(props: ToastProps) {
   return (
     <>
       {showToast && (
-        <Toast className="bg-zinc-800">
+        <Toast className="bg-neutral-800">
           <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg  text-orange-500 dark:bg-orange-700 dark:text-orange-200">
             {type === "error" ? (
               <HiExclamationCircle className="h-7 w-7" />
@@ -29,7 +29,7 @@ export default function DefaultToast(props: ToastProps) {
             )}
           </div>
           <div className="ml-3 text-sm font-normal text-white">{message}</div>
-          <Toast.Toggle className="bg-zinc-800" />
+          <Toast.Toggle className="bg-neutral-800" />
         </Toast>
       )}
     </>

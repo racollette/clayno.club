@@ -24,7 +24,7 @@ import { useUser } from "~/hooks/useUser";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
-    inner: "bg-zinc-900 rounded-lg",
+    inner: "bg-neutral-900 rounded-lg",
     base: "relative w-full p-4 h-auto",
   },
 };
@@ -217,7 +217,7 @@ export default function LoginModal() {
       >
         {/* <Modal.Header>Create Account or Log In</Modal.Header> */}
         {connected ? (
-          <Modal.Body className="rounded-lg bg-zinc-900">
+          <Modal.Body className="rounded-lg bg-neutral-900">
             <div className="flex flex-col space-y-4 text-white">
               <div className="flex flex-col">
                 <div className="text-lg font-extrabold">Verify Wallet</div>
@@ -239,7 +239,7 @@ export default function LoginModal() {
                     className="peer sr-only"
                     onChange={() => setUseLedger(!useLedger)}
                   />
-                  <div className="peer h-5 w-9 rounded-full bg-zinc-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-pink-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-pink-800"></div>
+                  <div className="peer h-5 w-9 rounded-full bg-neutral-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-pink-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-pink-800"></div>
                   <span className="ml-3 text-sm font-extrabold text-zinc-400 dark:text-gray-300">
                     Using Ledger?
                   </span>
@@ -280,7 +280,7 @@ export default function LoginModal() {
           </Modal.Body>
         ) : (
           <Modal.Body>
-            <div className="bg-zinc-900 text-white">
+            <div className="bg-neutral-900 text-white">
               <div className="text-lg font-extrabold ">
                 Create Account or Log in
               </div>
@@ -301,7 +301,7 @@ export default function LoginModal() {
                 </div>
                 <div className="flex flex-row justify-start gap-4">
                   <button
-                    className="rounded-lg bg-zinc-800 px-4 py-3 text-white"
+                    className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
                     onClick={() => signIn("discord")}
                   >
                     <div className="flex flex-row justify-center gap-2">
@@ -318,7 +318,7 @@ export default function LoginModal() {
                     </div>
                   </button>
                   <button
-                    className="rounded-lg bg-zinc-800 px-4 py-3 text-white"
+                    className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
                     onClick={() => signIn("twitter")}
                   >
                     <div className="flex flex-row justify-center gap-2">

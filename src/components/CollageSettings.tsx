@@ -12,7 +12,7 @@ import {
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
-    inner: "bg-stone-900 rounded-lg",
+    inner: "bg-neutral-900 rounded-lg",
   },
   root: {
     sizes: {
@@ -84,7 +84,7 @@ function CoreSettings(props: CollageSettingsProps) {
     setColor,
   } = props;
   return (
-    <div className="flex flex-col justify-start gap-4 rounded-md bg-stone-800 p-6 text-white">
+    <div className="flex flex-col justify-start gap-4 rounded-md bg-neutral-800 p-6 text-white">
       <div className="flex flex-col gap-1">
         <div>Columns</div>
         <SliderBase

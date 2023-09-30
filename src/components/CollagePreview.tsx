@@ -150,7 +150,7 @@ export const CollagePreview = (props: CollageGridProps) => {
                     outlineWidth: `${borderWidth / 2}px`,
                     outlineColor: borderColor,
                   }}
-                  className={`relative box-border flex aspect-square items-center justify-center bg-stone-800 outline lg:w-24`}
+                  className={`relative box-border flex aspect-square items-center justify-center bg-neutral-800 outline lg:w-24`}
                 >
                   {item.imageURL && (
                     <>
