@@ -86,7 +86,7 @@ export default function DinoSlide({
           isMinimized ? "h-[50px]" : "h-[240px]"
         }`}
       >
-        <div className="flex p-4">
+        <div className="flex p-2 lg:p-4">
           {user && session ? (
             <div className="flex flex-row">
               <div className="flex flex-row flex-wrap gap-2">
@@ -137,7 +137,7 @@ export default function DinoSlide({
                   </Fragment>
                 ))}
               </div>
-              <div className="flex flex-col justify-start gap-3 lg:px-3">
+              <div className="flex flex-col justify-start gap-3 px-1 lg:px-3">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
