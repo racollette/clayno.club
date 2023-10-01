@@ -371,7 +371,7 @@ export default function FusionPage() {
               <Tooltip>
                 <TooltipTrigger
                   className={`rounded-lg px-3 py-2 ${
-                    !gridFull
+                    !gridFull || (cols === 1 && rows === 1)
                       ? "cursor-not-allowed bg-neutral-400 hover:bg-neutral-500"
                       : "cursor-pointer bg-cyan-600 hover:bg-cyan-500"
                   }`}

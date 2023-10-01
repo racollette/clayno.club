@@ -57,6 +57,7 @@ export const CollagePreview = (props: CollageGridProps) => {
     state: null,
     position: null,
   });
+  // const { status, url: storageURL } = collage;
 
   const checkProgress = async () => {
     try {
@@ -68,19 +69,13 @@ export const CollagePreview = (props: CollageGridProps) => {
           position: jobResponse.data.queuePosition,
         };
         setJobProgress(newJobProgress);
-        console.log(newJobProgress); // Log the updated progress
-
         if (newJobProgress.state === "completed") {
           setVideoURL(`https://api.dinoherd.cc/videos/${id}.mp4`);
           setMonitorJob(false);
         }
-
-        return true;
       }
-      return false;
     } catch (error) {
-      console.error("Error checking job status:", error);
-      return false;
+      // console.error("Error checking job status:", error);
     }
   };
 
@@ -173,9 +168,9 @@ export const CollagePreview = (props: CollageGridProps) => {
         ))}
         <div
           className={`absolute left-1/2 top-1/2 flex ${
-            cols <= 2 ? `flex-col` : `flex-row`
+            rows === 1 ? `flex-row` : cols <= 2 ? `flex-col` : `flex-row`
           } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
-            cols <= 3 ? `gap-6` : `gap-12`
+            cols <= 3 ? `gap-4` : `gap-12`
           } opacity-0 transition-opacity hover:opacity-100`}
         >
           <TooltipProvider>
