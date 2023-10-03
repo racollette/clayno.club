@@ -100,9 +100,11 @@ export default function DinoSlide({
             <HiChevronDown color="white" size={32} />
           )}
         </div>
-        <div className="absolute right-0 top-0 mr-4 pt-2 text-right text-xs italic text-zinc-500">
-          {`Last updated: ${lastUpdated}`}
-        </div>
+        {lastUpdated && (
+          <div className="absolute right-0 top-0 mr-4 pt-2 text-right text-xs italic text-zinc-500">
+            {`Last updated: ${lastUpdated}`}
+          </div>
+        )}
       </div>
       <ScrollArea
         className={`rounded-md border bg-black ${
