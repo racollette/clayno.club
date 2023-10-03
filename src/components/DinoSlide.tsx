@@ -92,8 +92,8 @@ export default function DinoSlide({
     <div
       className={`fixed bottom-0 left-0 w-full select-none px-2 transition-all`}
     >
-      <div className="relative flex cursor-pointer flex-row items-center justify-center">
-        <div>
+      <div className="relative flex flex-row items-center justify-center">
+        <div className="cursor-pointer px-8" onClick={() => toggleMinimize()}>
           {isMinimized ? (
             <HiChevronUp color="white" size={32} />
           ) : (
