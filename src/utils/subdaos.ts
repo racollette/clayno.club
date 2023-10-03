@@ -1,4 +1,3 @@
-import { Dino } from "@prisma/client";
 import { api } from "./api";
 
 export const groupAndFilter = (acronym: string) => {

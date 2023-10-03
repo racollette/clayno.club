@@ -227,3 +227,10 @@ model ClaymakerToSubDAO {
   @@index([B], map: "_ClaymakerToSubDAO_B_index")
   @@map("_ClaymakerToSubDAO")
 }
+
+model LastUpdated {
+  id      String   @id
+  holders DateTime
+  tribes  DateTime
+  herds   DateTime
+}

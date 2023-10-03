@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
 import LoginModal from "./LoginModal";
+import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 type DinoSlideProps = {
   handlePlace: (imageURL: string, motion: string, mint: string) => void;
@@ -67,6 +68,7 @@ export default function DinoSlide({
   const [isMinimized, setIsMinimized] = useState(false);
 
   const wallets = user?.wallets.map((wallet: any) => wallet.address) ?? [];
+  const lastUpdated = useTimeSinceLastUpdate("holders");
 
   const { data: holders, isLoading } = api.fusion.getUserDinos.useQuery({
     wallets: wallets,
@@ -90,15 +92,17 @@ export default function DinoSlide({
     <div
       className={`fixed bottom-0 left-0 w-full select-none px-2 transition-all`}
     >
-      <div
-        className="flex  cursor-pointer justify-center"
-        onClick={toggleMinimize}
-      >
-        {isMinimized ? (
-          <HiChevronUp color="white" size={32} />
-        ) : (
-          <HiChevronDown color="white" size={32} />
-        )}
+      <div className="relative flex cursor-pointer flex-row items-center justify-center">
+        <div>
+          {isMinimized ? (
+            <HiChevronUp color="white" size={32} />
+          ) : (
+            <HiChevronDown color="white" size={32} />
+          )}
+        </div>
+        <div className="absolute right-0 top-0 mr-4 pt-2 text-right text-xs italic text-zinc-500">
+          {`Last updated: ${lastUpdated}`}
+        </div>
       </div>
       <ScrollArea
         className={`rounded-md border bg-black ${
