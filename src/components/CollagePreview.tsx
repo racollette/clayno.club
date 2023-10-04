@@ -7,6 +7,8 @@ import {
   HiVideoCamera,
   HiDownload,
   HiFilm,
+  HiEye,
+  HiEyeOff,
 } from "react-icons/hi";
 import {
   Tooltip,
@@ -30,10 +32,13 @@ type CollageGridProps = {
   borderColor: string;
   borderWidth: number;
   grid: GridItemProps[][];
-  onDelete: (event: React.MouseEvent<SVGElement>, id: string) => void;
-  onLoad: (collage: any) => void;
-  onRecord: (id: string) => void;
+  onDelete?: (event: React.MouseEvent<SVGElement>, id: string) => void;
+  onLoad?: (collage: any) => void;
+  onRecord?: (id: string) => void;
+  onHide?: (id: string, hidden: boolean) => void;
   collage: Collage;
+  asProfile?: boolean;
+  isOwner?: boolean;
 };
 
 export const CollagePreview = (props: CollageGridProps) => {
@@ -47,7 +52,10 @@ export const CollagePreview = (props: CollageGridProps) => {
     onDelete,
     onLoad,
     onRecord,
+    onHide,
     collage,
+    asProfile,
+    isOwner,
   } = props;
   const collageRef = useRef<HTMLDivElement>(null);
   const { jobStatus } = useFusion();
@@ -57,6 +65,7 @@ export const CollagePreview = (props: CollageGridProps) => {
     state: null,
     position: null,
   });
+  const [hidden, setHidden] = useState<boolean>(collage.hidden === true);
   // const { status, url: storageURL } = collage;
 
   const checkProgress = async () => {
@@ -127,12 +136,12 @@ export const CollagePreview = (props: CollageGridProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center lg:pr-4" ref={collageRef}>
+    <div className="flex w-full flex-col items-center lg:pr-4" ref={collageRef}>
       <div
-        className="relative grid w-full"
+        // className={`relative grid flex-grow ${!asProfile && `h-full w-full`}`}
+        className={`relative grid w-full ${asProfile && `md:w-1/2 lg:w-2/5`}`}
         style={{
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          // margin: `${borderWidth}px`,
         }}
       >
         {grid.map((row, rowIndex) => (
@@ -145,7 +154,9 @@ export const CollagePreview = (props: CollageGridProps) => {
                     outlineWidth: `${borderWidth / 2}px`,
                     outlineColor: borderColor,
                   }}
-                  className={`relative box-border flex aspect-square items-center justify-center bg-neutral-800 outline lg:w-24`}
+                  className={`relative box-border flex aspect-square items-center justify-center bg-neutral-800 outline ${
+                    !asProfile && `lg:w-24`
+                  }`}
                 >
                   {item.imageURL && (
                     <>
@@ -158,6 +169,7 @@ export const CollagePreview = (props: CollageGridProps) => {
                         }
                         alt={`Dropped Image ${rowIndex}_${colIndex}`}
                         fill
+                        className="object-cover"
                       />
                     </>
                   )}
@@ -166,129 +178,196 @@ export const CollagePreview = (props: CollageGridProps) => {
             })}
           </Fragment>
         ))}
-        <div
-          className={`absolute left-1/2 top-1/2 flex ${
-            rows === 1 ? `flex-row` : cols <= 2 ? `flex-col` : `flex-row`
-          } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
-            cols <= 3 ? `gap-4` : `gap-12`
-          } opacity-0 transition-opacity hover:opacity-100`}
-        >
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <HiPencilAlt
-                  className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
-                  color="black"
-                  size={50}
-                  onClick={(e) =>
-                    onLoad({
-                      rows,
-                      cols,
-                      borderColor,
-                      borderWidth,
-                      grid,
-                    })
-                  }
-                />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs font-semibold">Load</p>
-              </TooltipContent>
-            </Tooltip>
-            {!videoURL && (
+        {!asProfile ? (
+          <div
+            className={`absolute left-1/2 top-1/2 flex ${
+              rows === 1 ? `flex-row` : cols <= 2 ? `flex-col` : `flex-row`
+            } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
+              cols <= 3 ? `gap-4` : `gap-12`
+            } opacity-0 transition-opacity hover:opacity-100`}
+          >
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <HiVideoCamera
-                    className="cursor-pointer rounded-full bg-amber-700/75 p-2"
+                  <HiPencilAlt
+                    className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
                     color="black"
                     size={50}
-                    onClick={(e) => {
-                      onRecord(id);
-                      setMonitorJob(true);
-                    }}
+                    onClick={(e) =>
+                      onLoad &&
+                      onLoad({
+                        rows,
+                        cols,
+                        borderColor,
+                        borderWidth,
+                        grid,
+                      })
+                    }
                   />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="text-xs font-semibold">Generate Video</p>
+                  <p className="text-xs font-semibold">Load</p>
                 </TooltipContent>
               </Tooltip>
-            )}
-
-            <Tooltip>
-              <TooltipTrigger>
-                <HiTrash
-                  className="cursor-pointer rounded-full bg-red-700/75 p-2"
-                  color="black"
-                  size={50}
-                  onClick={(e) => onDelete(e, id)}
-                />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs font-semibold">Delete</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </div>
-      {/* Display job progress */}
-      {jobProgress.state !== null && (
-        <div className="mt-3">
-          {jobProgress.state === "active" && (
-            <div className="flex flex-col justify-center gap-2">
-              <p className="text-center text-xs font-semibold">
-                Job Processing
-              </p>
-              {/* <div className="relative h-16 w-28"> */}
-              <Image
-                src="/icons/Ellipsis-1.8s-200px.svg"
-                alt="Processing"
-                width={150}
-                height={50}
-              />
-              {/* </div> */}
-            </div>
-          )}
-          {jobProgress.state === "waiting" && (
-            <div className="flex flex-row justify-between gap-2">
-              <Image
-                src="/icons/Blocks-5s-200px.svg"
-                alt="In Queue"
-                width={40}
-                height={40}
-              />
-              <div className="flex flex-col justify-center">
-                <p className="text-xs italic text-zinc-500">In Queue</p>
-                <p>
-                  <span className="text-xs">
-                    Position {jobProgress.position}
-                  </span>
-                </p>
+              {!videoURL && (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HiVideoCamera
+                      className="cursor-pointer rounded-full bg-amber-700/75 p-2"
+                      color="black"
+                      size={50}
+                      onClick={(e) => {
+                        onRecord && onRecord(id);
+                        setMonitorJob(true);
+                      }}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs font-semibold">Generate Video</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              <Tooltip>
+                <TooltipTrigger>
+                  <HiTrash
+                    className="cursor-pointer rounded-full bg-red-700/75 p-2"
+                    color="black"
+                    size={50}
+                    onClick={(e) => onDelete && onDelete(e, id)}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs font-semibold">Delete</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        ) : (
+          <>
+            {isOwner && (
+              <div
+                className={`absolute left-1/2 top-1/2 flex ${
+                  rows === 1 ? `flex-row` : cols <= 2 ? `flex-col` : `flex-row`
+                } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
+                  cols <= 3 ? `gap-4` : `gap-12`
+                } opacity-0 transition-opacity hover:opacity-100`}
+              >
+                <TooltipProvider>
+                  {!hidden ? (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HiEyeOff
+                          className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
+                          color="black"
+                          size={50}
+                          onClick={(e) => {
+                            if (onHide) {
+                              onHide(collage.id, true);
+                              setHidden(true);
+                            }
+                          }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-xs font-semibold">
+                          Hide from Public
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HiEye
+                          className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
+                          color="black"
+                          size={50}
+                          onClick={(e) => {
+                            if (onHide) {
+                              onHide(collage.id, false);
+                              setHidden(false);
+                            }
+                          }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-xs font-semibold">Show to Public</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </TooltipProvider>
               </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {!asProfile && (
+        <>
+          {/* Display job progress */}
+          {jobProgress.state !== null && (
+            <div className="mt-3">
+              {jobProgress.state === "active" && (
+                <div className="flex flex-col justify-center gap-2">
+                  <p className="text-center text-xs font-semibold">
+                    Job Processing
+                  </p>
+                  <Image
+                    src="/icons/Ellipsis-1.8s-200px.svg"
+                    alt="Processing"
+                    width={150}
+                    height={50}
+                  />
+                </div>
+              )}
+              {jobProgress.state === "waiting" && (
+                <div className="flex flex-row justify-between gap-2">
+                  <Image
+                    src="/icons/Blocks-5s-200px.svg"
+                    alt="In Queue"
+                    width={40}
+                    height={40}
+                  />
+                  <div className="flex flex-col justify-center">
+                    <p className="text-xs italic text-zinc-500">In Queue</p>
+                    <p>
+                      <span className="text-xs">
+                        Position {jobProgress.position}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
 
-      {videoURL && (
-        <div className="flex flex-row justify-around gap-2">
-          <p className="self-center font-semibold">Video ready!</p>
-          <Tooltip>
-            <TooltipTrigger onClick={() => handlePreviewClick(videoURL)}>
-              <HiFilm className="self-center" color="#00ff99" size={32} />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-xs font-semibold">Preview</p>
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger onClick={() => downloadVideo(videoURL)}>
-              <HiDownload className="self-center" color="#9999ff" size={32} />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-xs font-semibold">Download</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
+          {videoURL && (
+            <div className="flex flex-row justify-around gap-2">
+              <p className="self-center font-semibold">Video ready!</p>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger onClick={() => handlePreviewClick(videoURL)}>
+                    <HiFilm className="self-center" color="#00ff99" size={32} />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs font-semibold">Preview</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger onClick={() => downloadVideo(videoURL)}>
+                    <HiDownload
+                      className="self-center"
+                      color="#9999ff"
+                      size={32}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs font-semibold">Download</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

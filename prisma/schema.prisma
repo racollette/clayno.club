@@ -187,6 +187,7 @@ model Collage {
   generatedAt DateTime?
   status      String?
   url         String?
+  hidden      Boolean?
   User        User?     @relation(fields: [userId], references: [id])
 
   @@index([userId])

@@ -11,6 +11,8 @@ import { truncateAccount } from "~/utils/addresses";
 import { Spinner } from "flowbite-react";
 import Head from "next/head";
 import { getQueryString } from "~/utils/routes";
+import { CollagePreview } from "~/components/CollagePreview";
+import { GridItemProps } from "~/components/CollageModal";
 
 // const WalletMultiButtonDynamic = dynamic(
 //   async () =>
@@ -45,6 +47,18 @@ export default function Profile() {
   const authWallet = wallets.some(
     (item) => item.address === session?.user.name
   );
+
+  const isOwner =
+    session &&
+    (session.user.name === user?.discord?.username ||
+      session?.user.name === user?.twitter?.username ||
+      authWallet);
+
+  const { data: collages } = api.fusion.getPublicCollages.useQuery({
+    userId: user?.id || "None",
+    isOwner: isOwner ? isOwner : false,
+  });
+
   const { data: walletHerds } = api.herd.getUserHerds.useQuery(queryString);
 
   useEffect(() => {
@@ -58,13 +72,22 @@ export default function Profile() {
     wallets: wallets.map((wallet) => wallet.address),
   });
 
+  const updateVisibility = api.fusion.hideCollage.useMutation();
+
+  const onHide = (id: string, hidden: boolean) => {
+    updateVisibility.mutate({
+      id: id,
+      hidden: hidden,
+    });
+  };
+
   return (
     <>
       <Head>
         <title>DinoHerd | Profile</title>
       </Head>
       <Layout>
-        <section className="flex w-full flex-col items-center justify-center py-4 md:px-4 md:py-8">
+        <section className="flex w-full flex-col items-center justify-center gap-8 py-4 md:flex-row md:items-start md:px-4 md:py-8">
           <div className="flex flex-row flex-wrap justify-center rounded-xl bg-neutral-800 p-4 align-middle">
             {isLoading ? (
               <Spinner className="self-center" />
@@ -182,49 +205,70 @@ export default function Profile() {
                     </div>
                   </div>
                 )}
-                {session &&
-                  (session.user.name === user?.discord?.username ||
-                    session?.user.name === user?.twitter?.username ||
-                    authWallet) && (
-                    <button
-                      className="mt-2 w-full rounded-lg bg-orange-500 px-2 py-2 text-sm font-bold"
-                      onClick={() => router.push(`${router.asPath}/settings`)}
-                    >
-                      Edit Profile
-                    </button>
-                  )}
+                {isOwner && (
+                  <button
+                    className="mt-2 w-full rounded-lg bg-orange-500 px-2 py-2 text-sm font-bold"
+                    onClick={() => router.push(`${router.asPath}/settings`)}
+                  >
+                    Edit Profile
+                  </button>
+                )}
               </div>
             )}
           </div>
-        </section>
-        {userTribes && userTribes?.length > 0 && (
-          <section className="flex w-full flex-col items-center gap-2">
-            <div className="mt-8 p-2 text-xl font-extrabold">Tribes</div>
-            <div className="flex w-full flex-col gap-2 rounded-lg bg-neutral-800 p-4 sm:w-96">
-              {userTribes.map((tribe, index) => (
-                <Link
-                  key={index}
-                  href={`/tribes/${tribe.acronym}`}
-                  className="cursor-pointer rounded-lg p-3 hover:bg-neutral-700"
-                >
-                  <div className="flex flex-row items-center justify-start gap-x-3">
-                    <div className="relative h-12 w-12 overflow-clip">
-                      <Image
-                        src={tribe.thumbnail ?? ""}
-                        alt=""
-                        fill
-                        className="rounded-md"
-                      />
+          {userTribes && userTribes?.length > 0 && (
+            <div className="flex flex-col items-center rounded-lg bg-neutral-800 px-4 py-2">
+              <div className="p-2 text-lg font-extrabold">Tribes</div>
+              <div className="grid grid-cols-2">
+                {userTribes.map((tribe, index) => (
+                  <Link
+                    key={index}
+                    href={`/tribes/${tribe.acronym}`}
+                    className="cursor-pointer rounded-lg p-1 hover:bg-neutral-700"
+                  >
+                    <div className="flex flex-row items-center justify-start gap-x-3">
+                      <div className="relative h-9 w-9 overflow-clip">
+                        <Image
+                          src={tribe.thumbnail ?? ""}
+                          alt=""
+                          fill
+                          className="rounded-md"
+                        />
+                      </div>
+                      <div className="text-xs font-bold">{tribe.name}</div>
                     </div>
-                    <div className="font-bold">{tribe.name}</div>
-                  </div>
-                </Link>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {collages && collages.length > 0 && (
+          <section className="flex w-full flex-col items-center gap-2">
+            <div className="mt-8 p-2 text-xl font-extrabold">Custom Herds</div>
+            <div className="flex w-full flex-col gap-8">
+              {collages?.map((collage) => (
+                <CollagePreview
+                  key={collage.id}
+                  id={collage.id}
+                  rows={collage.rows}
+                  cols={collage.columns}
+                  borderColor={collage.borderColor}
+                  borderWidth={collage.borderWidth}
+                  grid={collage.data as GridItemProps[][]}
+                  collage={collage}
+                  asProfile={true}
+                  onHide={onHide}
+                  isOwner={isOwner ? isOwner : false}
+                />
               ))}
             </div>
           </section>
         )}
+
         <section className="flex w-full flex-col items-center gap-2">
-          <div className="mt-8 p-2 text-xl font-extrabold">Herds</div>
+          <div className="mt-8 p-2 text-xl font-extrabold">Detected Herds</div>
           {isWallet ? (
             <>
               {walletHerds && walletHerds.length > 0 ? (

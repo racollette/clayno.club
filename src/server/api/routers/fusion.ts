@@ -71,11 +71,28 @@ export const fusionRouter = createTRPCRouter({
       });
     }),
 
+  getPublicCollages: publicProcedure
+    .input(z.object({ userId: z.string(), isOwner: z.boolean() }))
+    .query(async ({ input }) => {
+      if (input.isOwner) {
+        return prisma.collage.findMany({
+          where: {
+            userId: input.userId,
+          },
+        });
+      }
+
+      return prisma.collage.findMany({
+        where: {
+          userId: input.userId,
+          hidden: false,
+        },
+      });
+    }),
+
   saveCollage: protectedProcedure
     .input(createUserCollageSchema)
     .mutation(async ({ input }) => {
-      console.log(input);
-
       // Create a new collage in the database
       const savedCollage = await prisma.collage.create({
         data: {
@@ -86,6 +103,7 @@ export const fusionRouter = createTRPCRouter({
           borderColor: input.borderColor,
           data: input.data,
           status: "new",
+          hidden: false,
         },
       });
 
@@ -102,5 +120,20 @@ export const fusionRouter = createTRPCRouter({
       });
 
       return deletedCollage;
+    }),
+
+  hideCollage: protectedProcedure
+    .input(z.object({ id: z.string(), hidden: z.boolean() }))
+    .mutation(async ({ input }) => {
+      const hideCollage = await prisma.collage.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          hidden: input.hidden,
+        },
+      });
+
+      return hideCollage;
     }),
 });

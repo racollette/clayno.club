@@ -241,8 +241,6 @@ export default function FusionPage() {
   const handleSaveCollage = async () => {
     if (!user) return;
 
-    console.log(grid);
-
     saveCollage.mutate({
       userId: user?.id,
       columns: cols,
@@ -280,7 +278,6 @@ export default function FusionPage() {
   };
 
   const handleLoadCollage = (collage: EditableCollage) => {
-    console.log(collage);
     const collageCopy = { ...collage };
 
     // setRows(collageCopy.rows);
@@ -296,7 +293,6 @@ export default function FusionPage() {
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
         row.map((cell) => {
-          console.log(gridIndex);
           gridIndex++;
           if (cell.imageURL === "") {
             return {

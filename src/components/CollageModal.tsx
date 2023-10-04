@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import { CollagePreview } from "./CollagePreview";
 import { Collage } from "@prisma/client";
@@ -11,7 +10,7 @@ import {
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
 
-type GridItemProps = {
+export type GridItemProps = {
   index: number;
   imageURL: string;
   motion: string;
