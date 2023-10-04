@@ -136,10 +136,16 @@ export const CollagePreview = (props: CollageGridProps) => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center lg:pr-4" ref={collageRef}>
+    <div
+      className={`flex flex-col ${
+        asProfile && `items-center`
+      } items-start lg:pr-4`}
+      ref={collageRef}
+    >
       <div
-        // className={`relative grid flex-grow ${!asProfile && `h-full w-full`}`}
-        className={`relative grid w-full ${asProfile && `md:w-1/2 lg:w-2/5`}`}
+        className={`relative grid w-full ${
+          asProfile && `w-full md:w-1/2 lg:w-2/5`
+        }`}
         style={{
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
         }}
@@ -302,7 +308,7 @@ export const CollagePreview = (props: CollageGridProps) => {
       </div>
 
       {!asProfile && (
-        <>
+        <div className="self-center">
           {/* Display job progress */}
           {jobProgress.state !== null && (
             <div className="mt-3">
@@ -341,7 +347,7 @@ export const CollagePreview = (props: CollageGridProps) => {
           )}
 
           {videoURL && (
-            <div className="flex flex-row justify-around gap-2">
+            <div className="flex flex-row justify-around gap-2 self-center">
               <p className="self-center font-semibold">Video ready!</p>
               <TooltipProvider>
                 <Tooltip>
@@ -367,7 +373,7 @@ export const CollagePreview = (props: CollageGridProps) => {
               </TooltipProvider>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

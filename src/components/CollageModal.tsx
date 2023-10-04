@@ -119,7 +119,7 @@ const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
                 &times;
               </span> */}
               <h2 className="mb-4 text-xl font-bold">{title}</h2>
-              <div className="flex flex-col gap-8 lg:flex-row lg:gap-4">
+              <div className="flex flex-col justify-start gap-8 lg:flex-row lg:gap-4">
                 {collages && collages.length > 0 ? (
                   <>
                     {collages?.map((collage) => (
