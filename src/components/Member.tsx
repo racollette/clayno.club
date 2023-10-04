@@ -79,7 +79,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
 
   return (
     <div
-      className={`rounded-lg bg-stone-800 p-3 pb-1 md:p-4 ${
+      className={`rounded-lg bg-neutral-800 p-3 pb-1 md:p-4 ${
         isRegistered && `order-first`
       } ${!expanded && `transform-gpu transition-transform hover:scale-95`} ${
         expanded && `col-span-2 py-4 md:col-span-3 lg:col-span-5`
@@ -100,6 +100,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
             className={`flex ${
               !expanded && `w-full`
             } flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700`}
+
           >
             <div className="relative aspect-square h-6 w-6 md:h-8 md:w-8">
               <Image
@@ -118,7 +119,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
               {expanded ? (
                 <button
                   onClick={toggleExpand}
-                  className="flex h-8 flex-row flex-nowrap justify-center gap-1 rounded-lg bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600"
+                  className="flex h-8 flex-row flex-nowrap justify-center gap-1 rounded-lg bg-neutral-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-neutral-600"
                 >
                   <div className="self-center">Hide</div>
                   <HiChevronUp className="self-center" />
@@ -126,7 +127,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
               ) : (
                 <button
                   onClick={toggleExpand}
-                  className="flex h-8 w-full flex-nowrap justify-center gap-1 rounded-md bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600 md:w-fit"
+                  className="flex h-8 w-full flex-nowrap justify-center gap-1 rounded-md bg-neutral-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-neutral-600 md:w-fit"
                 >
                   <div className="self-center whitespace-nowrap">
                     {additionalDinos} more

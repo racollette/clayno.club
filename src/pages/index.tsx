@@ -4,6 +4,7 @@ import { api } from "~/utils/api";
 import TabSelection from "~/components/TabSelection";
 import Herd from "~/components/Herd";
 import Image from "next/image";
+import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {
@@ -40,6 +41,8 @@ export default function Home() {
   );
   const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
+  const lastUpdated = useTimeSinceLastUpdate("herds");
+
   return (
     <>
       <Head>
@@ -61,8 +64,8 @@ export default function Home() {
           </div>
         ) : (
           <div className=" flex flex-col items-center justify-center py-2 md:px-4">
-            <div className="flex w-full flex-row flex-wrap align-middle">
-              <div className="relative m-4 aspect-video w-full p-4">
+            <div className="flex w-full flex-row flex-wrap justify-end align-middle">
+              <div className="relative mx-4 mt-4 aspect-video w-full p-4">
                 <Image
                   className="rounded-lg"
                   src="https://pbs.twimg.com/media/FqOrzzRXoAQ3yjV?format=jpg"
@@ -93,6 +96,9 @@ export default function Home() {
                     </h2>
                   </div>
                 </div>
+              </div>
+              <div className="mr-4 pt-2 text-right text-xs italic text-zinc-500">
+                {`Last updated: ${lastUpdated}`}
               </div>
             </div>
 
@@ -134,26 +140,7 @@ export default function Home() {
   );
 }
 
-// function AuthShowcase() {
-//   const { data: sessionData } = useSession();
-
 //   const { data: secretMessage } = api.herd.getSecretMessage.useQuery(
 //     undefined, // no input
 //     { enabled: sessionData?.user !== undefined }
 //   );
-
-//   return (
-//     <div className="flex flex-col items-center justify-center gap-4">
-//       <p className="text-center text-2xl text-white">
-//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-//         {secretMessage && <span> - {secretMessage}</span>}
-//       </p>
-//       <button
-//         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//         onClick={sessionData ? () => void signOut() : () => void signIn()}
-//       >
-//         {sessionData ? "Sign out" : "Sign in"}
-//       </button>
-//     </div>
-//   );
-// }

@@ -9,12 +9,17 @@ import { groupAndFilter } from "~/utils/subdaos";
 import Head from "next/head";
 import { Fragment } from "react";
 import { Attributes, Dino } from "@prisma/client";
+import { api } from "~/utils/api";
+import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 export default function SubDAO() {
   const router = useRouter();
   const { subdao } = router.query;
   const acronym = getQueryString(subdao);
   const { data, isLoading, sortedMap } = groupAndFilter(acronym);
+
+  const { data: updatedData } = api.general.getLastUpdated.useQuery();
+  const lastUpdated = useTimeSinceLastUpdate("tribes");
 
   return (
     <>
@@ -26,13 +31,11 @@ export default function SubDAO() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <div className="flex w-full flex-col justify-center gap-8 align-middle lg:w-full xl:w-11/12 2xl:w-10/12">
+        <div className="flex w-full flex-col justify-center gap-4 align-middle lg:w-full xl:w-11/12 2xl:w-10/12">
           {!isLoading && data ? (
             <>
               <div
-                className={`relative 
-                aspect-[3/1]
-                overflow-hidden rounded-lg md:mx-8`}
+                className={`relative aspect-[3/1] overflow-hidden rounded-lg md:mx-8`}
               >
                 {data.banner_url && (
                   <div className="overflow-hidden">
@@ -112,7 +115,7 @@ export default function SubDAO() {
                 </div>
 
                 <div className="flex flex-row flex-wrap md:gap-4">
-                  <div className="my-2 flex flex-row items-center justify-start gap-x-6 rounded-lg bg-stone-800 px-4 py-2">
+                  <div className="my-2 flex flex-row items-center justify-start gap-x-6 rounded-lg bg-neutral-800 px-4 py-2">
                     <div className="flex flex-col">
                       <div className="text-md font-bold">
                         {data?.uniqueAddresses}
@@ -146,7 +149,7 @@ export default function SubDAO() {
                     </div>
                   </div>
                   {data.requirements && (
-                    <div className="my-2 inline-block rounded-lg bg-stone-800 p-1">
+                    <div className="my-2 inline-block rounded-lg bg-neutral-800 p-1">
                       <div className="flex flex-row gap-2 p-2">
                         <div className="text-wrap p-2 text-left text-xs uppercase text-neutral-500">
                           Eligibility
@@ -166,10 +169,22 @@ export default function SubDAO() {
                       </div>
                     </div>
                   )}
+                  {lastUpdated && (
+                    <div className="flex flex-row flex-wrap md:gap-4">
+                      <div className="my-2 flex flex-row items-center justify-start gap-x-6 rounded-lg bg-neutral-800 px-4 py-2">
+                        <div className="flex flex-col">
+                          <div className="text-md font-bold">{lastUpdated}</div>
+                          <div className="text-xs uppercase text-neutral-500">
+                            Last Updated
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </section>
 
-              <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              <div className="mt-4 grid grid-cols-2 justify-center gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {!isLoading && sortedMap && (
                   <>
                     {!data.grouping ? (

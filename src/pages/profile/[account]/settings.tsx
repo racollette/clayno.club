@@ -138,7 +138,7 @@ const Settings = () => {
               Verify your identity so we can display your name next to your
               dinos!
             </div>
-            <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
+            <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
               {user?.discord && !unlinkedDiscord ? (
                 <div className="flex flex-row justify-between gap-4 md:gap-12">
                   <div className="flex flex-row">
@@ -150,7 +150,7 @@ const Settings = () => {
                     </span>
                   </div>
                   <button
-                    className="self-end rounded-lg bg-zinc-900 px-4 py-3"
+                    className="self-end rounded-lg bg-neutral-900 px-4 py-3"
                     onClick={() => handleUnlink("discord")}
                   >
                     <div className="flex flex-row gap-2">
@@ -173,7 +173,7 @@ const Settings = () => {
                     <Spinner className="self-center" />
                   ) : (
                     <button
-                      className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
+                      className="mr-4 rounded-lg bg-neutral-900 px-4 py-3"
                       disabled={linkDiscord.isLoading}
                       onClick={() => {
                         setStoredUserId(userId);
@@ -206,7 +206,7 @@ const Settings = () => {
                     </span>
                   </div>
                   <button
-                    className="self-end rounded-lg bg-zinc-900 px-4 py-3"
+                    className="self-end rounded-lg bg-neutral-900 px-4 py-3"
                     onClick={() => handleUnlink("twitter")}
                   >
                     <div className="flex flex-row gap-2">
@@ -229,7 +229,7 @@ const Settings = () => {
                     <Spinner className="self-center" />
                   ) : (
                     <button
-                      className="mr-4 rounded-lg bg-zinc-900 px-4 py-3"
+                      className="mr-4 rounded-lg bg-neutral-900 px-4 py-3"
                       disabled={linkTwitter.isLoading}
                       onClick={() => {
                         setStoredUserId(userId);
@@ -259,7 +259,7 @@ const Settings = () => {
               You can connect multiple wallets. All of these wallets will be
               able to access your profile.
             </div>
-            <div className="flex flex-col gap-6 rounded-lg bg-zinc-800 p-4">
+            <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
               {user?.defaultAddress && (
                 <div className="flex flex-row justify-between">
                   <div className="self-center">

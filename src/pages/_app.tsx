@@ -4,6 +4,7 @@ import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import React, { useMemo } from "react";
+import { Toaster } from "~/@/components/ui/toaster";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -56,8 +57,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <SessionProvider session={session}>
             <Header />
             <Component {...pageProps} />
-            <Analytics />
-            <Footer />
+            <Toaster />
+            <Analytics /> <Footer />
           </SessionProvider>
         </WalletModalProvider>
       </WalletProvider>
