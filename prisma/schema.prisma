@@ -90,15 +90,16 @@ model Account {
 }
 
 model User {
-  id             String    @id @default(cuid())
+  id             String      @id @default(cuid())
   name           String?
   image          String?
-  defaultAddress String    @unique
+  defaultAddress String      @unique
   accounts       Account[]
   discord        Discord?
   twitter        Twitter?
   wallets        Wallet[]
   collages       Collage[]
+  AudioFile      AudioFile[]
 }
 
 model Discord {
@@ -189,6 +190,17 @@ model Collage {
   url         String?
   hidden      Boolean?
   User        User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model AudioFile {
+  id         String   @id @default(cuid())
+  name       String
+  userId     String?
+  uploadedAt DateTime @default(now())
+  url        String?
+  User       User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }

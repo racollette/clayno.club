@@ -5,12 +5,12 @@ import Layout from "~/components/Layout";
 import Image from "next/image";
 import Head from "next/head";
 import DinoSlide from "~/components/DinoSlide";
-import { HiXCircle } from "react-icons/hi";
 import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
 import CollageModal from "~/components/CollageModal";
-import { HiSave, HiBan, HiCog } from "react-icons/hi";
+import MusicModal from "~/components/MusicModal";
+import { HiSave, HiBan, HiXCircle } from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -73,7 +73,6 @@ export default function FusionPage() {
   const [color, setColor] = useState<string>("#ffffff");
   const collageRef = useRef<HTMLDivElement>(null);
   const { doFusion, error } = useFusion();
-  const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
   const [pulse, setPulse] = useState(false);
@@ -86,6 +85,11 @@ export default function FusionPage() {
   const { data, isLoading, refetch } = api.fusion.getUserCollages.useQuery({
     userId: user?.id || "None",
   });
+
+  const { data: audioFiles, refetch: refetchAudio } =
+    api.fusion.getUserAudioFiles.useQuery({
+      userId: user?.id || "None",
+    });
 
   const initialGrid = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, (_, index) => ({
@@ -364,6 +368,12 @@ export default function FusionPage() {
                 onLoad={handleLoadCollage}
                 onRecord={handleRecord}
               />
+              <MusicModal
+                title="Audio Files"
+                userId={user?.id || ""}
+                data={audioFiles}
+              />
+
               <Tooltip>
                 <TooltipTrigger
                   className={`rounded-lg px-3 py-2 ${

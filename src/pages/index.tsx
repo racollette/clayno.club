@@ -98,7 +98,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="mr-4 pt-2 text-right text-xs italic text-zinc-500">
-                {`Last updated: ${lastUpdated}`}
+                {`Updated ${lastUpdated}`}
               </div>
             </div>
 

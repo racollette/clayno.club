@@ -136,4 +136,14 @@ export const fusionRouter = createTRPCRouter({
 
       return hideCollage;
     }),
+
+  getUserAudioFiles: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ input }) => {
+      return prisma.audioFile.findMany({
+        where: {
+          userId: input.userId,
+        },
+      });
+    }),
 });

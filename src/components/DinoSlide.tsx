@@ -102,7 +102,7 @@ export default function DinoSlide({
         </div>
         {lastUpdated && (
           <div className="absolute right-0 top-0 mr-4 pt-2 text-right text-xs italic text-zinc-500">
-            {`Last updated: ${lastUpdated}`}
+            {`Updated ${lastUpdated}`}
           </div>
         )}
       </div>
