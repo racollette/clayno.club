@@ -146,4 +146,19 @@ export const fusionRouter = createTRPCRouter({
         },
       });
     }),
+
+  setClipStart: protectedProcedure
+    .input(z.object({ id: z.string(), clipStart: z.number() }))
+    .mutation(async ({ input }) => {
+      const clipStartSet = await prisma.audioFile.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          clipStart: input.clipStart,
+        },
+      });
+
+      return clipStartSet;
+    }),
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 import { CollagePreview } from "./CollagePreview";
-import { Collage } from "@prisma/client";
+import { AudioFile, Collage } from "@prisma/client";
 import { HiCollection } from "react-icons/hi";
 import {
   Tooltip,
@@ -22,13 +22,22 @@ interface ModalProps {
   content: string;
   pulse: boolean;
   data: Collage[] | undefined;
+  clips: AudioFile[] | undefined;
   onLoad: (collage: any) => void;
   onRecord: (id: string) => void;
 }
 
-const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
+const CollageModal = ({
+  title,
+  pulse,
+  data,
+  clips,
+  onLoad,
+  onRecord,
+}: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const selectRef = useRef<HTMLDivElement | null>(null);
   const [collages, setCollages] = useState<Collage[] | undefined>(undefined);
 
   const openModal = () => {
@@ -47,7 +56,9 @@ const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (
         modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
+        !modalRef.current.contains(event.target as Node) &&
+        selectRef.current &&
+        selectRef.current.contains(event.target as Node)
       ) {
         closeModal();
       }
@@ -131,12 +142,14 @@ const CollageModal = ({ title, pulse, data, onLoad, onRecord }: ModalProps) => {
                         borderColor={collage.borderColor}
                         borderWidth={collage.borderWidth}
                         grid={collage.data as GridItemProps[][]}
+                        clips={clips}
                         onDelete={(event) =>
                           handleDeleteCollage(event, collage.id)
                         }
                         onLoad={onLoad}
                         onRecord={onRecord}
                         collage={collage}
+                        selectRef={selectRef}
                       />
                     ))}
                   </>

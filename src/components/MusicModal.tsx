@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { api } from "~/utils/api";
-import { AudioFile, Collage } from "@prisma/client";
+import { AudioFile } from "@prisma/client";
 import { HiMusicNote } from "react-icons/hi";
 import {
   Tooltip,
@@ -15,9 +14,10 @@ type MusicModalProps = {
   title: string;
   data: AudioFile[] | undefined;
   userId: string;
+  refetch: any;
 };
 
-const MusicModal = ({ title, data, userId }: MusicModalProps) => {
+const MusicModal = ({ title, data, userId, refetch }: MusicModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [audioFiles, setAudioFiles] = useState<AudioFile[] | undefined>(
@@ -78,8 +78,6 @@ const MusicModal = ({ title, data, userId }: MusicModalProps) => {
   //   }
   // };
 
-  console.log(audioFiles);
-
   return (
     <div className="lg:select-none">
       <TooltipProvider>
@@ -106,15 +104,15 @@ const MusicModal = ({ title, data, userId }: MusicModalProps) => {
           >
             <div className="modal-content px-2 py-2 text-left lg:px-6 lg:py-4">
               <h2 className="mb-4 text-xl font-bold">{title}</h2>
-              <div className="flex flex-col justify-start lg:gap-4">
-                <FileUpload userId={userId} />
-                {data?.map((clip) => (
-                  <Fragment key={clip.id}>
-                    {clip.url && (
-                      <AudioPlayer audioUrl={clip.url} name={clip.name} />
-                    )}
-                  </Fragment>
-                ))}
+              <div className="flex flex-col justify-start gap-4">
+                <FileUpload userId={userId} refetch={refetch} />
+                <div className="flex flex-col gap-8">
+                  {data?.map((song) => (
+                    <Fragment key={song.id}>
+                      {song.url && <AudioPlayer song={song} />}
+                    </Fragment>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

@@ -200,6 +200,7 @@ model AudioFile {
   userId     String?
   uploadedAt DateTime @default(now())
   url        String?
+  clipStart  Float?
   User       User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])

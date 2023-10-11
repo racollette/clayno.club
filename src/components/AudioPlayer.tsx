@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { RangeSlider, Slider } from "~/@/components/ui/slider";
+import { RangeSlider } from "~/@/components/ui/slider";
+import { Separator } from "~/@/components/ui/separator";
 import { HiPlay, HiPause, HiCheck } from "react-icons/hi";
 import {
   Tooltip,
@@ -7,13 +8,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
+import { api } from "~/utils/api";
+import { AudioFile } from "@prisma/client";
+import { useToast } from "~/@/components/ui/use-toast";
 
 interface AudioPlayerProps {
-  name: string;
-  audioUrl: string;
+  song: AudioFile;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, name }) => {
+const DEFAULT_DURATION: number = 10;
+
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
+  const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -21,7 +27,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, name }) => {
   const [selectedStartTime, setSelectedStartTime] = useState<number>(0);
   const [clipDuration, setClipDuration] = useState<number>(10);
   const [mode, setMode] = useState<string>("full");
-  const defaultDuration = 10;
+
+  const setClipStart = api.fusion.setClipStart.useMutation();
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
@@ -31,7 +38,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, name }) => {
   };
 
   const handleSegmentChange = (v: number[]) => {
-    setClipDuration(defaultDuration);
+    setClipDuration(DEFAULT_DURATION);
     setMode("segment");
     if (!isNaN(v[0] ?? 0)) {
       const newStartTime = v[0] ?? 0;
@@ -66,6 +73,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, name }) => {
     e.stopPropagation();
   };
 
+  const handleSetClip = (clipStart: number) => {
+    console.log(clipStart);
+    try {
+      setClipStart.mutate({
+        id: song.id,
+        clipStart: clipStart,
+      });
+      toast({
+        title: "Clip set successfully",
+      });
+      setMode("full");
+    } catch {
+      toast({
+        title: "An error occurred.",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     const handleTimeUpdate = () => {
       if (audioRef.current) {
@@ -97,24 +124,31 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, name }) => {
   }, []);
 
   return (
-    <>
-      <div className="flex flex-row items-center gap-4">
-        <div className="text-ellipsis whitespace-nowrap text-sm">{name}</div>
+    <div className="flex flex-col gap-4">
+      <Separator />
+      <div className="flex flex-row items-center justify-between gap-4">
+        <div className="max-w- truncate  whitespace-nowrap text-xs">
+          {song.name}
+        </div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
               className={`cursor-pointer ${
-                mode === "segment" ? `bg-green-400` : `bg-neutral-700`
-              } rounded-md hover:bg-white`}
+                mode === "segment"
+                  ? `bg-green-500 hover:bg-green-400`
+                  : ` bg-neutral-700 hover:bg-neutral-600`
+              } rounded-md`}
               disabled={mode === "full"}
               onClick={() => {
-                setMode("full");
+                handleSetClip(selectedStartTime);
               }}
             >
               <HiCheck
                 size={28}
                 className={`${
-                  mode === "segment" ? `text-white` : `text-neutral-500`
+                  mode === "segment"
+                    ? `text-white`
+                    : `cursor-not-allowed text-neutral-500`
                 }`}
               />
             </TooltipTrigger>
@@ -124,27 +158,29 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, name }) => {
           </Tooltip>
         </TooltipProvider>
       </div>
-      <div className="audio-player text-center">
-        <audio ref={audioRef} src={audioUrl} controls className="hidden" />
-        <div className="segment-controls mt-4 flex items-center justify-center">
-          <button onClick={handlePlayPause}>
-            {isPlaying ? <HiPause size={28} /> : <HiPlay size={28} />}
-          </button>
-          <div className="w-16">{formatTime(0.0)}</div>
-          <RangeSlider
-            min={0}
-            max={duration - defaultDuration}
-            step={0.01}
-            value={[selectedStartTime]}
-            defaultValue={[0]}
-            onValueChange={(v) => handleSegmentChange(v)}
-            rangeLow={formatTime(selectedStartTime)}
-            rangeHigh={formatTime(selectedStartTime + defaultDuration)}
-          />
-          <div className="w-16">{formatTime(duration)}</div>
+      {song.url && (
+        <div className="audio-player text-center">
+          <audio ref={audioRef} src={song.url} controls className="hidden" />
+          <div className="segment-controls mt-4 flex items-center justify-center gap-2">
+            <button onClick={handlePlayPause}>
+              {isPlaying ? <HiPause size={32} /> : <HiPlay size={32} />}
+            </button>
+            {/* <div className="w-16 text-sm">{formatTime(0.0)}</div> */}
+            <RangeSlider
+              min={0}
+              max={duration - DEFAULT_DURATION}
+              step={0.01}
+              value={[selectedStartTime]}
+              defaultValue={[0]}
+              onValueChange={(v) => handleSegmentChange(v)}
+              rangeLow={formatTime(selectedStartTime)}
+              rangeHigh={formatTime(selectedStartTime + DEFAULT_DURATION)}
+            />
+            <div className="w-16 text-sm">{formatTime(duration)}</div>
+          </div>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 
