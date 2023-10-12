@@ -37,7 +37,6 @@ const CollageModal = ({
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const selectRef = useRef<HTMLDivElement | null>(null);
   const [collages, setCollages] = useState<Collage[] | undefined>(undefined);
 
   const openModal = () => {
@@ -150,7 +149,6 @@ const CollageModal = ({
                         onLoad={onLoad}
                         onRecord={onRecord}
                         collage={collage}
-                        selectRef={selectRef}
                       />
                     ))}
                   </>
