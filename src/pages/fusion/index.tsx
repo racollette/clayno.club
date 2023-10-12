@@ -314,9 +314,14 @@ export default function FusionPage() {
     );
   };
 
-  const handleRecord = async (id: string) => {
+  const handleRecord = async (id: string, audioClipId?: string) => {
     try {
-      const response = await doFusion(id);
+      let response;
+      if (audioClipId) {
+        response = await doFusion(id, audioClipId);
+      } else {
+        response = await doFusion(id);
+      }
       const { jobId } = response.data;
 
       if (response && response.status === 200) {

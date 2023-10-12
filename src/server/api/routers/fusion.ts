@@ -147,6 +147,16 @@ export const fusionRouter = createTRPCRouter({
       });
     }),
 
+  deleteAudioFile: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      return prisma.audioFile.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
   setClipStart: protectedProcedure
     .input(z.object({ id: z.string(), clipStart: z.number() }))
     .mutation(async ({ input }) => {

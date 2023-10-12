@@ -44,7 +44,7 @@ type CollageGridProps = {
   clips: AudioFile[] | undefined;
   onDelete?: (event: React.MouseEvent<SVGElement>, id: string) => void;
   onLoad?: (collage: any) => void;
-  onRecord?: (id: string) => void;
+  onRecord?: (id: string, audioClipId?: string) => void;
   onHide?: (id: string, hidden: boolean) => void;
   collage: Collage;
   asProfile?: boolean;
@@ -80,8 +80,8 @@ export const CollagePreview = (props: CollageGridProps) => {
     position: null,
   });
   const [hidden, setHidden] = useState<boolean>(collage.hidden === true);
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
-  // const { status, url: storageURL } = collage;
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
+  const [audioClip, setAudioClip] = useState<string | undefined>();
 
   const checkProgress = async () => {
     try {
@@ -209,7 +209,7 @@ export const CollagePreview = (props: CollageGridProps) => {
                 : `flex-row`
             } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
               cols <= 3 ? `gap-4` : `gap-10`
-            } opacity-0 transition-opacity hover:opacity-100`}
+            } ${`sm:opacity-0`} transition-opacity hover:opacity-100`}
           >
             <TooltipProvider>
               <Tooltip>
@@ -272,7 +272,11 @@ export const CollagePreview = (props: CollageGridProps) => {
                       color="black"
                       size={46}
                       onClick={(e) => {
-                        onRecord && onRecord(id);
+                        if (audioClip) {
+                          onRecord && onRecord(id, audioClip);
+                        } else {
+                          onRecord && onRecord(id);
+                        }
                         setMonitorJob(true);
                       }}
                     />
@@ -357,12 +361,8 @@ export const CollagePreview = (props: CollageGridProps) => {
       </div>
 
       {audioEnabled && (
-        <div
-          className="w-full py-2"
-          ref={selectRef}
-          onClick={(e) => e.preventDefault()}
-        >
-          <Select>
+        <div className="w-full py-2">
+          <Select onValueChange={(v) => setAudioClip(v)}>
             <SelectTrigger className={`truncate text-xs`}>
               <SelectValue placeholder="None"></SelectValue>
             </SelectTrigger>

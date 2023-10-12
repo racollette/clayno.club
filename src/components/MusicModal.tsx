@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { AudioFile } from "@prisma/client";
-import { HiMusicNote } from "react-icons/hi";
+import { HiMusicNote, HiXCircle } from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -96,20 +96,30 @@ const MusicModal = ({ title, data, userId, refetch }: MusicModalProps) => {
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
+          {/* Add backdrop overlay */}
+          <div className="fixed inset-0 bg-neutral-900 opacity-90"></div>
 
           <div
             className="modal-container z-50 mx-auto max-h-[85vh] w-11/12 overflow-y-auto rounded-lg bg-neutral-800 px-4 py-2 shadow-lg lg:w-3/4 lg:px-4 lg:py-2"
             ref={modalRef}
           >
             <div className="modal-content px-2 py-2 text-left lg:px-6 lg:py-4">
-              <h2 className="mb-4 text-xl font-bold">{title}</h2>
+              <div className="mb-4 flex  flex-row justify-between">
+                <h2 className="mb-4 text-xl font-bold">{title}</h2>
+                <HiXCircle
+                  onClick={closeModal}
+                  size={32}
+                  className={`z-50 cursor-pointer hover:text-red-500`}
+                />
+              </div>
               <div className="flex flex-col justify-start gap-4">
                 <FileUpload userId={userId} refetch={refetch} />
                 <div className="flex flex-col gap-8">
                   {data?.map((song) => (
                     <Fragment key={song.id}>
-                      {song.url && <AudioPlayer song={song} />}
+                      {song.url && (
+                        <AudioPlayer song={song} refetch={refetch} />
+                      )}
                     </Fragment>
                   ))}
                 </div>

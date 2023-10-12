@@ -9,6 +9,7 @@ function FileUpload({ userId, refetch }: { userId: string; refetch: any }) {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
+    console.log(selectedFile);
 
     if (selectedFile) {
       const fileName = selectedFile.name.toLowerCase();
@@ -38,7 +39,7 @@ function FileUpload({ userId, refetch }: { userId: string; refetch: any }) {
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file, encodeURI(file.name));
 
     try {
       const response = await fetch(
@@ -54,16 +55,17 @@ function FileUpload({ userId, refetch }: { userId: string; refetch: any }) {
         toast({
           title: "File uploaded successfully",
         });
-      } else {
-        toast({
-          title: "File upload failed",
-          variant: "destructive",
-        });
       }
+
       setFile(null);
       setUploading(false);
     } catch (error) {
       console.error("Error uploading file:", error);
+      setUploading(false);
+      toast({
+        title: "File upload failed",
+        variant: "destructive",
+      });
     }
   };
 

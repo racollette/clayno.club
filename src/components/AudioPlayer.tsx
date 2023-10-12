@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RangeSlider } from "~/@/components/ui/slider";
 import { Separator } from "~/@/components/ui/separator";
-import { HiPlay, HiPause, HiCheck } from "react-icons/hi";
+import { HiPlay, HiPause, HiCheck, HiTrash } from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -14,11 +14,12 @@ import { useToast } from "~/@/components/ui/use-toast";
 
 interface AudioPlayerProps {
   song: AudioFile;
+  refetch: any;
 }
 
 const DEFAULT_DURATION: number = 10;
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
   const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -29,6 +30,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
   const [mode, setMode] = useState<string>("full");
 
   const setClipStart = api.fusion.setClipStart.useMutation();
+  const deleteAudioFile = api.fusion.deleteAudioFile.useMutation();
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
@@ -93,6 +95,24 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
     }
   };
 
+  const handleDelete = () => {
+    try {
+      deleteAudioFile.mutate({
+        id: song.id,
+      });
+      toast({
+        title: "File deleted",
+      });
+      setTimeout(() => refetch(), 500);
+    } catch {
+      toast({
+        title: "File deletion failed.",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     const handleTimeUpdate = () => {
       if (audioRef.current) {
@@ -130,33 +150,46 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
         <div className="max-w- truncate  whitespace-nowrap text-xs">
           {song.name}
         </div>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger
-              className={`cursor-pointer ${
-                mode === "segment"
-                  ? `bg-green-500 hover:bg-green-400`
-                  : ` bg-neutral-700 hover:bg-neutral-600`
-              } rounded-md`}
-              disabled={mode === "full"}
-              onClick={() => {
-                handleSetClip(selectedStartTime);
-              }}
-            >
-              <HiCheck
-                size={28}
-                className={`${
+        <div className="flex flex-row gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger
+                className={`cursor-pointer ${
                   mode === "segment"
-                    ? `text-white`
-                    : `cursor-not-allowed text-neutral-500`
-                }`}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Set Clip</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+                    ? `bg-green-500 hover:bg-green-400`
+                    : ` bg-neutral-700 hover:bg-neutral-600`
+                } rounded-md`}
+                disabled={mode === "full"}
+                onClick={() => {
+                  handleSetClip(selectedStartTime);
+                }}
+              >
+                <HiCheck
+                  size={28}
+                  className={`${
+                    mode === "segment"
+                      ? `text-white`
+                      : `cursor-not-allowed text-neutral-500`
+                  }`}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Set Clip</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger
+                className={`cursor-pointer rounded-md bg-red-500 hover:bg-red-400`}
+                onClick={handleDelete}
+              >
+                <HiTrash size={28} />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
       {song.url && (
         <div className="audio-player text-center">
