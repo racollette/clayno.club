@@ -118,47 +118,44 @@ const CollageModal = ({
           <div className="fixed inset-0 bg-neutral-900 opacity-90"></div>
 
           <div
-            className="z-50 mx-auto max-h-[85vh] w-11/12 overflow-y-auto rounded-lg bg-neutral-800 px-4 py-2 shadow-lg lg:w-3/4 lg:px-4 lg:py-2"
+            className="relative z-50 mx-auto max-h-[85vh] w-11/12 overflow-y-auto rounded-lg bg-neutral-800 px-4 py-2 shadow-lg lg:w-3/4 lg:px-4 lg:py-2"
             ref={modalRef}
           >
-            <div className="px-2 py-2 text-left lg:px-6 lg:py-4">
-              <div className="mb-4 flex  flex-row justify-between">
-                <h2 className="mb-4 text-xl font-bold">{title}</h2>
-                <HiXCircle
-                  onClick={closeModal}
-                  size={32}
-                  className={`z-50 cursor-pointer hover:text-red-500`}
-                />
-              </div>
-              <div className="flex flex-col justify-start gap-8 lg:flex-row lg:gap-4">
-                {collages && collages.length > 0 ? (
-                  <>
-                    {collages?.map((collage) => (
-                      <CollagePreview
-                        key={collage.id}
-                        id={collage.id}
-                        rows={collage.rows}
-                        cols={collage.columns}
-                        borderColor={collage.borderColor}
-                        borderWidth={collage.borderWidth}
-                        grid={collage.data as GridItemProps[][]}
-                        clips={clips}
-                        onDelete={(event) =>
-                          handleDeleteCollage(event, collage.id)
-                        }
-                        onLoad={onLoad}
-                        onRecord={onRecord}
-                        collage={collage}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <div className="flex h-40 items-center text-center text-xl font-semibold text-red-400">
-                    No Collages yet!
-                  </div>
-                )}
-              </div>
-              {/* <p className="mb-4">{content}</p> */}
+            <div className="sticky left-0 top-0 mx-2 my-4 flex flex-row justify-between text-left">
+              <h2 className="mb-4 text-xl font-bold">{title}</h2>
+              <HiXCircle
+                onClick={closeModal}
+                size={32}
+                className={`z-50 cursor-pointer hover:text-red-500`}
+              />
+            </div>
+            <div className="mx-2 mb-4 flex flex-col justify-start gap-8 lg:flex-row lg:gap-4">
+              {collages && collages.length > 0 ? (
+                <>
+                  {collages?.map((collage) => (
+                    <CollagePreview
+                      key={collage.id}
+                      id={collage.id}
+                      rows={collage.rows}
+                      cols={collage.columns}
+                      borderColor={collage.borderColor}
+                      borderWidth={collage.borderWidth}
+                      grid={collage.data as GridItemProps[][]}
+                      clips={clips}
+                      onDelete={(event) =>
+                        handleDeleteCollage(event, collage.id)
+                      }
+                      onLoad={onLoad}
+                      onRecord={onRecord}
+                      collage={collage}
+                    />
+                  ))}
+                </>
+              ) : (
+                <div className="flex h-40 items-center text-center text-xl font-semibold text-red-400">
+                  No Collages yet!
+                </div>
+              )}
             </div>
           </div>
         </div>
