@@ -17,7 +17,7 @@ interface AudioPlayerProps {
   refetch: any;
 }
 
-const DEFAULT_DURATION: number = 10;
+const DEFAULT_DURATION = 10;
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
   const { toast } = useToast();
