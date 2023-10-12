@@ -80,7 +80,7 @@ export const CollagePreview = (props: CollageGridProps) => {
     position: null,
   });
   const [hidden, setHidden] = useState<boolean>(collage.hidden === true);
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
   const [audioClip, setAudioClip] = useState<string | undefined>();
 
   const checkProgress = async () => {

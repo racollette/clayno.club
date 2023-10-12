@@ -55,8 +55,6 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
   const isUnowned = owner === "unowned";
 
-  console.log(expanded);
-
   const avatar = user?.discord
     ? user.discord.image_url
     : user?.twitter
@@ -100,7 +98,6 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
             className={`flex ${
               !expanded && `w-full`
             } flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700`}
-
           >
             <div className="relative aspect-square h-6 w-6 md:h-8 md:w-8">
               <Image

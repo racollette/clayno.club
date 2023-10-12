@@ -22,20 +22,22 @@ const DEFAULT_DURATION: number = 10;
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
   const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [currentTime, setCurrentTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState<number>(0);
   const [selectedStartTime, setSelectedStartTime] = useState<number>(0);
+  const [clipStart, setClipStart] = useState<number | undefined>();
   const [clipDuration, setClipDuration] = useState<number>(10);
   const [mode, setMode] = useState<string>("full");
+  const currentTime = audioRef.current?.currentTime;
 
-  const setClipStart = api.fusion.setClipStart.useMutation();
+  const saveClipStart = api.fusion.setClipStart.useMutation();
   const deleteAudioFile = api.fusion.deleteAudioFile.useMutation();
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
       setDuration(audioRef.current.duration);
+      setClipStart(song?.clipStart ?? undefined);
+      setSelectedStartTime(song?.clipStart ?? 0);
     }
   };
 
@@ -76,15 +78,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
   };
 
   const handleSetClip = (clipStart: number) => {
-    console.log(clipStart);
     try {
-      setClipStart.mutate({
+      saveClipStart.mutate({
         id: song.id,
         clipStart: clipStart,
       });
       toast({
         title: "Clip set successfully",
       });
+      setClipStart(clipStart);
       setMode("full");
     } catch {
       toast({
@@ -122,6 +124,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
         }
         if (currentTime >= selectedStartTime + clipDuration) {
           audioRef.current.pause();
+          setIsPlaying(false);
         }
       }
     };
@@ -152,11 +155,43 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
         </div>
         <div className="flex flex-row gap-2">
           <TooltipProvider>
+            {clipStart !== undefined && (
+              <Tooltip>
+                <TooltipTrigger>
+                  {isPlaying ? (
+                    <HiPause
+                      size={28}
+                      className={`cursor-pointer rounded-md bg-green-500 hover:bg-green-400`}
+                      onClick={(e) => {
+                        audioRef.current!.pause();
+                        setIsPlaying(false);
+                        e.stopPropagation();
+                      }}
+                    />
+                  ) : (
+                    <HiPlay
+                      size={28}
+                      className={`cursor-pointer rounded-md bg-green-500 hover:bg-green-400`}
+                      onClick={(e) => {
+                        audioRef.current!.currentTime = selectedStartTime;
+                        audioRef.current!.play();
+                        setIsPlaying(true);
+                        e.stopPropagation();
+                      }}
+                    />
+                  )}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Play Clip</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+
             <Tooltip>
               <TooltipTrigger
                 className={`cursor-pointer ${
                   mode === "segment"
-                    ? `bg-green-500 hover:bg-green-400`
+                    ? `bg-blue-500 hover:bg-blue-400`
                     : ` bg-neutral-700 hover:bg-neutral-600`
                 } rounded-md`}
                 disabled={mode === "full"}
@@ -185,7 +220,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
                 <HiTrash size={28} />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Delete</p>
+                <p>Delete File</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -204,10 +239,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
               max={duration - DEFAULT_DURATION}
               step={0.01}
               value={[selectedStartTime]}
-              defaultValue={[0]}
+              defaultValue={[clipStart ?? 0]}
               onValueChange={(v) => handleSegmentChange(v)}
               rangeLow={formatTime(selectedStartTime)}
-              rangeHigh={formatTime(selectedStartTime + DEFAULT_DURATION)}
+              rangeHigh={formatTime(
+                (currentTime ?? 0) + DEFAULT_DURATION > duration
+                  ? duration
+                  : selectedStartTime + DEFAULT_DURATION
+              )}
             />
             <div className="w-16 text-sm">{formatTime(duration)}</div>
           </div>

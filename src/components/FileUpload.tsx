@@ -9,8 +9,6 @@ function FileUpload({ userId, refetch }: { userId: string; refetch: any }) {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    console.log(selectedFile);
-
     if (selectedFile) {
       const fileName = selectedFile.name.toLowerCase();
       if (fileName.endsWith(".mp3")) {
@@ -95,8 +93,14 @@ function FileUpload({ userId, refetch }: { userId: string; refetch: any }) {
           } flex flex-row items-center rounded-md px-4 py-2 text-sm`}
           type="submit"
         >
-          Upload
-          {uploading && <HiRefresh size={20} className="ml-2 animate-spin" />}
+          {uploading ? (
+            <>
+              Uploading
+              <HiRefresh size={20} className="ml-2 animate-spin" />
+            </>
+          ) : (
+            <span>Upload</span>
+          )}
         </button>
         <p className="text-xs">{file?.name}</p>
       </form>
