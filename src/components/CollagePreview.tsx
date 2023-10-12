@@ -41,7 +41,7 @@ type CollageGridProps = {
   borderColor: string;
   borderWidth: number;
   grid: GridItemProps[][];
-  clips: AudioFile[] | undefined;
+  clips?: AudioFile[] | undefined;
   onDelete?: (event: React.MouseEvent<SVGElement>, id: string) => void;
   onLoad?: (collage: any) => void;
   onRecord?: (id: string, audioClipId?: string) => void;
@@ -49,7 +49,6 @@ type CollageGridProps = {
   collage: Collage;
   asProfile?: boolean;
   isOwner?: boolean;
-  selectRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export const CollagePreview = (props: CollageGridProps) => {
@@ -68,7 +67,6 @@ export const CollagePreview = (props: CollageGridProps) => {
     collage,
     asProfile,
     isOwner,
-    selectRef,
   } = props;
   const collageRef = useRef<HTMLDivElement>(null);
 
