@@ -76,6 +76,7 @@ export default function FusionPage() {
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
   const [pulse, setPulse] = useState(false);
+  const [overlayOn, setOverlayOn] = useState(false);
   const [selected, setSelected] = useState({
     imageURL: "",
     motion: "",
@@ -252,6 +253,7 @@ export default function FusionPage() {
       borderWidth: outlineWidth,
       borderColor: color,
       data: grid,
+      overlay: overlayOn,
     });
 
     setPulse(true);
@@ -281,7 +283,7 @@ export default function FusionPage() {
     }
   };
 
-  const handleLoadCollage = (collage: EditableCollage) => {
+  const handleLoadCollage = (collage: EditableCollage, overlay?: boolean) => {
     const collageCopy = { ...collage };
 
     // setRows(collageCopy.rows);
@@ -290,6 +292,7 @@ export default function FusionPage() {
     setOutlineWidth(collageCopy.borderWidth);
     setColor(collageCopy.borderColor);
     setGrid([...collageCopy.grid]);
+    setOverlayOn(overlay ?? false);
   };
 
   const handleFillCells = (mints: any, showPFP: boolean) => {
@@ -422,6 +425,8 @@ export default function FusionPage() {
                 color={color}
                 setColor={setColor}
                 modalMode={true}
+                overlayOn={overlayOn}
+                setOverlayOn={setOverlayOn}
               />
             </div>
 
@@ -444,7 +449,7 @@ export default function FusionPage() {
               ref={collageRef}
             >
               <div
-                className={`grid w-full`}
+                className={`relative grid w-full`}
                 style={{
                   gridTemplateColumns: `repeat(${cols}, 1fr)`,
                   margin: `${outlineWidth}px`,
@@ -506,6 +511,32 @@ export default function FusionPage() {
                     );
                   })
                 )}
+                {overlayOn && (
+                  <div
+                    className={`absolute left-1/2 ${
+                      rows % 2 === 0
+                        ? `top-1/2`
+                        : rows === 1
+                        ? `hidden`
+                        : `top-2/3`
+                    }  
+                    ${
+                      cols === 2
+                        ? `w-3/5`
+                        : cols === 4 || cols === 5
+                        ? `w-1/3`
+                        : cols === 6
+                        ? `w-1/4`
+                        : `w-1/2`
+                    } aspect-[5.23/1] -translate-x-1/2 -translate-y-1/2 transform`}
+                  >
+                    <Image
+                      src="/images/clayno_logo_horizontal.png"
+                      alt="Claynosaurz"
+                      fill
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className="hidden lg:block">
@@ -519,6 +550,8 @@ export default function FusionPage() {
                 color={color}
                 setColor={setColor}
                 modalMode={false}
+                overlayOn={overlayOn}
+                setOverlayOn={setOverlayOn}
               />
             </div>
           </div>

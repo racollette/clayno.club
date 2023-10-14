@@ -25,6 +25,7 @@ const createUserCollageSchema = z.object({
       })
     )
   ),
+  overlay: z.boolean(),
 });
 
 export const fusionRouter = createTRPCRouter({
@@ -104,6 +105,7 @@ export const fusionRouter = createTRPCRouter({
           data: input.data,
           status: "new",
           hidden: false,
+          overlay: input.overlay,
         },
       });
 

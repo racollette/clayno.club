@@ -189,6 +189,7 @@ model Collage {
   status      String?
   url         String?
   hidden      Boolean?
+  overlay     Boolean?
   User        User?     @relation(fields: [userId], references: [id])
 
   @@index([userId])
