@@ -199,7 +199,7 @@ export const CollagePreview = (props: CollageGridProps) => {
         ))}
         {!asProfile ? (
           <div
-            className={`absolute left-1/2 top-1/2 flex ${
+            className={`absolute left-1/2 top-1/2 z-50 flex ${
               rows === 1
                 ? `flex-row`
                 : cols <= 2
@@ -362,7 +362,7 @@ export const CollagePreview = (props: CollageGridProps) => {
         )}
         {collage.overlay && (
           <div
-            className={`absolute left-1/2 ${
+            className={`absolute left-1/2 z-10 ${
               rows % 2 === 0 ? `top-1/2` : rows === 1 ? `hidden` : `top-2/3`
             }  
                     ${
