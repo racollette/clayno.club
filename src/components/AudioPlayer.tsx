@@ -1,7 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RangeSlider } from "~/@/components/ui/slider";
 import { Separator } from "~/@/components/ui/separator";
-import { HiPlay, HiPause, HiCheck, HiTrash } from "react-icons/hi";
+import {
+  HiPlay,
+  HiPause,
+  HiCheck,
+  HiTrash,
+  HiFastForward,
+  HiRewind,
+} from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -115,6 +122,32 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
     }
   };
 
+  const handleRewind = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime =
+        audioRef.current.currentTime > 10
+          ? audioRef.current.currentTime - 10
+          : 0;
+
+      if (audioRef.current.paused) {
+        audioRef.current.play();
+      }
+    }
+  };
+
+  const handleFastForward = () => {
+    if (audioRef.current) {
+      audioRef.current!.currentTime =
+        audioRef.current!.currentTime > duration - DEFAULT_DURATION
+          ? duration
+          : audioRef.current!.currentTime + 10;
+
+      if (audioRef.current.paused) {
+        audioRef.current.play();
+      }
+    }
+  };
+
   useEffect(() => {
     const handleTimeUpdate = () => {
       if (audioRef.current) {
@@ -165,6 +198,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
                       onClick={(e) => {
                         audioRef.current!.pause();
                         setIsPlaying(false);
+                        setMode("segment");
                         e.stopPropagation();
                       }}
                     />
@@ -173,9 +207,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
                       size={28}
                       className={`cursor-pointer rounded-md bg-green-500 hover:bg-green-400`}
                       onClick={(e) => {
-                        audioRef.current!.currentTime = selectedStartTime;
+                        audioRef.current!.currentTime = clipStart;
                         audioRef.current!.play();
                         setIsPlaying(true);
+                        setMode("segment");
                         e.stopPropagation();
                       }}
                     />
@@ -229,10 +264,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
       {song.url && (
         <div className="audio-player text-center">
           <audio ref={audioRef} src={song.url} controls className="hidden" />
-          <div className="segment-controls mt-4 flex items-center justify-center gap-2">
+          <div className="segment-controls mt-4 flex items-center justify-center gap-1">
+            <HiRewind
+              className="cursor-pointer"
+              size={28}
+              onClick={handleRewind}
+            />
             <button onClick={handlePlayPause}>
               {isPlaying ? <HiPause size={32} /> : <HiPlay size={32} />}
             </button>
+            <HiFastForward
+              className="cursor-pointer"
+              size={28}
+              onClick={handleFastForward}
+            />
             {/* <div className="w-16 text-sm">{formatTime(0.0)}</div> */}
             <RangeSlider
               min={0}

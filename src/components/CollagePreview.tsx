@@ -233,56 +233,57 @@ export const CollagePreview = (props: CollageGridProps) => {
                 </TooltipContent>
               </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger>
-                  {!audioEnabled ? (
-                    <HiMusicNote
-                      className="inline-block cursor-pointer rounded-full bg-teal-500/75 p-2"
-                      color="black"
-                      size={46}
-                      onClick={(e) => {
-                        setAudioEnabled(true);
-                        e.stopPropagation();
-                      }}
-                    />
-                  ) : (
-                    <HiVolumeOff
-                      className="inline-block cursor-pointer rounded-full bg-teal-500/75 p-2"
-                      color="black"
-                      size={46}
-                      onClick={(e) => {
-                        setAudioEnabled(false);
-                        e.stopPropagation();
-                      }}
-                    />
-                  )}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs font-semibold">Add Audio</p>
-                </TooltipContent>
-              </Tooltip>
-
               {!videoURL && (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HiVideoCamera
-                      className="inline-block cursor-pointer rounded-full bg-amber-700/75 p-2"
-                      color="black"
-                      size={46}
-                      onClick={(e) => {
-                        if (audioClip) {
-                          onRecord && onRecord(id, audioClip);
-                        } else {
-                          onRecord && onRecord(id);
-                        }
-                        setMonitorJob(true);
-                      }}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs font-semibold">Generate Video</p>
-                  </TooltipContent>
-                </Tooltip>
+                <>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      {!audioEnabled ? (
+                        <HiMusicNote
+                          className="inline-block cursor-pointer rounded-full bg-teal-500/75 p-2"
+                          color="black"
+                          size={46}
+                          onClick={(e) => {
+                            setAudioEnabled(true);
+                            e.stopPropagation();
+                          }}
+                        />
+                      ) : (
+                        <HiVolumeOff
+                          className="inline-block cursor-pointer rounded-full bg-teal-500/75 p-2"
+                          color="black"
+                          size={46}
+                          onClick={(e) => {
+                            setAudioEnabled(false);
+                            e.stopPropagation();
+                          }}
+                        />
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs font-semibold">Add Audio</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <HiVideoCamera
+                        className="inline-block cursor-pointer rounded-full bg-amber-700/75 p-2"
+                        color="black"
+                        size={46}
+                        onClick={(e) => {
+                          if (audioClip) {
+                            onRecord && onRecord(id, audioClip);
+                          } else {
+                            onRecord && onRecord(id);
+                          }
+                          setMonitorJob(true);
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs font-semibold">Generate Video</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </>
               )}
               <Tooltip>
                 <TooltipTrigger>
