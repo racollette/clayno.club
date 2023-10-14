@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
+import { Checkbox } from "~/@/components/ui/checkbox";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -31,8 +32,8 @@ type CollageSettingsProps = {
   color: string;
   setColor: Dispatch<SetStateAction<string>>;
   modalMode: boolean;
-  //   openModal: string | undefined;
-  //   setOpenModal: (c: string | undefined) => void;
+  overlayOn: boolean;
+  setOverlayOn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CollageSettings = (props: CollageSettingsProps) => {
@@ -82,11 +83,14 @@ function CoreSettings(props: CollageSettingsProps) {
     outlineWidth,
     color,
     setColor,
+    overlayOn,
+    setOverlayOn,
   } = props;
+
   return (
-    <div className="flex flex-col justify-start gap-4 rounded-md bg-neutral-800 p-6 text-white">
-      <div className="flex flex-col gap-1">
-        <div>Columns</div>
+    <div className="flex flex-col justify-start gap-4 rounded-md bg-neutral-800 p-4 text-white">
+      <div className="flex flex-col gap-2">
+        <div className="text-sm font-bold">Columns</div>
         <SliderBase
           onValueChange={(v) => handleSlideColumns(v)}
           defaultValue={[cols]}
@@ -97,8 +101,8 @@ function CoreSettings(props: CollageSettingsProps) {
           className="w-48"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <div>Rows</div>
+      <div className="flex flex-col gap-2">
+        <div className="text-sm font-bold">Rows</div>
         <SliderBase
           onValueChange={(v) => handleSlideRows(v)}
           defaultValue={[2]}
@@ -109,8 +113,8 @@ function CoreSettings(props: CollageSettingsProps) {
           className="w-48"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <div>Border Width</div>
+      <div className="flex flex-col gap-2">
+        <div className="text-sm font-bold">Border Width</div>
         <SliderBase
           onValueChange={(v) => handleOutlineWidth(v)}
           defaultValue={[2]}
@@ -124,6 +128,16 @@ function CoreSettings(props: CollageSettingsProps) {
       <div>
         <ColorPicker onChange={setColor} color={color} />
       </div>
+      {rows !== 1 && (
+        <div className="flex flex-row items-center gap-2">
+          <Checkbox
+            className="bg-white"
+            checked={overlayOn}
+            onCheckedChange={() => setOverlayOn(!overlayOn)}
+          />
+          <label className="text-sm font-bold">Logo Overlay</label>
+        </div>
+      )}
     </div>
   );
 }

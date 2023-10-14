@@ -25,6 +25,7 @@ const createUserCollageSchema = z.object({
       })
     )
   ),
+  overlay: z.boolean(),
 });
 
 export const fusionRouter = createTRPCRouter({
@@ -104,6 +105,7 @@ export const fusionRouter = createTRPCRouter({
           data: input.data,
           status: "new",
           hidden: false,
+          overlay: input.overlay,
         },
       });
 
@@ -135,5 +137,40 @@ export const fusionRouter = createTRPCRouter({
       });
 
       return hideCollage;
+    }),
+
+  getUserAudioFiles: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ input }) => {
+      return prisma.audioFile.findMany({
+        where: {
+          userId: input.userId,
+        },
+      });
+    }),
+
+  deleteAudioFile: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      return prisma.audioFile.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
+  setClipStart: protectedProcedure
+    .input(z.object({ id: z.string(), clipStart: z.number() }))
+    .mutation(async ({ input }) => {
+      const clipStartSet = await prisma.audioFile.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          clipStart: input.clipStart,
+        },
+      });
+
+      return clipStartSet;
     }),
 });

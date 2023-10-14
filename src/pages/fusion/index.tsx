@@ -5,12 +5,12 @@ import Layout from "~/components/Layout";
 import Image from "next/image";
 import Head from "next/head";
 import DinoSlide from "~/components/DinoSlide";
-import { HiXCircle } from "react-icons/hi";
 import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
 import CollageModal from "~/components/CollageModal";
-import { HiSave, HiBan, HiCog } from "react-icons/hi";
+import MusicModal from "~/components/MusicModal";
+import { HiSave, HiBan, HiXCircle } from "react-icons/hi";
 import {
   Tooltip,
   TooltipContent,
@@ -73,10 +73,10 @@ export default function FusionPage() {
   const [color, setColor] = useState<string>("#ffffff");
   const collageRef = useRef<HTMLDivElement>(null);
   const { doFusion, error } = useFusion();
-  const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const saveCollage = api.fusion.saveCollage.useMutation();
   const [pulse, setPulse] = useState(false);
+  const [overlayOn, setOverlayOn] = useState(false);
   const [selected, setSelected] = useState({
     imageURL: "",
     motion: "",
@@ -86,6 +86,11 @@ export default function FusionPage() {
   const { data, isLoading, refetch } = api.fusion.getUserCollages.useQuery({
     userId: user?.id || "None",
   });
+
+  const { data: audioFiles, refetch: refetchAudio } =
+    api.fusion.getUserAudioFiles.useQuery({
+      userId: user?.id || "None",
+    });
 
   const initialGrid = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, (_, index) => ({
@@ -248,6 +253,7 @@ export default function FusionPage() {
       borderWidth: outlineWidth,
       borderColor: color,
       data: grid,
+      overlay: overlayOn,
     });
 
     setPulse(true);
@@ -277,7 +283,7 @@ export default function FusionPage() {
     }
   };
 
-  const handleLoadCollage = (collage: EditableCollage) => {
+  const handleLoadCollage = (collage: EditableCollage, overlay?: boolean) => {
     const collageCopy = { ...collage };
 
     // setRows(collageCopy.rows);
@@ -286,6 +292,7 @@ export default function FusionPage() {
     setOutlineWidth(collageCopy.borderWidth);
     setColor(collageCopy.borderColor);
     setGrid([...collageCopy.grid]);
+    setOverlayOn(overlay ?? false);
   };
 
   const handleFillCells = (mints: any, showPFP: boolean) => {
@@ -310,9 +317,14 @@ export default function FusionPage() {
     );
   };
 
-  const handleRecord = async (id: string) => {
+  const handleRecord = async (id: string, audioClipId?: string) => {
     try {
-      const response = await doFusion(id);
+      let response;
+      if (audioClipId) {
+        response = await doFusion(id, audioClipId);
+      } else {
+        response = await doFusion(id);
+      }
       const { jobId } = response.data;
 
       if (response && response.status === 200) {
@@ -350,11 +362,11 @@ export default function FusionPage() {
               : cols === 3
               ? `w-full lg:w-4/5 xl:w-3/5 2xl:w-1/2`
               : cols === 2
-              ? `w-full lg:w-1/2 xl:w-1/2 2xl:w-2/5`
-              : `w-full lg:w-1/3 xl:w-1/3`
+              ? `w-full lg:w-3/5 xl:w-1/2 2xl:w-2/5`
+              : `w-full lg:w-1/2 xl:w-1/3 2xl:w-2/5`
           } select-none flex-col items-start justify-center gap-y-4`}
         >
-          <div className="flex flex-row justify-start gap-4 rounded-lg bg-neutral-800 px-4 py-2">
+          <div className="flex flex-row flex-wrap justify-start gap-4 rounded-lg bg-neutral-800 px-4 py-2">
             <TooltipProvider>
               <CollageModal
                 title="My Collages"
@@ -363,7 +375,15 @@ export default function FusionPage() {
                 pulse={pulse}
                 onLoad={handleLoadCollage}
                 onRecord={handleRecord}
+                clips={audioFiles}
               />
+              <MusicModal
+                title="Audio Files"
+                userId={user?.id || ""}
+                data={audioFiles}
+                refetch={refetchAudio}
+              />
+
               <Tooltip>
                 <TooltipTrigger
                   className={`rounded-lg px-3 py-2 ${
@@ -405,6 +425,8 @@ export default function FusionPage() {
                 color={color}
                 setColor={setColor}
                 modalMode={true}
+                overlayOn={overlayOn}
+                setOverlayOn={setOverlayOn}
               />
             </div>
 
@@ -427,7 +449,7 @@ export default function FusionPage() {
               ref={collageRef}
             >
               <div
-                className={`grid w-full`}
+                className={`relative grid w-full`}
                 style={{
                   gridTemplateColumns: `repeat(${cols}, 1fr)`,
                   margin: `${outlineWidth}px`,
@@ -489,6 +511,32 @@ export default function FusionPage() {
                     );
                   })
                 )}
+                {overlayOn && (
+                  <div
+                    className={`absolute left-1/2 ${
+                      rows % 2 === 0
+                        ? `top-1/2`
+                        : rows === 1
+                        ? `hidden`
+                        : `top-2/3`
+                    }  
+                    ${
+                      cols === 2
+                        ? `w-3/5`
+                        : cols === 4 || cols === 5
+                        ? `w-1/3`
+                        : cols === 6
+                        ? `w-1/4`
+                        : `w-1/2`
+                    } aspect-[5.23/1] -translate-x-1/2 -translate-y-1/2 transform`}
+                  >
+                    <Image
+                      src="/images/clayno_logo_horizontal.png"
+                      alt="Claynosaurz"
+                      fill
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className="hidden lg:block">
@@ -502,6 +550,8 @@ export default function FusionPage() {
                 color={color}
                 setColor={setColor}
                 modalMode={false}
+                overlayOn={overlayOn}
+                setOverlayOn={setOverlayOn}
               />
             </div>
           </div>

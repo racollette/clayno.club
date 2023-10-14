@@ -1,25 +1,17 @@
 import { useState } from "react";
-import axios from "axios"; // Import Axios library
-
-type PayloadProps = {
-  columns: number;
-  rows: number;
-  borderWidth: number;
-  borderColor: string;
-  data: { motion: string; mint: string }[];
-};
+import axios from "axios";
 
 const useFusion = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const doFusion = async (id: string) => {
+  const doFusion = async (id: string, audioClipId?: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await axios.post(
-        `https://api.dinoherd.cc/queue-job/${id}`,
+        `https://api.dinoherd.cc/queue-job/${id}?audio=${audioClipId}`,
         {
           headers: {
             "Content-Type": "application/json",

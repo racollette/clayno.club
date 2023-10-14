@@ -1,4 +1,4 @@
-import { Collage } from "@prisma/client";
+import { AudioFile, Collage } from "@prisma/client";
 import Image from "next/image";
 import { Fragment, useRef, useEffect, useState } from "react";
 import {
@@ -9,6 +9,8 @@ import {
   HiFilm,
   HiEye,
   HiEyeOff,
+  HiMusicNote,
+  HiVolumeOff,
 } from "react-icons/hi";
 import {
   Tooltip,
@@ -16,6 +18,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/@/components/ui/select";
 import useFusion from "~/hooks/useFusion";
 
 type GridItemProps = {
@@ -32,9 +41,10 @@ type CollageGridProps = {
   borderColor: string;
   borderWidth: number;
   grid: GridItemProps[][];
+  clips?: AudioFile[] | undefined;
   onDelete?: (event: React.MouseEvent<SVGElement>, id: string) => void;
-  onLoad?: (collage: any) => void;
-  onRecord?: (id: string) => void;
+  onLoad?: (collage: any, overlay?: boolean) => void;
+  onRecord?: (id: string, audioClipId?: string) => void;
   onHide?: (id: string, hidden: boolean) => void;
   collage: Collage;
   asProfile?: boolean;
@@ -48,6 +58,7 @@ export const CollagePreview = (props: CollageGridProps) => {
     borderColor,
     borderWidth,
     grid,
+    clips,
     id,
     onDelete,
     onLoad,
@@ -58,6 +69,7 @@ export const CollagePreview = (props: CollageGridProps) => {
     isOwner,
   } = props;
   const collageRef = useRef<HTMLDivElement>(null);
+
   const { jobStatus } = useFusion();
   const [videoURL, setVideoURL] = useState<string | null>(collage.url);
   const [monitorJob, setMonitorJob] = useState<boolean>(false);
@@ -66,7 +78,8 @@ export const CollagePreview = (props: CollageGridProps) => {
     position: null,
   });
   const [hidden, setHidden] = useState<boolean>(collage.hidden === true);
-  // const { status, url: storageURL } = collage;
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
+  const [audioClip, setAudioClip] = useState<string | undefined>();
 
   const checkProgress = async () => {
     try {
@@ -186,28 +199,35 @@ export const CollagePreview = (props: CollageGridProps) => {
         ))}
         {!asProfile ? (
           <div
-            className={`absolute left-1/2 top-1/2 flex ${
-              rows === 1 ? `flex-row` : cols <= 2 ? `flex-col` : `flex-row`
+            className={`absolute left-1/2 top-1/2 z-50 flex ${
+              rows === 1
+                ? `flex-row`
+                : cols <= 2
+                ? `grid grid-cols-2 items-center gap-0`
+                : `flex-row`
             } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
-              cols <= 3 ? `gap-4` : `gap-12`
-            } opacity-0 transition-opacity hover:opacity-100`}
+              cols <= 3 ? `gap-4` : `gap-10`
+            } ${`sm:opacity-0`} transition-opacity hover:opacity-100`}
           >
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   <HiPencilAlt
-                    className="cursor-pointer rounded-full bg-yellow-400/75 p-2"
+                    className="inline-block cursor-pointer rounded-full bg-yellow-400/75 p-2"
                     color="black"
-                    size={50}
+                    size={46}
                     onClick={(e) =>
                       onLoad &&
-                      onLoad({
-                        rows,
-                        cols,
-                        borderColor,
-                        borderWidth,
-                        grid,
-                      })
+                      onLoad(
+                        {
+                          rows,
+                          cols,
+                          borderColor,
+                          borderWidth,
+                          grid,
+                        },
+                        collage?.overlay ?? false
+                      )
                     }
                   />
                 </TooltipTrigger>
@@ -215,30 +235,65 @@ export const CollagePreview = (props: CollageGridProps) => {
                   <p className="text-xs font-semibold">Load</p>
                 </TooltipContent>
               </Tooltip>
+
               {!videoURL && (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HiVideoCamera
-                      className="cursor-pointer rounded-full bg-amber-700/75 p-2"
-                      color="black"
-                      size={50}
-                      onClick={(e) => {
-                        onRecord && onRecord(id);
-                        setMonitorJob(true);
-                      }}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs font-semibold">Generate Video</p>
-                  </TooltipContent>
-                </Tooltip>
+                <>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      {!audioEnabled ? (
+                        <HiMusicNote
+                          className="inline-block cursor-pointer rounded-full bg-teal-500/75 p-2"
+                          color="black"
+                          size={46}
+                          onClick={(e) => {
+                            setAudioEnabled(true);
+                            e.stopPropagation();
+                          }}
+                        />
+                      ) : (
+                        <HiVolumeOff
+                          className="inline-block cursor-pointer rounded-full bg-teal-500/75 p-2"
+                          color="black"
+                          size={46}
+                          onClick={(e) => {
+                            setAudioEnabled(false);
+                            e.stopPropagation();
+                          }}
+                        />
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs font-semibold">Add Audio</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <HiVideoCamera
+                        className="inline-block cursor-pointer rounded-full bg-amber-700/75 p-2"
+                        color="black"
+                        size={46}
+                        onClick={(e) => {
+                          if (audioClip) {
+                            onRecord && onRecord(id, audioClip);
+                          } else {
+                            onRecord && onRecord(id);
+                          }
+                          setMonitorJob(true);
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs font-semibold">Generate Video</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </>
               )}
               <Tooltip>
                 <TooltipTrigger>
                   <HiTrash
-                    className="cursor-pointer rounded-full bg-red-700/75 p-2"
+                    className="inline-block cursor-pointer rounded-full bg-red-700/75 p-2"
                     color="black"
-                    size={50}
+                    size={46}
                     onClick={(e) => onDelete && onDelete(e, id)}
                   />
                 </TooltipTrigger>
@@ -252,7 +307,7 @@ export const CollagePreview = (props: CollageGridProps) => {
           <>
             {isOwner && (
               <div
-                className={`absolute left-1/2 top-1/2 flex ${
+                className={`absolute left-1/2 top-1/4 z-50 flex ${
                   rows === 1 ? `flex-row` : cols <= 2 ? `flex-col` : `flex-row`
                 } h-full w-full -translate-x-1/2 -translate-y-1/2 transform  items-center justify-center ${
                   cols <= 3 ? `gap-4` : `gap-12`
@@ -305,7 +360,58 @@ export const CollagePreview = (props: CollageGridProps) => {
             )}
           </>
         )}
+        {collage.overlay && (
+          <div
+            className={`absolute left-1/2 z-10 ${
+              rows % 2 === 0 ? `top-1/2` : rows === 1 ? `hidden` : `top-2/3`
+            }  
+                    ${
+                      cols === 2
+                        ? `w-3/5`
+                        : cols === 4 || cols === 5
+                        ? `w-1/3`
+                        : cols === 6
+                        ? `w-1/4`
+                        : `w-1/2`
+                    } aspect-[5.23/1] -translate-x-1/2 -translate-y-1/2 transform`}
+          >
+            <Image
+              src="/images/clayno_logo_horizontal.png"
+              alt="Claynosaurz"
+              fill
+            />
+          </div>
+        )}
       </div>
+
+      {audioEnabled && (
+        <div className="w-full py-2">
+          <Select onValueChange={(v) => setAudioClip(v)}>
+            <SelectTrigger className={`truncate text-xs`}>
+              <SelectValue placeholder="None"></SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {clips?.map((clip) => (
+                <SelectItem key={clip.id} value={clip.id}>
+                  <div
+                    className={`${
+                      cols <= 2
+                        ? `w-36`
+                        : cols <= 3
+                        ? `w-60`
+                        : cols <= 4
+                        ? `w-80`
+                        : `w-96`
+                    } truncate text-xs`}
+                  >
+                    {clip.name}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {!asProfile && (
         <div className="self-center">
