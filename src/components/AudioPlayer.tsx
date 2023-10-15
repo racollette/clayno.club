@@ -173,7 +173,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song, refetch }) => {
   useEffect(() => {
     setTimeout(() => {
       handleTimeUpdate();
-    }, 500);
+    }, 1000);
     if (audioRef.current) {
       audioRef.current.volume = 0.25; // Set default volume to 50%
     }
