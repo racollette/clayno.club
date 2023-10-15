@@ -392,21 +392,25 @@ export const CollagePreview = (props: CollageGridProps) => {
             </SelectTrigger>
             <SelectContent>
               {clips?.map((clip) => (
-                <SelectItem key={clip.id} value={clip.id}>
-                  <div
-                    className={`${
-                      cols <= 2
-                        ? `w-36`
-                        : cols <= 3
-                        ? `w-60`
-                        : cols <= 4
-                        ? `w-80`
-                        : `w-96`
-                    } truncate text-xs`}
-                  >
-                    {clip.name}
-                  </div>
-                </SelectItem>
+                <>
+                  {clip.clipStart !== null && (
+                    <SelectItem key={clip.id} value={clip.id}>
+                      <div
+                        className={`${
+                          cols <= 2
+                            ? `w-36`
+                            : cols <= 3
+                            ? `w-60`
+                            : cols <= 4
+                            ? `w-80`
+                            : `w-96`
+                        } truncate text-xs`}
+                      >
+                        {clip.name}
+                      </div>
+                    </SelectItem>
+                  )}
+                </>
               ))}
             </SelectContent>
           </Select>
