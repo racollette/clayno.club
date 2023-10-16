@@ -9,7 +9,6 @@ import { groupAndFilter } from "~/utils/subdaos";
 import Head from "next/head";
 import { Fragment } from "react";
 import { Attributes, Dino } from "@prisma/client";
-import { api } from "~/utils/api";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 export default function SubDAO() {
@@ -18,7 +17,6 @@ export default function SubDAO() {
   const acronym = getQueryString(subdao);
   const { data, isLoading, sortedMap } = groupAndFilter(acronym);
 
-  const { data: updatedData } = api.general.getLastUpdated.useQuery();
   const lastUpdated = useTimeSinceLastUpdate("tribes");
 
   return (

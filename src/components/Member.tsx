@@ -38,7 +38,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
       .map((wallet: any) => wallet.address)
       .filter((address: any) => user?.defaultAddress !== address) ?? [];
 
-  const otherWallets = fetchOtherWallets(wallets, acronym);
+  const { otherWallets } = fetchOtherWallets(wallets);
 
   useEffect(() => {
     if (wallets) {

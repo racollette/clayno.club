@@ -37,7 +37,7 @@ export default function Home() {
   };
 
   const herds = api.useQueries((t) =>
-    [1, 2, 3, 4].map((tier) => t.herd.getHerdTier({ tier: tier }))
+    [1, 2, 3].map((tier) => t.herd.getHerdTier({ tier: tier }))
   );
   const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
@@ -63,9 +63,9 @@ export default function Home() {
             />
           </div>
         ) : (
-          <div className=" flex flex-col items-center justify-center py-2 md:px-4">
-            <div className="flex w-full flex-row flex-wrap justify-end align-middle">
-              <div className="relative mx-4 mt-4 aspect-video w-full p-4">
+          <div className="flex w-full flex-col items-center justify-center py-2 md:px-4">
+            <div className="flex w-full flex-col flex-wrap items-center justify-center p-2">
+              <div className="relative aspect-video w-full p-4 md:w-3/5">
                 <Image
                   className="rounded-lg"
                   src="https://pbs.twimg.com/media/FqOrzzRXoAQ3yjV?format=jpg"
@@ -96,43 +96,44 @@ export default function Home() {
                     </h2>
                   </div>
                 </div>
-              </div>
-              <div className="mr-4 pt-2 text-right text-xs italic text-zinc-500">
-                {`Updated ${lastUpdated}`}
+                <div className="absolute -bottom-5 -right-0 pt-2 text-right text-xs italic text-zinc-500">
+                  {`Updated ${lastUpdated}`}
+                </div>
               </div>
             </div>
 
-            <TabSelection
-              labels={["3 Trait", "2 Trait", "1 Trait", "0 Trait"]}
-              counts={[
-                herds[0]?.data?.length ?? 0,
-                herds[1]?.data?.length ?? 0,
-                herds[2]?.data?.length ?? 0,
-                herds[3]?.data?.length ?? 0,
-              ]}
-              showDactyl={showDactyl}
-              showSaga={showSaga}
-              showPFP={showPFP}
-              toggleDactyl={toggleDactyl}
-              toggleSaga={toggleSaga}
-              togglePFP={togglePFP}
-            >
-              {herds.map((tier, index) => (
-                <div key={index} className="flex flex-col items-center gap-2">
-                  {tier.data &&
-                    tier.data?.map((herd) => (
-                      <Herd
-                        key={herd.id}
-                        herd={herd}
-                        showDactyl={showDactyl}
-                        showSaga={showSaga}
-                        showOwner={true}
-                        showPFP={showPFP}
-                      />
-                    ))}
-                </div>
-              ))}
-            </TabSelection>
+            <section className="w-full md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-2/5">
+              <TabSelection
+                labels={["3 Trait", "2 Trait", "1 Trait"]}
+                counts={[
+                  herds[0]?.data?.length ?? 0,
+                  herds[1]?.data?.length ?? 0,
+                  herds[2]?.data?.length ?? 0,
+                ]}
+                showDactyl={showDactyl}
+                showSaga={showSaga}
+                showPFP={showPFP}
+                toggleDactyl={toggleDactyl}
+                toggleSaga={toggleSaga}
+                togglePFP={togglePFP}
+              >
+                {herds.map((tier, index) => (
+                  <div key={index} className="flex flex-col items-center gap-2">
+                    {tier.data &&
+                      tier.data?.map((herd) => (
+                        <Herd
+                          key={herd.id}
+                          herd={herd}
+                          showDactyl={showDactyl}
+                          showSaga={showSaga}
+                          showOwner={true}
+                          showPFP={showPFP}
+                        />
+                      ))}
+                  </div>
+                ))}
+              </TabSelection>
+            </section>
           </div>
         )}
       </main>
