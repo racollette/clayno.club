@@ -155,7 +155,7 @@ function sortByAmount(groupedDinos: any) {
   );
 }
 
-export function fetchOtherWallets(wallets: string[], acronym: string) {
+export function fetchOtherWallets(wallets: string[]) {
   const { data: otherWallets } = api.subdao.getHolders.useQuery({
     wallets: wallets || [],
   });
