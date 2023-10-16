@@ -15,6 +15,11 @@ import ImageExpander from "./Expander";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { fetchOtherWallets } from "~/utils/subdaos";
 
+const MARKETPLACES = [
+  "4zdNGgAtFsW1cQgHqkiWyRsxaAgxrSRRynnuunxzjxue", // Magic Eden
+  "1BWutmTvYPwDtmw9abTkS4Ssr8no61spGAvW1X6NDix", // Tensor
+];
+
 type MemberProps = {
   owner: string;
   data: {
@@ -38,12 +43,13 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
       .map((wallet: any) => wallet.address)
       .filter((address: any) => user?.defaultAddress !== address) ?? [];
 
-  const otherWallets = fetchOtherWallets(wallets, acronym);
+  const otherWallets = fetchOtherWallets(wallets);
 
   useEffect(() => {
     if (wallets) {
-      if (acronym !== "CC") return;
+      if (acronym !== "cc") return;
       const mintArray = otherWallets?.flatMap((item) => item.mints);
+
       if (mintArray) {
         setUserDinos([...dinos, ...mintArray]);
       }
