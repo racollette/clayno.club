@@ -120,6 +120,9 @@ export default function Herd(props: HerdProps) {
                       width={20}
                       height={20}
                     />
+                    <div className="self-center text-white">
+                      {owner.twitter.global_name}
+                    </div>
                   </Link>
                 )}
                 <Link
