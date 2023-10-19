@@ -6,6 +6,24 @@ import {
 } from "~/server/api/trpc";
 
 export const herdRouter = createTRPCRouter({
+  getAllHerds: publicProcedure.query(({ ctx, input }) => {
+    return ctx.prisma.herd.findMany({
+      orderBy: {
+        rarity: "asc",
+      },
+      include: {
+        herd: {
+          orderBy: {
+            name: "desc",
+          },
+          include: {
+            attributes: true,
+          },
+        },
+      },
+    });
+  }),
+
   getHerdTier: publicProcedure
     .input(z.object({ tier: z.number() }))
     .query(({ ctx, input }) => {

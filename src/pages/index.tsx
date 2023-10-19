@@ -1,10 +1,15 @@
 import Head from "next/head";
-import { Fragment, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import TabSelection from "~/components/TabSelection";
 import Herd from "~/components/Herd";
 import Image from "next/image";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
+import { useRouter, useSearchParams } from "next/navigation";
+import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
+import { Label } from "~/@/components/ui/label";
+import { Herd as HerdType, Attributes, Dino } from "@prisma/client";
+import Link from "next/link";
 
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {
@@ -19,14 +24,92 @@ import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 //   return (total / 6).toFixed(0);
 // };
 
+const COLORS = [
+  "Charcoal",
+  "Mist",
+  "Aqua",
+  "Desert",
+  "Volcanic",
+  "Tropic",
+  "Amethyst",
+  "Spring",
+];
+const SKINS = [
+  "Apres",
+  "Mirage",
+  "Jurassic",
+  "Toxic",
+  "Coral",
+  "Elektra",
+  "Cristalline",
+  "Oceania",
+  "Savanna",
+  "Amazonia",
+];
+const BACKGROUNDS = ["Salmon", "Lavender", "Peach", "Sky", "Mint", "Dune"];
+
+const TIERS = ["Legendary", "Epic", "Rare"];
+
+// Custom hook to filter herds
+function useFilteredHerds(
+  allHerds:
+    | (HerdType & {
+        herd: (Dino & {
+          attributes: Attributes | null;
+        })[];
+      })[]
+    | undefined,
+  color: string | null,
+  skin: string | null,
+  background: string | null,
+  tier: string | null
+) {
+  return allHerds?.filter((herd) => {
+    const herdMatchesLower = herd.matches.toLowerCase();
+    const colorFilter =
+      !color || color === "all" || herdMatchesLower.includes(color);
+    const skinFilter =
+      !skin || skin === "all" || herdMatchesLower.includes(skin);
+    const backgroundFilter =
+      !background ||
+      background === "all" ||
+      herdMatchesLower.includes(background);
+    const tierValue =
+      tier === "legendary" ? 1 : tier === "epic" ? 2 : tier === "rare" ? 3 : 0;
+    const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
+
+    return colorFilter && skinFilter && backgroundFilter && tierFilter;
+  });
+}
+
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // const showDactyl = searchParams.get("dactyl");
+  // const showSaga = searchParams.get("saga");
+  // const showPFP = searchParams.get("pfp");
+
+  const color = searchParams.get("color");
+  const skin = searchParams.get("skin");
+  const background = searchParams.get("background");
+  const tier = searchParams.get("tier");
+
   const [showDactyl, setShowDactyl] = useState(false);
   const [showSaga, setShowSaga] = useState(false);
   const [showPFP, setShowPFP] = useState(false);
 
-  function toggleDactyl(newToggleState: boolean) {
+  const { data: allHerds, isLoading: allHerdsLoading } =
+    api.herd.getAllHerds.useQuery();
+  const [filteredHerds, setFilteredHerds] = useState(allHerds);
+
+  useEffect(() => {
+    setFilteredHerds(useFilteredHerds(allHerds, color, skin, background, tier));
+  }, [color, background, skin, tier]);
+
+  const toggleDactyl = (newToggleState: boolean) => {
     setShowDactyl(newToggleState);
-  }
+  };
 
   const toggleSaga = (newToggleState: boolean) => {
     setShowSaga(newToggleState);
@@ -36,10 +119,10 @@ export default function Home() {
     setShowPFP(newToggleState);
   };
 
-  const herds = api.useQueries((t) =>
-    [1, 2, 3].map((tier) => t.herd.getHerdTier({ tier: tier }))
-  );
-  const isLoading = herds.some((queryResult) => queryResult.isLoading);
+  // const herds = api.useQueries((t) =>
+  //   [1, 2, 3].map((tier) => t.herd.getHerdTier({ tier: tier }))
+  // );
+  // const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
   const lastUpdated = useTimeSinceLastUpdate("herds");
 
@@ -53,7 +136,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="relative flex min-h-screen flex-col items-center justify-center bg-black">
-        {isLoading ? (
+        {allHerdsLoading ? (
           <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full text-white md:w-1/4">
             <Image
               src="/gifs/TTT.gif"
@@ -102,13 +185,176 @@ export default function Home() {
               </div>
             </div>
 
+            <section className="flex flex-col gap-4 p-8 text-white">
+              <RadioGroup
+                defaultValue="all"
+                className="flex items-center justify-center"
+                orientation="horizontal"
+              >
+                <div className="w-20 text-right text-xs font-bold">Skin</div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Link
+                    href={`?skin=all&color=${color}&background=${background}&tier=${tier}`}
+                    scroll={false}
+                    className="flex items-center justify-center"
+                  >
+                    <RadioGroupItem
+                      value={"all"}
+                      className="h-5 w-5 self-center bg-neutral-700 text-white"
+                    />
+                  </Link>
+
+                  <Label className="text-xs font-semibold">All</Label>
+                  {SKINS.map((skin) => (
+                    <>
+                      <Link
+                        key={skin}
+                        href={`?skin=${skin.toLowerCase()}&color=${color}&background=${background}&tier=${tier}`}
+                        scroll={false}
+                        className="flex items-center justify-center"
+                      >
+                        <RadioGroupItem
+                          value={skin}
+                          className="h-5 w-5 self-center bg-neutral-700 p-1 text-white"
+                        />
+                      </Link>
+
+                      <Label className="text-xs font-semibold">{skin}</Label>
+                    </>
+                  ))}
+                </div>
+              </RadioGroup>
+
+              <RadioGroup
+                defaultValue="all"
+                className="flex items-center justify-center"
+                orientation="horizontal"
+              >
+                <div className="w-20 text-right text-xs font-bold">Color</div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Link
+                    href={`?skin=${skin}&color=all&background=${background}&tier=${tier}`}
+                    scroll={false}
+                    className="flex items-center justify-center"
+                  >
+                    <RadioGroupItem
+                      value={"all"}
+                      className="h-5 w-5 self-center bg-neutral-700 text-white"
+                    />
+                  </Link>
+
+                  <Label className="text-xs font-semibold">All</Label>
+                  {COLORS.map((color) => (
+                    <>
+                      <Link
+                        key={color}
+                        href={`?skin=${skin}&color=${color.toLowerCase()}&background=${background}&tier=${tier}`}
+                        scroll={false}
+                        className="flex items-center justify-center"
+                      >
+                        <RadioGroupItem
+                          value={color}
+                          className="h-5 w-5 self-center bg-neutral-700 p-1 text-white"
+                        />
+                      </Link>
+
+                      <Label className="text-xs font-semibold">{color}</Label>
+                    </>
+                  ))}
+                </div>
+              </RadioGroup>
+
+              <RadioGroup
+                defaultValue="all"
+                className="flex items-center justify-center"
+                orientation="horizontal"
+              >
+                <div className="w-20 text-right text-xs font-bold">
+                  Background
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Link
+                    href={`?skin=${skin}&color=${color}&background=all&tier=${tier}`}
+                    scroll={false}
+                    className="flex items-center justify-center"
+                  >
+                    <RadioGroupItem
+                      value={"all"}
+                      className="h-5 w-5 self-center bg-neutral-700 text-white"
+                    />
+                  </Link>
+
+                  <Label className="text-xs font-semibold">All</Label>
+                  {BACKGROUNDS.map((background) => (
+                    <>
+                      <Link
+                        key={background}
+                        href={`?skin=${skin}&color=${color}&background=${background.toLowerCase()}&tier=${tier}`}
+                        scroll={false}
+                        className="flex items-center justify-center"
+                      >
+                        <RadioGroupItem
+                          value={background}
+                          className="h-5 w-5 self-center bg-neutral-700 p-1 text-white"
+                        />
+                      </Link>
+
+                      <Label className="text-xs font-semibold">
+                        {background}
+                      </Label>
+                    </>
+                  ))}
+                </div>
+              </RadioGroup>
+
+              <RadioGroup
+                defaultValue="all"
+                className="flex items-center justify-center"
+                orientation="horizontal"
+              >
+                <div className="w-20 text-right text-xs font-bold">Tier</div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Link
+                    href={`?skin=${skin}&color=${color}&background=${background}&tier=all`}
+                    scroll={false}
+                    className="flex items-center justify-center"
+                  >
+                    <RadioGroupItem
+                      value={"all"}
+                      className="h-5 w-5 self-center bg-neutral-700 text-white"
+                    />
+                  </Link>
+
+                  <Label className="text-xs font-semibold">All</Label>
+                  {TIERS.map((tier) => (
+                    <>
+                      <Link
+                        key={tier}
+                        href={`?skin=${skin}&color=${color}&background=${background}&tier=${tier.toLowerCase()}`}
+                        scroll={false}
+                        className="flex items-center justify-center"
+                      >
+                        <RadioGroupItem
+                          value={tier}
+                          className="h-5 w-5 self-center bg-neutral-700 p-1 text-white"
+                        />
+                      </Link>
+
+                      <Label className="text-xs font-semibold">{tier}</Label>
+                    </>
+                  ))}
+                </div>
+              </RadioGroup>
+            </section>
+
             <section className="w-full md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-2/5">
               <TabSelection
                 labels={["3 Trait", "2 Trait", "1 Trait"]}
                 counts={[
-                  herds[0]?.data?.length ?? 0,
-                  herds[1]?.data?.length ?? 0,
-                  herds[2]?.data?.length ?? 0,
+                  // herds[0]?.data?.length ?? 0,
+                  // herds[1]?.data?.length ?? 0,
+                  // herds[2]?.data?.length ?? 0,
+                  0, 0, 0,
                 ]}
                 showDactyl={showDactyl}
                 showSaga={showSaga}
@@ -117,9 +363,9 @@ export default function Home() {
                 toggleSaga={toggleSaga}
                 togglePFP={togglePFP}
               >
-                {herds.map((tier, index) => (
-                  <div key={index} className="flex flex-col items-center gap-2">
-                    {tier.data &&
+                {/* {herds.map((tier, index) => ( */}
+                <div className="flex flex-col items-center gap-2">
+                  {/* {tier.data &&
                       tier.data?.map((herd) => (
                         <Herd
                           key={herd.id}
@@ -129,9 +375,19 @@ export default function Home() {
                           showOwner={true}
                           showPFP={showPFP}
                         />
-                      ))}
-                  </div>
-                ))}
+                      ))} */}
+                  {filteredHerds?.map((herd) => (
+                    <Herd
+                      key={herd.id}
+                      herd={herd}
+                      showDactyl={showDactyl}
+                      showSaga={showSaga}
+                      showOwner={true}
+                      showPFP={showPFP}
+                    />
+                  ))}
+                </div>
+                {/* ))} */}
               </TabSelection>
             </section>
           </div>

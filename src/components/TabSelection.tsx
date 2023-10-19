@@ -39,7 +39,7 @@ const TabSelection = ({
 
   return (
     <>
-      <div className="flex flex-wrap justify-center border-gray-300 p-4 md:p-10">
+      {/* <div className="flex flex-wrap justify-center border-gray-300 p-4 md:p-10">
         {labels.map((category: string, index: number) => (
           <TabButton
             key={category}
@@ -49,7 +49,7 @@ const TabSelection = ({
             onClick={() => handleTabClick(index)}
           />
         ))}
-      </div>
+      </div> */}
       <div className="mx-10 mt-2 grid grid-cols-2 justify-center gap-y-2 align-middle md:flex md:flex-row md:gap-x-6">
         <ToggleSwitch
           className="justify-self-start"
@@ -71,7 +71,7 @@ const TabSelection = ({
         />
       </div>
       {/* eslint-disable */}
-      <div className="p-4">{children[activeTab]}</div>
+      <div className="p-4">{children}</div>
     </>
   );
 };
