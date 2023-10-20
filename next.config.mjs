@@ -68,7 +68,6 @@ const config = {
   publicRuntimeConfig: {
     myRPC: process.env.RPC
   },
-  scrollRestoration: "manual",
 };
 
 export default config;
