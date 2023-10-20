@@ -90,10 +90,10 @@ export default function Home() {
   // const showSaga = searchParams.get("saga");
   // const showPFP = searchParams.get("pfp");
 
-  const color = searchParams.get("color");
-  const skin = searchParams.get("skin");
-  const background = searchParams.get("background");
-  const tier = searchParams.get("tier");
+  const color = searchParams.get("color") || "all";
+  const skin = searchParams.get("skin") || "all";
+  const background = searchParams.get("background") || "all";
+  const tier = searchParams.get("tier") || "all";
 
   const [showDactyl, setShowDactyl] = useState(false);
   const [showSaga, setShowSaga] = useState(false);
@@ -102,6 +102,10 @@ export default function Home() {
   const { data: allHerds, isLoading: allHerdsLoading } =
     api.herd.getAllHerds.useQuery();
   const [filteredHerds, setFilteredHerds] = useState(allHerds);
+
+  useEffect(() => {
+    setFilteredHerds(allHerds);
+  }, []);
 
   useEffect(() => {
     setFilteredHerds(useFilteredHerds(allHerds, color, skin, background, tier));
@@ -148,7 +152,7 @@ export default function Home() {
         ) : (
           <div className="flex w-full flex-col items-center justify-center py-2 md:px-4">
             <div className="flex w-full flex-col flex-wrap items-center justify-center p-2">
-              <div className="relative aspect-video w-full p-4 md:w-3/5">
+              <div className="relative aspect-video w-full p-4 md:w-1/2">
                 <Image
                   className="rounded-lg"
                   src="https://pbs.twimg.com/media/FqOrzzRXoAQ3yjV?format=jpg"
