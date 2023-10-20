@@ -9,6 +9,7 @@ import {
   getTraitBadgeColor,
   getBorderColor,
 } from "~/utils/colors";
+import { TraitHover } from "./TraitHover";
 
 // const coreSpecies = ["Rex", "Bronto", "Ankylo", "Raptor", "Trice", "Stego"];
 
@@ -27,6 +28,7 @@ type HerdProps = {
 export default function Herd(props: HerdProps) {
   const { herd, showDactyl, showSaga, showOwner, showPFP } = props;
   const [filteredHerd, setFilteredHerd] = useState(herd);
+  const [isHovered, setIsHovered] = useState(false);
 
   const { data: owner } = api.binding.getUser.useQuery({
     type: "wallet",
@@ -59,6 +61,14 @@ export default function Herd(props: HerdProps) {
   }, [showDactyl, showSaga, herd]);
 
   // const discord: Discord = owner?.discord ? owner.discord : ""
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
     <div
@@ -95,6 +105,7 @@ export default function Herd(props: HerdProps) {
                     href={`/profile/${
                       owner?.discord?.username || owner?.twitter?.username
                     }`}
+                    target="_blank"
                   >
                     <Image
                       className="mr-2 self-center rounded-md"
@@ -198,12 +209,22 @@ export default function Herd(props: HerdProps) {
               >
                 <Image
                   src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                    showPFP ? dino.pfp : dino.gif
+                    showPFP ? dino.pfp : isHovered ? dino.pfp : dino.gif
                   }`}
                   alt="Clayno gif"
                   quality={100}
                   fill
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  className="cursor-pointer"
                 ></Image>
+                {isHovered && (
+                  <div
+                    className={`absolute bottom-1 right-1 rounded-md bg-black px-2 py-1 text-xs text-white`}
+                  >
+                    {dino.name.split(" ").pop()}
+                  </div>
+                )}
                 {/* {dino.rarity && (
                   <div
                   className={`absolute bottom-0 left-0 m-1 rounded-lg  px-2 py-1 text-xs text-white ${getRarityColor(
