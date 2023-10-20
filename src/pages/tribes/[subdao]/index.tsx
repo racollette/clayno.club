@@ -134,7 +134,7 @@ export default function SubDAO() {
                         </span>
                       </div>
                       <div className="text-xs uppercase text-neutral-500">
-                        Members
+                        Verified
                       </div>
                     </div>
                     <div className="flex flex-col">
