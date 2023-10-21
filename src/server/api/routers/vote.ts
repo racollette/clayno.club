@@ -13,6 +13,9 @@ export const voteRouter = createTRPCRouter({
         where: {
           userId: input.userId,
         },
+        include: {
+          votes: true,
+        },
       });
     }),
 
@@ -49,6 +52,27 @@ export const voteRouter = createTRPCRouter({
           },
           votesCast: {
             increment: 1,
+          },
+        },
+      });
+    }),
+
+  removeVote: protectedProcedure
+    .input(z.object({ userId: z.string(), herdId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.voter.update({
+        where: {
+          userId: input.userId,
+        },
+        data: {
+          votes: {
+            disconnect: { id: input.herdId }, // Connect the "Voter" to the "Herd."
+          },
+          votesAvailable: {
+            increment: 1,
+          },
+          votesCast: {
+            decrement: 1,
           },
         },
       });
