@@ -20,9 +20,31 @@ export const herdRouter = createTRPCRouter({
             attributes: true,
           },
         },
+        voters: true,
       },
     });
   }),
+
+  getHerdById: publicProcedure
+    .input(z.object({ herdId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.herd.findUnique({
+        where: {
+          id: input.herdId,
+        },
+        include: {
+          herd: {
+            orderBy: {
+              name: "desc",
+            },
+            include: {
+              attributes: true,
+            },
+          },
+          voters: true,
+        },
+      });
+    }),
 
   getHerdTier: publicProcedure
     .input(z.object({ tier: z.number() }))
