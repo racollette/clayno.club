@@ -322,8 +322,10 @@ export const bindingRouter = createTRPCRouter({
     }),
 
   getUsersByWalletAddresses: publicProcedure
-    .input(z.object({ walletAddresses: z.array(z.string()) }))
+    .input(z.object({ walletAddresses: z.array(z.string()) || z.undefined() }))
     .query(async ({ input }) => {
+      if (input.walletAddresses === undefined) return;
+
       return prisma.user.findMany({
         where: {
           wallets: {
@@ -336,6 +338,8 @@ export const bindingRouter = createTRPCRouter({
         },
         include: {
           wallets: true,
+          discord: true,
+          twitter: true,
         },
       });
     }),

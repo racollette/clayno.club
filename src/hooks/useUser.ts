@@ -21,11 +21,16 @@ export const useUser = () => {
         : id ?? "none",
   });
 
+  const { data: voterInfo, isLoading: voterInfoLoading } =
+    api.vote.getVoterInfo.useQuery({
+      userId: userId || "none",
+    });
+
   useEffect(() => {
     if (user?.id) {
       setUserId(user.id);
     }
   }, [user]);
 
-  return { user: user, isLoading: isLoading, session: session };
+  return { user, voterInfo, voterInfoLoading, isLoading, session };
 };

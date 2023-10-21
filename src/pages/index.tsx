@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import TabSelection from "~/components/TabSelection";
 import Herd from "~/components/Herd";
@@ -10,7 +10,8 @@ import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
 import { Label } from "~/@/components/ui/label";
 import { Herd as HerdType, Attributes, Dino } from "@prisma/client";
 import Link from "next/link";
-
+import { useUser } from "~/hooks/useUser";
+import { useToast } from "~/@/components/ui/use-toast";
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {
 //     if (obj.attributes.species !== "Dactyl") {
@@ -50,15 +51,15 @@ const BACKGROUNDS = ["Salmon", "Lavender", "Peach", "Sky", "Mint", "Dune"];
 
 const TIERS = ["Legendary", "Epic", "Rare"];
 
+type HerdWithAttributes = HerdType & {
+  herd: (Dino & {
+    attributes: Attributes | null;
+  })[];
+};
+
 // Custom hook to filter herds
 function useFilteredHerds(
-  allHerds:
-    | (HerdType & {
-        herd: (Dino & {
-          attributes: Attributes | null;
-        })[];
-      })[]
-    | undefined,
+  allHerds: HerdType[] | undefined,
   color: string | null,
   skin: string | null,
   background: string | null,
@@ -83,8 +84,14 @@ function useFilteredHerds(
 }
 
 export default function Home() {
+  const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user, voterInfo, voterInfoLoading } = useUser();
+  const [votesAvailable, setVotesAvailable] = useState<number | null>(
+    voterInfo?.votesAvailable ?? null
+  );
+  const castVote = api.vote.castVote.useMutation();
 
   // const showDactyl = searchParams.get("dactyl");
   // const showSaga = searchParams.get("saga");
@@ -101,15 +108,29 @@ export default function Home() {
 
   const { data: allHerds, isLoading: allHerdsLoading } =
     api.herd.getAllHerds.useQuery();
-  const [filteredHerds, setFilteredHerds] = useState(allHerds);
+  const [filteredHerds, setFilteredHerds] = useState<HerdType[] | undefined>(
+    allHerds
+  );
+
+  const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
+  const allHerdAddresses = [...allHerdAddressesSet];
+  const { data: allHerdOwners } =
+    api.binding.getUsersByWalletAddresses.useQuery({
+      walletAddresses: allHerdAddresses ?? [],
+    });
 
   useEffect(() => {
     setFilteredHerds(allHerds);
+    setVotesAvailable(voterInfo?.votesAvailable ?? null);
   }, []);
 
   useEffect(() => {
+    setVotesAvailable(voterInfo?.votesAvailable ?? null);
+  }, [voterInfoLoading]);
+
+  useEffect(() => {
     setFilteredHerds(useFilteredHerds(allHerds, color, skin, background, tier));
-  }, [color, background, skin, tier]);
+  }, [color, background, skin, tier, allHerdsLoading]);
 
   const toggleDactyl = (newToggleState: boolean) => {
     setShowDactyl(newToggleState);
@@ -121,6 +142,47 @@ export default function Home() {
 
   const togglePFP = (newToggleState: boolean) => {
     setShowPFP(newToggleState);
+  };
+
+  const handleCastVote = (herdId: string) => {
+    console.log(herdId);
+    if (votesAvailable === 0) {
+      toast({
+        title: "No votes remaining!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (votesAvailable === null) {
+      toast({
+        title: "Could not retrieve voter status",
+        description: "Please try again",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (user) {
+      try {
+        castVote.mutate({ userId: user.id, herdId });
+        toast({
+          title: "Vote cast!",
+        });
+        setVotesAvailable((prev) => prev! - 1);
+      } catch (error) {
+        // Handle the error here, you can show an error toast or log the error.
+        console.error("Error casting vote:", error);
+        toast({
+          title: "An error occurred while casting your vote.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      toast({
+        title: "Must be signed in to vote!",
+        variant: "destructive",
+      });
+    }
   };
 
   // const herds = api.useQueries((t) =>
@@ -210,9 +272,11 @@ export default function Home() {
 
                   <Label className="text-xs font-semibold">All</Label>
                   {SKINS.map((skin) => (
-                    <>
+                    <div
+                      key={skin}
+                      className="flex items-center justify-center space-x-2"
+                    >
                       <Link
-                        key={skin}
                         href={`?skin=${skin.toLowerCase()}&color=${color}&background=${background}&tier=${tier}`}
                         scroll={false}
                         className="flex items-center justify-center"
@@ -224,7 +288,7 @@ export default function Home() {
                       </Link>
 
                       <Label className="text-xs font-semibold">{skin}</Label>
-                    </>
+                    </div>
                   ))}
                 </div>
               </RadioGroup>
@@ -249,7 +313,10 @@ export default function Home() {
 
                   <Label className="text-xs font-semibold">All</Label>
                   {COLORS.map((color) => (
-                    <>
+                    <div
+                      key={color}
+                      className="flex items-center justify-center space-x-2"
+                    >
                       <Link
                         key={color}
                         href={`?skin=${skin}&color=${color.toLowerCase()}&background=${background}&tier=${tier}`}
@@ -263,7 +330,7 @@ export default function Home() {
                       </Link>
 
                       <Label className="text-xs font-semibold">{color}</Label>
-                    </>
+                    </div>
                   ))}
                 </div>
               </RadioGroup>
@@ -290,9 +357,11 @@ export default function Home() {
 
                   <Label className="text-xs font-semibold">All</Label>
                   {BACKGROUNDS.map((background) => (
-                    <>
+                    <div
+                      key={background}
+                      className="flex items-center justify-center space-x-2"
+                    >
                       <Link
-                        key={background}
                         href={`?skin=${skin}&color=${color}&background=${background.toLowerCase()}&tier=${tier}`}
                         scroll={false}
                         className="flex items-center justify-center"
@@ -306,7 +375,7 @@ export default function Home() {
                       <Label className="text-xs font-semibold">
                         {background}
                       </Label>
-                    </>
+                    </div>
                   ))}
                 </div>
               </RadioGroup>
@@ -330,8 +399,11 @@ export default function Home() {
                   </Link>
 
                   <Label className="text-xs font-semibold">All</Label>
-                  {TIERS.map((tier) => (
-                    <>
+                  {TIERS.map((tier, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-center space-x-2"
+                    >
                       <Link
                         key={tier}
                         href={`?skin=${skin}&color=${color}&background=${background}&tier=${tier.toLowerCase()}`}
@@ -345,7 +417,7 @@ export default function Home() {
                       </Link>
 
                       <Label className="text-xs font-semibold">{tier}</Label>
-                    </>
+                    </div>
                   ))}
                 </div>
               </RadioGroup>
@@ -380,16 +452,32 @@ export default function Home() {
                           showPFP={showPFP}
                         />
                       ))} */}
-                  {filteredHerds?.map((herd) => (
-                    <Herd
-                      key={herd.id}
-                      herd={herd}
-                      showDactyl={showDactyl}
-                      showSaga={showSaga}
-                      showOwner={true}
-                      showPFP={showPFP}
-                    />
-                  ))}
+                  {filteredHerds?.map((herd) => {
+                    const foundUser = allHerdOwners?.find((user) => {
+                      return user.wallets.some(
+                        (wallet) => wallet.address === herd.owner
+                      );
+                    });
+                    return (
+                      <div key={herd.id} className="w-full">
+                        <button
+                          className="rounded-lg bg-amber-400 px-4 py-2"
+                          onClick={() => handleCastVote(herd.id)}
+                        >
+                          Cast Vote
+                        </button>
+                        <Herd
+                          key={herd.id}
+                          herd={herd as HerdWithAttributes}
+                          showDactyl={showDactyl}
+                          showSaga={showSaga}
+                          showOwner={true}
+                          showPFP={showPFP}
+                          owner={foundUser}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
                 {/* ))} */}
               </TabSelection>

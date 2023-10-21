@@ -52,14 +52,37 @@ model Attributes {
 }
 
 model Herd {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   owner   String
   tier    Int
   type    String
   matches String
   rarity  Int
+  key     String  @unique
   herd    Dino[]
+  voters  Voter[]
 }
+
+model Voter {
+  votesAvailable Int
+  votesCast      Int
+  votes          Herd[]
+  userId         String @id @unique
+  User           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// model HerdVoter {
+//   id        String   @id @default(uuid())
+//   herdId    String
+//   voterId   String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   herds     Herd     @relation(fields: [herdId], references: [id])
+//   voters    Voter    @relation(fields: [voterId], references: [userId])
+
+//   @@index([herdId])
+//   @@index([voterId])
+// }
 
 model DinoToHerd {
   A String
@@ -100,6 +123,7 @@ model User {
   wallets        Wallet[]
   collages       Collage[]
   AudioFile      AudioFile[]
+  Voter          Voter?
 }
 
 model Discord {

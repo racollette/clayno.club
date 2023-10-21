@@ -1,4 +1,12 @@
-import type { Attributes, Dino, Herd } from "@prisma/client";
+import type {
+  Attributes,
+  Dino,
+  Discord,
+  Herd,
+  Twitter,
+  User,
+  Wallet,
+} from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,7 +17,6 @@ import {
   getTraitBadgeColor,
   getBorderColor,
 } from "~/utils/colors";
-import { TraitHover } from "./TraitHover";
 
 // const coreSpecies = ["Rex", "Bronto", "Ankylo", "Raptor", "Trice", "Stego"];
 
@@ -23,17 +30,19 @@ type HerdProps = {
   showSaga: boolean;
   showOwner: boolean;
   showPFP: boolean;
+  owner:
+    | (User & {
+        discord: Discord | null;
+        twitter: Twitter | null;
+        wallets: Wallet[];
+      })
+    | undefined;
 };
 
 export default function Herd(props: HerdProps) {
-  const { herd, showDactyl, showSaga, showOwner, showPFP } = props;
+  const { herd, showDactyl, showSaga, showOwner, showPFP, owner } = props;
   const [filteredHerd, setFilteredHerd] = useState(herd);
   const [isHovered, setIsHovered] = useState(false);
-
-  const { data: owner } = api.binding.getUser.useQuery({
-    type: "wallet",
-    id: herd.owner,
-  });
 
   useEffect(() => {
     let filteredHerd = herd.herd;
@@ -59,8 +68,6 @@ export default function Herd(props: HerdProps) {
 
     setFilteredHerd({ ...herd, herd: filteredHerd });
   }, [showDactyl, showSaga, herd]);
-
-  // const discord: Discord = owner?.discord ? owner.discord : ""
 
   const handleMouseEnter = () => {
     setIsHovered(true);

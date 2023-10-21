@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import LoginModal from "./LoginModal";
 import { Navbar } from "flowbite-react";
+import VoterInfo from "./VoterInfo";
 
 export default function Header() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Header() {
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
+        <VoterInfo />
         <LoginModal />
         <Navbar.Toggle className="bg-transparent text-zinc-500 hover:bg-transparent hover:text-white focus:ring-zinc-500" />
       </div>
