@@ -8,7 +8,7 @@ import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
 import { Label } from "~/@/components/ui/label";
-import { Herd as HerdType, Attributes, Dino } from "@prisma/client";
+import { Herd as HerdType, Attributes, Dino, Voter } from "@prisma/client";
 import Link from "next/link";
 import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
@@ -51,15 +51,16 @@ const BACKGROUNDS = ["Salmon", "Lavender", "Peach", "Sky", "Mint", "Dune"];
 
 const TIERS = ["Legendary", "Epic", "Rare"];
 
-type HerdWithAttributes = HerdType & {
+type HerdWithIncludes = HerdType & {
   herd: (Dino & {
     attributes: Attributes | null;
   })[];
+  voters: Voter[];
 };
 
 // Custom hook to filter herds
 function useFilteredHerds(
-  allHerds: HerdType[] | undefined,
+  allHerds: HerdWithIncludes[] | undefined,
   color: string | null,
   skin: string | null,
   background: string | null,
@@ -87,12 +88,93 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, voterInfo, voterInfoLoading } = useUser();
-  const [votesAvailable, setVotesAvailable] = useState<number | null>(
-    voterInfo?.votesAvailable ?? null
-  );
-  const castVote = api.vote.castVote.useMutation();
+  const { user, voterInfo } = useUser();
+  const {
+    data: allHerds,
+    isLoading: allHerdsLoading,
+    refetch,
+  } = api.herd.getAllHerds.useQuery();
+  const utils = api.useContext();
 
+  const castVote = api.vote.castVote.useMutation({
+    async onMutate(updateVoterInfo) {
+      await utils.vote.getVoterInfo.cancel();
+
+      const prevData = utils.vote.getVoterInfo.getData({
+        userId: updateVoterInfo.userId,
+      });
+
+      if (user && prevData) {
+        const newData = {
+          votes: [
+            ...prevData.votes,
+            { id: updateVoterInfo.herdId } as HerdType,
+          ],
+          votesAvailable: prevData.votesAvailable - 1,
+          votesCast: prevData.votesCast + 1,
+          userId: updateVoterInfo.userId,
+        };
+
+        utils.vote.getVoterInfo.setData(
+          { userId: updateVoterInfo.userId },
+          newData
+        );
+      }
+
+      return { prevData };
+    },
+    onError(err, updatedVoterInfo, ctx) {
+      if (user) {
+        utils.vote.getVoterInfo.setData({ userId: user.id }, ctx?.prevData);
+      }
+    },
+    onSettled() {
+      // Sync with server once mutation has settled
+      utils.vote.getVoterInfo.invalidate();
+      refetch();
+    },
+  });
+
+  const removeVote = api.vote.removeVote.useMutation({
+    async onMutate(updateVoterInfo) {
+      await utils.vote.getVoterInfo.cancel();
+
+      const prevData = utils.vote.getVoterInfo.getData({
+        userId: updateVoterInfo.userId,
+      });
+
+      if (user && prevData) {
+        const newData = {
+          votes: [
+            ...prevData.votes,
+            { id: updateVoterInfo.herdId } as HerdType,
+          ],
+          votesAvailable: prevData.votesAvailable + 1,
+          votesCast: prevData.votesCast - 1,
+          userId: updateVoterInfo.userId,
+        };
+
+        utils.vote.getVoterInfo.setData(
+          { userId: updateVoterInfo.userId },
+          newData
+        );
+      }
+
+      return { prevData };
+    },
+    onError(err, updatedVoterInfo, ctx) {
+      // If the mutation fails, use the context-value from onMutate
+      if (user) {
+        utils.vote.getVoterInfo.setData({ userId: user.id }, ctx?.prevData);
+      }
+    },
+    onSettled() {
+      // Sync with server once mutation has settled
+      utils.vote.getVoterInfo.invalidate();
+      utils.herd.getAllHerds.invalidate();
+      // refetchVoterInfo();
+    },
+  });
   // const showDactyl = searchParams.get("dactyl");
   // const showSaga = searchParams.get("saga");
   // const showPFP = searchParams.get("pfp");
@@ -106,11 +188,9 @@ export default function Home() {
   const [showSaga, setShowSaga] = useState(false);
   const [showPFP, setShowPFP] = useState(false);
 
-  const { data: allHerds, isLoading: allHerdsLoading } =
-    api.herd.getAllHerds.useQuery();
-  const [filteredHerds, setFilteredHerds] = useState<HerdType[] | undefined>(
-    allHerds
-  );
+  const [filteredHerds, setFilteredHerds] = useState<
+    HerdWithIncludes[] | undefined
+  >(useFilteredHerds(allHerds, color, skin, background, tier));
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
@@ -121,16 +201,16 @@ export default function Home() {
 
   useEffect(() => {
     setFilteredHerds(allHerds);
-    setVotesAvailable(voterInfo?.votesAvailable ?? null);
   }, []);
 
   useEffect(() => {
-    setVotesAvailable(voterInfo?.votesAvailable ?? null);
-  }, [voterInfoLoading]);
-
-  useEffect(() => {
-    setFilteredHerds(useFilteredHerds(allHerds, color, skin, background, tier));
-  }, [color, background, skin, tier, allHerdsLoading]);
+    if (allHerds && !allHerdsLoading) {
+      // Calculate and set the filteredHerds based on the latest allHerds data
+      setFilteredHerds(
+        useFilteredHerds(allHerds, color, skin, background, tier)
+      );
+    }
+  }, [color, background, skin, tier, allHerdsLoading, allHerds]);
 
   const toggleDactyl = (newToggleState: boolean) => {
     setShowDactyl(newToggleState);
@@ -144,21 +224,35 @@ export default function Home() {
     setShowPFP(newToggleState);
   };
 
-  const handleCastVote = (herdId: string) => {
-    console.log(herdId);
-    if (votesAvailable === 0) {
+  const handleCastVote = (herdId: string, herd: HerdWithIncludes) => {
+    console.log(voterInfo);
+    if (voterInfo && voterInfo.votesAvailable <= 0) {
       toast({
         title: "No votes remaining!",
+      });
+      return;
+    }
+
+    if (voterInfo?.votesAvailable === null) {
+      toast({
+        title: "Could not retrieve voter status",
+        description: "Please try again",
         variant: "destructive",
       });
       return;
     }
 
-    if (votesAvailable === null) {
+    const alreadyVoted =
+      filteredHerds &&
+      filteredHerds.some(
+        (herd) =>
+          herd.id === herdId &&
+          herd.voters.some((voter) => voter.userId === user?.id)
+      );
+
+    if (alreadyVoted) {
       toast({
-        title: "Could not retrieve voter status",
-        description: "Please try again",
-        variant: "destructive",
+        title: "You already voted for this herd!",
       });
       return;
     }
@@ -168,12 +262,41 @@ export default function Home() {
         toast({
           title: "Vote cast!",
         });
-        setVotesAvailable((prev) => prev! - 1);
       } catch (error) {
-        // Handle the error here, you can show an error toast or log the error.
         console.error("Error casting vote:", error);
         toast({
           title: "An error occurred while casting your vote.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      toast({
+        title: "Must be signed in to vote!",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveVote = (herdId: string, herd: HerdWithIncludes) => {
+    if (voterInfo?.votesAvailable === null) {
+      toast({
+        title: "Could not retrieve voter status",
+        description: "Please try again",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (user) {
+      try {
+        removeVote.mutate({ userId: user.id, herdId });
+        toast({
+          title: "Vote removed!",
+        });
+      } catch (error) {
+        console.error("Error removing vote:", error);
+        toast({
+          title: "An error occurred while removing your vote.",
           variant: "destructive",
         });
       }
@@ -213,7 +336,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="flex w-full flex-col items-center justify-center py-2 md:px-4">
-            <div className="flex w-full flex-col flex-wrap items-center justify-center p-2">
+            {/* <div className="flex w-full flex-col flex-wrap items-center justify-center p-2">
               <div className="relative aspect-video w-full p-4 md:w-1/2">
                 <Image
                   className="rounded-lg"
@@ -249,7 +372,7 @@ export default function Home() {
                   {`Updated ${lastUpdated}`}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <section className="flex flex-col gap-4 p-8 text-white">
               <RadioGroup
@@ -460,15 +583,30 @@ export default function Home() {
                     });
                     return (
                       <div key={herd.id} className="w-full">
-                        <button
-                          className="rounded-lg bg-amber-400 px-4 py-2"
-                          onClick={() => handleCastVote(herd.id)}
-                        >
-                          Cast Vote
-                        </button>
+                        {voterInfo?.votes.some(
+                          (vote) => vote.id === herd.id
+                        ) ? (
+                          <button
+                            className="rounded-lg bg-red-400 px-4 py-2"
+                            onClick={() => handleRemoveVote(herd.id, herd)}
+                          >
+                            Remove Vote
+                          </button>
+                        ) : (
+                          <button
+                            className="rounded-lg bg-amber-400 px-4 py-2"
+                            onClick={() => handleCastVote(herd.id, herd)}
+                          >
+                            Cast Vote
+                          </button>
+                        )}
+
+                        <div className="rounded-lg bg-green-400 p-2 text-sm font-extrabold">
+                          {herd.voters.length}
+                        </div>
                         <Herd
                           key={herd.id}
-                          herd={herd as HerdWithAttributes}
+                          herd={herd as HerdWithIncludes}
                           showDactyl={showDactyl}
                           showSaga={showSaga}
                           showOwner={true}
