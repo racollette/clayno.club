@@ -128,29 +128,46 @@ export const VoteWidget = ({
               <DialogTitle className="text-white">Voters</DialogTitle>
             </DialogHeader>
             <div className="flex flex-row flex-wrap gap-2">
-              {herd.voters.map((voter) => {
-                const avatar = voter.user.discord
-                  ? voter.user.discord.image_url
-                  : voter.user.twitter
-                  ? voter.user.twitter?.image_url
-                  : `https://ui-avatars.com/api/?name=${voter.user.defaultAddress}&background=random`;
-                return (
-                  <div key={voter.userId}>
-                    <Tooltip>
-                      <TooltipTrigger
-                        className={`cursor-pointer overflow-clip rounded-lg`}
-                        asChild
-                      >
-                        <Image src={avatar} alt="PFP" width={32} height={32} />
-                      </TooltipTrigger>
-                      <TooltipContent className="mb-1 rounded-lg bg-white p-2 font-semibold">
-                        {voter.user.discord?.global_name ||
-                          voter.user.twitter?.global_name}
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                );
-              })}
+              {herd.voters.length === 0 ? (
+                <Image
+                  src={`/images/travolta.gif`}
+                  alt={"???"}
+                  width={150}
+                  height={150}
+                  className="rounded-lg"
+                />
+              ) : (
+                <>
+                  {herd.voters.map((voter) => {
+                    const avatar = voter.user.discord
+                      ? voter.user.discord.image_url
+                      : voter.user.twitter
+                      ? voter.user.twitter?.image_url
+                      : `https://ui-avatars.com/api/?name=${voter.user.defaultAddress}&background=random`;
+                    return (
+                      <div key={voter.userId}>
+                        <Tooltip>
+                          <TooltipTrigger
+                            className={`cursor-pointer overflow-clip rounded-lg`}
+                            asChild
+                          >
+                            <Image
+                              src={avatar}
+                              alt="PFP"
+                              width={32}
+                              height={32}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent className="mb-1 rounded-lg bg-white p-2 font-semibold">
+                            {voter.user.discord?.global_name ||
+                              voter.user.twitter?.global_name}
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
           </DialogContent>
         </Dialog>
