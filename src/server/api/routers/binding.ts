@@ -25,17 +25,37 @@ export const bindingRouter = createTRPCRouter({
     .input(createUserRequestSchema)
     .mutation(async ({ input }) => {
       // Create a new user in the database
-      const createdUser = await prisma.user.create({
-        data: {
-          defaultAddress: input.address,
-          wallets: {
-            create: { address: input.address },
+      try {
+        const createdUser = await prisma.user.create({
+          data: {
+            defaultAddress: input.address,
+            wallets: {
+              create: { address: input.address },
+            },
           },
-        },
-      });
+        });
+
+        const checkHolderStatus = await prisma.holder.findFirst({
+          where: {
+            owner: input.address,
+          },
+        });
+        const dinosOwned = checkHolderStatus?.amount || 0;
+        const votesToIssue = dinosOwned > 0 ? 15 : 0;
+        const createVoter = await prisma.voter.create({
+          data: {
+            votesAvailable: votesToIssue,
+            votesCast: 0,
+            userId: createdUser.id,
+            votesIssued: votesToIssue > 0,
+          },
+        });
+        return createdUser;
+      } catch (error) {
+        throw new Error("Failed to set up account");
+      }
 
       // return userResponseSchema.parse(createdUser);
-      return createdUser;
     }),
 
   getUser: publicProcedure
@@ -267,6 +287,44 @@ export const bindingRouter = createTRPCRouter({
             twitter: true,
           },
         });
+
+        const checkHolderStatus = await prisma.holder.findFirst({
+          where: {
+            owner: input.wallet,
+          },
+        });
+        const dinosOwned = checkHolderStatus?.amount || 0;
+
+        const voterInfo = await prisma.voter.findUnique({
+          where: {
+            userId: input.id,
+          },
+        });
+
+        if (!voterInfo) {
+          await prisma.voter.create({
+            data: {
+              votesAvailable: dinosOwned > 0 ? 15 : 0,
+              votesCast: 0,
+              votesIssued: dinosOwned > 0 ? true : false,
+              userId: input.id,
+            },
+          });
+        } else {
+          await prisma.voter.update({
+            where: {
+              userId: input.id,
+            },
+            data: {
+              votesAvailable: voterInfo?.votesIssued
+                ? voterInfo.votesAvailable
+                : dinosOwned > 0
+                ? 15
+                : 0,
+            },
+          });
+        }
+
         return linkedWallet;
       } catch (error) {
         console.error("Error deleting user:", error);
