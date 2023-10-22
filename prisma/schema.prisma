@@ -66,23 +66,11 @@ model Herd {
 model Voter {
   votesAvailable Int
   votesCast      Int
+  votesIssued    Boolean
+  userId         String  @id @unique
   votes          Herd[]
-  userId         String @id @unique
-  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
-// model HerdVoter {
-//   id        String   @id @default(uuid())
-//   herdId    String
-//   voterId   String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   herds     Herd     @relation(fields: [herdId], references: [id])
-//   voters    Voter    @relation(fields: [voterId], references: [userId])
-
-//   @@index([herdId])
-//   @@index([voterId])
-// }
 
 model DinoToHerd {
   A String
@@ -272,4 +260,13 @@ model LastUpdated {
   holders DateTime
   tribes  DateTime
   herds   DateTime
+}
+
+model HerdToVoter {
+  A String
+  B String
+
+  @@unique([A, B], map: "_HerdToVoter_AB_unique")
+  @@index([B], map: "_HerdToVoter_B_index")
+  @@map("_HerdToVoter")
 }
