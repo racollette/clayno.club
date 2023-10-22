@@ -8,10 +8,19 @@ import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
 import { Label } from "~/@/components/ui/label";
-import { Herd as HerdType, Attributes, Dino, Voter } from "@prisma/client";
+import {
+  Herd as HerdType,
+  Attributes,
+  Dino,
+  Voter,
+  User,
+  Discord,
+  Twitter,
+} from "@prisma/client";
 import Link from "next/link";
 import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
+import { VoteWidget } from "~/components/VoteWidget";
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {
 //     if (obj.attributes.species !== "Dactyl") {
@@ -51,12 +60,18 @@ const BACKGROUNDS = ["Salmon", "Lavender", "Peach", "Sky", "Mint", "Dune"];
 
 const TIERS = ["Legendary", "Epic", "Rare"];
 
-type HerdWithIncludes = HerdType & {
-  herd: (Dino & {
-    attributes: Attributes | null;
-  })[];
-  voters: Voter[];
-};
+type HerdWithIncludes =
+  | HerdType & {
+      herd: (Dino & {
+        attributes: Attributes | null;
+      })[];
+      voters: (Voter & {
+        user: User & {
+          discord: Discord | null;
+          twitter: Twitter | null;
+        };
+      })[];
+    };
 
 // Custom hook to filter herds
 function useFilteredHerds(
@@ -224,7 +239,7 @@ export default function Home() {
     setShowPFP(newToggleState);
   };
 
-  const handleCastVote = (herdId: string, herd: HerdWithIncludes) => {
+  const handleCastVote = (herdId: string) => {
     console.log(voterInfo);
     if (voterInfo && voterInfo.votesAvailable <= 0) {
       toast({
@@ -277,7 +292,7 @@ export default function Home() {
     }
   };
 
-  const handleRemoveVote = (herdId: string, herd: HerdWithIncludes) => {
+  const handleRemoveVote = (herdId: string) => {
     if (voterInfo?.votesAvailable === null) {
       toast({
         title: "Could not retrieve voter status",
@@ -546,7 +561,7 @@ export default function Home() {
               </RadioGroup>
             </section>
 
-            <section className="w-full md:w-3/4 lg:w-3/5 xl:w-1/2 2xl:w-2/5">
+            <section className="w-full md:w-4/5 lg:w-2/3 xl:w-3/5 2xl:w-1/2">
               <TabSelection
                 labels={["3 Trait", "2 Trait", "1 Trait"]}
                 counts={[
@@ -582,28 +597,10 @@ export default function Home() {
                       );
                     });
                     return (
-                      <div key={herd.id} className="w-full">
-                        {voterInfo?.votes.some(
-                          (vote) => vote.id === herd.id
-                        ) ? (
-                          <button
-                            className="rounded-lg bg-red-400 px-4 py-2"
-                            onClick={() => handleRemoveVote(herd.id, herd)}
-                          >
-                            Remove Vote
-                          </button>
-                        ) : (
-                          <button
-                            className="rounded-lg bg-amber-400 px-4 py-2"
-                            onClick={() => handleCastVote(herd.id, herd)}
-                          >
-                            Cast Vote
-                          </button>
-                        )}
-
-                        <div className="rounded-lg bg-green-400 p-2 text-sm font-extrabold">
-                          {herd.voters.length}
-                        </div>
+                      <div
+                        key={herd.id}
+                        className="flex w-full flex-row items-center gap-8"
+                      >
                         <Herd
                           key={herd.id}
                           herd={herd as HerdWithIncludes}
@@ -612,6 +609,12 @@ export default function Home() {
                           showOwner={true}
                           showPFP={showPFP}
                           owner={foundUser}
+                        />
+                        <VoteWidget
+                          voterInfo={voterInfo}
+                          herd={herd}
+                          handleRemoveVote={handleRemoveVote}
+                          handleCastVote={handleCastVote}
                         />
                       </div>
                     );
