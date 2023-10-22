@@ -103,7 +103,7 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, voterInfo } = useUser();
+  const { user, voterInfo, session, sessionStatus } = useUser();
   const {
     data: allHerds,
     isLoading: allHerdsLoading,
@@ -241,6 +241,20 @@ export default function Home() {
 
   const handleCastVote = (herdId: string) => {
     console.log(voterInfo);
+
+    if (sessionStatus === "unauthenticated") {
+      toast({
+        title: "Sign in first!",
+      });
+      return;
+    }
+
+    if (!voterInfo) {
+      toast({
+        title: "Not eligible to vote 😔",
+      });
+      return;
+    }
     if (voterInfo && voterInfo.votesAvailable <= 0) {
       toast({
         title: "No votes remaining!",
