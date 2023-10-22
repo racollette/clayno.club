@@ -1,24 +1,19 @@
-import { useWallet } from "@solana/wallet-adapter-react";
+// import { useWallet } from "@solana/wallet-adapter-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { getSessionDetails } from "~/utils/session";
 
 export const useUser = () => {
-  const { publicKey, connected } = useWallet();
+  // const { publicKey, connected } = useWallet();
+  const { data: session, status } = useSession();
 
-  const { data: session } = useSession();
   const [userId, setUserId] = useState<string | undefined>();
-  const { sessionType, id } = getSessionDetails(session);
+  const { id, sessionType } = getSessionDetails(session);
 
   const { data: user, isLoading } = api.binding.getUser.useQuery({
-    type: connected ? "wallet" : userId ? "id" : sessionType,
-    id:
-      connected && publicKey
-        ? publicKey.toString()
-        : userId
-        ? userId
-        : id ?? "none",
+    type: sessionType ?? "none",
+    id: id ?? "none",
   });
 
   const { data: voterInfo, isLoading: voterInfoLoading } =
@@ -32,5 +27,12 @@ export const useUser = () => {
     }
   }, [user]);
 
-  return { user, voterInfo, voterInfoLoading, isLoading, session };
+  return {
+    user,
+    voterInfo,
+    voterInfoLoading,
+    isLoading,
+    session,
+    sessionStatus: status,
+  };
 };

@@ -15,11 +15,8 @@ import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
-import { api } from "~/utils/api";
 import ProfileButton from "./ProfileButton";
 import { shortAccount, truncateAccount } from "~/utils/addresses";
-import { getSessionDetails } from "~/utils/session";
-import DefaultToast from "./Toast";
 import { useUser } from "~/hooks/useUser";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
@@ -193,13 +190,12 @@ export default function LoginModal({
             />
           ) : (
             <div className="flex flex-row gap-6">
-              {!isLoading && (
+              {/* {!isLoading && (
                 <DefaultToast
                   message={"Account not found. Please create one first."}
                   type={"error"}
                 />
-              )}
-              {/* <Button onClick={handleSignOut}>Sign Out</Button> */}
+              )} */}
               <Button
                 onClick={() => {
                   handleDisconnect();

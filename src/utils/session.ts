@@ -8,5 +8,5 @@ export const getSessionDetails = (session: Session | null) => {
       ? session?.user.profile.username
       : session?.user.name;
 
-  return { id };
+  return { id, sessionType: session?.user.type };
 };

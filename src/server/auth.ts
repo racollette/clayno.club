@@ -21,6 +21,7 @@ import { env } from "~/env.mjs";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
+      type: string;
       id: string;
       profile: Profile;
     } & DefaultSession["user"] &
@@ -54,15 +55,18 @@ export const authOptions: NextAuthOptions = {
         session.user.profile = token.profile;
         // @ts-expect-error unknown type
         if (token?.profile?.data) {
+          session.user.type = "twitter";
           // @ts-expect-error unknown type
           session.user.name = token.profile.data.username;
         } else {
+          session.user.type = "discord";
           // @ts-expect-error unknown type
           session.user.name = token?.profile?.username;
         }
       }
       // @ts-expect-error unknown type
       if (token.account.type === "credentials") {
+        session.user.type = "wallet";
         session.user.name = token.sub;
         session.user.image = `https://ui-avatars.com/api/?name=${token.sub}&background=random`;
       }
