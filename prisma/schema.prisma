@@ -68,7 +68,7 @@ model Voter {
   votesCast      Int
   votes          Herd[]
   userId         String @id @unique
-  User           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // model HerdVoter {
