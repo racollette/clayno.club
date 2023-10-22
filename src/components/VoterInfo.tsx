@@ -1,12 +1,9 @@
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { useUser } from "~/hooks/useUser";
 
 export default function VoterInfo() {
   const { user, voterInfo, voterInfoLoading } = useUser();
   const { status } = useSession();
-
-  console.log(status);
 
   return (
     <>
