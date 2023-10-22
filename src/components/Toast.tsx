@@ -14,7 +14,7 @@ export default function DefaultToast(props: ToastProps) {
   useEffect(() => {
     setTimeout(() => {
       setShowToast(false);
-    }, 5000);
+    }, 2000);
   }, []);
 
   return (
