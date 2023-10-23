@@ -29,7 +29,7 @@ export default function Header() {
       <Navbar.Collapse>
         <Navbar.Link
           className="text-md cursor-pointer text-zinc-500 hover:bg-neutral-800 hover:text-white"
-          href={`/`}
+          href={`/herds`}
         >
           Herds
         </Navbar.Link>

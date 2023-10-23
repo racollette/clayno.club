@@ -23,7 +23,7 @@ export default function SubDAO() {
     <>
       <Head>
         <title>{data?.name ?? `DinoHerd`}</title>
-        <meta name="description" content="Claynosaurz Herd Showcase" />
+        <meta name="description" content="Claynosaurz Collectors Gallery" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="icon" href="/favicon.ico" />
