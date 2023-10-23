@@ -372,6 +372,12 @@ export const bindingRouter = createTRPCRouter({
           },
         });
 
+        await prisma.voter.delete({
+          where: {
+            userId: input.id,
+          },
+        });
+
         return deleteUser;
       } catch (error) {
         console.error("Error deleting user:", error);
