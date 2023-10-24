@@ -296,22 +296,22 @@ export default function FusionPage() {
   };
 
   const handleFillCells = (mints: any, showPFP: boolean) => {
-    let gridIndex = -1;
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
         row.map((cell) => {
-          gridIndex++;
-          if (cell.imageURL === "") {
+          // Check if there are more mints to fill
+          if (mints.length > 0) {
+            const mint = mints.shift(); // Get the next mint
             return {
               ...cell,
-              imageURL: showPFP ? mints[gridIndex].pfp : mints[gridIndex].gif,
-              mint: mints[gridIndex].mint,
-              motion: showPFP
-                ? "PFP"
-                : mints[gridIndex].attributes?.motion || "PFP",
+              imageURL: showPFP ? mint.pfp : mint.gif,
+              mint: mint.mint,
+              motion: showPFP ? "PFP" : mint.attributes?.motion || "PFP",
             };
+          } else {
+            // If you run out of mints, keep the cell as it is
+            return { ...cell };
           }
-          return { ...cell };
         })
       )
     );
