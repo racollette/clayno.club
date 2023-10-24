@@ -112,8 +112,8 @@ export default function SubDAO() {
                   </div>
                 </div>
 
-                <div className="flex flex-row flex-wrap md:gap-4">
-                  <div className="my-2 flex flex-row items-center justify-start gap-x-6 rounded-lg bg-neutral-800 px-4 py-2">
+                <div className="flex flex-row flex-wrap gap-2 md:gap-4">
+                  <div className="flex flex-row items-center justify-start gap-x-6 rounded-lg bg-neutral-800 px-4 py-2">
                     <div className="flex flex-col">
                       <div className="text-md font-bold">
                         {data?.uniqueAddresses}
@@ -147,7 +147,7 @@ export default function SubDAO() {
                     </div>
                   </div>
                   {data.requirements && (
-                    <div className="my-2 inline-block rounded-lg bg-neutral-800 p-1">
+                    <div className="inline-block rounded-lg bg-neutral-800 p-1">
                       <div className="flex flex-row gap-2 p-2">
                         <div className="text-wrap p-2 text-left text-xs uppercase text-neutral-500">
                           Eligibility
@@ -169,7 +169,7 @@ export default function SubDAO() {
                   )}
                   {lastUpdated && (
                     <div className="flex flex-row flex-wrap md:gap-4">
-                      <div className="my-2 flex flex-row items-center justify-start gap-x-6 rounded-lg bg-neutral-800 px-4 py-2">
+                      <div className="flex flex-row items-center justify-start gap-x-6 rounded-lg bg-neutral-800 px-4 py-2">
                         <div className="flex flex-col">
                           <div className="text-md font-bold">{lastUpdated}</div>
                           <div className="text-xs uppercase text-neutral-500">
