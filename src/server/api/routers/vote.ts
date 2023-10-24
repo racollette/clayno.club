@@ -21,43 +21,63 @@ export const voteRouter = createTRPCRouter({
 
   castVote: protectedProcedure
     .input(z.object({ userId: z.string(), herdId: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.voter.update({
+    .mutation(async ({ ctx, input }) => {
+      const existingVotes = await ctx.prisma.voter.findUnique({
         where: {
           userId: input.userId,
         },
-        data: {
-          votes: {
-            connect: { id: input.herdId },
-          },
-          votesAvailable: {
-            decrement: 1,
-          },
-          votesCast: {
-            increment: 1,
-          },
-        },
       });
+
+      const votesAvailable = existingVotes && existingVotes?.votesAvailable > 0;
+
+      if (votesAvailable) {
+        return await ctx.prisma.voter.update({
+          where: {
+            userId: input.userId,
+          },
+          data: {
+            votes: {
+              connect: { id: input.herdId },
+            },
+            votesAvailable: {
+              decrement: 1,
+            },
+            votesCast: {
+              increment: 1,
+            },
+          },
+        });
+      }
     }),
 
   removeVote: protectedProcedure
     .input(z.object({ userId: z.string(), herdId: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.voter.update({
+    .mutation(async ({ ctx, input }) => {
+      const existingVotes = await ctx.prisma.voter.findUnique({
         where: {
           userId: input.userId,
         },
-        data: {
-          votes: {
-            disconnect: { id: input.herdId },
-          },
-          votesAvailable: {
-            increment: 1,
-          },
-          votesCast: {
-            decrement: 1,
-          },
-        },
       });
+
+      const votesCast = existingVotes && existingVotes?.votesCast > 0;
+
+      if (votesCast) {
+        return await ctx.prisma.voter.update({
+          where: {
+            userId: input.userId,
+          },
+          data: {
+            votes: {
+              disconnect: { id: input.herdId },
+            },
+            votesAvailable: {
+              increment: 1,
+            },
+            votesCast: {
+              decrement: 1,
+            },
+          },
+        });
+      }
     }),
 });
