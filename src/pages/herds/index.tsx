@@ -1,9 +1,10 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "~/utils/api";
 import TabSelection from "~/components/TabSelection";
 import Herd from "~/components/Herd";
 import Image from "next/image";
+import Link from "next/link";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -14,11 +15,12 @@ import {
   User,
   Discord,
   Twitter,
+  Wallet,
 } from "@prisma/client";
 import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
 import { VoteWidget } from "~/components/VoteWidget";
-import { HiExternalLink } from "react-icons/hi";
+import { HiExternalLink, HiX, HiRefresh } from "react-icons/hi";
 import { FilterDialog } from "~/components/FilterDialog";
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {
@@ -32,6 +34,14 @@ import { FilterDialog } from "~/components/FilterDialog";
 
 //   return (total / 6).toFixed(0);
 // };
+
+type Owners =
+  | (User & {
+      discord: Discord | null;
+      twitter: Twitter | null;
+      wallets: Wallet[];
+    })[]
+  | undefined;
 
 type HerdWithIncludes =
   | HerdType & {
@@ -65,23 +75,29 @@ function useFilteredHerds(
       background === "all" ||
       herdMatchesLower.includes(background);
     const tierValue =
-      tier === "legendary" ? 1 : tier === "epic" ? 2 : tier === "rare" ? 3 : 0;
+      tier === "perfect" ? 1 : tier === "epic" ? 2 : tier === "rare" ? 3 : 0;
     const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
 
     return colorFilter && skinFilter && backgroundFilter && tierFilter;
   });
 }
 
+function useHerdOwners(walletAddresses: string[]) {
+  const allHerdOwnersQuery = api.binding.getUsersByWalletAddresses.useQuery({
+    walletAddresses,
+  });
+  const { data, isError, isLoading } = allHerdOwnersQuery;
+  return { data, isError, isLoading };
+}
+
 export default function Home() {
   const { toast } = useToast();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { user, voterInfo, session, sessionStatus } = useUser();
-  const {
-    data: allHerds,
-    isLoading: allHerdsLoading,
-    refetch,
-  } = api.herd.getAllHerds.useQuery();
+  const { data: allHerds, isLoading: allHerdsLoading } =
+    api.herd.getAllHerds.useQuery();
+  const [castVoteLoading, setCastVoteLoading] = useState(false);
+  const [removeVoteLoading, setRemoveVoteLoading] = useState(false);
   const utils = api.useContext();
 
   const castVote = api.vote.castVote.useMutation({
@@ -119,7 +135,10 @@ export default function Home() {
     onSettled() {
       // Sync with server once mutation has settled
       utils.vote.getVoterInfo.invalidate();
-      refetch();
+      utils.herd.getAllHerds.invalidate();
+      setTimeout(() => {
+        setCastVoteLoading(false);
+      }, 2000);
     },
   });
 
@@ -160,12 +179,11 @@ export default function Home() {
       // Sync with server once mutation has settled
       utils.vote.getVoterInfo.invalidate();
       utils.herd.getAllHerds.invalidate();
-      // refetchVoterInfo();
+      setTimeout(() => {
+        setRemoveVoteLoading(false);
+      }, 2000);
     },
   });
-  // const showDactyl = searchParams.get("dactyl");
-  // const showSaga = searchParams.get("saga");
-  // const showPFP = searchParams.get("pfp");
 
   const color = searchParams.get("color") || "all";
   const skin = searchParams.get("skin") || "all";
@@ -175,6 +193,11 @@ export default function Home() {
   const [showDactyl, setShowDactyl] = useState(false);
   const [showSaga, setShowSaga] = useState(false);
   const [showPFP, setShowPFP] = useState(false);
+  const [showVoted, setShowVoted] = useState(false);
+
+  const myVotes = allHerds?.filter((herd) =>
+    herd.voters.some((voter) => voter.userId === user?.id)
+  );
 
   const [filteredHerds, setFilteredHerds] = useState<
     HerdWithIncludes[] | undefined
@@ -182,10 +205,8 @@ export default function Home() {
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
-  const { data: allHerdOwners } =
-    api.binding.getUsersByWalletAddresses.useQuery({
-      walletAddresses: allHerdAddresses ?? [],
-    });
+
+  const { data: owners } = useHerdOwners(allHerdAddresses);
 
   useEffect(() => {
     setFilteredHerds(allHerds);
@@ -198,7 +219,7 @@ export default function Home() {
         useFilteredHerds(allHerds, color, skin, background, tier)
       );
     }
-  }, [color, background, skin, tier, allHerdsLoading, allHerds]);
+  }, [color, background, skin, tier, allHerds]);
 
   const toggleDactyl = (newToggleState: boolean) => {
     setShowDactyl(newToggleState);
@@ -212,7 +233,22 @@ export default function Home() {
     setShowPFP(newToggleState);
   };
 
+  const toggleVoted = (newToggleState: boolean) => {
+    setShowVoted(newToggleState);
+    if (newToggleState) {
+      setFilteredHerds(myVotes);
+    } else {
+      setFilteredHerds(
+        useFilteredHerds(allHerds, color, skin, background, tier)
+      );
+    }
+  };
+
   const handleCastVote = (herdId: string) => {
+    if (castVoteLoading || removeVoteLoading) {
+      return;
+    }
+
     if (sessionStatus === "unauthenticated") {
       toast({
         title: "Sign in first!",
@@ -278,6 +314,7 @@ export default function Home() {
     }
     if (user) {
       try {
+        setCastVoteLoading(true);
         castVote.mutate({ userId: user.id, herdId });
         // toast({
         //   title: "Vote cast!",
@@ -298,6 +335,10 @@ export default function Home() {
   };
 
   const handleRemoveVote = (herdId: string) => {
+    if (castVoteLoading || removeVoteLoading) {
+      return;
+    }
+
     if (voterInfo?.votesAvailable === null) {
       toast({
         title: "Could not retrieve voter status",
@@ -309,7 +350,8 @@ export default function Home() {
 
     if (user) {
       try {
-        removeVote.mutate({ userId: user.id, herdId });
+        setRemoveVoteLoading(true);
+        removeVote.mutateAsync({ userId: user.id, herdId });
         // toast({
         //   title: "Vote removed!",
         // });
@@ -334,6 +376,13 @@ export default function Home() {
   // const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
   const lastUpdated = useTimeSinceLastUpdate("herds");
+  const filtersActive = [color, skin, background, tier].filter(
+    (filter) => filter !== "all"
+  ).length;
+  const filteredResults =
+    !allHerdsLoading && filteredHerds && filteredHerds?.length > 0
+      ? filteredHerds?.length
+      : 0;
 
   return (
     <>
@@ -344,7 +393,7 @@ export default function Home() {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="relative flex min-h-screen flex-col items-center justify-center bg-black">
+      <main className="relative flex min-h-screen flex-col items-center  bg-black">
         {allHerdsLoading ? (
           <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full text-white md:w-1/4">
             <Image
@@ -394,13 +443,31 @@ export default function Home() {
               </div>
             </div> */}
 
-            <section className="flex flex-col gap-4 p-8 text-white">
+            <section className="flex flex-row items-center justify-center gap-4 p-8 text-white">
               <FilterDialog
                 color={color}
                 skin={skin}
                 background={background}
                 tier={tier}
               />
+
+              {filtersActive > 0 && (
+                <div className="flex flex-row flex-nowrap rounded-md bg-neutral-800 p-2 hover:bg-neutral-700">
+                  <Link
+                    href={`?skin=all&color=all&background=all&tier=all`}
+                    className="flex flex-row flex-nowrap items-center gap-2 text-sm font-bold text-white "
+                  >
+                    [{filtersActive}]
+                    <HiX size={20} className="text-white" />
+                  </Link>
+                </div>
+              )}
+              <div className="text-sm font-bold text-white">
+                <div>
+                  {filteredResults} herd
+                  {filteredResults !== 1 && `s`}
+                </div>
+              </div>
             </section>
 
             <section className="w-full md:w-4/5 lg:w-2/3 xl:w-3/5 2xl:w-1/2">
@@ -415,12 +482,14 @@ export default function Home() {
                 showDactyl={showDactyl}
                 showSaga={showSaga}
                 showPFP={showPFP}
+                showVoted={showVoted}
                 toggleDactyl={toggleDactyl}
                 toggleSaga={toggleSaga}
                 togglePFP={togglePFP}
+                toggleVoted={toggleVoted}
               >
                 {/* {herds.map((tier, index) => ( */}
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center justify-center gap-2">
                   {/* {tier.data &&
                       tier.data?.map((herd) => (
                         <Herd
@@ -432,8 +501,33 @@ export default function Home() {
                           showPFP={showPFP}
                         />
                       ))} */}
+
+                  {filteredResults === 0 && (
+                    <div className="mt-10 flex flex-col items-center justify-center gap-2">
+                      {allHerdsLoading ? (
+                        <HiRefresh
+                          size={50}
+                          className="animate-spin text-white"
+                        />
+                      ) : (
+                        <>
+                          <Image
+                            src="/images/travolta.gif"
+                            width={200}
+                            height={200}
+                            alt="???"
+                            className="rounded-lg"
+                          />
+                          <p className="font-semibold text-white">
+                            No herds found!
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
+
                   {filteredHerds?.map((herd) => {
-                    const foundUser = allHerdOwners?.find((user) => {
+                    const foundUser = owners?.find((user) => {
                       return user.wallets.some(
                         (wallet) => wallet.address === herd.owner
                       );
@@ -457,6 +551,7 @@ export default function Home() {
                           herd={herd}
                           handleRemoveVote={handleRemoveVote}
                           handleCastVote={handleCastVote}
+                          voteLoading={castVoteLoading || removeVoteLoading}
                         />
                       </div>
                     );
@@ -471,8 +566,3 @@ export default function Home() {
     </>
   );
 }
-
-//   const { data: secretMessage } = api.herd.getSecretMessage.useQuery(
-//     undefined, // no input
-//     { enabled: sessionData?.user !== undefined }
-//   );
