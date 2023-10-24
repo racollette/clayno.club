@@ -60,20 +60,19 @@ export const VoteWidget = ({
   const voted = voterInfo?.votes.some((voteCast) => voteCast.id === herd.id);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-row items-end gap-2 md:flex-col md:items-center md:gap-4">
       <TooltipProvider>
         {voted ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="hover:animate-bounce disabled:cursor-not-allowed"
+                className="relative h-12 w-12 hover:animate-bounce disabled:cursor-not-allowed md:h-20 md:w-20"
                 onClick={() => handleRemoveVote(herd.id)}
                 disabled={voteLoading}
               >
                 <Image
                   src="/images/rex_happy.png"
-                  width={64}
-                  height={64}
+                  fill
                   alt="Voted"
                   className="scale-x-[-1] transform"
                 />
@@ -87,14 +86,13 @@ export const VoteWidget = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="hover:animate-bounce disabled:cursor-not-allowed"
+                className="relative h-12 w-12 hover:animate-bounce disabled:cursor-not-allowed md:h-16 md:w-16"
                 onClick={() => handleCastVote(herd.id)}
                 disabled={voteLoading}
               >
                 <Image
                   src="/images/rex_bored_orange.png"
-                  width={72}
-                  height={72}
+                  fill
                   alt="Vote"
                   className="scale-x-[-1] transform pl-2"
                 />
@@ -114,7 +112,7 @@ export const VoteWidget = ({
                   voted
                     ? `border-green-400 bg-green-600`
                     : `border-amber-200/80 bg-amber-400/80`
-                } aspect-square  rounded-xl border-4 px-3 py-1 text-center text-2xl font-extrabold text-white hover:animate-pulse`}
+                } aspect-square rounded-lg border-2 px-3 py-1 text-center text-lg font-extrabold text-white hover:animate-pulse md:rounded-xl md:border-4 md:text-2xl`}
               >
                 {herd.voters.length}
               </DialogTrigger>

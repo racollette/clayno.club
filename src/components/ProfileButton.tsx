@@ -26,7 +26,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
             width={20}
             height={20}
           />
-          <div className="text-sm">{username}</div>
+          <div className="hidden text-sm md:block">{username}</div>
         </div>
       }
     >

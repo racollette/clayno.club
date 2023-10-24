@@ -9,7 +9,7 @@ export default function VoterInfo() {
   return (
     <>
       {status === "authenticated" && !voterInfoLoading && voterInfo && user ? (
-        <div className="flex flex-row items-center justify-center gap-1 rounded-lg bg-fuchsia-700 px-4 py-2">
+        <div className="flex flex-row items-center justify-center gap-1 rounded-lg bg-fuchsia-700 px-2 py-2 md:px-4">
           <span className="text-sm font-bold">{voterInfo.votesAvailable}</span>
           <Image
             src={"/images/rex_happy.png"}
