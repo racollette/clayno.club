@@ -47,6 +47,7 @@ type VoteWidgetProps = {
 
   handleCastVote: (herdId: string) => void;
   handleRemoveVote: (herdId: string) => void;
+  voteLoading: boolean;
 };
 
 export const VoteWidget = ({
@@ -54,6 +55,7 @@ export const VoteWidget = ({
   herd,
   handleCastVote,
   handleRemoveVote,
+  voteLoading,
 }: VoteWidgetProps) => {
   const voted = voterInfo?.votes.some((voteCast) => voteCast.id === herd.id);
 
@@ -64,8 +66,9 @@ export const VoteWidget = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="hover:animate-bounce"
+                className="hover:animate-bounce disabled:cursor-not-allowed"
                 onClick={() => handleRemoveVote(herd.id)}
+                disabled={voteLoading}
               >
                 <Image
                   src="/images/rex_happy.png"
@@ -84,8 +87,9 @@ export const VoteWidget = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="hover:animate-bounce"
+                className="hover:animate-bounce disabled:cursor-not-allowed"
                 onClick={() => handleCastVote(herd.id)}
+                disabled={voteLoading}
               >
                 <Image
                   src="/images/rex_bored_orange.png"
