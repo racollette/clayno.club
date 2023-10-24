@@ -15,9 +15,11 @@ type TabSelectionProps = {
   showDactyl: boolean;
   showSaga: boolean;
   showPFP: boolean;
+  showVoted: boolean;
   toggleDactyl: (toggleState: boolean) => void;
   toggleSaga: (toggleState: boolean) => void;
   togglePFP: (toggleState: boolean) => void;
+  toggleVoted: (toggleState: boolean) => void;
 };
 
 const TabSelection = ({
@@ -27,9 +29,11 @@ const TabSelection = ({
   showDactyl,
   showSaga,
   showPFP,
+  showVoted,
   toggleDactyl,
   toggleSaga,
   togglePFP,
+  toggleVoted,
 }: TabSelectionProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
@@ -52,22 +56,28 @@ const TabSelection = ({
       </div> */}
       <div className="mx-10 mt-2 grid grid-cols-2 justify-center gap-y-2 align-middle md:flex md:flex-row md:gap-x-6">
         <ToggleSwitch
-          className="justify-self-start"
+          className=""
           toggleState={showDactyl}
           label={"Show Dactyls"}
           onToggle={toggleDactyl}
         />
         <ToggleSwitch
-          className="justify-self-end"
+          className=""
           toggleState={showSaga}
           label={"Show Saga"}
           onToggle={toggleSaga}
         />
         <ToggleSwitch
-          className="justify-self-start"
+          className=""
           toggleState={showPFP}
           label={"PFP Mode"}
           onToggle={togglePFP}
+        />
+        <ToggleSwitch
+          className=""
+          toggleState={showVoted}
+          label={"My Votes"}
+          onToggle={toggleVoted}
         />
       </div>
       {/* eslint-disable */}
