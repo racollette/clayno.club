@@ -31,11 +31,13 @@ type HerdProps = {
   showOwner: boolean;
   showPFP: boolean;
   owner?:
-    | (User & {
+    | {
         discord: Discord | null;
         twitter: Twitter | null;
+        id: string;
+        defaultAddress: string;
         wallets: Wallet[];
-      })
+      }
     | undefined;
 };
 
@@ -80,7 +82,7 @@ export default function Herd(props: HerdProps) {
   return (
     <div
       key={filteredHerd.id}
-      className="mb-6 flex w-full flex-col rounded-lg bg-neutral-800 p-4 md:p-6"
+      className="mb-1 flex w-full flex-col rounded-lg bg-neutral-800 p-4 md:p-6"
     >
       <div
         className={`mb-1 flex flex-none flex-wrap items-center justify-between rounded-md  ${getBorderColor(
@@ -88,10 +90,10 @@ export default function Herd(props: HerdProps) {
         )}`}
       >
         {filteredHerd.tier !== 4 && (
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-1">
             {filteredHerd.matches.split("_").map((trait, index) => (
               <div
-                className={`m-1 rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
+                className={`rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
                   trait
                 )}`}
                 key={index}
