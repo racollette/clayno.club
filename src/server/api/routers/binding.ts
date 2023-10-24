@@ -41,7 +41,7 @@ export const bindingRouter = createTRPCRouter({
           },
         });
         const dinosOwned = checkHolderStatus?.amount || 0;
-        const votesToIssue = dinosOwned > 0 ? 15 : 0;
+        const votesToIssue = dinosOwned > 0 ? 20 : 0;
         const createVoter = await prisma.voter.create({
           data: {
             votesAvailable: votesToIssue,
@@ -304,7 +304,7 @@ export const bindingRouter = createTRPCRouter({
         if (!voterInfo) {
           await prisma.voter.create({
             data: {
-              votesAvailable: dinosOwned > 0 ? 15 : 0,
+              votesAvailable: dinosOwned > 0 ? 20 : 0,
               votesCast: 0,
               votesIssued: dinosOwned > 0 ? true : false,
               userId: input.id,
@@ -319,7 +319,7 @@ export const bindingRouter = createTRPCRouter({
               votesAvailable: voterInfo?.votesIssued
                 ? voterInfo.votesAvailable
                 : dinosOwned > 0
-                ? 15
+                ? 20
                 : 0,
             },
           });
