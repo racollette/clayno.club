@@ -48,7 +48,7 @@ export default function Home() {
               Tribes
             </h1>
             <h2 className="lg:text-md rounded-lg bg-neutral-900/70 p-2 text-sm font-semibold text-white">
-              Claynotopia's sub-communities!
+              {`Claynotopia's sub-communities!`}
             </h2>
           </Link>
           <Link
