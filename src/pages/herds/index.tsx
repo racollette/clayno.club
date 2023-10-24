@@ -75,7 +75,15 @@ function filterHerds(
       background === "all" ||
       herdMatchesLower.includes(background);
     const tierValue =
-      tier === "perfect" ? 1 : tier === "epic" ? 2 : tier === "rare" ? 3 : 0;
+      tier === "perfect"
+        ? 1
+        : tier === "epic"
+        ? 2
+        : tier === "rare"
+        ? 3
+        : tier === "scrappy"
+        ? 4
+        : 0;
     const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
 
     return colorFilter && skinFilter && backgroundFilter && tierFilter;
@@ -83,9 +91,10 @@ function filterHerds(
 }
 
 function useHerdOwners(walletAddresses: string[]) {
-  const allHerdOwnersQuery = api.binding.getUsersByWalletAddresses.useQuery({
-    walletAddresses,
-  });
+  // const allHerdOwnersQuery = api.binding.getUsersByWalletAddresses.useQuery({
+  //   walletAddresses,
+  // });
+  const allHerdOwnersQuery = api.binding.getAllUsers.useQuery();
   const { data, isError, isLoading } = allHerdOwnersQuery;
   return { data, isError, isLoading };
 }
@@ -138,7 +147,7 @@ export default function Home() {
       utils.herd.getAllHerds.invalidate();
       setTimeout(() => {
         setCastVoteLoading(false);
-      }, 2000);
+      }, 1000);
     },
   });
 
@@ -181,7 +190,7 @@ export default function Home() {
       utils.herd.getAllHerds.invalidate();
       setTimeout(() => {
         setRemoveVoteLoading(false);
-      }, 2000);
+      }, 1000);
     },
   });
 
@@ -439,7 +448,7 @@ export default function Home() {
               </div>
             </div> */}
 
-            <section className="flex flex-row items-center justify-center gap-4 p-8 text-white">
+            <section className="flex flex-row items-center justify-center gap-2 p-2 text-white md:gap-4 md:p-4">
               <FilterDialog
                 color={color}
                 skin={skin}
@@ -448,10 +457,10 @@ export default function Home() {
               />
 
               {filtersActive > 0 && (
-                <div className="flex flex-row flex-nowrap rounded-md bg-neutral-800 p-2 hover:bg-neutral-700">
+                <div className="flex flex-row flex-nowrap rounded-md bg-red-700 p-2 hover:bg-red-500">
                   <Link
                     href={`?skin=all&color=all&background=all&tier=all`}
-                    className="flex flex-row flex-nowrap items-center gap-2 text-sm font-bold text-white "
+                    className="flex flex-row flex-nowrap items-center justify-center gap-2 text-sm font-bold text-white "
                   >
                     [{filtersActive}]
                     <HiX size={20} className="text-white" />
@@ -463,6 +472,9 @@ export default function Home() {
                   {filteredResults} herd
                   {filteredResults !== 1 && `s`}
                 </div>
+              </div>
+              <div className="hidden text-right text-xs italic text-zinc-500 md:block">
+                {`Updated ${lastUpdated}`}
               </div>
             </section>
 
@@ -485,7 +497,7 @@ export default function Home() {
                 toggleVoted={toggleVoted}
               >
                 {/* {herds.map((tier, index) => ( */}
-                <div className="flex flex-col items-center justify-center gap-2">
+                <div className="mt-4 flex flex-col items-center justify-center gap-2">
                   {/* {tier.data &&
                       tier.data?.map((herd) => (
                         <Herd
@@ -531,7 +543,7 @@ export default function Home() {
                     return (
                       <div
                         key={herd.id}
-                        className="flex w-full flex-row items-center gap-8"
+                        className="mb-6 flex w-full flex-col items-center md:flex-row md:gap-8"
                       >
                         <Herd
                           key={herd.id}
