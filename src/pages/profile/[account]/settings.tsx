@@ -28,7 +28,7 @@ const Settings = () => {
     refetch,
     isLoading,
   } = api.binding.getUser.useQuery({
-    type: userId ? "id" : connected ? "wallet" : sessionType,
+    type: userId ? "id" : connected ? "wallet" : sessionType ?? "none",
     id: userId
       ? userId
       : connected && publicKey

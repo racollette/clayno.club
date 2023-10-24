@@ -30,7 +30,7 @@ type HerdProps = {
   showSaga: boolean;
   showOwner: boolean;
   showPFP: boolean;
-  owner:
+  owner?:
     | (User & {
         discord: Discord | null;
         twitter: Twitter | null;
