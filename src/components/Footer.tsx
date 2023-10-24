@@ -9,11 +9,11 @@ export default function Footer() {
         <Image src="/icons/heart.svg" alt="Love" width={16} height={16} />
         <span className="text-sm">by</span>
         <Link
-          href={`https://twitter.com/AlphaDecay235`}
+          href={`https://twitter.com/Decay235`}
           className="text-sm text-sky-500"
           target="_blank"
         >
-          <span className="text-sm">@AlphaDecay235</span>
+          <span className="text-sm">Decay</span>
         </Link>
       </div>
     </footer>
