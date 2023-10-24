@@ -17,7 +17,7 @@ export const herdRouter = createTRPCRouter({
           rarity: "asc",
         },
         include: {
-          herd: {
+          dinos: {
             orderBy: {
               name: "desc",
             },
@@ -43,7 +43,7 @@ export const herdRouter = createTRPCRouter({
         },
       ],
       include: {
-        herd: {
+        dinos: {
           orderBy: {
             name: "desc",
           },

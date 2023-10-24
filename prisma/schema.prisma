@@ -26,11 +26,13 @@ model Dino {
   rarity      Int?
   subDAOId    String?
   attributes  Attributes?
-  herd        Herd[]
+  herdId      String? // Reference to the Herd the Dino belongs to
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
+  herd        Herd?       @relation(fields: [herdId], references: [id])
 
   @@index([holderOwner])
+  @@index([herdId])
 }
 
 model Attributes {
@@ -52,13 +54,14 @@ model Attributes {
 }
 
 model Herd {
-  id      String @id @default(uuid())
+  id      String @id @default(cuid())
   owner   String
   tier    Int
   type    String
   matches String
   rarity  Int
-  herd    Dino[]
+  key     String @unique
+  dinos   Dino[]
 }
 
 model DinoToHerd {
@@ -208,4 +211,56 @@ model ClaymakerToSubDAO {
   @@unique([A, B], map: "_ClaymakerToSubDAO_AB_unique")
   @@index([B], map: "_ClaymakerToSubDAO_B_index")
   @@map("_ClaymakerToSubDAO")
+}
+
+model AudioFile {
+  id         String   @id
+  name       String
+  userId     String?
+  uploadedAt DateTime @default(now())
+  url        String?
+  clipStart  Float?
+
+  @@index([userId])
+}
+
+model Collage {
+  id          String    @id
+  columns     Int
+  rows        Int
+  borderColor String
+  borderWidth Int
+  data        Json
+  userId      String?
+  createdAt   DateTime  @default(now())
+  generatedAt DateTime?
+  status      String?
+  url         String?
+  hidden      Boolean?
+  overlay     Boolean?
+
+  @@index([userId])
+}
+
+model LastUpdated {
+  id      String   @id
+  holders DateTime
+  tribes  DateTime
+  herds   DateTime
+}
+
+model Voter {
+  votesAvailable Int
+  votesCast      Int
+  userId         String  @id @unique
+  votesIssued    Boolean
+}
+
+model HerdToVoter {
+  A String
+  B String
+
+  @@unique([A, B], map: "_HerdToVoter_AB_unique")
+  @@index([B], map: "_HerdToVoter_B_index")
+  @@map("_HerdToVoter")
 }

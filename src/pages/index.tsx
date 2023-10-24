@@ -38,6 +38,8 @@ export default function Home() {
   const herds = api.useQueries((t) =>
     [1, 2, 3, 4].map((tier) => t.herd.getHerdTier({ tier: tier }))
   );
+
+  console.log(herds);
   const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
   return (
