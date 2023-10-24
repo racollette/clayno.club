@@ -17,7 +17,7 @@ export default function Home() {
             style={{
               background: `url('/images/3d_herd.jpeg')`,
             }}
-            className="h-[5000px] w-[5000px] animate-homepage-dino-pattern bg-repeat"
+            className="h-[5000px] w-[1000px] animate-homepage-dino-pattern bg-repeat md:h-[5000px] md:w-[5000px]"
           ></div>
         </div>
         <div className="z-10 my-16 flex w-full flex-col items-center justify-around gap-16 md:flex-row md:gap-10">
