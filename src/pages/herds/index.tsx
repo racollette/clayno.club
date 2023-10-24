@@ -57,7 +57,7 @@ type HerdWithIncludes =
     };
 
 // Custom hook to filter herds
-function useFilteredHerds(
+function filterHerds(
   allHerds: HerdWithIncludes[] | undefined,
   color: string | null,
   skin: string | null,
@@ -201,7 +201,7 @@ export default function Home() {
 
   const [filteredHerds, setFilteredHerds] = useState<
     HerdWithIncludes[] | undefined
-  >(useFilteredHerds(allHerds, color, skin, background, tier));
+  >(filterHerds(allHerds, color, skin, background, tier));
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
@@ -215,9 +215,7 @@ export default function Home() {
   useEffect(() => {
     if (allHerds && !allHerdsLoading) {
       // Calculate and set the filteredHerds based on the latest allHerds data
-      setFilteredHerds(
-        useFilteredHerds(allHerds, color, skin, background, tier)
-      );
+      setFilteredHerds(filterHerds(allHerds, color, skin, background, tier));
     }
   }, [color, background, skin, tier, allHerds]);
 
@@ -238,9 +236,7 @@ export default function Home() {
     if (newToggleState) {
       setFilteredHerds(myVotes);
     } else {
-      setFilteredHerds(
-        useFilteredHerds(allHerds, color, skin, background, tier)
-      );
+      setFilteredHerds(filterHerds(allHerds, color, skin, background, tier));
     }
   };
 
