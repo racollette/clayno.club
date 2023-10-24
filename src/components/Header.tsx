@@ -5,6 +5,7 @@ import VoterInfo from "./VoterInfo";
 
 export default function Header() {
   const router = useRouter();
+  const isHerdsPage = router.pathname === "/herds";
 
   return (
     <Navbar className="bg-black text-white" fluid>
@@ -15,14 +16,14 @@ export default function Header() {
           src="/favicon.svg"
         /> */}
         <span
-          className="cursor-pointer self-center whitespace-nowrap px-2 text-xl font-semibold dark:text-white"
+          className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-semibold dark:text-white md:text-xl"
           onClick={() => router.push(`/`)}
         >
           DinoHerd.cc
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
-        <VoterInfo />
+        {isHerdsPage && <VoterInfo />}
         <LoginModal />
         <Navbar.Toggle className="bg-transparent text-zinc-500 hover:bg-transparent hover:text-white focus:ring-zinc-500" />
       </div>
