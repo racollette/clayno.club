@@ -113,7 +113,7 @@ export default function DinoSlide({
       >
         <div className="flex p-2 lg:p-4">
           {user && session ? (
-            <div className="flex flex-grow flex-row">
+            <div className="flex flex-grow flex-row justify-between">
               <div className="flex flex-row flex-wrap gap-2">
                 {holdersWithDefaults?.map((holder, index) => (
                   <Fragment key={index}>
@@ -173,6 +173,7 @@ export default function DinoSlide({
                   </Fragment>
                 ))}
               </div>
+              {/* chatgpt */}
               <div className="flex flex-col justify-start gap-3 px-1 lg:px-3">
                 <TooltipProvider>
                   <Tooltip>
