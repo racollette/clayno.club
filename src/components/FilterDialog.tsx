@@ -45,7 +45,7 @@ export const FilterDialog = ({
         <DialogTrigger asChild>
           <button className="flex flex-row items-center gap-2 rounded-md bg-fuchsia-700 px-4 py-2 text-sm font-bold hover:bg-fuchsia-600">
             Filters
-            <HiAdjustments className="rotate-90" size={24} />
+            <HiAdjustments className="rotate-90" size={20} />
           </button>
         </DialogTrigger>
         <DialogContent className="border-none bg-neutral-900/80">
