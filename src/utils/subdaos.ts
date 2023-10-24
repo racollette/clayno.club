@@ -1,10 +1,10 @@
-import { Dino } from "@prisma/client";
 import { api } from "./api";
 
 export const groupAndFilter = (acronym: string) => {
   const { data, isLoading } = api.subdao.getSubDAO.useQuery({
     acronym: acronym,
   });
+
   const { data: users } = api.binding.getAllUsers.useQuery();
 
   if (data?.type === "Quantity") {
@@ -156,10 +156,10 @@ function sortByAmount(groupedDinos: any) {
   );
 }
 
-export function fetchOtherWallets(wallets: string[], acronym: string) {
-  const { data: otherWallets } = api.subdao.getHolders.useQuery({
+export function fetchOtherWallets(wallets: string[]) {
+  const { data: otherWallets, isLoading } = api.subdao.getHolders.useQuery({
     wallets: wallets || [],
   });
 
-  return otherWallets;
+  return { otherWallets, isLoading };
 }

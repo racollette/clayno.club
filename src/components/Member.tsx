@@ -38,7 +38,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
       .map((wallet: any) => wallet.address)
       .filter((address: any) => user?.defaultAddress !== address) ?? [];
 
-  const otherWallets = fetchOtherWallets(wallets, acronym);
+  const { otherWallets } = fetchOtherWallets(wallets);
 
   useEffect(() => {
     if (wallets) {
@@ -54,8 +54,6 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
   const expandable = userDinos ? userDinos.length > 1 : dinos.length > 1;
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
   const isUnowned = owner === "unowned";
-
-  console.log(expanded);
 
   const avatar = user?.discord
     ? user.discord.image_url
@@ -79,7 +77,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
 
   return (
     <div
-      className={`rounded-lg bg-stone-800 p-3 pb-1 md:p-4 ${
+      className={`rounded-lg bg-neutral-800 p-3 pb-1 md:p-4 ${
         isRegistered && `order-first`
       } ${!expanded && `transform-gpu transition-transform hover:scale-95`} ${
         expanded && `col-span-2 py-4 md:col-span-3 lg:col-span-5`
@@ -118,7 +116,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
               {expanded ? (
                 <button
                   onClick={toggleExpand}
-                  className="flex h-8 flex-row flex-nowrap justify-center gap-1 rounded-lg bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600"
+                  className="flex h-8 flex-row flex-nowrap justify-center gap-1 rounded-lg bg-neutral-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-neutral-600"
                 >
                   <div className="self-center">Hide</div>
                   <HiChevronUp className="self-center" />
@@ -126,7 +124,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
               ) : (
                 <button
                   onClick={toggleExpand}
-                  className="flex h-8 w-full flex-nowrap justify-center gap-1 rounded-md bg-stone-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-stone-600 md:w-fit"
+                  className="flex h-8 w-full flex-nowrap justify-center gap-1 rounded-md bg-neutral-700 px-2 py-1 align-middle text-xs font-extrabold hover:bg-neutral-600 md:w-fit"
                 >
                   <div className="self-center whitespace-nowrap">
                     {additionalDinos} more

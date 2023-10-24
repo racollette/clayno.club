@@ -63,7 +63,7 @@ export default function Herd(props: HerdProps) {
   return (
     <div
       key={filteredHerd.id}
-      className="mb-6 flex w-full flex-col rounded-lg bg-stone-800 p-4 md:p-6"
+      className="mb-6 flex w-full flex-col rounded-lg bg-neutral-800 p-4 md:p-6"
     >
       <div
         className={`mb-1 flex flex-none flex-wrap items-center justify-between rounded-md  ${getBorderColor(
@@ -89,25 +89,31 @@ export default function Herd(props: HerdProps) {
           <>
             {owner?.twitter || owner?.discord ? (
               <div className="mx-3 flex flex-row justify-center align-middle">
-                {owner.discord && (
-                  <div className="mr-2 flex">
-                    <Link
-                      className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
-                      href={`/profile/${owner.discord.username}`}
-                    >
-                      <Image
-                        className="mr-2 self-center rounded-md"
-                        src={owner.discord.image_url}
-                        alt="Avatar"
-                        width={24}
-                        height={24}
-                      />
-                      <div className="self-center text-white">
-                        {owner.discord.global_name}
-                      </div>
-                    </Link>
-                  </div>
-                )}
+                <div className="mr-2 flex">
+                  <Link
+                    className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
+                    href={`/profile/${
+                      owner?.discord?.username || owner?.twitter?.username
+                    }`}
+                  >
+                    <Image
+                      className="mr-2 self-center rounded-md"
+                      src={
+                        owner?.discord?.image_url ||
+                        owner?.twitter?.image_url ||
+                        ""
+                      }
+                      alt="Avatar"
+                      width={24}
+                      height={24}
+                    />
+                    <div className="self-center text-white">
+                      {owner?.discord?.global_name ||
+                        owner?.twitter?.global_name}
+                    </div>
+                  </Link>
+                </div>
+
                 {owner.twitter && (
                   <Link
                     className="self-center rounded-md px-2 py-2 text-white hover:bg-white/20"

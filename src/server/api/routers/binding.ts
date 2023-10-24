@@ -7,6 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 const createUserRequestSchema = z.object({
+  user: z.string(),
   address: z.string(),
 });
 

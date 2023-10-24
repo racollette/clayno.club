@@ -38,7 +38,7 @@ const TabSelection = ({
   };
 
   return (
-    <div>
+    <>
       <div className="flex flex-wrap justify-center border-gray-300 p-4 md:p-10">
         {labels.map((category: string, index: number) => (
           <TabButton
@@ -72,7 +72,7 @@ const TabSelection = ({
       </div>
       {/* eslint-disable */}
       <div className="p-4">{children[activeTab]}</div>
-    </div>
+    </>
   );
 };
 

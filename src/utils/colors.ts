@@ -1,5 +1,5 @@
 export const getRarityColor = (rank: number) => {
-  if (rank > 6088) return "bg-zinc-500";
+  if (rank > 6088) return "bg-neutral-500";
   if (rank > 3564) return "bg-emerald-600";
   if (rank > 1531) return "bg-blue-400";
   if (rank > 505) return "bg-purple-600";
@@ -15,7 +15,7 @@ export const getTraitBadgeColor = (trait: string) => {
     case "Aqua":
       return "bg-sky-600";
     case "Charcoal":
-      return "bg-zinc-700";
+      return "bg-neutral-700";
     case "Desert":
       return "bg-yellow-500";
     case "Mist":
