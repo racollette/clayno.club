@@ -246,35 +246,6 @@ model ClaymakerToSubDAO {
   @@map("_ClaymakerToSubDAO")
 }
 
-model AudioFile {
-  id         String   @id
-  name       String
-  userId     String?
-  uploadedAt DateTime @default(now())
-  url        String?
-  clipStart  Float?
-
-  @@index([userId])
-}
-
-model Collage {
-  id          String    @id
-  columns     Int
-  rows        Int
-  borderColor String
-  borderWidth Int
-  data        Json
-  userId      String?
-  createdAt   DateTime  @default(now())
-  generatedAt DateTime?
-  status      String?
-  url         String?
-  hidden      Boolean?
-  overlay     Boolean?
-
-  @@index([userId])
-}
-
 model LastUpdated {
   id      String   @id
   holders DateTime
