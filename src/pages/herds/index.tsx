@@ -201,8 +201,8 @@ export default function Home() {
   const background = searchParams.get("background") || "all";
   const tier = searchParams.get("tier") || "all";
 
-  const [showDactyl, setShowDactyl] = useState(false);
-  const [showSaga, setShowSaga] = useState(false);
+  const [showDactyl, setShowDactyl] = useState(true);
+  const [showSaga, setShowSaga] = useState(true);
   const [showPFP, setShowPFP] = useState(false);
   const [showVoted, setShowVoted] = useState(false);
 
