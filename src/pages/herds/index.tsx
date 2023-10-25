@@ -84,7 +84,9 @@ function filterHerds(
         : tier === "scrappy"
         ? 4
         : 0;
-    const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
+    // const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
+    const tierFilter =
+      !tier || tier === "all" ? herd.tier !== 4 : herd.tier === tierValue;
 
     return colorFilter && skinFilter && backgroundFilter && tierFilter;
   });
