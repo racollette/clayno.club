@@ -22,7 +22,7 @@ import {
 
 type HerdProps = {
   herd: Herd & {
-    herd: (Dino & {
+    dinos: (Dino & {
       attributes: Attributes | null;
     })[];
   };
@@ -47,7 +47,7 @@ export default function Herd(props: HerdProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    let filteredHerd = herd.herd;
+    let filteredHerd = herd.dinos;
 
     if (!showDactyl && !showSaga) {
       filteredHerd = filteredHerd.filter(
@@ -68,7 +68,7 @@ export default function Herd(props: HerdProps) {
       );
     }
 
-    setFilteredHerd({ ...herd, herd: filteredHerd });
+    setFilteredHerd({ ...herd, dinos: filteredHerd });
   }, [showDactyl, showSaga, herd]);
 
   const handleMouseEnter = () => {
@@ -207,7 +207,7 @@ export default function Herd(props: HerdProps) {
       </div>
 
       <div className={`grid grid-cols-3`} key={herd.id}>
-        {filteredHerd.herd.map((dino) => (
+        {filteredHerd.dinos.map((dino) => (
           <div key={dino.mint}>
             {dino.attributes && (
               <div
