@@ -17,12 +17,12 @@ export default function Home() {
             style={{
               background: `url('/images/3d_herd.jpeg')`,
             }}
-            className="h-[5000px] w-[1000px] animate-homepage-dino-pattern bg-repeat md:h-[5000px] md:w-[5000px]"
+            className="h-[5000px] w-[1000px] animate-homepage-dino-pattern bg-repeat md:h-[6000px] md:w-[6000px]"
           ></div>
         </div>
         <div className="z-10 my-16 flex w-full flex-col items-center justify-around gap-16 md:flex-row md:gap-10">
           <Link
-            className="flex aspect-square w-3/4 -rotate-[9deg] cursor-pointer flex-col items-center justify-center gap-4 rounded-xl bg-neutral-800 bg-contain p-8 text-center text-white  shadow-2xl shadow-neutral-900 hover:animate-wiggle md:w-1/5 lg:w-1/4"
+            className="flex aspect-square w-3/4 -rotate-[9deg] cursor-pointer flex-col items-center justify-center gap-4 rounded-xl bg-neutral-800 bg-contain p-8 text-center text-white  shadow-2xl shadow-neutral-900 hover:animate-wiggle md:w-1/4"
             style={{
               background: `url('/images/trailer_herd.jpeg')`,
               backgroundSize: `100%`,
@@ -52,7 +52,7 @@ export default function Home() {
             </h2>
           </Link>
           <Link
-            className="flex aspect-square w-3/4 -rotate-[9deg] cursor-pointer flex-col items-center justify-center gap-4 rounded-xl bg-neutral-800 bg-contain p-8 text-center  text-white shadow-2xl shadow-neutral-900 hover:animate-wiggle md:w-1/5 lg:w-1/4"
+            className="flex aspect-square w-3/4 -rotate-[9deg] cursor-pointer flex-col items-center justify-center gap-4 rounded-xl bg-neutral-800 bg-contain p-8 text-center  text-white shadow-2xl shadow-neutral-900 hover:animate-wiggle md:w-1/4"
             style={{
               background: `url('/images/sticker_collage.png')`,
               backgroundSize: `100%`,
