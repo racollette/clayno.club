@@ -56,10 +56,10 @@ export const FilterDialog = ({
             Filter herds by traits
           </DialogDescription>
           <div className="flex flex-col flex-wrap gap-4 text-white">
+            <FilterGroup trait={"tier"} params={params} />
             <FilterGroup trait={"skin"} params={params} />
             <FilterGroup trait={"color"} params={params} />
             <FilterGroup trait={"background"} params={params} />
-            <FilterGroup trait={"tier"} params={params} />
           </div>
         </DialogContent>
       </Dialog>
