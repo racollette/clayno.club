@@ -12,8 +12,11 @@ import useLocalStorage from "~/utils/storage";
 import AlertModal from "~/components/AlertModal";
 import router from "next/router";
 import Head from "next/head";
+import { useToast } from "~/@/components/ui/use-toast";
+import { VoteInstruction } from "@solana/web3.js";
 
 const Settings = () => {
+  const { toast } = useToast();
   const { data: session } = useSession();
   const { publicKey, connected } = useWallet();
   // const { user, sessionType, isLoading, refetch } = getUserSession();
@@ -36,6 +39,19 @@ const Settings = () => {
       : id ?? "none",
   });
 
+  const { data: voterInfo } = api.vote.getVoterInfo.useQuery({
+    userId: user?.id ?? "none",
+  });
+
+  const { data: holderData } = api.general.getHolderDinos.useQuery({
+    wallets: user?.wallets.map((wallet) => wallet.address) ?? ["none"],
+  });
+
+  const holderDinos =
+    (holderData && holderData.flatMap((holder) => holder && holder?.mints)) ||
+    [];
+  const voteEligible = holderDinos?.length > 0;
+
   const linkDiscord = api.binding.linkDiscord.useMutation();
   const linkTwitter = api.binding.linkTwitter.useMutation();
   const unlinkDiscord = api.binding.unlinkDiscord.useMutation();
@@ -44,6 +60,8 @@ const Settings = () => {
   const deleteWallet = api.binding.deleteWallet.useMutation();
   const linkWallet = api.binding.linkWallet.useMutation();
   const deleteAccount = api.binding.deleteUser.useMutation();
+  const createVoter = api.vote.createVoter.useMutation();
+  const issueVotes = api.vote.issueVotes.useMutation();
 
   useEffect(() => {
     if (user?.id) {
@@ -122,6 +140,33 @@ const Settings = () => {
       }
     } catch (error) {
       console.error("Error deleting data:", error);
+    }
+  };
+
+  const handleCreateVoter = async () => {
+    try {
+      if (user) {
+        if (voterInfo?.votesIssued === false) {
+          issueVotes.mutate({
+            userId: user.id,
+            wallets: user.wallets.map((wallet) => wallet.address),
+          });
+          toast({
+            title: "Votes issued",
+          });
+        } else {
+          console.log(voterInfo);
+          createVoter.mutate({
+            userId: user.id,
+            wallets: user.wallets.map((wallet) => wallet.address),
+          });
+          toast({
+            title: "Voter account created",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error creating voter account:", error);
     }
   };
 
@@ -333,6 +378,22 @@ const Settings = () => {
               {userId && (
                 <AddWalletModal linkWallet={linkWallet} userId={userId} />
               )}
+            </div>
+          </div>
+          <div className="mt-8">
+            <div className="text-xl font-extrabold">Voting</div>
+            <div className="py-2 text-sm text-zinc-500">
+              You can request votes here if they are not automatically added to
+              your account.
+            </div>
+            <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
+              <button
+                className="rounded-md bg-emerald-700 px-4 py-2 hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-neutral-700"
+                disabled={!voteEligible || voterInfo?.votesIssued}
+                onClick={handleCreateVoter}
+              >
+                Request Votes
+              </button>
             </div>
           </div>
         </div>

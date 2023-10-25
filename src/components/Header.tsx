@@ -23,7 +23,8 @@ export default function Header() {
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
-        {isHerdsPage && <VoterInfo />}
+        {/* {isHerdsPage && <VoterInfo />} */}
+        <VoterInfo />
         <LoginModal />
         <Navbar.Toggle className="bg-transparent text-zinc-500 hover:bg-transparent hover:text-white focus:ring-zinc-500" />
       </div>

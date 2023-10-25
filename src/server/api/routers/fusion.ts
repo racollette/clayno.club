@@ -6,10 +6,6 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
-const createUserRequestSchema = z.object({
-  address: z.string(),
-});
-
 const createUserCollageSchema = z.object({
   userId: z.string(),
   columns: z.number(),

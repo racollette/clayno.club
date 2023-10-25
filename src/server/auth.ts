@@ -11,6 +11,7 @@ import { SigninMessage } from "../utils/SigninMessage";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
 import { env } from "~/env.mjs";
+import { api } from "~/utils/api";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -149,23 +150,7 @@ export const authOptions: NextAuthOptions = {
 
           // Create new user if doesn't exist
           if (!user) {
-            user = await prisma.user.create({
-              data: {
-                defaultAddress: signinMessage.publicKey,
-                wallets: {
-                  create: { address: signinMessage.publicKey },
-                },
-              },
-            });
-            // create account
-            await prisma.account.create({
-              data: {
-                userId: user.id,
-                type: "credentials",
-                provider: "Solana",
-                providerAccountId: signinMessage.publicKey,
-              },
-            });
+            createUser(signinMessage.publicKey);
           }
 
           return {
@@ -224,23 +209,7 @@ export const authOptions: NextAuthOptions = {
           });
           // Create new user if doesn't exist
           if (!user) {
-            user = await prisma.user.create({
-              data: {
-                defaultAddress: credentials?.address,
-                wallets: {
-                  create: { address: credentials?.address },
-                },
-              },
-            });
-            // create account
-            await prisma.account.create({
-              data: {
-                userId: user.id,
-                type: "credentials",
-                provider: "Ethereum",
-                providerAccountId: credentials?.address,
-              },
-            });
+            createUser(credentials.address);
           }
 
           return {
@@ -274,3 +243,46 @@ export const getServerAuthSession = (ctx: {
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
+
+async function createUser(address: string) {
+  try {
+    const createdUser = await prisma.user.create({
+      data: {
+        defaultAddress: address,
+        wallets: {
+          create: { address: address },
+        },
+      },
+    });
+
+    const checkHolderStatus = await prisma.holder.findFirst({
+      where: {
+        owner: address,
+      },
+    });
+    const dinosOwned = checkHolderStatus?.amount || 0;
+    const votesToIssue = dinosOwned > 0 ? 20 : 0;
+
+    await prisma.voter.create({
+      data: {
+        votesAvailable: votesToIssue,
+        votesCast: 0,
+        userId: createdUser.id,
+        votesIssued: votesToIssue > 0,
+      },
+    });
+
+    await prisma.account.create({
+      data: {
+        userId: createdUser.id,
+        type: "credentials",
+        provider: "Ethereum",
+        providerAccountId: address,
+      },
+    });
+
+    return createdUser;
+  } catch (error) {
+    throw new Error("Failed to set up account");
+  }
+}

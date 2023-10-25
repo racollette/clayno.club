@@ -6,6 +6,69 @@ import {
 } from "~/server/api/trpc";
 
 export const voteRouter = createTRPCRouter({
+  createVoter: protectedProcedure
+    .input(z.object({ userId: z.string(), wallets: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      // Create a new user in the database
+      try {
+        const checkHolderStatus = await ctx.prisma.holder.findFirst({
+          where: {
+            owner: {
+              in: input.wallets,
+            },
+          },
+        });
+
+        const dinosOwned = checkHolderStatus?.amount || 0;
+        const votesToIssue = dinosOwned > 0 ? 20 : 0;
+        const createdVoter = await ctx.prisma.voter.create({
+          data: {
+            votesAvailable: votesToIssue,
+            votesCast: 0,
+            userId: input.userId,
+            votesIssued: votesToIssue > 0,
+          },
+        });
+        return createdVoter;
+      } catch (error) {
+        throw new Error("Failed to create voter");
+      }
+
+      // return userResponseSchema.parse(createdUser);
+    }),
+
+  issueVotes: protectedProcedure
+    .input(z.object({ userId: z.string(), wallets: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      // Create a new user in the database
+      try {
+        const checkHolderStatus = await ctx.prisma.holder.findFirst({
+          where: {
+            owner: {
+              in: input.wallets,
+            },
+          },
+        });
+
+        const dinosOwned = checkHolderStatus?.amount || 0;
+        const votesToIssue = dinosOwned > 0 ? 20 : 0;
+        const issueVotes = await ctx.prisma.voter.update({
+          where: {
+            userId: input.userId,
+          },
+          data: {
+            votesAvailable: votesToIssue,
+            votesIssued: votesToIssue > 0,
+          },
+        });
+        return issueVotes;
+      } catch (error) {
+        throw new Error("Failed to issue votes");
+      }
+
+      // return userResponseSchema.parse(createdUser);
+    }),
+
   getVoterInfo: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {

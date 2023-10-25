@@ -7,7 +7,6 @@ import {
 } from "~/server/api/trpc";
 
 const createUserRequestSchema = z.object({
-  user: z.string(),
   address: z.string(),
 });
 
@@ -21,7 +20,7 @@ const linkSocialProfileRequestSchema = z.object({
 });
 
 export const bindingRouter = createTRPCRouter({
-  userCreate: publicProcedure
+  createUser: publicProcedure
     .input(createUserRequestSchema)
     .mutation(async ({ input }) => {
       // Create a new user in the database
@@ -42,7 +41,8 @@ export const bindingRouter = createTRPCRouter({
         });
         const dinosOwned = checkHolderStatus?.amount || 0;
         const votesToIssue = dinosOwned > 0 ? 20 : 0;
-        const createVoter = await prisma.voter.create({
+
+        await prisma.voter.create({
           data: {
             votesAvailable: votesToIssue,
             votesCast: 0,
@@ -50,12 +50,20 @@ export const bindingRouter = createTRPCRouter({
             votesIssued: votesToIssue > 0,
           },
         });
+
+        await prisma.account.create({
+          data: {
+            userId: createdUser.id,
+            type: "credentials",
+            provider: "Ethereum",
+            providerAccountId: input.address,
+          },
+        });
+
         return createdUser;
       } catch (error) {
         throw new Error("Failed to set up account");
       }
-
-      // return userResponseSchema.parse(createdUser);
     }),
 
   getUser: publicProcedure
@@ -366,15 +374,22 @@ export const bindingRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       try {
-        const deleteUser = await prisma.user.delete({
+        const voterExists = await prisma.voter.findUnique({
           where: {
-            id: input.id,
+            userId: input.id,
           },
         });
 
-        await prisma.voter.delete({
+        if (voterExists) {
+          await prisma.voter.delete({
+            where: {
+              userId: input.id,
+            },
+          });
+        }
+        const deleteUser = await prisma.user.delete({
           where: {
-            userId: input.id,
+            id: input.id,
           },
         });
 
