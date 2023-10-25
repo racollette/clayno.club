@@ -112,7 +112,7 @@ export const VoteWidget = ({
                   voted
                     ? `border-green-400 bg-green-600`
                     : `border-amber-200/80 bg-amber-400/80`
-                } aspect-square rounded-lg border-2 px-3 py-1 text-center text-lg font-extrabold text-white hover:animate-pulse md:rounded-xl md:border-4 md:text-2xl`}
+                } aspect-square rounded-lg border-2 px-2 py-1 text-center text-lg font-extrabold text-white hover:animate-pulse md:rounded-xl md:border-4 md:text-xl`}
               >
                 {herd.voters.length}
               </DialogTrigger>
