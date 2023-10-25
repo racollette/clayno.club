@@ -34,7 +34,7 @@ type VoteWidgetProps = {
     | undefined;
   herd:
     | Herd & {
-        herd: (Dino & {
+        dinos: (Dino & {
           attributes: Attributes | null;
         })[];
         voters: (Voter & {

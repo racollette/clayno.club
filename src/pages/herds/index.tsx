@@ -45,7 +45,7 @@ type Owners =
 
 type HerdWithIncludes =
   | HerdType & {
-      herd: (Dino & {
+      dinos: (Dino & {
         attributes: Attributes | null;
       })[];
       voters: (Voter & {

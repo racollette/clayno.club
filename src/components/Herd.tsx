@@ -11,14 +11,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { truncateAccount } from "~/utils/addresses";
-import { api } from "~/utils/api";
 import {
   getRarityColor,
   getTraitBadgeColor,
   getBorderColor,
 } from "~/utils/colors";
-
-// const coreSpecies = ["Rex", "Bronto", "Ankylo", "Raptor", "Trice", "Stego"];
 
 type HerdProps = {
   herd: Herd & {

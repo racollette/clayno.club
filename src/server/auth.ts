@@ -138,7 +138,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Could not validate the signed message");
 
           // Check if user exists
-          let user = await prisma.user.findFirst({
+          const user = await prisma.user.findFirst({
             where: {
               wallets: {
                 some: {
@@ -198,7 +198,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Could not validate the signed message");
 
           // Check if user exists
-          let user = await prisma.user.findFirst({
+          const user = await prisma.user.findFirst({
             where: {
               wallets: {
                 some: {

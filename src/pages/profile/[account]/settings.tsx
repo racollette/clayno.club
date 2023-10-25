@@ -13,7 +13,6 @@ import AlertModal from "~/components/AlertModal";
 import router from "next/router";
 import Head from "next/head";
 import { useToast } from "~/@/components/ui/use-toast";
-import { VoteInstruction } from "@solana/web3.js";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -388,7 +387,7 @@ const Settings = () => {
             </div>
             <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
               <button
-                className="rounded-md bg-emerald-700 px-4 py-2 hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-neutral-700"
+                className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-neutral-700"
                 disabled={!voteEligible || voterInfo?.votesIssued}
                 onClick={handleCreateVoter}
               >
