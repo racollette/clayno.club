@@ -29,7 +29,7 @@ model Dino {
   attributes  Attributes?
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
-  herd        Herd?       @relation(fields: [herdId], references: [id])
+  herd        Herd?       @relation(fields: [herdId], references: [id]) //
 
   @@index([holderOwner])
   @@index([herdId])
