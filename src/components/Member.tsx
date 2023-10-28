@@ -10,7 +10,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { shortAccount } from "~/utils/addresses";
-import { api } from "~/utils/api";
 import ImageExpander from "./Expander";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { fetchOtherWallets } from "~/utils/subdaos";

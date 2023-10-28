@@ -1,5 +1,5 @@
 // import styled from "styled-components";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 
 type ColorPickerProps = {

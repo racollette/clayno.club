@@ -1,5 +1,4 @@
 import {
-  WalletModal,
   WalletMultiButton,
   useWalletModal,
 } from "@solana/wallet-adapter-react-ui";

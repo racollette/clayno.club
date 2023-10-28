@@ -4,7 +4,6 @@ import type {
   Discord,
   Herd,
   Twitter,
-  User,
   Wallet,
 } from "@prisma/client";
 import Image from "next/image";
