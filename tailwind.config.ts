@@ -17,6 +17,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        clayno: ["Claynotopia-Regular", "sans"],
+        claynoShadow: ["Claynotopia-Shadow", "sans"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

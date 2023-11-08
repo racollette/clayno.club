@@ -75,4 +75,14 @@
   body {
     @apply bg-background text-foreground;
   }
+  @font-face {
+    font-family: Claynotopia-Regular;
+    font-weight: 400;
+    src:  url("../../public/fonts/Claynotopia-Regular.otf")
+  }
+  @font-face {
+    font-family: Claynotopia-Shadow;
+    font-weight: 400;
+    src: url("../../public/fonts/Claynotopia-Shadow.otf")
+  }
 }
