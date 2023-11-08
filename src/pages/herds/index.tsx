@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
+import type {
   Herd as HerdType,
   Attributes,
   Dino,
