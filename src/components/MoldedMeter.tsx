@@ -42,7 +42,7 @@ export const MoldedMeter = () => {
         <span className="text-red-500">ter</span>
       </h1>
       {clayCounts && (
-        <>
+        <div className="container flex flex-col gap-2 font-clayno">
           <div className="flex flex-row gap-2">
             <Image
               src="/images/Red.png"
@@ -52,11 +52,11 @@ export const MoldedMeter = () => {
               className="rounded-full"
             />
             <div
-              className="relative flex h-10 w-full items-center rounded-3xl border-2 border-red-500"
+              className="items-centeroverflow-clip relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-red-500"
               ref={clayBarRef}
             >
               <div
-                className="h-full rounded-l-3xl rounded-r-3xl bg-red-500"
+                className="h-full min-w-[50px] rounded-r-3xl bg-red-500"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.red - clayCounts.red) /
@@ -90,9 +90,9 @@ export const MoldedMeter = () => {
               alt="Green Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center rounded-3xl border-2 border-green-500">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-green-500">
               <div
-                className="h-full rounded-l-3xl rounded-r-3xl bg-green-500"
+                className="h-full min-w-[50px] rounded-r-3xl bg-green-500"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.green - clayCounts.green) /
@@ -125,9 +125,9 @@ export const MoldedMeter = () => {
               alt="Yellow Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center rounded-3xl border-2 border-amber-400">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-amber-400">
               <div
-                className="h-full rounded-l-3xl rounded-r-3xl bg-amber-400"
+                className="h-full min-w-[50px]  rounded-r-3xl bg-amber-400"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.yellow - clayCounts.yellow) /
@@ -160,9 +160,9 @@ export const MoldedMeter = () => {
               alt="White Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center rounded-3xl border-2 border-gray-300">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-gray-300">
               <div
-                className="h-full rounded-l-3xl rounded-r-3xl bg-gray-300"
+                className="h-full min-w-[50px] rounded-r-3xl bg-gray-300"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.white - clayCounts.white) /
@@ -195,9 +195,9 @@ export const MoldedMeter = () => {
               alt="Blue Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center rounded-3xl border-2 border-blue-400">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-blue-400">
               <div
-                className="h-full rounded-l-3xl rounded-r-3xl bg-blue-400"
+                className="h-full min-w-[50px] rounded-r-3xl bg-blue-400"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.blue - clayCounts.blue) /
@@ -230,9 +230,9 @@ export const MoldedMeter = () => {
               alt="Black Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center rounded-3xl border-2 border-neutral-700">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-neutral-700">
               <div
-                className="h-full rounded-l-3xl rounded-r-3xl bg-neutral-700"
+                className="h-full min-w-[50px] rounded-r-3xl bg-neutral-700"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.black - clayCounts.black) /
@@ -257,7 +257,7 @@ export const MoldedMeter = () => {
               </p>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
