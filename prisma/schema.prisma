@@ -29,14 +29,14 @@ model Dino {
   attributes  Attributes?
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
-  herd        Herd?       @relation(fields: [herdId], references: [id]) //
+  herd        Herd?       @relation(fields: [herdId], references: [id])
 
   @@index([holderOwner])
   @@index([herdId])
 }
 
 model Attributes {
-  mint       String @id
+  mint       String  @id
   species    String
   skin       String
   color      String
@@ -48,7 +48,8 @@ model Attributes {
   belly      String
   pattern    String
   details    String
-  dino       Dino   @relation(fields: [mint], references: [mint])
+  class      String?
+  dino       Dino    @relation(fields: [mint], references: [mint])
 
   @@index([mint])
 }
@@ -258,10 +259,12 @@ model ClaymakerToSubDAO {
 }
 
 model LastUpdated {
-  id      String   @id
-  holders DateTime
-  tribes  DateTime
-  herds   DateTime
+  id         String   @id
+  holders    DateTime
+  tribes     DateTime
+  herds      DateTime
+  clay       DateTime @default(now())
+  claymakers DateTime @default(now())
 }
 
 model HerdToVoter {
@@ -271,4 +274,26 @@ model HerdToVoter {
   @@unique([A, B], map: "_HerdToVoter_AB_unique")
   @@index([B], map: "_HerdToVoter_B_index")
   @@map("_HerdToVoter")
+}
+
+model MoldedMeterSnapshot {
+  id        String   @id
+  createdAt DateTime @default(now())
+  red       Int
+  green     Int
+  yellow    Int
+  blue      Int
+  black     Int
+  white     Int
+}
+
+model ClassCountSnapshot {
+  id        String   @id
+  createdAt DateTime @default(now())
+  warrior   Json
+  defender  Json
+  stalker   Json
+  mender    Json
+  mystic    Json
+  tracker   Json
 }
