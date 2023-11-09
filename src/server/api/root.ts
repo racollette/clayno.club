@@ -5,6 +5,7 @@ import { subdaoRouter } from "./routers/subdao";
 import { fusionRouter } from "./routers/fusion";
 import { generalRouter } from "./routers/general";
 import { voteRouter } from "./routers/vote";
+import { statsRouter } from "./routers/stats";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   fusion: fusionRouter,
   general: generalRouter,
   vote: voteRouter,
+  stats: statsRouter,
 });
 
 // export type definition of API
