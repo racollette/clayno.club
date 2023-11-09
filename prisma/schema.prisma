@@ -290,10 +290,5 @@ model MoldedMeterSnapshot {
 model ClassCountSnapshot {
   id        String   @id
   createdAt DateTime @default(now())
-  warrior   Json
-  defender  Json
-  stalker   Json
-  mender    Json
-  mystic    Json
-  tracker   Json
+  classes   Json
 }
