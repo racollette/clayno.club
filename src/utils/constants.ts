@@ -29,3 +29,12 @@ export const BACKGROUNDS = [
   "Dune",
 ];
 export const TIERS = ["Perfect", "Epic", "Rare", "Scrappy"];
+
+export const ORIGINAL_CLAY_SUPPLY = {
+  red: 4942,
+  green: 5132,
+  yellow: 5117,
+  white: 5630,
+  blue: 5221,
+  black: 4973,
+};
