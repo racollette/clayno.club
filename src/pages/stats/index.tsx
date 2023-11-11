@@ -11,7 +11,7 @@ export default function StatsPage() {
         <title>DinoHerd | Stats</title>
       </Head>
       <Layout>
-        <section className="flex w-full flex-col items-center justify-center gap-8 py-4 md:items-start md:px-4 md:py-8">
+        <section className="flex w-full flex-col items-center justify-center gap-12 overflow-hidden py-4 md:items-start md:px-4 md:py-8">
           <ClassCounter />
           <MoldedMeter />
           <MakerMeter />
