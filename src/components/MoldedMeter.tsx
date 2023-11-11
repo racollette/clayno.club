@@ -32,27 +32,36 @@ export const MoldedMeter = () => {
     };
   }, []);
 
+  const totalClayMolded = clayCounts
+    ? clayCounts?.black +
+      clayCounts?.blue +
+      clayCounts?.green +
+      clayCounts?.red +
+      clayCounts?.white +
+      clayCounts?.yellow
+    : 0;
+
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="p-4 text-center font-claynoShadow text-3xl md:text-5xl">
-        <span className="text-yellow-300">Mo</span>
-        <span className="text-green-400">ld</span>
-        <span className="mr-2 text-blue-400">ed</span>
-        <span className="ml-2 text-gray-300">Me</span>
-        <span className="text-red-500">ter</span>
+      <h1 className="p-4 text-center font-clayno text-3xl hover:animate-wiggle md:text-4xl">
+        <span className="text-green-400">Cl</span>
+        <span className="mr-2 text-yellow-300">ay</span>
+        <span className="ml-2 text-blue-400">Mo</span>
+        <span className="text-red-500">ld</span>
+        <span className="text-green-400">ed</span>
       </h1>
       {clayCounts && (
-        <div className="container flex flex-col gap-2 font-clayno">
-          <div className="flex flex-row gap-2">
+        <div className="flex flex-col gap-2 font-clayno md:container">
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
             <Image
-              src="/images/Red.png"
+              src="/images/red.png"
               width={40}
               height={40}
               alt="Red Clay"
               className="rounded-full"
             />
             <div
-              className="items-centeroverflow-clip relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-red-500 bg-red-500/25"
+              className="items-centeroverflow-clip relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-red-500/40"
               ref={clayBarRef}
             >
               <div
@@ -82,15 +91,15 @@ export const MoldedMeter = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-2">
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
             <Image
-              src="/images/Green.png"
+              src="/images/green.png"
               width={40}
               height={40}
               alt="Green Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-green-500 bg-green-500/25">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-green-500/40">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-green-500"
                 style={{
@@ -117,15 +126,15 @@ export const MoldedMeter = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-2">
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
             <Image
-              src="/images/Yellow.png"
+              src="/images/yellow.png"
               width={40}
               height={40}
               alt="Yellow Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-amber-400 bg-amber-400/25">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-amber-400/40">
               <div
                 className="h-full min-w-[50px]  rounded-r-3xl bg-amber-400"
                 style={{
@@ -152,15 +161,15 @@ export const MoldedMeter = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-2">
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
             <Image
-              src="/images/White.png"
+              src="/images/white.png"
               width={40}
               height={40}
               alt="White Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-gray-300 bg-gray-300/25">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-gray-300/40">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-gray-300"
                 style={{
@@ -187,15 +196,15 @@ export const MoldedMeter = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-2">
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
             <Image
-              src="/images/Blue.png"
+              src="/images/blue.png"
               width={40}
               height={40}
               alt="Blue Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-blue-400 bg-blue-400/25">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-blue-400/40">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-blue-400"
                 style={{
@@ -222,15 +231,15 @@ export const MoldedMeter = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-2">
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
             <Image
-              src="/images/Black.png"
+              src="/images/black.png"
               width={40}
               height={40}
               alt="Black Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-neutral-700 bg-neutral-700/25">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-neutral-700/60">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-neutral-700"
                 style={{
@@ -254,6 +263,42 @@ export const MoldedMeter = () => {
               </p>
               <p className="absolute right-4 text-lg font-extrabold">
                 {clayCounts.black}
+              </p>
+            </div>
+          </div>
+          <div className="flex cursor-pointer flex-row gap-2 hover:animate-pulse">
+            <Image
+              src="/images/rainbow.png"
+              width={40}
+              height={40}
+              alt="Total"
+              className="rounded-full"
+            />
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-gradient-to-r from-amber-400/40 from-10% via-blue-400/40 via-50% to-red-400/40 to-90%">
+              <div
+                className="h-full min-w-[50px] rounded-r-3xl bg-gradient-to-r from-red-500 from-20% via-blue-500 via-50%  to-amber-500 to-75%"
+                style={{
+                  width: `${Math.floor(
+                    ((ORIGINAL_CLAY_SUPPLY.black - clayCounts.black) /
+                      ORIGINAL_CLAY_SUPPLY.black) *
+                      clayBarWidth
+                  )}px`,
+                }}
+              ></div>
+              <p className="absolute left-4 text-lg font-extrabold">
+                {ORIGINAL_CLAY_SUPPLY.total - totalClayMolded}
+              </p>
+              <p className="absolute left-1/2 text-lg font-extrabold">
+                {(
+                  ((ORIGINAL_CLAY_SUPPLY.total - totalClayMolded) /
+                    ORIGINAL_CLAY_SUPPLY.total) *
+                  100
+                ).toFixed(2)}
+                %
+              </p>
+              <p className="absolute right-4 text-lg font-extrabold">
+                {ORIGINAL_CLAY_SUPPLY.total -
+                  (ORIGINAL_CLAY_SUPPLY.total - totalClayMolded)}
               </p>
             </div>
           </div>
