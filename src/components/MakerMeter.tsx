@@ -9,7 +9,7 @@ export const MakerMeter = () => {
 
   const {
     data: claymakerCounts,
-    // isLoading,
+    isLoading,
     // refetch,
   } = api.stats.getMakerChargesSnapshot.useQuery();
 
@@ -23,10 +23,6 @@ export const MakerMeter = () => {
     // Initial update
     updateClayBarWidth();
 
-    setTimeout(() => {
-      updateClayBarWidth();
-    }, 1000);
-
     // Listen for the window resize event
     window.addEventListener("resize", updateClayBarWidth);
 
@@ -35,6 +31,10 @@ export const MakerMeter = () => {
       window.removeEventListener("resize", updateClayBarWidth);
     };
   }, []);
+
+  useEffect(() => {
+    updateClayBarWidth();
+  }, [isLoading]);
 
   return (
     <div className="flex w-full flex-col gap-2">

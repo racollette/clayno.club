@@ -9,7 +9,7 @@ export const MoldedMeter = () => {
 
   const {
     data: clayCounts,
-    // isLoading,
+    isLoading,
     // refetch,
   } = api.stats.getMoldedMeterSnapshot.useQuery();
 
@@ -23,10 +23,6 @@ export const MoldedMeter = () => {
     // Initial update
     updateClayBarWidth();
 
-    setTimeout(() => {
-      updateClayBarWidth();
-    }, 1000);
-
     // Listen for the window resize event
     window.addEventListener("resize", updateClayBarWidth);
 
@@ -35,6 +31,10 @@ export const MoldedMeter = () => {
       window.removeEventListener("resize", updateClayBarWidth);
     };
   }, []);
+
+  useEffect(() => {
+    updateClayBarWidth();
+  }, [isLoading]);
 
   const totalClayMolded = clayCounts
     ? clayCounts?.black +
