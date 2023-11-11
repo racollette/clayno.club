@@ -23,6 +23,10 @@ export const MakerMeter = () => {
     // Initial update
     updateClayBarWidth();
 
+    setTimeout(() => {
+      updateClayBarWidth();
+    }, 1000);
+
     // Listen for the window resize event
     window.addEventListener("resize", updateClayBarWidth);
 
@@ -57,7 +61,7 @@ export const MakerMeter = () => {
                 ref={clayBarRef}
               >
                 <div
-                  className="h-full min-w-[50px] rounded-r-3xl bg-teal-500"
+                  className="h-full min-w-[60px] rounded-r-3xl bg-teal-500"
                   style={{
                     width: `${Math.floor(
                       ((ORIGINAL_CLAYMAKER_SUPPLY.first -
@@ -97,7 +101,7 @@ export const MakerMeter = () => {
                 ref={clayBarRef}
               >
                 <div
-                  className="h-full min-w-[50px] rounded-r-3xl bg-purple-500"
+                  className="h-full min-w-[60px] rounded-r-3xl bg-purple-500"
                   style={{
                     width: `${Math.floor(
                       ((ORIGINAL_CLAYMAKER_SUPPLY.deluxe -
@@ -138,7 +142,7 @@ export const MakerMeter = () => {
                 ref={clayBarRef}
               >
                 <div
-                  className="h-full min-w-[50px] rounded-r-3xl"
+                  className="h-full min-w-[60px] rounded-r-3xl"
                   style={{
                     width: `${Math.floor(
                       ((ORIGINAL_CLAYMAKER_SUPPLY.limited -

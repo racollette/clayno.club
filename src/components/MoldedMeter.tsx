@@ -23,6 +23,10 @@ export const MoldedMeter = () => {
     // Initial update
     updateClayBarWidth();
 
+    setTimeout(() => {
+      updateClayBarWidth();
+    }, 1000);
+
     // Listen for the window resize event
     window.addEventListener("resize", updateClayBarWidth);
 
@@ -65,7 +69,7 @@ export const MoldedMeter = () => {
               ref={clayBarRef}
             >
               <div
-                className="h-full min-w-[50px] rounded-r-3xl bg-red-500"
+                className="h-full min-w-[60px] rounded-r-3xl bg-red-500"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.red - clayCounts.red) /
@@ -101,7 +105,7 @@ export const MoldedMeter = () => {
             />
             <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-green-500/40">
               <div
-                className="h-full min-w-[50px] rounded-r-3xl bg-green-500"
+                className="h-full min-w-[60px] rounded-r-3xl bg-green-500"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.green - clayCounts.green) /
@@ -136,7 +140,7 @@ export const MoldedMeter = () => {
             />
             <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-amber-400/40">
               <div
-                className="h-full min-w-[50px]  rounded-r-3xl bg-amber-400"
+                className="h-full min-w-[60px]  rounded-r-3xl bg-amber-400"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.yellow - clayCounts.yellow) /
@@ -171,7 +175,7 @@ export const MoldedMeter = () => {
             />
             <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-gray-300/40">
               <div
-                className="h-full min-w-[50px] rounded-r-3xl bg-gray-300"
+                className="h-full min-w-[60px] rounded-r-3xl bg-gray-300"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.white - clayCounts.white) /
@@ -206,7 +210,7 @@ export const MoldedMeter = () => {
             />
             <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-blue-400/40">
               <div
-                className="h-full min-w-[50px] rounded-r-3xl bg-blue-400"
+                className="h-full min-w-[60px] rounded-r-3xl bg-blue-400"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.blue - clayCounts.blue) /
@@ -241,7 +245,7 @@ export const MoldedMeter = () => {
             />
             <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-neutral-700/60">
               <div
-                className="h-full min-w-[50px] rounded-r-3xl bg-neutral-700"
+                className="h-full min-w-[60px] rounded-r-3xl bg-neutral-700"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.black - clayCounts.black) /
@@ -276,7 +280,7 @@ export const MoldedMeter = () => {
             />
             <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl bg-gradient-to-r from-amber-400/40 from-10% via-blue-400/40 via-50% to-red-400/40 to-90%">
               <div
-                className="h-full min-w-[50px] rounded-r-3xl bg-gradient-to-r from-red-500 from-20% via-blue-500 via-50%  to-amber-500 to-75%"
+                className="h-full min-w-[60px] rounded-r-3xl bg-gradient-to-r from-red-500 from-20% via-blue-500 via-50%  to-amber-500 to-75%"
                 style={{
                   width: `${Math.floor(
                     ((ORIGINAL_CLAY_SUPPLY.black - clayCounts.black) /
