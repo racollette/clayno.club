@@ -38,3 +38,9 @@ export const ORIGINAL_CLAY_SUPPLY = {
   blue: 5221,
   black: 4973,
 };
+
+export const ORIGINAL_CLAYMAKER_SUPPLY = {
+  first: 9057,
+  deluxe: 1743,
+  limited: 184,
+};

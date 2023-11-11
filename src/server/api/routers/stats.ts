@@ -21,4 +21,12 @@ export const statsRouter = createTRPCRouter({
       },
     });
   }),
+
+  getMakerChargesSnapshot: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.makerChargesSnapshot.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }),
 });
