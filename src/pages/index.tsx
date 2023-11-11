@@ -11,7 +11,7 @@ export default function Home() {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="relative flex min-h-screen min-w-full flex-col items-center justify-center overflow-hidden">
+      <main className="relative flex min-h-screen min-w-full flex-col items-center justify-center overflow-hidden font-clayno">
         <div className="absolute origin-center -rotate-[9deg] bg-cover bg-repeat">
           <div
             style={{
