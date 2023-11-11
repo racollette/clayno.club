@@ -52,7 +52,7 @@ export const MoldedMeter = () => {
               className="rounded-full"
             />
             <div
-              className="items-centeroverflow-clip relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-red-500"
+              className="items-centeroverflow-clip relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-red-500 bg-red-500/25"
               ref={clayBarRef}
             >
               <div
@@ -90,7 +90,7 @@ export const MoldedMeter = () => {
               alt="Green Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-green-500">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-green-500 bg-green-500/25">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-green-500"
                 style={{
@@ -125,7 +125,7 @@ export const MoldedMeter = () => {
               alt="Yellow Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-amber-400">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-amber-400 bg-amber-400/25">
               <div
                 className="h-full min-w-[50px]  rounded-r-3xl bg-amber-400"
                 style={{
@@ -160,7 +160,7 @@ export const MoldedMeter = () => {
               alt="White Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-gray-300">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-gray-300 bg-gray-300/25">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-gray-300"
                 style={{
@@ -195,7 +195,7 @@ export const MoldedMeter = () => {
               alt="Blue Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-blue-400">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-blue-400 bg-blue-400/25">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-blue-400"
                 style={{
@@ -230,7 +230,7 @@ export const MoldedMeter = () => {
               alt="Black Clay"
               className="rounded-full"
             />
-            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-neutral-700">
+            <div className="relative flex h-10 w-full items-center overflow-clip rounded-3xl border-2 border-neutral-700 bg-neutral-700/25">
               <div
                 className="h-full min-w-[50px] rounded-r-3xl bg-neutral-700"
                 style={{
