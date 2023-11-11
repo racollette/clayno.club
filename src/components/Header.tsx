@@ -16,7 +16,7 @@ export default function Header() {
           src="/favicon.svg"
         /> */}
         <span
-          className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-semibold dark:text-white md:text-xl"
+          className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-extrabold hover:animate-wiggle dark:text-white md:text-xl"
           onClick={() => router.push(`/`)}
         >
           DinoHerd.cc
