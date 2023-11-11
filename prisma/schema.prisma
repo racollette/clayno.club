@@ -185,6 +185,7 @@ model Claymaker {
   holderOwner String?
   rarity      Int?
   subDAOId    String?
+  charges     Int?
   holder      Holder?  @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
 
@@ -291,4 +292,13 @@ model ClassCountSnapshot {
   id        String   @id
   createdAt DateTime @default(now())
   classes   Json
+}
+
+model MakerChargesSnapshot {
+  id            String   @id
+  createdAt     DateTime @default(now())
+  first         Int
+  deluxe        Int
+  limited       Int
+  deluxeCharges Int
 }
