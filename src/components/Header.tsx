@@ -26,26 +26,32 @@ export default function Header() {
         {/* {isHerdsPage && <VoterInfo />} */}
         <VoterInfo />
         <LoginModal />
-        <Navbar.Toggle className="bg-transparent text-zinc-500 hover:bg-transparent hover:text-white focus:ring-zinc-500" />
+        <Navbar.Toggle className="bg-transparent text-white hover:bg-transparent focus:ring-zinc-500" />
       </div>
       <Navbar.Collapse>
         <Navbar.Link
-          className="text-md cursor-pointer text-zinc-500 hover:bg-neutral-800 hover:text-white"
+          className="text-md cursor-pointer text-white"
           href={`/herds`}
         >
           Herds
         </Navbar.Link>
         <Navbar.Link
-          className="text-md cursor-pointer text-zinc-500 hover:bg-neutral-800 hover:text-white"
+          className="text-md cursor-pointer text-white"
           href={`/tribes`}
         >
           Tribes
         </Navbar.Link>
         <Navbar.Link
-          className="text-md cursor-pointer text-zinc-500 hover:bg-neutral-800 hover:text-white"
+          className="text-md cursor-pointer text-white"
           href={`/fusion`}
         >
           Fusion
+        </Navbar.Link>
+        <Navbar.Link
+          className="text-md cursor-pointer text-white"
+          href={`/stats`}
+        >
+          Stats
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
