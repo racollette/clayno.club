@@ -84,6 +84,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "homepage-dino-pattern": "homepage-dino-pattern 60s linear infinite",
         wiggle: "wiggle 1s ease-in-out infinite",
+        "spin-slow": "spin 3s linear infinite",
       },
     },
   },
