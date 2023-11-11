@@ -16,7 +16,7 @@ export default function Header() {
           src="/favicon.svg"
         /> */}
         <span
-          className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-extrabold hover:animate-wiggle dark:text-white md:text-xl"
+          className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-claynoShadow hover:animate-wiggle dark:text-white md:text-xl"
           onClick={() => router.push(`/`)}
         >
           DinoHerd.cc
@@ -30,25 +30,25 @@ export default function Header() {
       </div>
       <Navbar.Collapse>
         <Navbar.Link
-          className="text-md cursor-pointer text-white"
+          className="text-md cursor-pointer font-clayno text-white"
           href={`/herds`}
         >
           Herds
         </Navbar.Link>
         <Navbar.Link
-          className="text-md cursor-pointer text-white"
+          className="text-md cursor-pointer font-clayno text-white"
           href={`/tribes`}
         >
           Tribes
         </Navbar.Link>
         <Navbar.Link
-          className="text-md cursor-pointer text-white"
+          className="text-md cursor-pointer font-clayno text-white"
           href={`/fusion`}
         >
           Fusion
         </Navbar.Link>
         <Navbar.Link
-          className="text-md cursor-pointer text-white"
+          className="text-md cursor-pointer font-clayno text-white"
           href={`/stats`}
         >
           Stats
