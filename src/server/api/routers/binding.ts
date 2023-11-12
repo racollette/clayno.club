@@ -247,7 +247,7 @@ export const bindingRouter = createTRPCRouter({
           return linkedSocial;
         }
       } catch (error) {
-        console.error("Error deleting user:", error);
+        console.error("Error linking twitter:", error);
         throw new Error("Failed to link Twitter account");
       }
     }),

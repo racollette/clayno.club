@@ -28,7 +28,9 @@ export const BACKGROUNDS = [
   "Mint",
   "Dune",
 ];
-export const TIERS = ["Perfect", "Epic", "Rare", "Scrappy"];
+export const TIERS = ["Insane", "Perfect", "Epic", "Rare", "Scrappy"];
+
+export const BELLY = ["On"];
 
 export const ORIGINAL_CLAY_SUPPLY = {
   red: 4942,

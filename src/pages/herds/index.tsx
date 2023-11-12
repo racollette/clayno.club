@@ -62,7 +62,8 @@ function filterHerds(
   color: string | null,
   skin: string | null,
   background: string | null,
-  tier: string | null
+  tier: string | null,
+  belly: string | null
 ) {
   return allHerds?.filter((herd) => {
     const herdMatchesLower = herd.matches.toLowerCase();
@@ -75,7 +76,9 @@ function filterHerds(
       background === "all" ||
       herdMatchesLower.includes(background);
     const tierValue =
-      tier === "perfect"
+      tier === "insane"
+        ? 0
+        : tier === "perfect"
         ? 1
         : tier === "epic"
         ? 2
@@ -87,8 +90,12 @@ function filterHerds(
     // const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
     const tierFilter =
       !tier || tier === "all" ? herd.tier !== 4 : herd.tier === tierValue;
+    const bellyFilter =
+      !belly || belly === "all" || herdMatchesLower.includes(belly);
 
-    return colorFilter && skinFilter && backgroundFilter && tierFilter;
+    return (
+      colorFilter && skinFilter && backgroundFilter && tierFilter && bellyFilter
+    );
   });
 }
 
@@ -200,6 +207,8 @@ export default function Home() {
   const skin = searchParams.get("skin") || "all";
   const background = searchParams.get("background") || "all";
   const tier = searchParams.get("tier") || "all";
+  // switch 'on' to 'belly' for display purposes
+  const belly = searchParams.get("belly") === "on" ? "belly" : "all";
 
   const [showDactyl, setShowDactyl] = useState(true);
   const [showSaga, setShowSaga] = useState(true);
@@ -212,7 +221,7 @@ export default function Home() {
 
   const [filteredHerds, setFilteredHerds] = useState<
     HerdWithIncludes[] | undefined
-  >(filterHerds(allHerds, color, skin, background, tier));
+  >(filterHerds(allHerds, color, skin, background, tier, belly));
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
@@ -221,14 +230,16 @@ export default function Home() {
 
   useEffect(() => {
     setFilteredHerds(allHerds);
-  }, []);
+  }, [allHerds]);
 
   useEffect(() => {
     if (allHerds && !allHerdsLoading) {
       // Calculate and set the filteredHerds based on the latest allHerds data
-      setFilteredHerds(filterHerds(allHerds, color, skin, background, tier));
+      setFilteredHerds(
+        filterHerds(allHerds, color, skin, background, tier, belly)
+      );
     }
-  }, [color, background, skin, tier, allHerds]);
+  }, [color, background, skin, tier, allHerds, belly, allHerdsLoading]);
 
   const toggleDactyl = (newToggleState: boolean) => {
     setShowDactyl(newToggleState);
@@ -247,7 +258,9 @@ export default function Home() {
     if (newToggleState) {
       setFilteredHerds(myVotes);
     } else {
-      setFilteredHerds(filterHerds(allHerds, color, skin, background, tier));
+      setFilteredHerds(
+        filterHerds(allHerds, color, skin, background, tier, belly)
+      );
     }
   };
 
@@ -456,6 +469,7 @@ export default function Home() {
                 skin={skin}
                 background={background}
                 tier={tier}
+                belly={belly}
               />
 
               {filtersActive > 0 && (

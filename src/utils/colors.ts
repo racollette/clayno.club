@@ -82,6 +82,8 @@ export const getTraitBadgeColor = (trait: string) => {
       return "";
     case "BellyOn":
       return "bg-rose-600";
+    case "Belly":
+      return "bg-rose-600";
     case "Midas":
       return "bg-amber-500";
     case "GoldClay/Maker":

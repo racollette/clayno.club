@@ -9,7 +9,7 @@ import {
 } from "~/@/components/ui/dialog";
 import { HiAdjustments } from "react-icons/hi";
 import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
-import { BACKGROUNDS, SKINS, COLORS, TIERS } from "~/utils/constants";
+import { BACKGROUNDS, SKINS, COLORS, TIERS, BELLY } from "~/utils/constants";
 import { Label } from "~/@/components/ui/label";
 import Link from "next/link";
 
@@ -18,6 +18,7 @@ type FilterDialogProps = {
   color: string;
   background: string;
   tier: string;
+  belly: string;
 };
 
 export const FilterDialog = ({
@@ -25,12 +26,14 @@ export const FilterDialog = ({
   color,
   background,
   tier,
+  belly,
 }: FilterDialogProps) => {
   const params = {
     skin: skin,
     color: color,
     background: background,
     tier: tier,
+    belly: belly,
   };
   return (
     <div className="flex flex-col items-center gap-4">
@@ -53,6 +56,7 @@ export const FilterDialog = ({
             <FilterGroup trait={"skin"} params={params} />
             <FilterGroup trait={"color"} params={params} />
             <FilterGroup trait={"background"} params={params} />
+            <FilterGroup trait={"belly"} params={params} />
           </div>
         </DialogContent>
       </Dialog>
@@ -60,8 +64,14 @@ export const FilterDialog = ({
   );
 };
 type FilterGroupProps = {
-  trait: "skin" | "color" | "background" | "tier";
-  params: { skin: string; color: string; background: string; tier: string };
+  trait: "skin" | "color" | "background" | "tier" | "belly";
+  params: {
+    skin: string;
+    color: string;
+    background: string;
+    tier: string;
+    belly: string;
+  };
 };
 
 function FilterGroup({ trait, params }: FilterGroupProps) {
@@ -69,9 +79,8 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
   const isTraitSkin = trait === "skin";
   const isTraitBackground = trait === "background";
   const isTraitTier = trait === "tier";
-  const traitValue = params[trait];
-
-  //   console.log(traitValue);
+  const isTraitBelly = trait === "belly";
+  // const traitValue = params[trait];
 
   const config = isTraitColor
     ? COLORS
@@ -79,7 +88,9 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
     ? SKINS
     : isTraitBackground
     ? BACKGROUNDS
-    : TIERS;
+    : isTraitTier
+    ? TIERS
+    : BELLY;
 
   const [traitSelected, setTraitSelected] = useState(
     params[trait].toLowerCase()
@@ -88,8 +99,6 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
   const handleTraitSelect = (v: string) => {
     setTraitSelected(v.toLowerCase());
   };
-
-  console.log(traitSelected);
 
   return (
     <div className="flex flex-col gap-1">
@@ -108,7 +117,9 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
                   isTraitColor ? "all" : params.color
                 }&background=${
                   isTraitBackground ? "all" : params.background
-                }&tier=${isTraitTier ? "all" : params.tier}`}
+                }&tier=${isTraitTier ? "all" : params.tier}&belly=${
+                  isTraitBelly ? "all" : params.belly
+                }`}
                 scroll={false}
                 className="flex items-center"
               >
@@ -133,6 +144,8 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
                       : params.background
                   }&tier=${
                     isTraitTier ? attribute.toLowerCase() : params.tier
+                  }&belly=${
+                    isTraitBelly ? attribute.toLowerCase() : params.belly
                   }`}
                   scroll={false}
                   className="flex items-center"
