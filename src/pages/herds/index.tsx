@@ -396,7 +396,7 @@ export default function Home() {
   // const isLoading = herds.some((queryResult) => queryResult.isLoading);
 
   const lastUpdated = useTimeSinceLastUpdate("herds");
-  const filtersActive = [color, skin, background, tier].filter(
+  const filtersActive = [color, skin, background, tier, belly].filter(
     (filter) => filter !== "all"
   ).length;
   const filteredResults =
