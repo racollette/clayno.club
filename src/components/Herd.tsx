@@ -108,15 +108,15 @@ export default function Herd(props: HerdProps) {
                   <Link
                     className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
                     href={`/profile/${
-                      owner?.discord?.username || owner?.twitter?.username
+                      owner?.twitter?.username || owner?.discord?.username
                     }`}
                     target="_blank"
                   >
                     <Image
                       className="mr-2 self-center rounded-md"
                       src={
-                        owner?.discord?.image_url ||
                         owner?.twitter?.image_url ||
+                        owner?.discord?.image_url ||
                         ""
                       }
                       alt="Avatar"
@@ -124,8 +124,8 @@ export default function Herd(props: HerdProps) {
                       height={24}
                     />
                     <div className="self-center text-white">
-                      {owner?.discord?.global_name ||
-                        owner?.twitter?.global_name}
+                      {owner?.twitter?.global_name ||
+                        owner?.discord?.global_name}
                     </div>
                   </Link>
                 </div>
