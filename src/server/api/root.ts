@@ -6,6 +6,7 @@ import { fusionRouter } from "./routers/fusion";
 import { generalRouter } from "./routers/general";
 import { voteRouter } from "./routers/vote";
 import { statsRouter } from "./routers/stats";
+import { inventoryRouter } from "./routers/inventory";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   general: generalRouter,
   vote: voteRouter,
   stats: statsRouter,
+  inventory: inventoryRouter,
 });
 
 // export type definition of API
