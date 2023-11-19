@@ -88,6 +88,7 @@ const Settings = () => {
               username: profile.username,
               global_name: profile.global_name,
               image_url: profile.image_url,
+              id: profile.profile_id,
             },
           });
           setUnlinkedDiscord(false);
