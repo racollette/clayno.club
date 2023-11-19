@@ -11,7 +11,6 @@ import { SigninMessage } from "../utils/SigninMessage";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
 import { env } from "~/env.mjs";
-import { api } from "~/utils/api";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -34,6 +33,7 @@ declare module "next-auth" {
     username: string;
     global_name: string;
     image_url: string;
+    profile_id: string;
     data: {
       id: string;
       name: string;
@@ -51,6 +51,8 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
+      console.log(session);
+      console.log(token);
       if (session.user) {
         // @ts-expect-error unknown type
         session.user.profile = token.profile;
@@ -63,6 +65,8 @@ export const authOptions: NextAuthOptions = {
           session.user.type = "discord";
           // @ts-expect-error unknown type
           session.user.name = token?.profile?.username;
+          // @ts-expect-error unknown type
+          session.user.profile.profile_id = token?.profile?.id;
         }
       }
       // @ts-expect-error unknown type

@@ -141,10 +141,10 @@ export const VoteWidget = ({
               ) : (
                 <>
                   {herd.voters.map((voter) => {
-                    const avatar = voter.user.discord
-                      ? voter.user.discord.image_url
-                      : voter.user.twitter
-                      ? voter.user.twitter?.image_url
+                    const avatar = voter.user.twitter
+                      ? voter.user.twitter.image_url
+                      : voter.user.discord
+                      ? voter.user.discord?.image_url
                       : `https://ui-avatars.com/api/?name=${voter.user.defaultAddress}&background=random`;
                     return (
                       <div key={voter.userId}>
@@ -161,8 +161,8 @@ export const VoteWidget = ({
                             />
                           </TooltipTrigger>
                           <TooltipContent className="mb-1 rounded-lg bg-white p-2 font-semibold">
-                            {voter.user.discord?.global_name ||
-                              voter.user.twitter?.global_name}
+                            {voter.user.twitter?.global_name ||
+                              voter.user.discord?.global_name}
                           </TooltipContent>
                         </Tooltip>
                       </div>

@@ -164,8 +164,8 @@ export default function LoginModal({
           {!isLoading && user ? (
             <ProfileButton
               imageURL={
-                user?.discord?.image_url ??
                 user?.twitter?.image_url ??
+                user?.discord?.image_url ??
                 `https://ui-avatars.com/api/?name=${
                   user?.defaultAddress ??
                   session?.user.name ??
@@ -173,16 +173,16 @@ export default function LoginModal({
                 }&background=random`
               }
               username={
-                user?.discord?.global_name ??
                 user?.twitter?.global_name ??
+                user?.discord?.global_name ??
                 shortAccount(user?.defaultAddress) ??
                 session?.user.name ??
                 publicKey?.toString()
               }
               handleSignout={handleSignOut}
               sessionKey={
-                user?.discord?.username ??
                 user?.twitter?.username ??
+                user?.discord?.username ??
                 user?.defaultAddress ??
                 session?.user.name ??
                 publicKey?.toString()

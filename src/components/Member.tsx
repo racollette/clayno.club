@@ -54,22 +54,22 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
   const isUnowned = owner === "unowned";
 
-  const avatar = user?.discord
-    ? user.discord.image_url
-    : user?.twitter
-    ? user?.twitter.image_url
+  const avatar = user?.twitter
+    ? user.twitter.image_url
+    : user?.discord
+    ? user?.discord.image_url
     : `https://ui-avatars.com/api/?name=${owner}&background=random`;
 
-  const profile = user?.discord
-    ? user?.discord.username
-    : user?.twitter
+  const profile = user?.twitter
     ? user?.twitter.username
+    : user?.discord
+    ? user?.discord.username
     : owner;
 
-  const name = user?.discord
-    ? user?.discord.global_name
-    : user?.twitter
+  const name = user?.twitter
     ? user?.twitter.global_name
+    : user?.discord
+    ? user?.discord.global_name
     : isUnowned
     ? "Listed/Unowned"
     : shortAccount(owner);

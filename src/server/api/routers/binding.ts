@@ -16,6 +16,7 @@ const linkSocialProfileRequestSchema = z.object({
     username: z.string(),
     global_name: z.string(),
     image_url: z.string(),
+    id: z.string().optional(),
   }),
 });
 

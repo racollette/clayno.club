@@ -99,10 +99,10 @@ export default function Profile() {
                       <Image
                         className="self-center rounded-full"
                         src={
-                          user.discord
-                            ? user.discord.image_url
-                            : user.twitter
+                          user.twitter
                             ? user.twitter.image_url
+                            : user.discord
+                            ? user.discord.image_url
                             : `https://ui-avatars.com/api/?name=${user?.defaultAddress}&background=random`
                         }
                         alt="Avatar"
@@ -110,10 +110,10 @@ export default function Profile() {
                         height={75}
                       />
                       <div className="self-center p-2 font-extrabold text-white">
-                        {user.discord
-                          ? user.discord.global_name
-                          : user.twitter
+                        {user.twitter
                           ? user.twitter.global_name
+                          : user.discord
+                          ? user.discord.global_name
                           : truncateAccount(user.defaultAddress)}
                       </div>
                     </div>
