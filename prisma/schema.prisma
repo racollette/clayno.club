@@ -118,19 +118,21 @@ model User {
 }
 
 model Discord {
-  username    String @unique
+  username    String  @unique
   global_name String
   image_url   String
-  userId      String @unique
-  User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String? @unique
+  userId      String  @unique
+  User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Twitter {
-  username    String @unique
+  username    String  @unique
   global_name String
   image_url   String
-  userId      String @unique
-  User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  banner_url  String?
+  userId      String  @unique
+  User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Wallet {
