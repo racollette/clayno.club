@@ -40,6 +40,13 @@ export default function ProfileButton(props: ProfileButtonProps) {
       </Dropdown.Item>
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
+        icon={HiViewGrid}
+        onClick={() => router.push(`/profile/${sessionKey}/inventory`)}
+      >
+        Inventory
+      </Dropdown.Item>
+      <Dropdown.Item
+        className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
         icon={HiCog}
         onClick={() => router.push(`/profile/${sessionKey}/settings`)}
       >
