@@ -51,8 +51,8 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
-      console.log(session);
-      console.log(token);
+      // console.log(session);
+      // console.log(token);
       if (session.user) {
         // @ts-expect-error unknown type
         session.user.profile = token.profile;
