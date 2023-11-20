@@ -1,5 +1,5 @@
 import { Dropdown } from "flowbite-react";
-import { HiCog, HiLogout, HiViewGrid } from "react-icons/hi";
+import { HiCog, HiLogout, HiViewGrid, HiCollection } from "react-icons/hi";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -33,7 +33,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
       {/* <Dropdown.Header></Dropdown.Header> */}
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
-        icon={HiViewGrid}
+        icon={HiCollection}
         onClick={() => router.push(`/profile/${sessionKey}`)}
       >
         Dashboard
@@ -41,7 +41,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
         icon={HiViewGrid}
-        onClick={() => router.push(`/profile/${sessionKey}/inventory`)}
+        onClick={() => router.push(`/inventory/${sessionKey}`)}
       >
         Inventory
       </Dropdown.Item>
