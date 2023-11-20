@@ -39,6 +39,7 @@ export const inventoryRouter = createTRPCRouter({
               rarity: "asc",
             },
           },
+          consumables: true,
         },
       });
     }),
