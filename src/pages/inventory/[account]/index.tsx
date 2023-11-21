@@ -15,15 +15,21 @@ import {
 } from "~/@/components/ui/select";
 6;
 import { sortByAttribute } from "~/utils/sort";
+import { useRouter } from "next/router";
+import { getQueryString } from "~/utils/routes";
+import { useFetchUserWallets } from "~/hooks/useFetchUserWallets";
 
 const Inventory = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const router = useRouter();
+  const { account } = router.query;
+  const { wallets } = useFetchUserWallets(account);
+
   const [originalSpecies, setOriginalSpecies] = useState<Character[]>([]);
   const [sagaSpecies, setSagaSpecies] = useState<Character[]>([]);
   const [selectedAttribute, setSelectedAttribute] = useState("");
 
-  const wallets = user?.wallets.map((wallet: Wallet) => wallet.address) ?? [];
-  const { data: holders } = api.inventory.getUserItems.useQuery({
+  const { data: holders, isLoading } = api.inventory.getUserItems.useQuery({
     wallets: wallets,
   });
 
@@ -59,7 +65,7 @@ const Inventory = () => {
     );
     setSagaSpecies(sagaSpecies ?? []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoading]);
 
   const handleSort = (attribute: string) => {
     setSelectedAttribute(attribute);
@@ -85,7 +91,9 @@ const Inventory = () => {
           <div className="font-clayno text-4xl">Inventory</div>
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-row justify-between">
-              <div className="font-clayno text-2xl text-white">Claynosaurz</div>
+              <div className="font-clayno text-2xl text-white">
+                Claynosaurz {`(${originalSpecies?.length})`}
+              </div>
               <div>
                 <Select onValueChange={(v) => handleSort(v)}>
                   <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
@@ -107,7 +115,9 @@ const Inventory = () => {
                 </div>
               ))}
             </div>
-            <div className="font-clayno text-2xl text-white">Call of Saga</div>
+            <div className="font-clayno text-2xl text-white">
+              Call of Saga {`(${sagaSpecies?.length})`}
+            </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {sagaSpecies?.map((dino: any) => (
                 <div key={dino.mint}>
@@ -115,93 +125,85 @@ const Inventory = () => {
                 </div>
               ))}
             </div>
-            <div className="font-clayno text-2xl text-white">Clay</div>
+            <div className="font-clayno text-2xl text-white">
+              Clay {`(${clay?.length})`}
+            </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {/* Grouping clays by color */}
               {clay && (
                 <>
-                  {Object.keys(groupByColor(clay)).map((color, idx) => {
+                  {Object.keys(groupByColor(clay)).map((color) => {
                     const firstClay = groupByColor(clay ?? [])[color][0];
                     const colorCount = groupByColor(clay ?? [])[color].length;
                     return (
                       <div
-                        key={idx}
+                        key={color}
                         className="relative flex flex-row flex-wrap gap-2"
                       >
                         <Item id={color} item={firstClay} />
                         <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                           {colorCount}
                         </p>
-
-                        {/* {groupByColor(clay ?? [])[color].map((clay: any) => (
-                        <div key={clay.mint}>
-                          <Item id={clay.mint} item={clay} />
-                        </div>
-                      ))} */}
                       </div>
                     );
                   })}
                 </>
               )}
             </div>
-            <div className="font-clayno text-2xl text-white">Claymakers</div>
+            <div className="font-clayno text-2xl text-white">
+              Claymakers {`(${claymakers?.length})`}
+            </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {/* Grouping clays by color */}
               {claymakers && (
                 <>
-                  {Object.keys(groupByEdition(claymakers)).map(
-                    (edition, idx) => {
-                      if (edition === "First" || edition === "Limited") {
-                        const firstClaymaker = groupByEdition(claymakers ?? [])[
-                          edition
-                        ][0];
-                        const editionCount = groupByEdition(claymakers ?? [])[
-                          edition
-                        ].length;
-                        return (
-                          <div
-                            key={idx}
-                            className="relative order-first flex flex-row flex-wrap gap-2"
-                          >
-                            <Item id={edition} item={firstClaymaker} />
-                            <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
-                              {editionCount}
-                            </p>
-
-                            {/* {groupByColor(clay ?? [])[color].map((clay: any) => (
-                        <div key={clay.mint}>
-                          <Item id={clay.mint} item={clay} />
-                        </div>
-                      ))} */}
-                          </div>
-                        );
-                      }
-
+                  {Object.keys(groupByEdition(claymakers)).map((edition) => {
+                    if (edition === "First" || edition === "Limited") {
+                      const firstClaymaker = groupByEdition(claymakers ?? [])[
+                        edition
+                      ][0];
+                      const editionCount = groupByEdition(claymakers ?? [])[
+                        edition
+                      ].length;
                       return (
-                        <>
-                          {groupByEdition(claymakers ?? [])["Deluxe"].map(
-                            (claymaker: any) => (
-                              <div key={claymaker.mint} className="relative">
-                                <Item id={claymaker.mint} item={claymaker} />
-                                <p className="front-clayno absolute bottom-2 right-2 text-xl text-white">
-                                  {claymaker.charges}/5
-                                </p>
-                              </div>
-                            )
-                          )}
-                        </>
+                        <div
+                          key={edition}
+                          className="relative order-first flex flex-row flex-wrap gap-2"
+                        >
+                          <Item id={edition} item={firstClaymaker} />
+                          <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
+                            {editionCount}
+                          </p>
+                        </div>
                       );
                     }
-                  )}
+
+                    return (
+                      <>
+                        {groupByEdition(claymakers ?? [])["Deluxe"].map(
+                          (claymaker: any) => (
+                            <div key={claymaker.mint} className="relative">
+                              <Item id={claymaker.mint} item={claymaker} />
+                              <p className="front-clayno absolute bottom-2 right-2 text-xl text-white">
+                                {claymaker.charges}/5
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </>
+                    );
+                  })}
                 </>
               )}
             </div>
-            <div className="font-clayno text-2xl text-white">Consumables</div>
+            <div className="font-clayno text-2xl text-white">
+              Consumables {`(${consumables?.length})`}
+            </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {consumables && (
                 <>
-                  {Object.keys(groupBySymbol(consumables)).map(
-                    (symbol, idx) => {
+                  {Object.keys(groupBySymbol(consumables)).map((symbol) => {
+                    if (symbol !== "ART") {
                       const firstConsumable = groupBySymbol(consumables ?? [])[
                         symbol
                       ][0];
@@ -210,23 +212,29 @@ const Inventory = () => {
                       ].length;
                       return (
                         <div
-                          key={idx}
+                          key={symbol}
                           className="relative flex flex-row flex-wrap gap-2"
                         >
                           <Item id={symbol} item={firstConsumable} />
                           <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                             {symbolCount}
                           </p>
-
-                          {/* {groupByColor(clay ?? [])[color].map((clay: any) => (
-                        <div key={clay.mint}>
-                          <Item id={clay.mint} item={clay} />
-                        </div>
-                      ))} */}
                         </div>
                       );
                     }
-                  )}
+
+                    return (
+                      <>
+                        {groupBySymbol(consumables ?? [])["ART"].map(
+                          (artifact: any) => (
+                            <div key={artifact.mint} className="relative">
+                              <Item id={artifact.mint} item={artifact} />
+                            </div>
+                          )
+                        )}
+                      </>
+                    );
+                  })}
                 </>
               )}
             </div>
