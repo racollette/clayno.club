@@ -25,27 +25,8 @@ export const Item = ({ id, item }: ItemProps) => {
   });
 
   const isDino = item.gif && item.pfp;
-
-  // const handleDownload = async (
-  //   imageURL: string,
-  //   name: string,
-  //   extension: string
-  // ) => {
-  //   try {
-  //     const response = await fetch(imageURL);
-  //     const blob = await response.blob();
-  //     const url = window.URL.createObjectURL(new Blob([blob]));
-
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.setAttribute("download", `${name}.${extension}`); // Set the downloaded file name here
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     link?.parentNode?.removeChild(link);
-  //   } catch (error) {
-  //     console.error("Error downloading image:", error);
-  //   }
-  // };
+  const isClay = item.color;
+  const isClaymaker = item.edition;
 
   const handleDownload = (name: string, extension: string) => {
     const blob = imageBlobs[imageState];
@@ -107,71 +88,87 @@ export const Item = ({ id, item }: ItemProps) => {
             quality={75}
           />
         </DialogTrigger>
-        <DialogContent className="aspect-square w-full max-w-xl border-none bg-neutral-900/80 p-4">
+        <DialogContent className="flex max-w-2xl flex-col gap-6 border-none bg-neutral-900/80 p-4">
           <DialogHeader className="">
-            <DialogTitle className="text-white">{item.name}</DialogTitle>
+            <DialogTitle className="m-0 text-white">{item.name}</DialogTitle>
           </DialogHeader>
           {/* <DialogDescription className="text-neutral-500">
             Filter herds by traits
           </DialogDescription> */}
-          <div className="relative flex aspect-square w-full flex-col flex-wrap items-center justify-center gap-4 overflow-clip rounded-lg p-4 text-white">
-            <Image
-              src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                imageState === "pfp" ? item.pfp : item.gif
-              }`}
-              alt={"Clayno"}
-              fill
-            />
-            <div className="absolute bottom-2 flex w-[95%] flex-row justify-between rounded-md bg-black px-2 py-2">
-              <div className="flex flex-row gap-2">
-                <button
-                  onClick={() => {
-                    setImageState("gif");
-                  }}
-                  className={`rounded-sm px-4 py-1 text-xs font-bold ${
-                    imageState === "gif" ? `bg-emerald-600` : `bg-neutral-500`
-                  }`}
-                >
-                  GIF
-                </button>
-                <button
-                  onClick={() => {
-                    setImageState("pfp");
-                  }}
-                  className={`rounded-sm  px-4 py-1 text-xs font-bold ${
-                    imageState === "pfp" ? `bg-emerald-600` : `bg-neutral-500`
-                  }`}
-                >
-                  PFP
-                </button>
-                {item.attributes?.class && (
+          <div className="grid grid-cols-8 items-start justify-start">
+            <div className="relative col-span-5 flex aspect-square flex-wrap items-center justify-center gap-4 overflow-clip rounded-lg p-4 text-white">
+              <Image
+                src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
+                  imageState === "pfp" ? item.pfp : item.gif || item.image
+                }`}
+                alt={"Clayno"}
+                fill
+              />
+              <div className="absolute bottom-2 flex w-[95%] flex-row justify-between rounded-md bg-black px-2 py-2">
+                <div className="flex flex-row gap-2">
                   <button
                     onClick={() => {
-                      setImageState("class");
+                      setImageState("gif");
                     }}
                     className={`rounded-sm px-4 py-1 text-xs font-bold ${
-                      imageState === "class"
-                        ? `bg-emerald-600`
-                        : `bg-neutral-500`
+                      imageState === "gif" ? `bg-emerald-600` : `bg-neutral-500`
                     }`}
                   >
-                    CLASS
+                    {isClay
+                      ? `IMAGE`
+                      : isClaymaker
+                      ? `GIF`
+                      : isDino
+                      ? `GIF`
+                      : `IMAGE`}
                   </button>
-                )}
+                  {item.pfp && (
+                    <button
+                      onClick={() => {
+                        setImageState("pfp");
+                      }}
+                      className={`rounded-sm  px-4 py-1 text-xs font-bold ${
+                        imageState === "pfp"
+                          ? `bg-emerald-600`
+                          : `bg-neutral-500`
+                      }`}
+                    >
+                      PFP
+                    </button>
+                  )}
+
+                  {item.attributes?.class && (
+                    <button
+                      onClick={() => {
+                        setImageState("class");
+                      }}
+                      className={`rounded-sm px-4 py-1 text-xs font-bold ${
+                        imageState === "class"
+                          ? `bg-emerald-600`
+                          : `bg-neutral-500`
+                      }`}
+                    >
+                      CLASS
+                    </button>
+                  )}
+                </div>
+                <div>
+                  <button
+                    className="rounded-sm bg-cyan-600 px-4 py-1 text-xs font-bold"
+                    onClick={() =>
+                      handleDownload(
+                        item.name,
+                        imageState === "pfp" ? "png" : "gif"
+                      )
+                    }
+                  >
+                    DOWNLOAD
+                  </button>
+                </div>
               </div>
-              <div>
-                <button
-                  className="rounded-sm bg-cyan-600 px-4 py-1 text-xs font-bold"
-                  onClick={() =>
-                    handleDownload(
-                      item.name,
-                      imageState === "pfp" ? "png" : "gif"
-                    )
-                  }
-                >
-                  DOWNLOAD
-                </button>
-              </div>
+            </div>
+            <div className="col-span-3 font-clayno text-lg text-white">
+              Traits
             </div>
           </div>
         </DialogContent>
