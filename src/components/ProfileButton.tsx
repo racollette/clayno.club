@@ -16,7 +16,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
 
   return (
     <Dropdown
-      className="border-none bg-neutral-700"
+      className="border-none bg-neutral-700 font-clayno"
       label={
         <div className="flex flex-row">
           <Image
@@ -26,7 +26,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
             width={20}
             height={20}
           />
-          <div className="hidden text-sm md:block">{username}</div>
+          <div className="hidden font-clayno text-sm md:block">{username}</div>
         </div>
       }
     >
