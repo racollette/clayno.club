@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/@/components/ui/select";
-6;
 import { sortByAttribute } from "~/utils/sort";
 import { useRouter } from "next/router";
 import { getQueryString } from "~/utils/routes";
