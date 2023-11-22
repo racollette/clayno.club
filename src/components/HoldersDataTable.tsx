@@ -43,12 +43,30 @@ interface DataTableProps<TData, TValue> {
 export default function HoldersDataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
-  console.log(data);
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        id: "holderOwner",
-        accessorKey: "holderOwner",
+        id: "rank",
+        accessorKey: "rank",
+        header: ({ column }) => {
+          return (
+            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
+              <div>Rank</div>
+            </div>
+          );
+        },
+        cell: ({ row }) => {
+          return (
+            <div className="self-center overflow-hidden whitespace-nowrap font-medium">
+              {row.index + 1}
+            </div>
+          );
+        },
+      },
+      {
+        id: "address",
+        accessorKey: "address",
+        canHide: false,
         header: ({ column }) => {
           return (
             <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
@@ -59,33 +77,36 @@ export default function HoldersDataTable<TData, TValue>({
         cell: ({ row }) => {
           return (
             <div className="self-center overflow-hidden whitespace-nowrap font-medium">
-              {row.original.holderOwner}
+              {row.original.address}
             </div>
           );
         },
       },
       {
-        id: "ogCount",
-        accessorKey: "ogCount",
+        id: "og",
+        accessorKey: "og",
         header: ({ column }) => {
           return (
-            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
+            <div
+              className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
               <div>Original</div>
+              <ArrowUpDown className="h-4 w-4" />
             </div>
           );
         },
         cell: ({ row }) => {
-          console.log(row);
           return (
-            <div className="self-center font-medium">
-              {row.original.ogCount}
-            </div>
+            <div className="self-center font-medium">{row.original.og}</div>
           );
         },
       },
       {
-        id: "sagaCount",
-        accessorKey: "sagaCount",
+        id: "saga",
+        accessorKey: "saga",
         header: ({ column }) => {
           return (
             <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
@@ -94,10 +115,41 @@ export default function HoldersDataTable<TData, TValue>({
           );
         },
         cell: ({ row }) => {
-          console.log(row);
+          return (
+            <div className="self-center font-medium">{row.original.saga}</div>
+          );
+        },
+      },
+      {
+        id: "clay",
+        accessorKey: "clay",
+        header: ({ column }) => {
+          return (
+            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
+              <div>Clay</div>
+            </div>
+          );
+        },
+        cell: ({ row }) => {
+          return (
+            <div className="self-center font-medium">{row.original.clay}</div>
+          );
+        },
+      },
+      {
+        id: "claymakers",
+        accessorKey: "claymakers",
+        header: ({ column }) => {
+          return (
+            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
+              <div>Claymakers</div>
+            </div>
+          );
+        },
+        cell: ({ row }) => {
           return (
             <div className="self-center font-medium">
-              {row.original.sagaCount}
+              {row.original.claymakers}
             </div>
           );
         },
@@ -145,24 +197,28 @@ export default function HoldersDataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Search address"
+          value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("address")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm bg-black"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto bg-black">
               Columns
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent
+            align="end"
+            className="bg-black font-clayno text-white"
+          >
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
+                console.log(column);
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -236,6 +292,7 @@ export default function HoldersDataTable<TData, TValue>({
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
+          className="bg-black font-clayno text-white"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
@@ -244,6 +301,7 @@ export default function HoldersDataTable<TData, TValue>({
         </Button>
         <Button
           variant="outline"
+          className="bg-black font-clayno text-white"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
