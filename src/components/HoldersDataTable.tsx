@@ -262,7 +262,7 @@ export default function HoldersDataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() =>
-                    router.push(`/inventory/${row.original.holderOwner}`)
+                    router.push(`/inventory/${row.original.address}`)
                   }
                   className="cursor-pointer rounded-md"
                 >
