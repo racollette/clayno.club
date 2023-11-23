@@ -69,8 +69,8 @@ const Inventory = () => {
   const handleSort = (attribute: string) => {
     setSelectedAttribute(attribute);
     if (attribute === "rarity") {
-      setOriginalSpecies(sortByRarity([...originalSpecies]));
-      setSagaSpecies(sortByRarity([...sagaSpecies]));
+      setOriginalSpecies(sortByRarity(originalSpecies));
+      setSagaSpecies(sortByRarity(sagaSpecies));
     }
 
     const originalSorted = sortByAttribute([...originalSpecies], attribute);
@@ -87,7 +87,7 @@ const Inventory = () => {
       </Head>
       <Layout>
         <section className="flex flex-col items-center justify-center gap-y-8 p-2 md:container">
-          <div className="font-clayno text-4xl">Inventory</div>
+          <div className="font-clayno text-3xl">Inventory</div>
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-row justify-between">
               <div className="font-clayno text-2xl text-white">
