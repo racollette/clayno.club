@@ -24,6 +24,8 @@ export const Item = ({ id, item }: ItemProps) => {
     class: null,
   });
 
+  const attributesArray = Object.entries(item.attributes ?? {});
+
   const isDino = item.gif && item.pfp;
   const isClay = item.color;
   const isClaymaker = item.edition;
@@ -88,15 +90,17 @@ export const Item = ({ id, item }: ItemProps) => {
             quality={75}
           />
         </DialogTrigger>
-        <DialogContent className="flex max-w-2xl flex-col gap-6 border-none bg-neutral-900/80 p-4">
-          <DialogHeader className="">
-            <DialogTitle className="m-0 text-white">{item.name}</DialogTitle>
+        <DialogContent className="flex max-w-2xl flex-col gap-4 border-none bg-neutral-900/80 p-4">
+          <DialogHeader>
+            <DialogTitle className="m-0 font-clayno text-white">
+              {item.name}
+            </DialogTitle>
           </DialogHeader>
           {/* <DialogDescription className="text-neutral-500">
             Filter herds by traits
           </DialogDescription> */}
-          <div className="grid grid-cols-8 items-start justify-start">
-            <div className="relative col-span-5 flex aspect-square flex-wrap items-center justify-center gap-4 overflow-clip rounded-lg p-4 text-white">
+          <div className="flex flex-col items-start justify-start gap-4 md:grid md:grid-cols-8 md:gap-0">
+            <div className="relative flex aspect-square w-full flex-wrap items-center justify-center gap-4 overflow-clip rounded-lg p-4 text-white md:col-span-5">
               <Image
                 src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
                   imageState === "pfp" ? item.pfp : item.gif || item.image
@@ -110,7 +114,7 @@ export const Item = ({ id, item }: ItemProps) => {
                     onClick={() => {
                       setImageState("gif");
                     }}
-                    className={`rounded-sm px-4 py-1 text-xs font-bold ${
+                    className={`rounded-sm px-4 py-1 font-clayno text-xs font-bold ${
                       imageState === "gif" ? `bg-emerald-600` : `bg-neutral-500`
                     }`}
                   >
@@ -127,7 +131,7 @@ export const Item = ({ id, item }: ItemProps) => {
                       onClick={() => {
                         setImageState("pfp");
                       }}
-                      className={`rounded-sm  px-4 py-1 text-xs font-bold ${
+                      className={`rounded-sm  px-4 py-1 font-clayno text-xs font-bold ${
                         imageState === "pfp"
                           ? `bg-emerald-600`
                           : `bg-neutral-500`
@@ -142,7 +146,7 @@ export const Item = ({ id, item }: ItemProps) => {
                       onClick={() => {
                         setImageState("class");
                       }}
-                      className={`rounded-sm px-4 py-1 text-xs font-bold ${
+                      className={`rounded-sm px-4 py-1 font-clayno text-xs font-bold ${
                         imageState === "class"
                           ? `bg-emerald-600`
                           : `bg-neutral-500`
@@ -154,7 +158,7 @@ export const Item = ({ id, item }: ItemProps) => {
                 </div>
                 <div>
                   <button
-                    className="rounded-sm bg-cyan-600 px-4 py-1 text-xs font-bold"
+                    className="rounded-sm bg-cyan-600 px-4 py-1 font-clayno text-xs font-bold"
                     onClick={() =>
                       handleDownload(
                         item.name,
@@ -167,8 +171,17 @@ export const Item = ({ id, item }: ItemProps) => {
                 </div>
               </div>
             </div>
-            <div className="col-span-3 font-clayno text-lg text-white">
-              Traits
+            <div className="w-2/3 items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3 md:w-full">
+              <h1 className="pb-2">TRAITS</h1>
+              {attributesArray.map(([key, value]) => {
+                if (key === "mint") return null;
+                return (
+                  <div key={key} className="flex flex-row justify-between">
+                    <p className="text-sm text-neutral-500">{key}</p>
+                    <p className="text-sm">{value as string}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </DialogContent>
