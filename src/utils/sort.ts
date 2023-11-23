@@ -16,13 +16,13 @@ export type Character = Dino & {
 export const sortByAttribute = (items: Character[], attribute: string) => {
   return items?.sort((a, b) => {
     const attrA = a.attributes?.[attribute] || "";
-    console.log(a.attributes);
     const attrB = b.attributes?.[attribute] || "";
     return attrA.localeCompare(attrB);
   });
 };
 
 export const sortByRarity = (items: Character[]) => {
+  console.log(items);
   return items?.sort((a, b) => {
     return (a.rarity ?? 0) - (b.rarity ?? 0); // Sort by the 'rarity' property in ascending order
   });
