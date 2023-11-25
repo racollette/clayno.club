@@ -17,6 +17,10 @@ import { sortByAttribute } from "~/utils/sort";
 import { useRouter } from "next/router";
 import { getQueryString } from "~/utils/routes";
 import { useFetchUserWallets } from "~/hooks/useFetchUserWallets";
+import { groupByColor, groupByEdition, groupBySymbol } from "~/utils/inventory";
+import { HiRefresh } from "react-icons/hi";
+import { zip } from "~/utils/zip";
+import { types } from "util";
 
 const Inventory = () => {
   // const { user } = useUser();
@@ -110,9 +114,24 @@ const Inventory = () => {
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {originalSpecies?.map((dino: any) => (
                 <div key={dino.mint}>
-                  <Item id={dino.mint} item={dino} />
+                  <Item id={dino.mint} item={dino} type={"dino"} />
                 </div>
               ))}
+              {originalSpecies?.length > 1 && (
+                <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
+                  <p className="font-clayno text-lg text-white">Download All</p>
+                  <DownloadButton
+                    data={originalSpecies}
+                    type="gif"
+                    backgroundColor={`bg-pink-500`}
+                  />
+                  <DownloadButton
+                    data={originalSpecies}
+                    type="pfp"
+                    backgroundColor={`bg-cyan-600`}
+                  />
+                </div>
+              )}
             </div>
             <div className="font-clayno text-2xl text-white">
               Call of Saga {`(${sagaSpecies?.length})`}
@@ -120,9 +139,24 @@ const Inventory = () => {
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {sagaSpecies?.map((dino: any) => (
                 <div key={dino.mint}>
-                  <Item id={dino.mint} item={dino} />
+                  <Item id={dino.mint} item={dino} type={"dino"} />
                 </div>
               ))}
+              {originalSpecies?.length > 1 && (
+                <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
+                  <p className="font-clayno text-lg text-white">Download All</p>
+                  <DownloadButton
+                    data={sagaSpecies}
+                    type="gif"
+                    backgroundColor={`bg-pink-500`}
+                  />
+                  <DownloadButton
+                    data={sagaSpecies}
+                    type="pfp"
+                    backgroundColor={`bg-cyan-600`}
+                  />
+                </div>
+              )}
             </div>
             <div className="font-clayno text-2xl text-white">
               Clay {`(${clay?.length})`}
@@ -139,7 +173,7 @@ const Inventory = () => {
                         key={color}
                         className="relative flex flex-row flex-wrap gap-2"
                       >
-                        <Item id={color} item={firstClay} />
+                        <Item id={color} item={firstClay} type={"clay"} />
                         <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                           {colorCount}
                         </p>
@@ -169,7 +203,11 @@ const Inventory = () => {
                           key={edition}
                           className="relative order-first flex flex-row flex-wrap gap-2"
                         >
-                          <Item id={edition} item={firstClaymaker} />
+                          <Item
+                            id={edition}
+                            item={firstClaymaker}
+                            type={"claymaker"}
+                          />
                           <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                             {editionCount}
                           </p>
@@ -182,7 +220,11 @@ const Inventory = () => {
                         {groupByEdition(claymakers ?? [])["Deluxe"].map(
                           (claymaker: any) => (
                             <div key={claymaker.mint} className="relative">
-                              <Item id={claymaker.mint} item={claymaker} />
+                              <Item
+                                id={claymaker.mint}
+                                item={claymaker}
+                                type={"claymaker"}
+                              />
                               <p className="front-clayno absolute bottom-2 right-2 text-xl text-white">
                                 {claymaker.charges}/5
                               </p>
@@ -214,7 +256,11 @@ const Inventory = () => {
                           key={symbol}
                           className="relative flex flex-row flex-wrap gap-2"
                         >
-                          <Item id={symbol} item={firstConsumable} />
+                          <Item
+                            id={symbol}
+                            item={firstConsumable}
+                            type={"consumable"}
+                          />
                           <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                             {symbolCount}
                           </p>
@@ -227,7 +273,11 @@ const Inventory = () => {
                         {groupBySymbol(consumables ?? [])["ART"].map(
                           (artifact: any) => (
                             <div key={artifact.mint} className="relative">
-                              <Item id={artifact.mint} item={artifact} />
+                              <Item
+                                id={artifact.mint}
+                                item={artifact}
+                                type={"consumable"}
+                              />
                             </div>
                           )
                         )}
@@ -246,35 +296,39 @@ const Inventory = () => {
 
 export default Inventory;
 
-function groupByColor(items: any[]): Record<string, any> {
-  return items.reduce((acc: Record<string, any>, item: any) => {
-    const color = item.color;
-    if (!acc[color]) {
-      acc[color] = [];
-    }
-    acc[color].push(item);
-    return acc;
-  }, {});
-}
+function DownloadButton({
+  data,
+  type,
+  backgroundColor,
+}: {
+  data: Character[];
+  type: string;
+  backgroundColor: string;
+}) {
+  const [isDownloading, setIsDownloading] = useState(false);
 
-function groupByEdition(items: any[]): Record<string, any> {
-  return items.reduce((acc: Record<string, any>, item: any) => {
-    const edition = item.edition;
-    if (!acc[edition]) {
-      acc[edition] = [];
-    }
-    acc[edition].push(item);
-    return acc;
-  }, {});
-}
+  const handleDownload = async (items: Character[], type: string) => {
+    setIsDownloading(true);
+    await zip(items, type);
+    setIsDownloading(false);
+  };
 
-function groupBySymbol(items: any[]): Record<string, any> {
-  return items.reduce((acc: Record<string, any>, item: any) => {
-    const symbol = item.symbol;
-    if (!acc[symbol]) {
-      acc[symbol] = [];
-    }
-    acc[symbol].push(item);
-    return acc;
-  }, {});
+  return (
+    <button
+      onClick={() => handleDownload(data, type)}
+      className={`w-4/5 rounded-lg px-4 py-2 ${backgroundColor}`}
+    >
+      {}
+      {isDownloading ? (
+        <div className="flex flex-row items-center justify-center gap-1">
+          <p className="font-clayno text-xs">Fetching</p>
+          <HiRefresh size={16} className="ml-2 inline-block animate-spin" />
+        </div>
+      ) : (
+        <div>
+          <p className="font-clayno text-xs">{type}s</p>
+        </div>
+      )}
+    </button>
+  );
 }
