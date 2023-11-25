@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "~/@/components/ui/select";
 import { CLASSES, SKINS, COLORS, SPECIES } from "~/utils/constants";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 type FilterTraits = {
   species: string;
@@ -30,6 +31,14 @@ const initalTraits: FilterTraits = {
   tribeId: "all",
 };
 
+type Owner = {
+  userId: string | null;
+  username: string | null;
+  userHandle: string | null;
+  userPFP: string | null;
+  wallets: string[];
+};
+
 const Holders = () => {
   const [filterTraits, setFilterTraits] = useState<FilterTraits>(initalTraits);
   // const [tableData, setTableData] = useState<any>([]);
@@ -40,7 +49,94 @@ const Holders = () => {
   const { data: ccHolders } =
     api.stats.getDinoHoldersByCount.useQuery(filterTraits);
 
-  console.log(ccHolders);
+  const { data: users } = api.binding.getAllUsers.useQuery();
+
+  const tableType =
+    filterTraits.tribeId === "cll09ow4e0000gq6epo4499y3" ? ccHolders : holders;
+  const tableData = tableType?.map((holder) => {
+    const user = users?.find((user) =>
+      user.wallets.some((wallet) => wallet.address === holder.address)
+    );
+
+    let owner: Owner = {
+      userId: null,
+      username: null,
+      userHandle: null,
+      userPFP: null,
+      wallets: [],
+    };
+
+    if (user) {
+      const { userId, username, userHandle, userPFP } =
+        extractProfileFromUser(user);
+      owner = {
+        userId,
+        username,
+        userHandle,
+        userPFP,
+        wallets: user.wallets.map((wallet) => wallet.address),
+      };
+    }
+
+    return {
+      ...holder,
+      owner,
+    };
+  });
+
+  const updatedTableData = tableData?.reduce(
+    (
+      accumulator: {
+        owner: Owner;
+        address: string | null;
+        og: number;
+        saga: number;
+        clay: number;
+        claymakers: number;
+      }[],
+      holder: {
+        owner: Owner;
+        address: string | null;
+        og: number;
+        saga: number;
+        clay: number;
+        claymakers: number;
+      }
+    ) => {
+      if (!holder.owner.userId) return [...accumulator, holder];
+
+      const userIndex = accumulator.findIndex(
+        (entry) => entry.owner.userId === holder.owner.userId
+      );
+
+      if (userIndex === -1) {
+        accumulator.push({
+          ...holder,
+          owner: {
+            ...holder.owner,
+            wallets: [holder.address ?? ""],
+          },
+        });
+      } else {
+        const existingEntry = accumulator[userIndex];
+        if (
+          existingEntry &&
+          !existingEntry?.owner.wallets.includes(holder.address ?? "")
+        ) {
+          existingEntry.og += holder.og;
+          existingEntry.saga += holder.saga;
+          existingEntry.clay += holder.clay;
+          existingEntry.claymakers += holder.claymakers;
+          existingEntry.owner.wallets.push(holder.address ?? "");
+        }
+      }
+
+      return accumulator;
+    },
+    []
+  );
+
+  console.log(updatedTableData);
 
   const handleSetFilters = (filter: string, value: string) => {
     console.log(value);
@@ -112,15 +208,7 @@ const Holders = () => {
             </Select>
           </div>
 
-          {holders && (
-            <HoldersDataTable
-              data={
-                filterTraits.tribeId === "cll09ow4e0000gq6epo4499y3"
-                  ? ccHolders
-                  : holders
-              }
-            />
-          )}
+          {holders && <HoldersDataTable data={updatedTableData} />}
         </section>
       </Layout>
     </>
