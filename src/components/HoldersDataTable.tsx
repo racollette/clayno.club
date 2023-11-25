@@ -31,10 +31,10 @@ import {
 import { Button } from "~/@/components/ui/button";
 import { useRouter } from "next/router";
 import { ArrowUpDown } from "lucide-react";
-import { getTraitBadgeColor } from "~/utils/colors";
 import Image from "next/image";
 import { useMemo } from "react";
 import { Input } from "~/@/components/ui/input";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 interface DataTableProps<TData, TValue> {
   data: any;
@@ -50,8 +50,14 @@ export default function HoldersDataTable<TData, TValue>({
         accessorKey: "rank",
         header: ({ column }) => {
           return (
-            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
+            <div
+              className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
               <div>Rank</div>
+              <ArrowUpDown className="h-4 w-4" />
             </div>
           );
         },
@@ -70,15 +76,36 @@ export default function HoldersDataTable<TData, TValue>({
         header: ({ column }) => {
           return (
             <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
-              <div>Holder Address</div>
+              <div>Owner</div>
             </div>
           );
         },
         cell: ({ row }) => {
+          const truncatedAddress = `${row.original.address.slice(
+            0,
+            5
+          )}...${row.original.address.slice(-5)}`;
           return (
-            <div className="self-center overflow-hidden whitespace-nowrap font-medium">
-              {row.original.address}
-            </div>
+            <>
+              {row.original.owner.userPFP ? (
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <Image
+                    src={row.original.owner.userPFP}
+                    alt="PFP"
+                    width={24}
+                    height={24}
+                    className="rounded-full"
+                    onError={handleUserPFPDoesNotExist}
+                  />
+                  <p>{row.original.owner.userHandle}</p>
+                  <p className="ml-4">{truncatedAddress}</p>
+                </div>
+              ) : (
+                <div className="flex flex-row overflow-hidden whitespace-nowrap">
+                  <p className="">{row.original.address}</p>
+                </div>
+              )}
+            </>
           );
         },
       },
@@ -93,7 +120,7 @@ export default function HoldersDataTable<TData, TValue>({
                 column.toggleSorting(column.getIsSorted() === "asc")
               }
             >
-              <div>Original</div>
+              <div>OG</div>
               <ArrowUpDown className="h-4 w-4" />
             </div>
           );
@@ -109,8 +136,14 @@ export default function HoldersDataTable<TData, TValue>({
         accessorKey: "saga",
         header: ({ column }) => {
           return (
-            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
-              <div>Sagas</div>
+            <div
+              className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <div>Saga</div>
+              <ArrowUpDown className="h-4 w-4" />
             </div>
           );
         },
@@ -125,8 +158,14 @@ export default function HoldersDataTable<TData, TValue>({
         accessorKey: "clay",
         header: ({ column }) => {
           return (
-            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
+            <div
+              className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
               <div>Clay</div>
+              <ArrowUpDown className="h-4 w-4" />
             </div>
           );
         },
@@ -141,8 +180,14 @@ export default function HoldersDataTable<TData, TValue>({
         accessorKey: "claymakers",
         header: ({ column }) => {
           return (
-            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
-              <div>Claymakers</div>
+            <div
+              className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <div>Makers</div>
+              <ArrowUpDown className="h-4 w-4" />
             </div>
           );
         },
@@ -262,7 +307,7 @@ export default function HoldersDataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() =>
-                    router.push(`/inventory/${row.original.address}`)
+                    window.open(`/inventory/${row.original.address}`)
                   }
                   className="cursor-pointer rounded-md"
                 >
