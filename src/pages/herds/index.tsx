@@ -103,8 +103,7 @@ function useHerdOwners(walletAddresses: string[]) {
   // const allHerdOwnersQuery = api.binding.getUsersByWalletAddresses.useQuery({
   //   walletAddresses,
   // });
-  const allHerdOwnersQuery = api.binding.getAllUsers.useQuery();
-  const { data, isError, isLoading } = allHerdOwnersQuery;
+  const { data, isError, isLoading } = api.binding.getAllUsers.useQuery();
   return { data, isError, isLoading };
 }
 
