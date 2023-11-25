@@ -12,11 +12,12 @@ import {
 type ItemProps = {
   id: string;
   item: any;
+  type: string;
 };
 
 type ImageState = "gif" | "pfp" | "class";
 
-export const Item = ({ id, item }: ItemProps) => {
+export const Item = ({ id, item, type }: ItemProps) => {
   const [imageState, setImageState] = useState<ImageState>("gif");
   const [imageBlobs, setImageBlobs] = useState({
     pfp: null,
@@ -24,11 +25,18 @@ export const Item = ({ id, item }: ItemProps) => {
     class: null,
   });
 
-  const attributesArray = Object.entries(item.attributes ?? {});
+  const isDino = type === "dino";
+  const isClay = type === "clay";
+  const isClaymaker = type === "claymaker";
+  const isConsumable = type === "consumable";
 
-  const isDino = item.gif && item.pfp;
-  const isClay = item.color;
-  const isClaymaker = item.edition;
+  if (isConsumable) {
+    console.log(item);
+    console.log(item.attributes);
+    console.log(item.attributes?.[0]);
+  }
+
+  const attributesArray = Object.entries(item.attributes ?? {});
 
   const handleDownload = (name: string, extension: string) => {
     const blob = imageBlobs[imageState];
@@ -70,7 +78,7 @@ export const Item = ({ id, item }: ItemProps) => {
   return (
     <div
       key={item.mint}
-      className={`relative flex h-28 w-28 cursor-grab justify-center overflow-clip rounded-md lg:h-40 lg:w-40`}
+      className={`relative flex h-28 w-28 cursor-pointer justify-center overflow-clip rounded-md lg:h-40 lg:w-40`}
     >
       <Dialog>
         <DialogTrigger asChild>
@@ -173,15 +181,59 @@ export const Item = ({ id, item }: ItemProps) => {
             </div>
             <div className="w-2/3 items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3 md:w-full">
               <h1 className="pb-2">TRAITS</h1>
-              {attributesArray.map(([key, value]) => {
-                if (key === "mint") return null;
-                return (
-                  <div key={key} className="flex flex-row justify-between">
-                    <p className="text-sm text-neutral-500">{key}</p>
-                    <p className="text-sm">{value as string}</p>
-                  </div>
-                );
-              })}
+              {isDino && (
+                <>
+                  {attributesArray.map(([key, value]) => {
+                    if (key === "mint") return null;
+                    return (
+                      <div key={key} className="flex flex-row justify-between">
+                        <p className="text-sm text-neutral-500">{key}</p>
+                        <p className="text-sm">{value as string}</p>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+
+              {isClaymaker && (
+                <div className="flex flex-row justify-between">
+                  <p className="text-sm text-neutral-500">Edition</p>
+                  <p className="text-sm">{item.edition}</p>
+                </div>
+              )}
+
+              {isClay && (
+                <div className="flex flex-row justify-between">
+                  <p className="text-sm text-neutral-500">Color</p>
+                  <p className="text-sm">{item.color}</p>
+                </div>
+              )}
+
+              {isConsumable && (
+                <>
+                  {item.attributes &&
+                    item.attributes.map(
+                      (
+                        trait: { value: string; trait_type: string },
+                        idx: number
+                      ) => {
+                        return (
+                          <div
+                            key={idx}
+                            className="flex flex-row justify-between"
+                          >
+                            {trait.value.length > 0 && (
+                              <p className="text-sm text-neutral-500">
+                                {trait.value}
+                              </p>
+                            )}
+                            <p className="text-sm">{trait.trait_type}</p>
+                          </div>
+                        );
+                      }
+                    )}
+                </>
+              )}
             </div>
           </div>
         </DialogContent>
