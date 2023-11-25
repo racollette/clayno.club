@@ -13,6 +13,7 @@ import Head from "next/head";
 import { getQueryString } from "~/utils/routes";
 import { CollagePreview } from "~/components/CollagePreview";
 import { GridItemProps } from "~/components/CollageModal";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 // const WalletMultiButtonDynamic = dynamic(
 //   async () =>
@@ -108,6 +109,7 @@ export default function Profile() {
                         alt="Avatar"
                         width={75}
                         height={75}
+                        onError={handleUserPFPDoesNotExist}
                       />
                       <div className="self-center p-2 font-extrabold text-white">
                         {user.twitter
