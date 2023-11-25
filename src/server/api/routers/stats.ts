@@ -5,6 +5,19 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
+type CombinedHolder = {
+  address: string | null;
+  // owner: {
+  //   username: string | null;
+  //   userHandle: string | null;
+  //   userPFP: string | null;
+  // };
+  og: number;
+  saga: number;
+  clay: number;
+  claymakers: number;
+};
+
 export const statsRouter = createTRPCRouter({
   getMoldedMeterSnapshot: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.moldedMeterSnapshot.findFirst({
@@ -29,6 +42,24 @@ export const statsRouter = createTRPCRouter({
       },
     });
   }),
+
+  getWalletUser: publicProcedure
+    .input(z.object({ walletAddress: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findFirst({
+        where: {
+          wallets: {
+            some: {
+              address: input.walletAddress,
+            },
+          },
+        },
+        include: {
+          discord: true,
+          twitter: true,
+        },
+      });
+    }),
 
   getDinoHoldersByTrait: publicProcedure
     .input(
@@ -178,37 +209,17 @@ export const statsRouter = createTRPCRouter({
         },
       });
 
-      const combinedHolders: {
-        address: string | null;
-        og: number;
-        saga: number;
-        clay: number;
-        claymakers: number;
-      }[] = [];
-
-      // Combine data based on holderOwner (address)
-      ogHolders.forEach((ogHolder) => {
-        const matchingSagaHolder = sagaHolders.find(
-          (sagaHolder) => sagaHolder.holderOwner === ogHolder.holderOwner
+      const combinedHolders: CombinedHolder[] = [];
+      for (const og of ogHolders) {
+        await fetchUserDetails(
+          og,
+          ctx,
+          combinedHolders,
+          sagaHolders,
+          clayHolders,
+          claymakerHolders
         );
-        const matchingClayHolder = clayHolders.find(
-          (clayHolder) => clayHolder.holderOwner === ogHolder.holderOwner
-        );
-        const matchingClaymakerHolder = claymakerHolders.find(
-          (claymakerHolder) =>
-            claymakerHolder.holderOwner === ogHolder.holderOwner
-        );
-
-        combinedHolders.push({
-          address: ogHolder.holderOwner,
-          og: ogHolder._count.mint,
-          saga: matchingSagaHolder ? matchingSagaHolder._count.mint : 0,
-          clay: matchingClayHolder ? matchingClayHolder._count.mint : 0,
-          claymakers: matchingClaymakerHolder
-            ? matchingClaymakerHolder._count.mint
-            : 0,
-        });
-      });
+      }
 
       return combinedHolders.sort((a, b) => b.og - a.og);
     }),
@@ -327,8 +338,6 @@ export const statsRouter = createTRPCRouter({
         },
       });
 
-      console.log(ogHolders);
-
       const sagaHolders = await ctx.prisma.dino.groupBy({
         by: ["holderOwner"],
         _count: {
@@ -377,37 +386,63 @@ export const statsRouter = createTRPCRouter({
         },
       });
 
-      const combinedHolders: {
-        address: string | null;
-        og: number;
-        saga: number;
-        clay: number;
-        claymakers: number;
-      }[] = [];
-
-      // Combine data based on holderOwner (address)
-      ogHolders.forEach((og) => {
-        const matchingSagaHolder = sagaHolders.find(
-          (saga) => saga.holderOwner === og.holderOwner
+      const combinedHolders: CombinedHolder[] = [];
+      for (const og of ogHolders) {
+        await fetchUserDetails(
+          og,
+          ctx,
+          combinedHolders,
+          sagaHolders,
+          clayHolders,
+          claymakerHolders
         );
-        const matchingClayHolder = clayHolders.find(
-          (clay) => clay.holderOwner === og.holderOwner
-        );
-        const matchingClaymakerHolder = claymakerHolders.find(
-          (claymaker) => claymaker.holderOwner === og.holderOwner
-        );
-
-        combinedHolders.push({
-          address: og.holderOwner,
-          og: og._count.mint,
-          saga: matchingSagaHolder ? matchingSagaHolder._count.mint : 0,
-          clay: matchingClayHolder ? matchingClayHolder._count.mint : 0,
-          claymakers: matchingClaymakerHolder
-            ? matchingClaymakerHolder._count.mint
-            : 0,
-        });
-      });
-
+      }
       return combinedHolders.sort((a, b) => b.og - a.og);
     }),
 });
+
+async function fetchUserDetails(
+  og: any,
+  ctx: any,
+  combinedHolders: any,
+  sagaHolders: any,
+  clayHolders: any,
+  claymakerHolders: any
+) {
+  // const user = await ctx.prisma.user.findFirst({
+  //   where: {
+  //     wallets: {
+  //       some: {
+  //         address: og.holderOwner as string,
+  //       },
+  //     },
+  //   },
+  //   include: {
+  //     discord: true,
+  //     twitter: true,
+  //   },
+  // });
+
+  // const { username, userHandle, userPFP } = extractProfileFromUser(user);
+
+  const matchingSagaHolder = sagaHolders.find(
+    (sagaHolder: any) => sagaHolder.holderOwner === og.holderOwner
+  );
+  const matchingClayHolder = clayHolders.find(
+    (clayHolder: any) => clayHolder.holderOwner === og.holderOwner
+  );
+  const matchingClaymakerHolder = claymakerHolders.find(
+    (claymakerHolder: any) => claymakerHolder.holderOwner === og.holderOwner
+  );
+
+  combinedHolders.push({
+    address: og.holderOwner,
+    // owner: { username, userHandle, userPFP },
+    og: og._count.mint,
+    saga: matchingSagaHolder ? matchingSagaHolder._count.mint : 0,
+    clay: matchingClayHolder ? matchingClayHolder._count.mint : 0,
+    claymakers: matchingClaymakerHolder
+      ? matchingClaymakerHolder._count.mint
+      : 0,
+  });
+}
