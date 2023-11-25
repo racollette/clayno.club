@@ -8,7 +8,7 @@ import { getTraitBadgeColor } from "~/utils/colors";
 import { groupAndFilter } from "~/utils/subdaos";
 import Head from "next/head";
 import { Fragment } from "react";
-import { Attributes, Dino } from "@prisma/client";
+import { type Attributes, type Dino } from "@prisma/client";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 export default function SubDAO() {

@@ -142,7 +142,7 @@ const Inventory = () => {
                   <Item id={dino.mint} item={dino} type={"dino"} />
                 </div>
               ))}
-              {originalSpecies?.length > 1 && (
+              {sagaSpecies?.length > 1 && (
                 <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
                   <p className="font-clayno text-lg text-white">Download All</p>
                   <DownloadButton

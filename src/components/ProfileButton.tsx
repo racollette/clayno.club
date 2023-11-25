@@ -2,6 +2,7 @@ import { Dropdown } from "flowbite-react";
 import { HiCog, HiLogout, HiViewGrid, HiCollection } from "react-icons/hi";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 type ProfileButtonProps = {
   imageURL: string;
@@ -25,6 +26,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
             alt="Avatar"
             width={20}
             height={20}
+            onError={handleUserPFPDoesNotExist}
           />
           <div className="hidden font-clayno text-sm md:block">{username}</div>
         </div>

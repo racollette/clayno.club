@@ -24,6 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/@/components/ui/dialog";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 type VoteWidgetProps = {
   voterInfo:
@@ -158,6 +159,7 @@ export const VoteWidget = ({
                               alt="PFP"
                               width={32}
                               height={32}
+                              onError={handleUserPFPDoesNotExist}
                             />
                           </TooltipTrigger>
                           <TooltipContent className="mb-1 rounded-lg bg-white p-2 font-semibold">
