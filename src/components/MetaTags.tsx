@@ -4,11 +4,11 @@ const MetaTags = ({
   title = "DinoHerd",
   description = "Claynosaurz Community Tools",
   ogTitle = "Claynosaurz Community Tools",
-  ogDescription = "Explore the herds, tribes and members of Claynotopia! Collectors collect.",
-  ogImage = "/images/trailer_herd.jpeg",
+  ogDescription = "Explore the dinos, herds and tribes of Claynotopia! Collectors collect.",
+  ogImage = "/images/og.jpeg",
   ogUrl = "https://dinoherd.cc",
-  twitterCard = "Explore the herds, tribes and members of Claynotopia! Collectors collect",
-  twitterImage = "/images/3d_herd.jpeg",
+  twitterCard = "Explore the dinos, herds and tribes of Claynotopia! Collectors collect.",
+  twitterImage = "/images/og.jpeg",
 }) => {
   return (
     <Head>
