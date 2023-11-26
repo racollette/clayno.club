@@ -256,7 +256,6 @@ export default function HoldersDataTable<TData, TValue>({
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
-                console.log(column);
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}

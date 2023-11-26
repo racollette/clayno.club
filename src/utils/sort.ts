@@ -22,7 +22,6 @@ export const sortByAttribute = (items: Character[], attribute: string) => {
 };
 
 export const sortByRarity = (items: Character[]) => {
-  console.log(items);
   return items?.sort((a, b) => {
     return (a.rarity ?? 0) - (b.rarity ?? 0); // Sort by the 'rarity' property in ascending order
   });

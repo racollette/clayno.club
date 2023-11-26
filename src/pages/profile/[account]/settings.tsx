@@ -156,7 +156,6 @@ const Settings = () => {
             title: "Votes issued",
           });
         } else {
-          console.log(voterInfo);
           createVoter.mutate({
             userId: user.id,
             wallets: user.wallets.map((wallet) => wallet.address),

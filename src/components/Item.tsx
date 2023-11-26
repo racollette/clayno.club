@@ -31,12 +31,6 @@ export const Item = ({ id, item, type }: ItemProps) => {
   const isClaymaker = type === "claymaker";
   const isConsumable = type === "consumable";
 
-  if (isConsumable) {
-    console.log(item);
-    console.log(item.attributes);
-    console.log(item.attributes?.[0]);
-  }
-
   const attributesArray = Object.entries(item.attributes ?? {});
 
   const handleDownload = (name: string, extension: string) => {
@@ -47,7 +41,11 @@ export const Item = ({ id, item, type }: ItemProps) => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${name}.${extension}`);
+      const imageName =
+        imageState === "class"
+          ? `${item.name}_${item.attributes.class}`
+          : item.name;
+      link.setAttribute("download", `${imageName}.${extension}`);
       document.body.appendChild(link);
       link.click();
       link?.parentNode?.removeChild(link);
@@ -58,7 +56,13 @@ export const Item = ({ id, item, type }: ItemProps) => {
     const getImageBlob = async (imageType: string) => {
       try {
         const response = await fetch(
-          `${imageType === "pfp" ? item.pfp : item.gif}`
+          `${
+            imageType === "pfp"
+              ? item.pfp
+              : imageType === "class"
+              ? item.classPFP
+              : item.gif
+          }`
         );
 
         if (response.ok) {
@@ -74,7 +78,8 @@ export const Item = ({ id, item, type }: ItemProps) => {
 
     getImageBlob("pfp");
     getImageBlob("gif");
-  }, [item.pfp, item.gif]);
+    getImageBlob("class");
+  }, [item.pfp, item.gif, item.classPFP]);
 
   return (
     <div
@@ -88,7 +93,11 @@ export const Item = ({ id, item, type }: ItemProps) => {
             src={
               isDino
                 ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                    imageState === "pfp" ? item.pfp : item.gif
+                    imageState === "pfp"
+                      ? item.pfp
+                      : imageState === "class"
+                      ? item.classPFP
+                      : item.gif
                   }`
                 : `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
                     item.image || item.gif
@@ -112,7 +121,11 @@ export const Item = ({ id, item, type }: ItemProps) => {
             <div className="relative flex aspect-square w-full flex-wrap items-center justify-center gap-4 overflow-clip rounded-lg p-4 text-white md:col-span-5">
               <Image
                 src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                  imageState === "pfp" ? item.pfp : item.gif || item.image
+                  imageState === "pfp"
+                    ? item.pfp
+                    : imageState === "class"
+                    ? item.classPFP
+                    : item.gif || item.image
                 }`}
                 alt={"Clayno"}
                 fill
@@ -150,7 +163,7 @@ export const Item = ({ id, item, type }: ItemProps) => {
                     </button>
                   )}
 
-                  {item.attributes?.class && (
+                  {item.classPFP && (
                     <button
                       onClick={() => {
                         setImageState("class");

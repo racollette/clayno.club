@@ -1,10 +1,7 @@
-import Head from "next/head";
-import { Fragment, use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "~/components/Layout";
-import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import { Item } from "~/components/Item";
-import { type Dino, type Wallet } from "@prisma/client";
 import { sortByRarity, type Character } from "~/utils/sort";
 import {
   Select,
@@ -15,23 +12,19 @@ import {
 } from "~/@/components/ui/select";
 import { sortByAttribute } from "~/utils/sort";
 import { useRouter } from "next/router";
-import { getQueryString } from "~/utils/routes";
 import { useFetchUserWallets } from "~/hooks/useFetchUserWallets";
 import { groupByColor, groupByEdition, groupBySymbol } from "~/utils/inventory";
 import { HiRefresh } from "react-icons/hi";
 import { zip } from "~/utils/zip";
-import { types } from "util";
 import MetaTags from "~/components/MetaTags";
 
 const Inventory = () => {
-  // const { user } = useUser();
   const router = useRouter();
   const { account } = router.query;
   const { wallets } = useFetchUserWallets(account);
 
   const [originalSpecies, setOriginalSpecies] = useState<Character[]>([]);
   const [sagaSpecies, setSagaSpecies] = useState<Character[]>([]);
-  const [selectedAttribute, setSelectedAttribute] = useState("");
 
   const { data: holders, isLoading } = api.inventory.getUserItems.useQuery({
     wallets: wallets,
@@ -72,7 +65,6 @@ const Inventory = () => {
   }, [isLoading]);
 
   const handleSort = (attribute: string) => {
-    setSelectedAttribute(attribute);
     if (attribute === "rarity") {
       setOriginalSpecies(sortByRarity(originalSpecies));
       setSagaSpecies(sortByRarity(sagaSpecies));
