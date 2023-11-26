@@ -15,6 +15,7 @@ import {
   getTraitBadgeColor,
   getBorderColor,
 } from "~/utils/colors";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 type HerdProps = {
   herd: Herd & {
@@ -122,6 +123,7 @@ export default function Herd(props: HerdProps) {
                       alt="Avatar"
                       width={24}
                       height={24}
+                      onError={handleUserPFPDoesNotExist}
                     />
                     <div className="self-center text-white">
                       {owner?.twitter?.global_name ||

@@ -246,8 +246,6 @@ export const statsRouter = createTRPCRouter({
         },
       });
 
-      console.log(holdersWithTribeId);
-
       // Extract holderOwner IDs from fetched holders
       const holderOwnerIds = holdersWithTribeId.map((holder) => holder.owner);
 
@@ -320,8 +318,6 @@ export const statsRouter = createTRPCRouter({
           class: input.class,
         };
       }
-
-      console.log(whereClause);
 
       const ogHolders = await ctx.prisma.dino.groupBy({
         by: ["holderOwner"],
