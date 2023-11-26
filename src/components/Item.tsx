@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/@/components/ui/dialog";
+import Link from "next/link";
 
 type ItemProps = {
   id: string;
@@ -179,61 +180,94 @@ export const Item = ({ id, item, type }: ItemProps) => {
                 </div>
               </div>
             </div>
-            <div className="w-2/3 items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3 md:w-full">
-              <h1 className="pb-2">TRAITS</h1>
-              {isDino && (
-                <>
-                  {attributesArray.map(([key, value]) => {
-                    if (key === "mint") return null;
-                    return (
-                      <div key={key} className="flex flex-row justify-between">
-                        <p className="text-sm text-neutral-500">{key}</p>
-                        <p className="text-sm">{value as string}</p>
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-
-              {isClaymaker && (
-                <div className="flex flex-row justify-between">
-                  <p className="text-sm text-neutral-500">Edition</p>
-                  <p className="text-sm">{item.edition}</p>
-                </div>
-              )}
-
-              {isClay && (
-                <div className="flex flex-row justify-between">
-                  <p className="text-sm text-neutral-500">Color</p>
-                  <p className="text-sm">{item.color}</p>
-                </div>
-              )}
-
-              {isConsumable && (
-                <>
-                  {item.attributes &&
-                    item.attributes.map(
-                      (
-                        trait: { value: string; trait_type: string },
-                        idx: number
-                      ) => {
+            <div className="h-full w-2/3 items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3 md:w-full">
+              <div className="flex h-full flex-col justify-between">
+                <div className="flex flex-col">
+                  <h1 className="pb-2">TRAITS</h1>
+                  {isDino && (
+                    <>
+                      {attributesArray.map(([key, value]) => {
+                        if (key === "mint") return null;
                         return (
                           <div
-                            key={idx}
+                            key={key}
                             className="flex flex-row justify-between"
                           >
-                            {trait.value.length > 0 && (
-                              <p className="text-sm text-neutral-500">
-                                {trait.value}
-                              </p>
-                            )}
-                            <p className="text-sm">{trait.trait_type}</p>
+                            <p className="text-sm text-neutral-500">{key}</p>
+                            <p className="text-sm">{value as string}</p>
                           </div>
                         );
-                      }
-                    )}
-                </>
-              )}
+                      })}
+                    </>
+                  )}
+
+                  {isClaymaker && (
+                    <div className="flex flex-row justify-between">
+                      <p className="text-sm text-neutral-500">Edition</p>
+                      <p className="text-sm">{item.edition}</p>
+                    </div>
+                  )}
+
+                  {isClay && (
+                    <div className="flex flex-row justify-between">
+                      <p className="text-sm text-neutral-500">Color</p>
+                      <p className="text-sm">{item.color}</p>
+                    </div>
+                  )}
+
+                  {isConsumable && (
+                    <>
+                      {item.attributes &&
+                        item.attributes.map(
+                          (
+                            trait: { value: string; trait_type: string },
+                            idx: number
+                          ) => {
+                            return (
+                              <div
+                                key={idx}
+                                className="flex flex-row justify-between"
+                              >
+                                {trait.value.length > 0 && (
+                                  <p className="text-sm text-neutral-500">
+                                    {trait.trait_type}
+                                  </p>
+                                )}
+                                <p className="text-sm">{trait.value}</p>
+                              </div>
+                            );
+                          }
+                        )}
+                    </>
+                  )}
+                </div>
+                <div className="flex flex-row gap-2 place-self-end">
+                  <Link
+                    href={`https://tensor.trade/item/${item.mint}`}
+                    target="_blank"
+                  >
+                    <Image
+                      src="/icons/tensor.svg"
+                      alt="Tensor"
+                      width={24}
+                      height={24}
+                      className="hover:scale-125"
+                    />
+                  </Link>
+                  <Link
+                    href={`https://magiceden.io/item-details/${item.mint}`}
+                    target="_blank"
+                  >
+                    <Image
+                      src="/icons/magic_eden.svg"
+                      alt="Magic Eden"
+                      width={24}
+                      height={24}
+                      className="hover:scale-125"
+                    />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </DialogContent>
