@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useState } from "react";
 import HoldersDataTable from "~/components/HoldersDataTable";
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
@@ -12,23 +11,17 @@ import {
 } from "~/@/components/ui/select";
 import { CLASSES, SKINS, COLORS, SPECIES } from "~/utils/constants";
 import { extractProfileFromUser } from "~/utils/wallet";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 type FilterTraits = {
   species: string;
   skin: string;
   color: string;
   class: string;
-  tribeId: string;
+  tribe: string;
 
   [key: string]: string;
-};
-
-const initalTraits: FilterTraits = {
-  species: "all",
-  skin: "all",
-  color: "all",
-  class: "all",
-  tribeId: "all",
 };
 
 type Owner = {
@@ -40,19 +33,32 @@ type Owner = {
 };
 
 const Holders = () => {
-  const [filterTraits, setFilterTraits] = useState<FilterTraits>(initalTraits);
-  // const [tableData, setTableData] = useState<any>([]);
+  const searchParams = useSearchParams();
+
+  const tribeParam = searchParams.get("tribe") || "all";
+  const skinParam = searchParams.get("skin") || "all";
+  const speciesParam = searchParams.get("species") || "all";
+  const colorParam = searchParams.get("color") || "all";
+  const classParam = searchParams.get("class") || "all";
+
+  const searchTraits: FilterTraits = {
+    tribe: tribeParam,
+    skin: skinParam,
+    species: speciesParam,
+    color: colorParam,
+    class: classParam,
+  };
+
   const { data: tribes } = api.subdao.getAllSubDAOs.useQuery();
-  const { data: holders, isLoading } =
-    api.stats.getDinoHoldersByTrait.useQuery(filterTraits);
+  const { data: holders } =
+    api.stats.getDinoHoldersByTrait.useQuery(searchTraits);
 
   const { data: ccHolders } =
-    api.stats.getDinoHoldersByCount.useQuery(filterTraits);
+    api.stats.getDinoHoldersByCount.useQuery(searchTraits);
 
   const { data: users } = api.binding.getAllUsers.useQuery();
 
-  const tableType =
-    filterTraits.tribeId === "cll09ow4e0000gq6epo4499y3" ? ccHolders : holders;
+  const tableType = searchTraits.tribe === "cc" ? ccHolders : holders;
   const tableData = tableType?.map((holder) => {
     const user = users?.find((user) =>
       user.wallets.some((wallet) => wallet.address === holder.address)
@@ -136,83 +142,107 @@ const Holders = () => {
     []
   );
 
-  console.log(updatedTableData);
-
-  const handleSetFilters = (filter: string, value: string) => {
-    console.log(value);
-    setFilterTraits((prevState) => ({
-      ...prevState,
-      [filter]: value,
-    }));
-  };
+  updatedTableData?.sort((a, b) => b.og - a.og);
 
   return (
-    <>
+    <div className="w-full">
       <Head>
         <title>DinoHerd | Holders</title>
       </Head>
-      <Layout>
-        <section className="flex w-full flex-col items-center justify-center gap-12 overflow-hidden py-4 font-clayno md:px-4 md:py-8">
-          <div className="flex flex-row gap-2">
-            <Select onValueChange={(v) => handleSetFilters("skin", v)}>
-              <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent className="bg-black font-clayno text-sm text-white">
-                <SelectItem value="all">All</SelectItem>
-                {SKINS.map((skin) => (
-                  <SelectItem key={skin} value={skin.toLowerCase()}>
-                    {skin}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select onValueChange={(v) => handleSetFilters("color", v)}>
-              <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent className="bg-black font-clayno text-sm text-white">
-                <SelectItem value="all">All</SelectItem>
-                {COLORS.map((color) => (
-                  <SelectItem key={color} value={color.toLowerCase()}>
-                    {color}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select onValueChange={(v) => handleSetFilters("species", v)}>
-              <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent className="bg-black font-clayno text-sm text-white">
-                <SelectItem value="all">All</SelectItem>
-                {SPECIES.map((species) => (
-                  <SelectItem key={species} value={species.toLowerCase()}>
-                    {species}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select onValueChange={(v) => handleSetFilters("tribeId", v)}>
-              <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent className="bg-black font-clayno text-sm text-white">
-                <SelectItem value="all">All</SelectItem>
-                {tribes?.map((tribe) => (
-                  <SelectItem key={tribe.id} value={tribe.id}>
-                    {tribe.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
+      <section className="flex w-full flex-col items-center justify-center gap-8 py-2 font-clayno md:px-4 ">
+        <div className="flex flex-row flex-wrap gap-2">
+          <FilterSelect
+            searchTraits={searchTraits}
+            data={COLORS}
+            type="color"
+            value={colorParam}
+          />
+          <FilterSelect
+            searchTraits={searchTraits}
+            data={SKINS}
+            type="skin"
+            value={skinParam}
+          />
+          <FilterSelect
+            searchTraits={searchTraits}
+            data={SPECIES}
+            type="species"
+            value={speciesParam}
+          />
+          <FilterSelect
+            searchTraits={searchTraits}
+            data={tribes}
+            type="tribe"
+            value={tribeParam}
+          />
+        </div>
+        <div className="container mx-auto max-w-5xl px-0 py-2 pb-24">
           {holders && <HoldersDataTable data={updatedTableData} />}
-        </section>
-      </Layout>
-    </>
+        </div>
+      </section>
+    </div>
   );
 };
 
 export default Holders;
+
+type FilterSelectProps = {
+  searchTraits: FilterTraits;
+  data: any;
+  type: string;
+  value?: string;
+};
+
+function FilterSelect({ searchTraits, data, type, value }: FilterSelectProps) {
+  const router = useRouter();
+  const handleSelectChange = (newValue: string) => {
+    const queryParams = {
+      ...searchTraits,
+      [type]: newValue !== "all" ? newValue : undefined,
+    };
+
+    const queryString = Object.entries(queryParams)
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+
+    router.push({
+      pathname: router.pathname,
+      query: queryString ? `tab=holders&${queryString}` : "tab=holders",
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="font-clayno text-sm text-neutral-500">{type}</p>
+      <Select
+        value={value}
+        onValueChange={(newValue) => handleSelectChange(newValue)}
+      >
+        <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
+          <SelectValue placeholder="All" />
+        </SelectTrigger>
+        <SelectContent className="bg-black font-clayno text-sm text-white">
+          <SelectItem value="all">All</SelectItem>
+          {type === "tribe" ? (
+            <>
+              {data?.map((trait: any) => (
+                <SelectItem key={trait.id} value={trait.acronym}>
+                  {trait.name}
+                </SelectItem>
+              ))}
+            </>
+          ) : (
+            <>
+              {data.map((trait: string) => (
+                <SelectItem key={trait} value={trait.toLowerCase()}>
+                  {trait}
+                </SelectItem>
+              ))}
+            </>
+          )}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
