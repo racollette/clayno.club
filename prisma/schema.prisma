@@ -27,6 +27,7 @@ model Dino {
   rarity      Int?
   subDAOId    String?
   herdId      String?
+  classPFP    String?
   attributes  Attributes?
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
@@ -196,14 +197,14 @@ model Claymaker {
 }
 
 model Consumable {
-  mint          String  @id
   name          String
   symbol        String?
   description   String?
   image         String
-  animation_url String?
   attributes    Json?
   holderOwner   String?
+  mint          String  @id
+  animation_url String?
   holder        Holder? @relation(fields: [holderOwner], references: [owner])
 
   @@index([holderOwner])
