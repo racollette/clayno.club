@@ -2,13 +2,13 @@ import Head from "next/head";
 
 const MetaTags = ({
   title = "DinoHerd",
-  description = "Claynosaurz Collectors Gallery",
-  ogTitle = "Default OG Title",
-  ogDescription = "Default OG Description",
-  ogImage = "/default-image.jpg",
-  ogUrl = "https://example.com",
-  twitterCard = "summary",
-  twitterImage = "/default-twitter-image.jpg",
+  description = "Claynosaurz Community Tools",
+  ogTitle = "Claynosaurz Community Tools",
+  ogDescription = "Explore the herds, tribes and members of Claynotopia! Collectors collect.",
+  ogImage = "/images/trailer_herd.jpeg",
+  ogUrl = "https://dinoherd.cc",
+  twitterCard = "Explore the herds, tribes and members of Claynotopia! Collectors collect",
+  twitterImage = "/images/3d_herd.jpeg",
 }) => {
   return (
     <Head>
