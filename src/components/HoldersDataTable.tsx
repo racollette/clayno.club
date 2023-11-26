@@ -2,18 +2,17 @@
 
 import * as React from "react";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   SortingState,
-  VisibilityState,
-  ColumnFiltersState,
+  type VisibilityState,
+  type ColumnFiltersState,
   getPaginationRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -50,14 +49,8 @@ export default function HoldersDataTable<TData, TValue>({
         accessorKey: "rank",
         header: ({ column }) => {
           return (
-            <div
-              className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
+            <div className="flex cursor-pointer flex-row items-center justify-start gap-1 hover:text-white">
               <div>Rank</div>
-              <ArrowUpDown className="h-4 w-4" />
             </div>
           );
         },
@@ -98,11 +91,12 @@ export default function HoldersDataTable<TData, TValue>({
                     onError={handleUserPFPDoesNotExist}
                   />
                   <p>{row.original.owner.userHandle}</p>
-                  <p className="ml-4">{truncatedAddress}</p>
+                  <p className="ml-4 hidden md:block">{truncatedAddress}</p>
                 </div>
               ) : (
                 <div className="flex flex-row overflow-hidden whitespace-nowrap">
-                  <p className="">{row.original.address}</p>
+                  <p className="block md:hidden">{truncatedAddress}</p>
+                  <p className="hidden md:block">{row.original.address}</p>
                 </div>
               )}
             </>
@@ -212,7 +206,6 @@ export default function HoldersDataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -221,7 +214,7 @@ export default function HoldersDataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     // onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    // onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
@@ -239,11 +232,11 @@ export default function HoldersDataTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <>
       <div className="flex items-center py-4">
         <Input
           placeholder="Search address"
-          value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
+          // value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("address")?.setFilterValue(event.target.value)
           }
@@ -307,7 +300,11 @@ export default function HoldersDataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() =>
-                    window.open(`/inventory/${row.original.address}`)
+                    window.open(
+                      `/inventory/${
+                        row.original.owner.username ?? row.original.address
+                      }`
+                    )
                   }
                   className="cursor-pointer rounded-md"
                 >
@@ -354,6 +351,6 @@ export default function HoldersDataTable<TData, TValue>({
           Next
         </Button>
       </div>
-    </div>
+    </>
   );
 }
