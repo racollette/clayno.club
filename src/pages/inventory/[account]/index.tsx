@@ -21,6 +21,7 @@ import { groupByColor, groupByEdition, groupBySymbol } from "~/utils/inventory";
 import { HiRefresh } from "react-icons/hi";
 import { zip } from "~/utils/zip";
 import { types } from "util";
+import MetaTags from "~/components/MetaTags";
 
 const Inventory = () => {
   // const { user } = useUser();
@@ -86,20 +87,18 @@ const Inventory = () => {
 
   return (
     <>
-      <Head>
-        <title>DinoHerd | Inventory</title>
-      </Head>
+      <MetaTags title="DinoHerd | Inventory" />
       <Layout>
         <section className="flex flex-col items-center justify-center gap-y-8 p-2 md:container">
           <div className="font-clayno text-3xl">Inventory</div>
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-row justify-between">
-              <div className="font-clayno text-2xl text-white">
+              <div className="font-clayno text-lg text-white md:text-2xl">
                 Claynosaurz {`(${originalSpecies?.length})`}
               </div>
               <div>
                 <Select onValueChange={(v) => handleSort(v)}>
-                  <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
+                  <SelectTrigger className="w-[120px] bg-black font-clayno text-sm text-white md:w-[180px]">
                     <SelectValue placeholder="Rarity" />
                   </SelectTrigger>
                   <SelectContent className="bg-black font-clayno text-sm text-white">
@@ -119,7 +118,9 @@ const Inventory = () => {
               ))}
               {originalSpecies?.length > 1 && (
                 <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
-                  <p className="font-clayno text-lg text-white">Download All</p>
+                  <p className="font-clayno text-sm text-white md:text-lg">
+                    Download All
+                  </p>
                   <DownloadButton
                     data={originalSpecies}
                     type="gif"
@@ -133,7 +134,7 @@ const Inventory = () => {
                 </div>
               )}
             </div>
-            <div className="font-clayno text-2xl text-white">
+            <div className="font-clayno text-lg text-white md:text-2xl">
               Call of Saga {`(${sagaSpecies?.length})`}
             </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
@@ -144,7 +145,9 @@ const Inventory = () => {
               ))}
               {sagaSpecies?.length > 1 && (
                 <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
-                  <p className="font-clayno text-lg text-white">Download All</p>
+                  <p className="font-clayno text-sm text-white md:text-lg">
+                    Download All
+                  </p>
                   <DownloadButton
                     data={sagaSpecies}
                     type="gif"
@@ -158,7 +161,7 @@ const Inventory = () => {
                 </div>
               )}
             </div>
-            <div className="font-clayno text-2xl text-white">
+            <div className="font-clayno text-lg text-white md:text-2xl">
               Clay {`(${clay?.length})`}
             </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
@@ -183,7 +186,7 @@ const Inventory = () => {
                 </>
               )}
             </div>
-            <div className="font-clayno text-2xl text-white">
+            <div className="font-clayno text-lg text-white md:text-2xl">
               Claymakers {`(${claymakers?.length})`}
             </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
@@ -237,7 +240,7 @@ const Inventory = () => {
                 </>
               )}
             </div>
-            <div className="font-clayno text-2xl text-white">
+            <div className="font-clayno text-lg text-white md:text-2xl">
               Consumables {`(${consumables?.length})`}
             </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">

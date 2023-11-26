@@ -10,17 +10,23 @@ import {
   TabsTrigger,
 } from "~/@/components/ui/tabs";
 import Holders from "./holders";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import MetaTags from "~/components/MetaTags";
 
 export default function StatsPage() {
+  const searchParams = useSearchParams();
+
+  const tab = searchParams.get("tab") || "resources";
+
   return (
     <>
-      <Head>
-        <title>DinoHerd | Stats</title>
-      </Head>
+      <MetaTags title="DinoHerd | Stats" />
       <Layout>
-        <section className="flex w-full flex-col items-center overflow-hidden py-4 md:px-4 md:py-8">
+        <section className="flex w-full flex-col items-center">
           <Tabs
             defaultValue="resources"
+            value={tab}
             className="flex w-full flex-col items-center gap-4"
           >
             <TabsList className="flex flex-row items-center justify-center gap-8 bg-neutral-800 font-clayno text-white">
@@ -28,10 +34,14 @@ export default function StatsPage() {
                 value="resources"
                 className="rounded-lg px-10 text-lg"
               >
-                Resources
+                <Link href={`?tab=resources`} scroll={false}>
+                  Resources
+                </Link>
               </TabsTrigger>
               <TabsTrigger value="holders" className="rounded-lg px-10 text-lg">
-                Holders
+                <Link href={`?tab=holders`} scroll={false}>
+                  Holders
+                </Link>
               </TabsTrigger>
             </TabsList>
             <TabsContent
@@ -42,7 +52,7 @@ export default function StatsPage() {
               <MoldedMeter />
               <MakerMeter />
             </TabsContent>
-            <TabsContent value="holders">
+            <TabsContent value="holders" className="w-full">
               <Holders />
             </TabsContent>
           </Tabs>

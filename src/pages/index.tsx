@@ -1,16 +1,10 @@
-import Head from "next/head";
 import Link from "next/link";
+import Metatags from "~/components/MetaTags";
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>DinoHerd | Home</title>
-        <meta name="description" content="Claynosaurz Collectors Gallery" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Metatags title="DinoHerd | Home" />
       <main className="relative flex min-h-screen min-w-full flex-col items-center justify-center overflow-hidden font-clayno">
         <div className="absolute origin-center -rotate-[9deg] bg-cover bg-repeat">
           <div

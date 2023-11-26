@@ -10,6 +10,7 @@ import Head from "next/head";
 import { Fragment } from "react";
 import { type Attributes, type Dino } from "@prisma/client";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
+import MetaTags from "~/components/MetaTags";
 
 export default function SubDAO() {
   const router = useRouter();
@@ -21,13 +22,7 @@ export default function SubDAO() {
 
   return (
     <>
-      <Head>
-        <title>{data?.name ?? `DinoHerd`}</title>
-        <meta name="description" content="Claynosaurz Collectors Gallery" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags title={data?.name ?? `DinoHerd`} />
       <Layout>
         <div className="flex w-full flex-col justify-center gap-4 align-middle lg:w-full xl:w-11/12 2xl:w-10/12">
           {!isLoading && data ? (

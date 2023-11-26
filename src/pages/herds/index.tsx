@@ -22,6 +22,7 @@ import { useToast } from "~/@/components/ui/use-toast";
 import { VoteWidget } from "~/components/VoteWidget";
 import { HiExternalLink, HiX, HiRefresh } from "react-icons/hi";
 import { FilterDialog } from "~/components/FilterDialog";
+import MetaTags from "~/components/MetaTags";
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {
 //     if (obj.attributes.species !== "Dactyl") {
@@ -405,13 +406,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>DinoHerd | Herds</title>
-        <meta name="description" content="Claynosaurz Collectors Gallery" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags title="DinoHerd | Herds" />
       <main className="relative flex min-h-screen flex-col items-center  bg-black">
         {allHerdsLoading ? (
           <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full text-white md:w-1/4">
