@@ -68,7 +68,7 @@ export const statsRouter = createTRPCRouter({
         species: z.string(),
         color: z.string(),
         class: z.string(),
-        tribeId: z.string(),
+        tribe: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -138,20 +138,18 @@ export const statsRouter = createTRPCRouter({
         };
       }
 
-      if (input.tribeId && input.tribeId !== "all") {
+      if (input.tribe && input.tribe !== "all") {
         whereClause.subdaos = {
           some: {
-            id: input.tribeId,
+            acronym: input.tribe,
           },
         };
         whereClauseSaga.subdaos = {
           some: {
-            id: input.tribeId,
+            acronym: input.tribe,
           },
         };
       }
-
-      console.log(whereClause);
 
       const ogHolders = await ctx.prisma.dino.groupBy({
         by: ["holderOwner"],
@@ -231,7 +229,7 @@ export const statsRouter = createTRPCRouter({
         species: z.string(),
         color: z.string(),
         class: z.string(),
-        tribeId: z.string(),
+        tribe: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -239,7 +237,7 @@ export const statsRouter = createTRPCRouter({
         where: {
           subdaos: {
             some: {
-              id: input.tribeId,
+              acronym: input.tribe,
             },
           },
         },
@@ -409,22 +407,6 @@ async function fetchUserDetails(
   clayHolders: any,
   claymakerHolders: any
 ) {
-  // const user = await ctx.prisma.user.findFirst({
-  //   where: {
-  //     wallets: {
-  //       some: {
-  //         address: og.holderOwner as string,
-  //       },
-  //     },
-  //   },
-  //   include: {
-  //     discord: true,
-  //     twitter: true,
-  //   },
-  // });
-
-  // const { username, userHandle, userPFP } = extractProfileFromUser(user);
-
   const matchingSagaHolder = sagaHolders.find(
     (sagaHolder: any) => sagaHolder.holderOwner === og.holderOwner
   );
@@ -437,7 +419,6 @@ async function fetchUserDetails(
 
   combinedHolders.push({
     address: og.holderOwner,
-    // owner: { username, userHandle, userPFP },
     og: og._count.mint,
     saga: matchingSagaHolder ? matchingSagaHolder._count.mint : 0,
     clay: matchingClayHolder ? matchingClayHolder._count.mint : 0,
