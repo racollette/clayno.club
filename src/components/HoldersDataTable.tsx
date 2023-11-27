@@ -240,11 +240,14 @@ export default function HoldersDataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("address")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm bg-black"
+          className="max-w-sm bg-black text-xs md:text-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto bg-black">
+            <Button
+              variant="outline"
+              className="ml-auto bg-black text-xs md:text-sm"
+            >
               Columns
             </Button>
           </DropdownMenuTrigger>

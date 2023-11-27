@@ -47,7 +47,7 @@ export const MoldedMeter = () => {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="p-4 text-center font-clayno text-3xl hover:animate-wiggle md:text-4xl">
+      <h1 className="p-4 text-center font-clayno text-2xl hover:animate-wiggle md:text-4xl">
         <span className="text-green-400">Cl</span>
         <span className="mr-2 text-yellow-300">ay</span>
         <span className="ml-2 text-blue-400">Mo</span>

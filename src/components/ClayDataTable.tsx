@@ -89,6 +89,7 @@ export default function HoldersDataTable<TData, TValue>({
                     height={24}
                     className="rounded-full"
                     onError={handleUserPFPDoesNotExist}
+                    quality={50}
                   />
                   <p>{row.original.owner.userHandle}</p>
                   <p className="ml-4 hidden md:block">{truncatedAddress}</p>
@@ -142,6 +143,7 @@ export default function HoldersDataTable<TData, TValue>({
                 height={20}
                 alt="Red"
                 className="rounded-md"
+                quality={50}
               />
               <ArrowUpDown className="h-4 w-4" />
             </div>
@@ -170,6 +172,7 @@ export default function HoldersDataTable<TData, TValue>({
                 height={20}
                 alt="Green"
                 className="rounded-md"
+                quality={50}
               />
               <ArrowUpDown className="h-4 w-4" />
             </div>
@@ -198,6 +201,7 @@ export default function HoldersDataTable<TData, TValue>({
                 height={20}
                 alt="Blue"
                 className="rounded-md"
+                quality={50}
               />
               <ArrowUpDown className="h-4 w-4" />
             </div>
@@ -226,6 +230,7 @@ export default function HoldersDataTable<TData, TValue>({
                 height={20}
                 alt="Yellow"
                 className="rounded-md"
+                quality={50}
               />
               <ArrowUpDown className="h-4 w-4" />
             </div>
@@ -254,6 +259,7 @@ export default function HoldersDataTable<TData, TValue>({
                 height={20}
                 alt="White"
                 className="rounded-md"
+                quality={50}
               />
               <ArrowUpDown className="h-4 w-4" />
             </div>
@@ -282,6 +288,7 @@ export default function HoldersDataTable<TData, TValue>({
                 height={20}
                 alt="Black"
                 className="rounded-md"
+                quality={50}
               />
               <ArrowUpDown className="h-4 w-4" />
             </div>
@@ -340,11 +347,14 @@ export default function HoldersDataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("address")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm bg-black"
+          className="max-w-sm bg-black text-xs md:text-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto bg-black">
+            <Button
+              variant="outline"
+              className="ml-auto bg-black text-xs md:text-sm"
+            >
               Columns
             </Button>
           </DropdownMenuTrigger>
