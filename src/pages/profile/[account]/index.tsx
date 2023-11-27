@@ -13,6 +13,8 @@ import Head from "next/head";
 import { getQueryString } from "~/utils/routes";
 import { CollagePreview } from "~/components/CollagePreview";
 import { GridItemProps } from "~/components/CollageModal";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
+import MetaTags from "~/components/MetaTags";
 
 // const WalletMultiButtonDynamic = dynamic(
 //   async () =>
@@ -83,9 +85,7 @@ export default function Profile() {
 
   return (
     <>
-      <Head>
-        <title>DinoHerd | Profile</title>
-      </Head>
+      <MetaTags title="DinoHerd | Profile" />
       <Layout>
         <section className="flex w-full flex-col items-center justify-center gap-8 py-4 md:flex-row md:items-start md:px-4 md:py-8">
           <div className="flex flex-row flex-wrap justify-center rounded-xl bg-neutral-800 p-4 align-middle">
@@ -108,6 +108,7 @@ export default function Profile() {
                         alt="Avatar"
                         width={75}
                         height={75}
+                        onError={handleUserPFPDoesNotExist}
                       />
                       <div className="self-center p-2 font-extrabold text-white">
                         {user.twitter

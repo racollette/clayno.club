@@ -51,11 +51,9 @@ export const ClassCounter = () => {
     setTopClass(largestTotal);
   }, [data]);
 
-  const [isWiggling, setIsWiggling] = useState(null);
-
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="p-4 text-center font-clayno text-3xl hover:animate-wiggle md:text-5xl">
+      <h1 className="p-4 text-center font-clayno text-2xl hover:animate-wiggle md:text-4xl">
         <span className="text-green-500">Cl</span>
         <span className="text-blue-400">as</span>
         <span className="text-red-400">ses</span>

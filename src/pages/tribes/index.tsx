@@ -1,21 +1,15 @@
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import Head from "next/head";
 import DataTable from "~/components/DataTable";
+import MetaTags from "~/components/MetaTags";
 
 export default function TribesPage() {
   const { data, isLoading } = api.subdao.getAllSubDAOs.useQuery();
 
   return (
     <>
-      <Head>
-        <title>DinoHerd | Tribes</title>
-        <meta name="description" content="Claynosaurz Collectors Gallery" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags title="DinoHerd | Tribes" />
       <Layout>
         <section className="container relative m-4 aspect-[7/2] w-full overflow-clip">
           <Image

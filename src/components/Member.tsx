@@ -13,6 +13,7 @@ import { shortAccount } from "~/utils/addresses";
 import ImageExpander from "./Expander";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { fetchOtherWallets } from "~/utils/subdaos";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 type MemberProps = {
   owner: string;
@@ -104,6 +105,7 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
                 src={avatar}
                 alt="Avatar"
                 fill
+                onError={handleUserPFPDoesNotExist}
               />
             </div>
             <div className="md:text-md self-center overflow-ellipsis whitespace-nowrap p-1 text-sm font-extrabold text-white">

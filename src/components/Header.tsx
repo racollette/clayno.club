@@ -43,15 +43,15 @@ export default function Header() {
         </Navbar.Link>
         <Navbar.Link
           className="text-md cursor-pointer font-clayno text-white"
-          href={`/fusion`}
-        >
-          Fusion
-        </Navbar.Link>
-        <Navbar.Link
-          className="text-md cursor-pointer font-clayno text-white"
           href={`/stats`}
         >
           Stats
+        </Navbar.Link>
+        <Navbar.Link
+          className="text-md cursor-pointer font-clayno text-white"
+          href={`/fusion`}
+        >
+          Fusion
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
