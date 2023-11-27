@@ -53,8 +53,6 @@ const Holders = () => {
   const { data: holders } =
     api.stats.getDinoHoldersByTrait.useQuery(searchTraits);
 
-  console.log(holders);
-
   const { data: ccHolders } =
     api.stats.getDinoHoldersByCount.useQuery(searchTraits);
 

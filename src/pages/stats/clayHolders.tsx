@@ -14,8 +14,6 @@ const ClayHolders = () => {
   const { data: clayHolders } = api.stats.getClayHoldersByColor.useQuery();
   const { data: users } = api.binding.getAllUsers.useQuery();
 
-  console.log(clayHolders);
-
   const tableData = clayHolders?.map((holder) => {
     const user = users?.find((user) =>
       user.wallets.some((wallet) => wallet.address === holder.address)
