@@ -18,6 +18,19 @@ type CombinedHolder = {
   claymakers: number;
 };
 
+type ClayHolder = {
+  address: string | null;
+  red: number;
+  blue: number;
+  green: number;
+  yellow: number;
+  white: number;
+  black: number;
+  total: number;
+
+  [key: string]: number | string | null;
+};
+
 export const statsRouter = createTRPCRouter({
   getMoldedMeterSnapshot: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.moldedMeterSnapshot.findFirst({
@@ -391,7 +404,58 @@ export const statsRouter = createTRPCRouter({
           claymakerHolders
         );
       }
+
       return combinedHolders.sort((a, b) => b.og - a.og);
+    }),
+
+  getClayHoldersByColor: publicProcedure
+    // .input(
+    //   z.object({
+    //     color: z.string(),
+    //   })
+    // )
+    .query(async ({ ctx, input }) => {
+      const clayColorsByOwner = await ctx.prisma.clay.groupBy({
+        by: ["holderOwner", "color"],
+        _count: {
+          color: true,
+        },
+        where: {
+          holderOwner: { not: null },
+        },
+      });
+
+      const clayHoldersMap: Record<string, ClayHolder> = {};
+
+      for (const { holderOwner, color, _count } of clayColorsByOwner) {
+        if (holderOwner && color) {
+          if (!clayHoldersMap[holderOwner]) {
+            clayHoldersMap[holderOwner] = {
+              address: holderOwner,
+              red: 0,
+              blue: 0,
+              green: 0,
+              yellow: 0,
+              white: 0,
+              black: 0,
+              total: 0,
+            };
+          }
+
+          const clayHolder = clayHoldersMap[holderOwner];
+          // Ensure color is a valid key of ClayHolder
+          if (clayHolder) {
+            clayHolder[color.toLowerCase()] = _count.color;
+            clayHolder.total += _count.color;
+          }
+        }
+      }
+
+      const clayHolders: ClayHolder[] = Object.values(clayHoldersMap);
+
+      return clayHolders.sort((a, b) => b.total - a.total);
+
+      // return clayColorsByOwner.sort((a, b) => b._count.color - a._count.color);
     }),
 });
 

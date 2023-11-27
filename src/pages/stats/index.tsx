@@ -13,6 +13,7 @@ import Holders from "./holders";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import MetaTags from "~/components/MetaTags";
+import ClayHolders from "./clayHolders";
 
 export default function StatsPage() {
   const searchParams = useSearchParams();
@@ -35,12 +36,17 @@ export default function StatsPage() {
                 className="rounded-lg px-10 text-lg"
               >
                 <Link href={`?tab=resources`} scroll={false}>
-                  Resources
+                  Summary
                 </Link>
               </TabsTrigger>
               <TabsTrigger value="holders" className="rounded-lg px-10 text-lg">
                 <Link href={`?tab=holders`} scroll={false}>
                   Holders
+                </Link>
+              </TabsTrigger>
+              <TabsTrigger value="clay" className="rounded-lg px-10 text-lg">
+                <Link href={`?tab=clay`} scroll={false}>
+                  Clay
                 </Link>
               </TabsTrigger>
             </TabsList>
@@ -54,6 +60,9 @@ export default function StatsPage() {
             </TabsContent>
             <TabsContent value="holders" className="w-full">
               <Holders />
+            </TabsContent>
+            <TabsContent value="clay" className="w-full">
+              <ClayHolders />
             </TabsContent>
           </Tabs>
         </section>
