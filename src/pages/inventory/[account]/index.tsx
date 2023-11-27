@@ -212,7 +212,7 @@ const Inventory = () => {
                           (claymaker: any) => (
                             <div key={claymaker.mint} className="relative">
                               <Item item={claymaker} type={"claymaker"} />
-                              <p className="front-clayno absolute bottom-2 right-2 text-xl text-white">
+                              <p className="absolute bottom-2 right-2 font-clayno text-xl text-white">
                                 {claymaker.charges}/5
                               </p>
                             </div>
