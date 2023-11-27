@@ -105,7 +105,7 @@ const Inventory = () => {
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {originalSpecies?.map((dino: any) => (
                 <div key={dino.mint}>
-                  <Item id={dino.mint} item={dino} type={"dino"} />
+                  <Item item={dino} type={"dino"} />
                 </div>
               ))}
               {originalSpecies?.length > 1 && (
@@ -132,7 +132,7 @@ const Inventory = () => {
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {sagaSpecies?.map((dino: any) => (
                 <div key={dino.mint}>
-                  <Item id={dino.mint} item={dino} type={"dino"} />
+                  <Item item={dino} type={"dino"} />
                 </div>
               ))}
               {sagaSpecies?.length > 1 && (
@@ -168,7 +168,7 @@ const Inventory = () => {
                         key={color}
                         className="relative flex flex-row flex-wrap gap-2"
                       >
-                        <Item id={color} item={firstClay} type={"clay"} />
+                        <Item item={firstClay} type={"clay"} />
                         <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                           {colorCount}
                         </p>
@@ -198,11 +198,7 @@ const Inventory = () => {
                           key={edition}
                           className="relative order-first flex flex-row flex-wrap gap-2"
                         >
-                          <Item
-                            id={edition}
-                            item={firstClaymaker}
-                            type={"claymaker"}
-                          />
+                          <Item item={firstClaymaker} type={"claymaker"} />
                           <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                             {editionCount}
                           </p>
@@ -215,11 +211,7 @@ const Inventory = () => {
                         {groupByEdition(claymakers ?? [])["Deluxe"].map(
                           (claymaker: any) => (
                             <div key={claymaker.mint} className="relative">
-                              <Item
-                                id={claymaker.mint}
-                                item={claymaker}
-                                type={"claymaker"}
-                              />
+                              <Item item={claymaker} type={"claymaker"} />
                               <p className="front-clayno absolute bottom-2 right-2 text-xl text-white">
                                 {claymaker.charges}/5
                               </p>
@@ -251,11 +243,7 @@ const Inventory = () => {
                           key={symbol}
                           className="relative flex flex-row flex-wrap gap-2"
                         >
-                          <Item
-                            id={symbol}
-                            item={firstConsumable}
-                            type={"consumable"}
-                          />
+                          <Item item={firstConsumable} type={"consumable"} />
                           <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
                             {symbolCount}
                           </p>
@@ -268,11 +256,7 @@ const Inventory = () => {
                         {groupBySymbol(consumables ?? [])["ART"].map(
                           (artifact: any) => (
                             <div key={artifact.mint} className="relative">
-                              <Item
-                                id={artifact.mint}
-                                item={artifact}
-                                type={"consumable"}
-                              />
+                              <Item item={artifact} type={"consumable"} />
                             </div>
                           )
                         )}
