@@ -26,39 +26,45 @@ export default function StatsPage() {
       <Layout>
         <section className="flex w-full flex-col items-center">
           <Tabs
-            defaultValue="resources"
+            defaultValue="summary"
             value={tab}
             className="flex w-full flex-col items-center gap-4"
           >
-            <TabsList className="flex flex-row items-center justify-center gap-8 bg-neutral-800 font-clayno text-white">
+            <TabsList className="flex flex-row items-center justify-center bg-neutral-800 font-clayno text-white md:gap-4">
               <TabsTrigger
-                value="resources"
-                className="rounded-lg px-10 text-lg"
+                value="summary"
+                className="text-md w-1/3 rounded-lg px-6 md:px-10"
               >
-                <Link href={`?tab=resources`} scroll={false}>
+                <Link href={`?tab=summary`} scroll={false}>
                   Summary
                 </Link>
               </TabsTrigger>
-              <TabsTrigger value="holders" className="rounded-lg px-10 text-lg">
-                <Link href={`?tab=holders`} scroll={false}>
-                  Holders
+              <TabsTrigger
+                value="dinos"
+                className="text-md w-1/3 rounded-lg px-6 md:px-10"
+              >
+                <Link href={`?tab=dinos`} scroll={false}>
+                  Dinos
                 </Link>
               </TabsTrigger>
-              <TabsTrigger value="clay" className="rounded-lg px-10 text-lg">
+              <TabsTrigger
+                value="clay"
+                className="text-md w-1/3 rounded-lg px-6 md:px-10"
+              >
                 <Link href={`?tab=clay`} scroll={false}>
                   Clay
                 </Link>
               </TabsTrigger>
             </TabsList>
             <TabsContent
-              value="resources"
+              value="summary"
               className="flex w-full flex-col gap-12 md:items-start"
             >
               <ClassCounter />
               <MoldedMeter />
               <MakerMeter />
             </TabsContent>
-            <TabsContent value="holders" className="w-full">
+            <TabsContent value="dinos" className="w-full">
               <Holders />
             </TabsContent>
             <TabsContent value="clay" className="w-full">
