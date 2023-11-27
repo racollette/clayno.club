@@ -52,17 +52,11 @@ const config = {
         protocol: 'https',
         hostname: '**.www.dinoherd.cc',
       },
+      {
+        protocol: 'https',
+        hostname: '**.dinoherd.cc',
+      },
     ],
-    // domains: [
-    //   "nftstorage.link",
-    //   "arweave.net",
-    //   "prod-image-cdn.tensor.trade",
-    //   "pbs.twimg.com",
-    //   "ton.twitter.com",
-    //   "cdn.discordapp.com",
-    //   "ui-avatars.com",
-    //   "www.dinoherd.cc"
-    // ],
     unoptimized: true
   },
   publicRuntimeConfig: {
