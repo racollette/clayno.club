@@ -33,7 +33,7 @@ declare module "next-auth" {
     username: string;
     global_name: string;
     image_url: string;
-    profile_id: string;
+    profile_id?: string;
     data: {
       id: string;
       name: string;
@@ -61,7 +61,8 @@ export const authOptions: NextAuthOptions = {
           session.user.type = "twitter";
           // @ts-expect-error unknown type
           session.user.name = token.profile.data.username;
-        } else {
+          // @ts-expect-error unknown type
+        } else if (token?.profile?.id) {
           session.user.type = "discord";
           // @ts-expect-error unknown type
           session.user.name = token?.profile?.username;
