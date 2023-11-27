@@ -1,7 +1,8 @@
 import { Dropdown } from "flowbite-react";
-import { HiCog, HiLogout, HiViewGrid } from "react-icons/hi";
+import { HiCog, HiLogout, HiViewGrid, HiCollection } from "react-icons/hi";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 type ProfileButtonProps = {
   imageURL: string;
@@ -16,7 +17,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
 
   return (
     <Dropdown
-      className="border-none bg-neutral-700"
+      className="border-none bg-neutral-700 font-clayno"
       label={
         <div className="flex flex-row">
           <Image
@@ -25,18 +26,26 @@ export default function ProfileButton(props: ProfileButtonProps) {
             alt="Avatar"
             width={20}
             height={20}
+            onError={handleUserPFPDoesNotExist}
           />
-          <div className="hidden text-sm md:block">{username}</div>
+          <div className="hidden font-clayno text-sm md:block">{username}</div>
         </div>
       }
     >
       {/* <Dropdown.Header></Dropdown.Header> */}
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
-        icon={HiViewGrid}
+        icon={HiCollection}
         onClick={() => router.push(`/profile/${sessionKey}`)}
       >
         Dashboard
+      </Dropdown.Item>
+      <Dropdown.Item
+        className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
+        icon={HiViewGrid}
+        onClick={() => router.push(`/inventory/${sessionKey}`)}
+      >
+        Inventory
       </Dropdown.Item>
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"

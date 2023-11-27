@@ -9,12 +9,13 @@ datasource db {
 }
 
 model Holder {
-  owner      String      @id
-  amount     Int
-  mints      Dino[]
-  subdaos    SubDAO[]
-  claymakers Claymaker[]
-  clay       Clay[]
+  owner       String       @id
+  amount      Int
+  mints       Dino[]
+  subdaos     SubDAO[]
+  claymakers  Claymaker[]
+  clay        Clay[]
+  consumables Consumable[]
 }
 
 model Dino {
@@ -26,6 +27,7 @@ model Dino {
   rarity      Int?
   subDAOId    String?
   herdId      String?
+  classPFP    String?
   attributes  Attributes?
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
@@ -121,8 +123,8 @@ model Discord {
   username    String  @unique
   global_name String
   image_url   String
-  id          String? @unique
   userId      String  @unique
+  id          String? @unique
   User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -130,8 +132,8 @@ model Twitter {
   username    String  @unique
   global_name String
   image_url   String
-  banner_url  String?
   userId      String  @unique
+  banner_url  String?
   User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -190,6 +192,20 @@ model Claymaker {
   charges     Int?
   holder      Holder?  @relation(fields: [holderOwner], references: [owner])
   subdaos     SubDAO[]
+
+  @@index([holderOwner])
+}
+
+model Consumable {
+  name          String
+  symbol        String?
+  description   String?
+  image         String
+  attributes    Json?
+  holderOwner   String?
+  mint          String  @id
+  animation_url String?
+  holder        Holder? @relation(fields: [holderOwner], references: [owner])
 
   @@index([holderOwner])
 }
@@ -262,12 +278,13 @@ model ClaymakerToSubDAO {
 }
 
 model LastUpdated {
-  id         String   @id
-  holders    DateTime
-  tribes     DateTime
-  herds      DateTime
-  clay       DateTime @default(now())
-  claymakers DateTime @default(now())
+  id          String   @id
+  holders     DateTime
+  tribes      DateTime
+  herds       DateTime
+  clay        DateTime @default(now())
+  claymakers  DateTime @default(now())
+  consumables DateTime @default(now())
 }
 
 model HerdToVoter {

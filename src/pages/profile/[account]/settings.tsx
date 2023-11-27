@@ -13,6 +13,7 @@ import AlertModal from "~/components/AlertModal";
 import router from "next/router";
 import Head from "next/head";
 import { useToast } from "~/@/components/ui/use-toast";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -155,7 +156,6 @@ const Settings = () => {
             title: "Votes issued",
           });
         } else {
-          console.log(voterInfo);
           createVoter.mutate({
             userId: user.id,
             wallets: user.wallets.map((wallet) => wallet.address),
@@ -188,7 +188,12 @@ const Settings = () => {
                 <div className="flex flex-row justify-between gap-4 md:gap-12">
                   <div className="flex flex-row">
                     <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
-                      <Image src={user?.discord.image_url} fill alt="Avatar" />
+                      <Image
+                        src={user?.discord.image_url}
+                        fill
+                        alt="Avatar"
+                        onError={handleUserPFPDoesNotExist}
+                      />
                     </div>
                     <span className="self-center">
                       {user?.discord.global_name}
@@ -244,7 +249,12 @@ const Settings = () => {
                 <div className="flex flex-row justify-between gap-12">
                   <div className="flex flex-row">
                     <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
-                      <Image src={user?.twitter.image_url} fill alt="Avatar" />
+                      <Image
+                        src={user?.twitter.image_url}
+                        fill
+                        alt="Avatar"
+                        onError={handleUserPFPDoesNotExist}
+                      />
                     </div>
                     <span className="self-center">
                       {user?.twitter.global_name}

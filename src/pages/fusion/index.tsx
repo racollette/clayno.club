@@ -19,6 +19,7 @@ import {
 } from "~/@/components/ui/tooltip";
 import { useToast } from "~/@/components/ui/use-toast";
 import { CollageSettings } from "~/components/CollageSettings";
+import MetaTags from "~/components/MetaTags";
 
 type GridItemProps = {
   index: number;
@@ -343,13 +344,7 @@ export default function FusionPage() {
 
   return (
     <>
-      <Head>
-        <title>DinoHerd | Fusion</title>
-        <meta name="description" content="Claynosaurz Herd Showcase" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags title="DinoHerd | Fusion" />
       <Layout>
         <section
           className={`my-10 flex ${

@@ -1,33 +1,54 @@
 export const COLORS = [
-  "Charcoal",
-  "Mist",
-  "Aqua",
-  "Desert",
-  "Volcanic",
-  "Tropic",
   "Amethyst",
+  "Aqua",
+  "Charcoal",
+  "Desert",
+  "Mist",
   "Spring",
+  "Tropic",
+  "Volcanic",
 ];
 export const SKINS = [
+  "Amazonia",
   "Apres",
-  "Mirage",
-  "Jurassic",
-  "Toxic",
   "Coral",
-  "Elektra",
   "Cristalline",
+  "Elektra",
+  "Jurassic",
+  "Mirage",
   "Oceania",
   "Savanna",
-  "Amazonia",
+  "Toxic",
 ];
 export const BACKGROUNDS = [
-  "Salmon",
-  "Lavender",
-  "Peach",
-  "Sky",
-  "Mint",
   "Dune",
+  "Lavender",
+  "Mint",
+  "Peach",
+  "Salmon",
+  "Sky",
 ];
+
+export const CLASSES = [
+  "Defender",
+  "Mender",
+  "Mystic",
+  "Stalker",
+  "Tracker",
+  "Warrior",
+];
+
+export const SPECIES = [
+  "Ankylo",
+  "Bronto",
+  "Raptor",
+  "Rex",
+  "Stego",
+  "Trice",
+  "Para",
+  "Spino",
+];
+
 export const TIERS = ["Insane", "Perfect", "Epic", "Rare", "Scrappy"];
 
 export const BELLY = ["On"];
