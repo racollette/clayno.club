@@ -2,8 +2,8 @@ import Head from "next/head";
 
 const MetaTags = ({
   title = "DinoHerd",
-  description = "DinoHerd.cc: Tools for the Claynosaurz Community",
-  ogTitle = "Claynosaurz Community Tools",
+  description = "Unofficial Claynosaurz Community Tools",
+  ogTitle = "Unofficial Claynosaurz Community Tools",
   ogDescription = "Explore the dinos, herds and tribes of Claynotopia! Collectors collect.",
   ogImage = "/images/og.jpeg",
   ogUrl = "https://dinoherd.cc",
