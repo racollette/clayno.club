@@ -210,7 +210,7 @@ function FilterSelect({ searchTraits, data, type, value }: FilterSelectProps) {
 
     router.push({
       pathname: router.pathname,
-      query: queryString ? `tab=holders&${queryString}` : "tab=holders",
+      query: queryString ? `tab=dinos&${queryString}` : "tab=dinos",
     });
   };
 
