@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 export const inventoryRouter = createTRPCRouter({
-  getUserItems: protectedProcedure
+  getUserItems: publicProcedure
     .input(
       z.object({
         wallets: z.array(z.string()),
