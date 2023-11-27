@@ -18,7 +18,7 @@ import ClayHolders from "./clayHolders";
 export default function StatsPage() {
   const searchParams = useSearchParams();
 
-  const tab = searchParams.get("tab") || "resources";
+  const tab = searchParams.get("tab") || "summary";
 
   return (
     <>
@@ -28,12 +28,12 @@ export default function StatsPage() {
           <Tabs
             defaultValue="summary"
             value={tab}
-            className="flex w-full flex-col items-center gap-4"
+            className="flex w-full flex-col items-center gap-2 md:gap-4"
           >
             <TabsList className="flex flex-row items-center justify-center bg-neutral-800 font-clayno text-white md:gap-4">
               <TabsTrigger
                 value="summary"
-                className="text-md w-1/3 rounded-lg px-6 md:px-10"
+                className="md:text-md w-1/3 rounded-lg px-6 text-sm md:px-10"
               >
                 <Link href={`?tab=summary`} scroll={false}>
                   Summary
@@ -41,7 +41,7 @@ export default function StatsPage() {
               </TabsTrigger>
               <TabsTrigger
                 value="dinos"
-                className="text-md w-1/3 rounded-lg px-6 md:px-10"
+                className="md:text-md w-1/3 rounded-lg px-6 text-sm md:px-10"
               >
                 <Link href={`?tab=dinos`} scroll={false}>
                   Dinos
@@ -49,7 +49,7 @@ export default function StatsPage() {
               </TabsTrigger>
               <TabsTrigger
                 value="clay"
-                className="text-md w-1/3 rounded-lg px-6 md:px-10"
+                className="md:text-md w-1/3 rounded-lg px-6 text-sm md:px-10"
               >
                 <Link href={`?tab=clay`} scroll={false}>
                   Clay
