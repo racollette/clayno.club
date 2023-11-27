@@ -11,14 +11,13 @@ import {
 import Link from "next/link";
 
 type ItemProps = {
-  id: string;
   item: any;
   type: string;
 };
 
 type ImageState = "gif" | "pfp" | "class";
 
-export const Item = ({ id, item, type }: ItemProps) => {
+export const Item = ({ item, type }: ItemProps) => {
   const [imageState, setImageState] = useState<ImageState>("gif");
   const [imageBlobs, setImageBlobs] = useState({
     pfp: null,
@@ -30,6 +29,7 @@ export const Item = ({ id, item, type }: ItemProps) => {
   const isClay = type === "clay";
   const isClaymaker = type === "claymaker";
   const isConsumable = type === "consumable";
+  const isPizza = item.symbol === "PIZZA";
 
   const attributesArray = Object.entries(item.attributes ?? {});
 
@@ -38,7 +38,6 @@ export const Item = ({ id, item, type }: ItemProps) => {
 
     if (blob) {
       const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
       link.href = url;
       const imageName =
@@ -61,7 +60,9 @@ export const Item = ({ id, item, type }: ItemProps) => {
               ? item.pfp
               : imageType === "class"
               ? item.classPFP
-              : item.gif
+              : isDino || isClaymaker || isClay
+              ? item.gif
+              : item.image
           }`
         );
 
@@ -79,7 +80,15 @@ export const Item = ({ id, item, type }: ItemProps) => {
     getImageBlob("pfp");
     getImageBlob("gif");
     getImageBlob("class");
-  }, [item.pfp, item.gif, item.classPFP]);
+  }, [
+    item.pfp,
+    item.gif,
+    item.classPFP,
+    item.image,
+    isDino,
+    isClay,
+    isClaymaker,
+  ]);
 
   return (
     <div
@@ -184,7 +193,15 @@ export const Item = ({ id, item, type }: ItemProps) => {
                     onClick={() =>
                       handleDownload(
                         item.name,
-                        imageState === "pfp" ? "png" : "gif"
+                        imageState === "pfp"
+                          ? "png"
+                          : isDino
+                          ? "gif"
+                          : isClaymaker
+                          ? "gif"
+                          : isPizza
+                          ? "gif"
+                          : "png"
                       )
                     }
                   >
