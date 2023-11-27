@@ -112,8 +112,8 @@ const ClayHolders = () => {
 
   return (
     <div className="w-full">
-      <section className="flex w-full flex-col items-center justify-center gap-8 py-2 font-clayno md:px-4 ">
-        <div className="container mx-auto max-w-5xl px-0 py-2 pb-24">
+      <section className="flex w-full flex-col items-center justify-center gap-8 font-clayno md:px-4 ">
+        <div className="container mx-auto max-w-5xl px-0 pb-24">
           {clayHolders && <ClayDataTable data={updatedTableData} />}
         </div>
       </section>
