@@ -151,7 +151,7 @@ const Holders = () => {
       <Head>
         <title>DinoHerd | Holders</title>
       </Head>
-      <section className="flex w-full flex-col items-center justify-center gap-8 py-2 font-clayno md:px-4 ">
+      <section className="flex w-full flex-col items-center justify-center gap-8 font-clayno md:px-4 ">
         <div className="flex flex-row flex-wrap gap-2">
           <FilterSelect
             searchTraits={searchTraits}
@@ -170,6 +170,12 @@ const Holders = () => {
             data={SPECIES}
             type="species"
             value={speciesParam}
+          />
+          <FilterSelect
+            searchTraits={searchTraits}
+            data={CLASSES}
+            type="class"
+            value={classParam}
           />
           <FilterSelect
             searchTraits={searchTraits}
@@ -215,13 +221,19 @@ function FilterSelect({ searchTraits, data, type, value }: FilterSelectProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <p className="font-clayno text-sm text-neutral-500">{type}</p>
+    <div className="flex flex-col gap-1">
+      <p className="font-clayno text-xs text-neutral-500 md:text-sm">{type}</p>
       <Select
         value={value}
         onValueChange={(newValue) => handleSelectChange(newValue)}
       >
-        <SelectTrigger className="w-[180px] bg-black font-clayno text-sm text-white">
+        <SelectTrigger
+          className={`${
+            type === "tribe"
+              ? `w-[150px] md:w-[175px]`
+              : `w-[110px] md:w-[135px]`
+          } bg-black font-clayno text-xs text-white md:text-sm`}
+        >
           <SelectValue placeholder="All" />
         </SelectTrigger>
         <SelectContent className="bg-black font-clayno text-sm text-white">
