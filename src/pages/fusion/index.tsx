@@ -104,9 +104,7 @@ export default function FusionPage() {
   const [grid, setGrid] = useState<GridItemProps[][]>(initialGrid);
   const gridFull = grid
     .flatMap((row) => row)
-    .every(
-      (cell) => cell.imageURL !== "" && cell.mint !== "" && cell.motion !== ""
-    );
+    .every((cell) => cell.imageURL !== "" && cell.mint !== "");
 
   const handleOutlineWidth = (v: number[]) => {
     if (v[0] === undefined) return;
