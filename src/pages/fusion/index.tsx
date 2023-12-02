@@ -154,7 +154,7 @@ export default function FusionPage() {
 
     // Access the individual data properties
     const imageURL = customData.imageURL;
-    const motion = customData.motion;
+    const motion = customData.motion.length === 0 ? "PFP" : customData.motion;
     const mint = customData.mint;
 
     // Update the imageURL of the specific cell in the grid
@@ -193,6 +193,7 @@ export default function FusionPage() {
 
   const handlePlace = (imageURL: string, motion: string, mint: string) => {
     let setItem = false;
+    console.log(motion);
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
         row.map((cell) => {
@@ -202,7 +203,7 @@ export default function FusionPage() {
               ...cell,
               imageURL: imageURL,
               mint,
-              motion,
+              motion: motion,
             };
           }
           return { ...cell };
@@ -221,7 +222,8 @@ export default function FusionPage() {
                     ...cell,
                     imageURL: selected.imageURL,
                     mint: selected.mint,
-                    motion: selected.motion,
+                    motion:
+                      selected.motion.length === 0 ? "PFP" : selected.motion,
                   }
                 : cell
             )
