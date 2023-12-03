@@ -36,7 +36,7 @@ type CollageSettingsProps = {
   setOverlayOn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const CollageSettings = (props: CollageSettingsProps) => {
+const CollageSettings = (props: CollageSettingsProps) => {
   const { modalMode } = props;
   const [openModal, setOpenModal] = useState<string | undefined>();
 
@@ -141,3 +141,5 @@ function CoreSettings(props: CollageSettingsProps) {
     </div>
   );
 }
+
+export default CollageSettings;

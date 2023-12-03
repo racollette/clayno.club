@@ -24,7 +24,7 @@ type MemberProps = {
   acronym: string;
 };
 
-export const Member = ({ data, owner, acronym }: MemberProps) => {
+const Member = ({ data, owner, acronym }: MemberProps) => {
   const { dinos, user } = data;
   const [expanded, setExpanded] = useState(false);
   const [userDinos, setUserDinos] = useState<any>(dinos);
@@ -140,3 +140,5 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
     </div>
   );
 };
+
+export default Member;

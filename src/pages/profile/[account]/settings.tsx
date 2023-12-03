@@ -6,7 +6,7 @@ import { api } from "~/utils/api";
 import Image from "next/image";
 import { Spinner } from "flowbite-react";
 import { getSessionDetails } from "~/utils/session";
-import AddWalletModal from "../_components/AddWalletModal";
+import AddWalletModal from "../../../components/profile/AddWalletModal";
 import { truncateAccount } from "~/utils/addresses";
 import useLocalStorage from "~/utils/storage";
 import AlertModal from "~/components/AlertModal";

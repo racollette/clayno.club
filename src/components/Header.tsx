@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import LoginModal from "./LoginModal";
 import { Navbar } from "flowbite-react";
-import VoterInfo from "../pages/herds/_components/VoterInfo";
+import VoterInfo from "./herds/VoterInfo";
 
 export default function Header() {
   const router = useRouter();

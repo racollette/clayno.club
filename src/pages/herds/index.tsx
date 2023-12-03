@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import TabSelection from "./_components/TabSelection";
+import TabSelection from "../../components/herds/TabSelection";
 import Herd from "../../components/Herd";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +20,7 @@ import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
 import { VoteWidget } from "~/components/VoteWidget";
 import { HiExternalLink, HiX, HiRefresh } from "react-icons/hi";
-import { FilterDialog } from "./_components/FilterDialog";
+import FilterDialog from "../../components/herds/FilterDialog";
 import MetaTags from "~/components/MetaTags";
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {

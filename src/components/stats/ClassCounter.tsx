@@ -34,7 +34,7 @@ function calculateWidth(elementWidth: number, count: number, total: number) {
   return `${(count / total) * containerOffset}px`;
 }
 
-export const ClassCounter = () => {
+const ClassCounter = () => {
   const speciesBarRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef<HTMLDivElement>(null);
   const [topClass, setTopClass] = useState(0);
@@ -215,3 +215,5 @@ function findLargestTotal(data: any) {
 
   return largestTotal ?? 0;
 }
+
+export default ClassCounter;

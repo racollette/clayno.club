@@ -2,7 +2,7 @@ import { type Dino, type Attributes } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
 import { getRarityColor } from "~/utils/colors";
-import { TraitHover } from "./TraitHover";
+import TraitHover from "./TraitHover";
 
 type ImageExpanderProps = {
   dinos: Dino[] & { attributes: Attributes }[];

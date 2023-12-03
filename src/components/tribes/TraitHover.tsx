@@ -11,7 +11,7 @@ type TraitHoverProps = {
   attributes: Attributes;
 };
 
-export function TraitHover({ attributes }: TraitHoverProps) {
+function TraitHover({ attributes }: TraitHoverProps) {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -42,3 +42,5 @@ export function TraitHover({ attributes }: TraitHoverProps) {
     </TooltipProvider>
   );
 }
+
+export default TraitHover;

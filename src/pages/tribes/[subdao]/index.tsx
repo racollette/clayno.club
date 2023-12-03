@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Layout from "~/components/Layout";
-import { Member } from "../_components/Member";
+import Member from "../../../components/tribes/Member";
 import { useRouter } from "next/router";
 import { getQueryString } from "~/utils/routes";
 import Link from "next/link";

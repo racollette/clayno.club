@@ -3,12 +3,12 @@
 import React, { useCallback, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import Image from "next/image";
-import DinoSlide from "~/pages/fusion/_components/DinoSlide";
+import DinoSlide from "~/components/fusion/DinoSlide";
 import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
 import CollageModal from "../../components/CollageModal";
-import MusicModal from "./_components/MusicModal";
+import MusicModal from "../../components/fusion/MusicModal";
 import { HiSave, HiBan, HiXCircle } from "react-icons/hi";
 import {
   Tooltip,
@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
 import { useToast } from "~/@/components/ui/use-toast";
-import { CollageSettings } from "./_components/CollageSettings";
+import CollageSettings from "../../components/fusion/CollageSettings";
 import MetaTags from "~/components/MetaTags";
 
 type GridItemProps = {

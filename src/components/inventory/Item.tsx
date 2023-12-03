@@ -17,7 +17,7 @@ type ItemProps = {
 
 type ImageState = "gif" | "pfp" | "class";
 
-export const Item = ({ item, type }: ItemProps) => {
+const Item = ({ item, type }: ItemProps) => {
   const [imageState, setImageState] = useState<ImageState>("gif");
   const [imageBlobs, setImageBlobs] = useState({
     pfp: null,
@@ -305,3 +305,5 @@ export const Item = ({ item, type }: ItemProps) => {
     </div>
   );
 };
+
+export default Item;

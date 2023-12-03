@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ToggleSwitch from "../../../components/ToggleSwitch";
+import ToggleSwitch from "../ToggleSwitch";
 
 type TabButtonProps = {
   label: string;
