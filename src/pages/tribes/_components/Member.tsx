@@ -1,10 +1,10 @@
 import {
-  Attributes,
-  Dino,
-  Discord,
-  Twitter,
-  User,
-  Wallet,
+  type Attributes,
+  type Dino,
+  type Discord,
+  type Twitter,
+  type User,
+  type Wallet,
 } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -35,8 +35,8 @@ export const Member = ({ data, owner, acronym }: MemberProps) => {
 
   const wallets =
     user?.wallets
-      .map((wallet: any) => wallet.address)
-      .filter((address: any) => user?.defaultAddress !== address) ?? [];
+      .map((wallet: Wallet) => wallet.address)
+      .filter((address: string) => user?.defaultAddress !== address) ?? [];
 
   const { otherWallets } = fetchOtherWallets(wallets);
 

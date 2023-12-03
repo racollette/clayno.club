@@ -1,6 +1,5 @@
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-// import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Herd from "~/components/Herd";
@@ -9,10 +8,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { truncateAccount } from "~/utils/addresses";
 import { Spinner } from "flowbite-react";
-import Head from "next/head";
 import { getQueryString } from "~/utils/routes";
 import { CollagePreview } from "~/components/CollagePreview";
-import { GridItemProps } from "~/components/CollageModal";
+import { type GridItemProps } from "~/components/CollageModal";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import MetaTags from "~/components/MetaTags";
 

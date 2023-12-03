@@ -1,4 +1,4 @@
-import ClayDataTable from "~/components/ClayDataTable";
+import ClayDataTable from "./_components/ClayDataTable";
 import { api } from "~/utils/api";
 import { extractProfileFromUser } from "~/utils/wallet";
 

@@ -12,7 +12,7 @@ import { SigninMessage } from "~/utils/SigninMessage";
 import { buildAuthTx, validateAuthTx } from "~/utils/authTx";
 import { connection } from "~/server/rpc";
 import { truncateAccount } from "~/utils/addresses";
-import { api } from "~/utils/api";
+import { type api } from "~/utils/api";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {

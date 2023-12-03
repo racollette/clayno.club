@@ -1,12 +1,11 @@
-import Head from "next/head";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import TabSelection from "~/components/TabSelection";
-import Herd from "~/components/Herd";
+import TabSelection from "./_components/TabSelection";
+import Herd from "../../components/Herd";
 import Image from "next/image";
 import Link from "next/link";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import type {
   Herd as HerdType,
   Attributes,
@@ -21,7 +20,7 @@ import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
 import { VoteWidget } from "~/components/VoteWidget";
 import { HiExternalLink, HiX, HiRefresh } from "react-icons/hi";
-import { FilterDialog } from "~/components/FilterDialog";
+import { FilterDialog } from "./_components/FilterDialog";
 import MetaTags from "~/components/MetaTags";
 // const getHerdRarity = (herd: any) => {
 //   const total = herd.herd.reduce((sum: number, obj: any) => {

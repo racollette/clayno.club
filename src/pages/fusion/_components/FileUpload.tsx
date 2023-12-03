@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { type ChangeEvent, type FormEvent, useState } from "react";
 import { useToast } from "~/@/components/ui/use-toast";
 import { HiRefresh } from "react-icons/hi";
 

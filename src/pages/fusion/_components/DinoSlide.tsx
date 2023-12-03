@@ -2,7 +2,7 @@ import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import ToggleSwitch from "./ToggleSwitch";
+import ToggleSwitch from "../../../components/ToggleSwitch";
 import { ScrollArea } from "~/@/components/ui/scroll-area";
 import {
   HiChevronDown,
@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
-import LoginModal from "./LoginModal";
+import LoginModal from "../../../components/LoginModal";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 type DinoSlideProps = {

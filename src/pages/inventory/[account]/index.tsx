@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
-import { Item } from "~/components/Item";
+import { Item } from "./_components/Item";
 import { sortByRarity, type Character } from "~/utils/sort";
 import {
   Select,

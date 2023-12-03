@@ -1,4 +1,4 @@
-import { Attributes } from "@prisma/client";
+import { type Attributes } from "@prisma/client";
 import {
   Tooltip,
   TooltipContent,

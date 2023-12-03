@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Layout from "~/components/Layout";
-import { Member } from "~/components/Member";
+import { Member } from "../_components/Member";
 import { useRouter } from "next/router";
 import { getQueryString } from "~/utils/routes";
 import Link from "next/link";
 import { getTraitBadgeColor } from "~/utils/colors";
 import { groupAndFilter } from "~/utils/subdaos";
-import Head from "next/head";
 import { Fragment } from "react";
 import { type Attributes, type Dino } from "@prisma/client";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";

@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
 import LoginModal from "./LoginModal";
 import { Navbar } from "flowbite-react";
-import VoterInfo from "./VoterInfo";
+import VoterInfo from "../pages/herds/_components/VoterInfo";
 
 export default function Header() {
   const router = useRouter();
-  const isHerdsPage = router.pathname === "/herds";
 
   return (
     <Navbar className="bg-black text-white" fluid>

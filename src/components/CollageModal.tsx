@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 import { CollagePreview } from "./CollagePreview";
-import { AudioFile, Collage } from "@prisma/client";
+import { type AudioFile, type Collage } from "@prisma/client";
 import { HiCollection, HiXCircle } from "react-icons/hi";
 import {
   Tooltip,

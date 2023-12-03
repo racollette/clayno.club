@@ -1,7 +1,7 @@
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import DataTable from "~/components/DataTable";
+import DataTable from "./_components/DataTable";
 import MetaTags from "~/components/MetaTags";
 
 export default function TribesPage() {
