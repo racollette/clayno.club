@@ -1,11 +1,11 @@
 import {
-  Attributes,
-  Dino,
-  Discord,
-  Herd,
-  Twitter,
-  User,
-  Voter,
+  type Discord,
+  type Attributes,
+  type Dino,
+  type Herd,
+  type Twitter,
+  type User,
+  type Voter,
 } from "@prisma/client";
 import {
   Tooltip,
@@ -14,13 +14,12 @@ import {
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  // DialogDescription,
   DialogHeader,
-  DialogOverlay,
+  // DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "~/@/components/ui/dialog";

@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import ColorPicker from "./ColorPicker";
 import { Slider as SliderBase } from "~/@/components/ui/slider";
-import { CustomFlowbiteTheme, Modal } from "flowbite-react";
+import { type CustomFlowbiteTheme, Modal } from "flowbite-react";
 import { HiCog } from "react-icons/hi";
 import {
   Tooltip,
@@ -36,7 +36,7 @@ type CollageSettingsProps = {
   setOverlayOn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const CollageSettings = (props: CollageSettingsProps) => {
+const CollageSettings = (props: CollageSettingsProps) => {
   const { modalMode } = props;
   const [openModal, setOpenModal] = useState<string | undefined>();
 
@@ -141,3 +141,5 @@ function CoreSettings(props: CollageSettingsProps) {
     </div>
   );
 }
+
+export default CollageSettings;

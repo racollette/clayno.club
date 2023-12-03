@@ -1,4 +1,4 @@
-import { AudioFile, Collage } from "@prisma/client";
+import { type AudioFile, type Collage } from "@prisma/client";
 import Image from "next/image";
 import { Fragment, useRef, useEffect, useState } from "react";
 import {

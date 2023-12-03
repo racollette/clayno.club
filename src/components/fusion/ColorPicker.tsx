@@ -1,11 +1,11 @@
-// import styled from "styled-components";
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 
 type ColorPickerProps = {
   color: string;
   onChange: Dispatch<SetStateAction<string>>;
 };
+
 const ColorPicker = ({ color, onChange }: ColorPickerProps) => {
   return (
     <>

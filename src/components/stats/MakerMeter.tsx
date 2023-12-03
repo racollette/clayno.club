@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ORIGINAL_CLAYMAKER_SUPPLY } from "~/utils/constants";
 import { api } from "~/utils/api";
 
-export const MakerMeter = () => {
+const MakerMeter = () => {
   const clayBarRef = useRef<HTMLDivElement>(null);
   const [clayBarWidth, setClayBarWidth] = useState(0);
 
@@ -165,3 +165,5 @@ export const MakerMeter = () => {
     </div>
   );
 };
+
+export default MakerMeter;

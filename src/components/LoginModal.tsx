@@ -18,7 +18,6 @@ import { connection } from "~/server/rpc";
 import ProfileButton from "./ProfileButton";
 import { shortAccount, truncateAccount } from "~/utils/addresses";
 import { useUser } from "~/hooks/useUser";
-import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {

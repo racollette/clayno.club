@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ORIGINAL_CLAY_SUPPLY } from "~/utils/constants";
 import { api } from "~/utils/api";
 
-export const MoldedMeter = () => {
+const MoldedMeter = () => {
   const clayBarRef = useRef<HTMLDivElement>(null);
   const [clayBarWidth, setClayBarWidth] = useState(0);
 
@@ -311,3 +311,5 @@ export const MoldedMeter = () => {
     </div>
   );
 };
+
+export default MoldedMeter;

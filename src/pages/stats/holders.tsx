@@ -1,6 +1,5 @@
 import Head from "next/head";
-import HoldersDataTable from "~/components/HoldersDataTable";
-import Layout from "~/components/Layout";
+import HoldersDataTable from "../../components/stats/HoldersDataTable";
 import { api } from "~/utils/api";
 import {
   Select,
