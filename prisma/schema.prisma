@@ -321,3 +321,14 @@ model MakerChargesSnapshot {
   limited       Int
   deluxeCharges Int
 }
+
+model Thread {
+  id       String   @id
+  addedAt  DateTime @default(now())
+  url      String
+  category String
+  type     String
+  author   String
+  userId   String?
+  title    String
+}
