@@ -21,7 +21,7 @@ type FilterDialogProps = {
   belly: string;
 };
 
-export const FilterDialog = ({
+const FilterDialog = ({
   skin,
   color,
   background,
@@ -166,3 +166,5 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
     </div>
   );
 }
+
+export default FilterDialog;

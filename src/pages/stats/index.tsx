@@ -1,8 +1,7 @@
 import Layout from "~/components/Layout";
-import Head from "next/head";
-import { MoldedMeter } from "~/components/MoldedMeter";
-import { ClassCounter } from "~/components/ClassCounter";
-import { MakerMeter } from "~/components/MakerMeter";
+import MoldedMeter from "../../components/stats/MoldedMeter";
+import ClassCounter from "../../components/stats/ClassCounter";
+import MakerMeter from "../../components/stats/MakerMeter";
 import {
   Tabs,
   TabsContent,

@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   type ColumnDef,
   flexRender,
-  SortingState,
+  // SortingState,
   type VisibilityState,
   type ColumnFiltersState,
   getPaginationRowModel,
@@ -28,7 +28,6 @@ import {
   DropdownMenuTrigger,
 } from "~/@/components/ui/dropdown-menu";
 import { Button } from "~/@/components/ui/button";
-import { useRouter } from "next/router";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import { useMemo } from "react";

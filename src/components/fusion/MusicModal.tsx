@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { AudioFile } from "@prisma/client";
+import { type AudioFile } from "@prisma/client";
 import { HiMusicNote, HiXCircle } from "react-icons/hi";
 import {
   Tooltip,
@@ -20,13 +20,6 @@ type MusicModalProps = {
 const MusicModal = ({ title, data, userId, refetch }: MusicModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const [audioFiles, setAudioFiles] = useState<AudioFile[] | undefined>(
-    undefined
-  );
-
-  useEffect(() => {
-    setAudioFiles(data);
-  }, []);
 
   const openModal = () => {
     setIsOpen(true);

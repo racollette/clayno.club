@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
 import { api } from "~/utils/api";
-import { AudioFile } from "@prisma/client";
+import { type AudioFile } from "@prisma/client";
 import { useToast } from "~/@/components/ui/use-toast";
 
 interface AudioPlayerProps {
