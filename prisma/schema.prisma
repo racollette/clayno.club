@@ -323,12 +323,9 @@ model MakerChargesSnapshot {
 }
 
 model Thread {
-  id       String   @id
-  addedAt  DateTime @default(now())
-  url      String
-  category String
-  type     String
-  author   String
-  userId   String?
-  title    String
+  id         String  @id @default(cuid())
+  tweetId    String  @unique
+  categoryId String
+  order      Int
+  tweetUrl   String?
 }
