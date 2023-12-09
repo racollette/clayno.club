@@ -62,6 +62,7 @@ const config = {
   publicRuntimeConfig: {
     myRPC: process.env.RPC
   },
+  transpilePackages: ['react-tweet']
 };
 
 export default config;
