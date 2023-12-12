@@ -21,7 +21,7 @@ const Resources = () => {
               <h2 className="text-md rounded-md bg-black px-4 py-2 font-clayno md:text-lg">
                 Threads
               </h2>
-              <p className="text-md rounded-md bg-black px-4 py-2 text-center font-clayno">
+              <p className="md:text-md rounded-md bg-black px-4 py-2 text-center font-clayno text-sm">
                 Explore the best X threads on Claynos!
               </p>
             </Link>
