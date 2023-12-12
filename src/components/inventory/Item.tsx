@@ -93,7 +93,7 @@ const Item = ({ item, type }: ItemProps) => {
   return (
     <div
       key={item.mint}
-      className={`relative flex h-28 w-28 cursor-pointer justify-center overflow-clip rounded-md lg:h-40 lg:w-40`}
+      className={`relative flex h-24 w-24 cursor-pointer justify-center overflow-clip rounded-md lg:h-40 lg:w-40`}
     >
       <Dialog>
         <DialogTrigger asChild>
