@@ -20,7 +20,7 @@ const Threads = () => {
           <div className="flex flex-col items-center">
             <h1 className="font-clayno text-2xl">Why Bullish?</h1>
             {threadCategories[0]?.data?.map((thread) => (
-              <div key={thread.id}>
+              <div className="px-4" key={thread.id}>
                 <Tweet id={thread.tweetId} />
               </div>
             ))}
@@ -28,7 +28,7 @@ const Threads = () => {
           <div className="flex flex-col items-center">
             <h1 className="font-clayno text-2xl">Guides</h1>
             {threadCategories[1]?.data?.map((thread) => (
-              <div key={thread.id}>
+              <div className="px-4" key={thread.id}>
                 <Tweet id={thread.tweetId} />
               </div>
             ))}
@@ -36,7 +36,7 @@ const Threads = () => {
           <div className="flex flex-col items-center">
             <h1 className="font-clayno text-2xl">Opinions</h1>
             {threadCategories[2]?.data?.map((thread) => (
-              <div key={thread.id}>
+              <div className="px-4" key={thread.id}>
                 <Tweet id={thread.tweetId} />
               </div>
             ))}
