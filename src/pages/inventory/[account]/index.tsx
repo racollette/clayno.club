@@ -92,7 +92,7 @@ const Inventory = () => {
               {account
                 ? account.length > 36
                   ? `${shortAccount(getQueryString(account))}'s Inventory`
-                  : account
+                  : `${account}'s Inventory`
                 : `Inventory`}
             </div>
             <div className="flex flex-row items-center justify-center gap-4">
