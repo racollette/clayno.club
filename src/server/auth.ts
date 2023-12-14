@@ -10,6 +10,7 @@ import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "../utils/SigninMessage";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
+import { objectToAuthDataMap, AuthDataValidator } from "@telegram-auth/server";
 import { env } from "~/env.mjs";
 
 /**
@@ -225,16 +226,47 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
+    CredentialsProvider({
+      id: "telegram-login",
+      name: "Telegram Login",
+      credentials: {},
+      async authorize(credentials, req) {
+        const validator = new AuthDataValidator({
+          botToken: `${process.env.BOT_TOKEN}`,
+        });
+
+        const data = objectToAuthDataMap(req.query || {});
+        const user = await validator.validate(data);
+
+        if (user.id && user.first_name) {
+          const returned = {
+            id: user.id.toString(),
+            email: user.id.toString(),
+            name: [user.first_name, user.last_name || ""].join(" "),
+            image: user.photo_url,
+          };
+
+          try {
+            // await createUserOrUpdate(user);
+          } catch {
+            console.log("Something went wrong while creating the user.");
+          }
+
+          return returned;
+        }
+        return null;
+      },
+    }),
   ],
+  /**
+   * ...add more providers here.
+   *
+   * Most other providers require a bit more work than the Discord provider. For example, the
+   * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
+   * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
+   *
+   * @see https://next-auth.js.org/providers/github
+   */
 };
 
 /**
