@@ -33,6 +33,7 @@ export const herdRouter = createTRPCRouter({
               include: {
                 discord: true,
                 twitter: true,
+                telegram: true,
               },
             },
           },

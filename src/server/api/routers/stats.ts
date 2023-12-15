@@ -70,6 +70,7 @@ export const statsRouter = createTRPCRouter({
         include: {
           discord: true,
           twitter: true,
+          telegram: true,
         },
       });
     }),

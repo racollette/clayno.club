@@ -52,6 +52,7 @@ export default function Profile() {
     session &&
     (session.user.name === user?.discord?.username ||
       session?.user.name === user?.twitter?.username ||
+      session?.user.name === user?.telegram?.username ||
       authWallet);
 
   const { data: collages } = api.fusion.getPublicCollages.useQuery({
@@ -101,6 +102,8 @@ export default function Profile() {
                             ? user.twitter.image_url
                             : user.discord
                             ? user.discord.image_url
+                            : user.telegram
+                            ? user.telegram.image_url
                             : `https://ui-avatars.com/api/?name=${user?.defaultAddress}&background=random`
                         }
                         alt="Avatar"
@@ -113,6 +116,8 @@ export default function Profile() {
                           ? user.twitter.global_name
                           : user.discord
                           ? user.discord.global_name
+                          : user.telegram
+                          ? user.telegram.global_name
                           : truncateAccount(user.defaultAddress)}
                       </div>
                     </div>
@@ -145,6 +150,25 @@ export default function Profile() {
                             />
                             <div className="self-center text-sm">
                               @{user.twitter.username}
+                            </div>
+                          </Link>
+                        </div>
+                      )}
+                      {user.telegram && (
+                        <div>
+                          <Link
+                            className="flex flex-row gap-2 rounded-md p-2 align-middle text-white hover:bg-white/10"
+                            href={`https://t.me/${user.telegram.username}`}
+                            target="_blank"
+                          >
+                            <Image
+                              src={"/icons/telegram.svg"}
+                              alt="Telegram"
+                              width={26}
+                              height={26}
+                            />
+                            <div className="self-center text-sm">
+                              @{user.telegram.username}
                             </div>
                           </Link>
                         </div>

@@ -15,6 +15,7 @@ import type {
   Discord,
   Twitter,
   Wallet,
+  Telegram,
 } from "@prisma/client";
 import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
@@ -39,6 +40,7 @@ type Owners =
   | (User & {
       discord: Discord | null;
       twitter: Twitter | null;
+      telegram: Telegram | null;
       wallets: Wallet[];
     })[]
   | undefined;
@@ -52,6 +54,7 @@ type HerdWithIncludes =
         user: User & {
           discord: Discord | null;
           twitter: Twitter | null;
+          telegram: Telegram | null;
         };
       })[];
     };
@@ -298,7 +301,7 @@ export default function Home() {
       return;
     }
 
-    if (!user?.discord && !user?.twitter) {
+    if (!user?.discord && !user?.twitter && !user?.telegram) {
       toast({
         title: "Please connect a social account before voting",
         description: (

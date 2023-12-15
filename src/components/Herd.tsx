@@ -3,6 +3,7 @@ import type {
   Dino,
   Discord,
   Herd,
+  Telegram,
   Twitter,
   Wallet,
 } from "@prisma/client";
@@ -31,6 +32,7 @@ type HerdProps = {
     | {
         discord: Discord | null;
         twitter: Twitter | null;
+        telegram: Telegram | null;
         id: string;
         defaultAddress: string;
         wallets: Wallet[];
@@ -103,13 +105,15 @@ export default function Herd(props: HerdProps) {
 
         {showOwner && (
           <>
-            {owner?.twitter || owner?.discord ? (
+            {owner?.twitter || owner?.discord || owner?.telegram ? (
               <div className="mx-3 flex flex-row justify-center align-middle">
                 <div className="mr-2 flex">
                   <Link
                     className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
                     href={`/profile/${
-                      owner?.twitter?.username || owner?.discord?.username
+                      owner?.twitter?.username ||
+                      owner?.discord?.username ||
+                      owner?.telegram?.username
                     }`}
                     target="_blank"
                   >
@@ -118,6 +122,7 @@ export default function Herd(props: HerdProps) {
                       src={
                         owner?.twitter?.image_url ||
                         owner?.discord?.image_url ||
+                        owner?.telegram?.image_url ||
                         ""
                       }
                       alt="Avatar"
@@ -127,7 +132,8 @@ export default function Herd(props: HerdProps) {
                     />
                     <div className="self-center text-white">
                       {owner?.twitter?.global_name ||
-                        owner?.discord?.global_name}
+                        owner?.discord?.global_name ||
+                        owner?.telegram?.global_name}
                     </div>
                   </Link>
                 </div>

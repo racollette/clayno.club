@@ -250,8 +250,8 @@ export const authOptions: NextAuthOptions = {
         if (user.id && user.first_name) {
           const returned = {
             id: user.id.toString(),
-            username: [user.first_name, user.last_name || ""].join(" "),
-            global_name: user.username,
+            global_name: [user.first_name, user.last_name || ""].join(" "),
+            username: user.username,
             image_url: user.photo_url,
           };
 

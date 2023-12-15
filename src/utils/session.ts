@@ -6,6 +6,8 @@ export const getSessionDetails = (session: Session | null) => {
       ? session?.user.profile.data.username
       : session?.user.type === "discord"
       ? session?.user.profile.username
+      : session?.user.type === "telegram"
+      ? session?.user.username
       : session?.user.name;
 
   return { id, sessionType: session?.user.type };

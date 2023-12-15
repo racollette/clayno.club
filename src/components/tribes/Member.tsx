@@ -1,4 +1,5 @@
 import {
+  type Telegram,
   type Attributes,
   type Dino,
   type Discord,
@@ -19,7 +20,12 @@ type MemberProps = {
   owner: string;
   data: {
     dinos: (Dino & { attributes: Attributes })[];
-    user: User & { wallets: Wallet[]; discord: Discord; twitter: Twitter };
+    user: User & {
+      wallets: Wallet[];
+      discord: Discord;
+      twitter: Twitter;
+      telegram: Telegram;
+    };
   };
   acronym: string;
 };
@@ -50,7 +56,7 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
     }
   }, [wallets]);
 
-  const isRegistered = user?.discord || user?.twitter;
+  const isRegistered = user?.discord || user?.twitter || user?.telegram;
   const expandable = userDinos ? userDinos.length > 1 : dinos.length > 1;
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
   const isUnowned = owner === "unowned";
@@ -59,18 +65,24 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
     ? user.twitter.image_url
     : user?.discord
     ? user?.discord.image_url
+    : user?.telegram
+    ? user?.telegram.image_url
     : `https://ui-avatars.com/api/?name=${owner}&background=random`;
 
   const profile = user?.twitter
     ? user?.twitter.username
     : user?.discord
     ? user?.discord.username
+    : user?.telegram
+    ? user?.telegram.username
     : owner;
 
   const name = user?.twitter
     ? user?.twitter.global_name
     : user?.discord
     ? user?.discord.global_name
+    : user?.telegram
+    ? user?.telegram.global_name
     : isUnowned
     ? "Listed/Unowned"
     : shortAccount(owner);

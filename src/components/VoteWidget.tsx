@@ -6,6 +6,7 @@ import {
   type Twitter,
   type User,
   type Voter,
+  type Telegram,
 } from "@prisma/client";
 import {
   Tooltip,
@@ -41,6 +42,7 @@ type VoteWidgetProps = {
           user: User & {
             discord: Discord | null;
             twitter: Twitter | null;
+            telegram: Telegram | null;
           };
         })[];
       };
@@ -145,6 +147,8 @@ export const VoteWidget = ({
                       ? voter.user.twitter.image_url
                       : voter.user.discord
                       ? voter.user.discord?.image_url
+                      : voter.user.telegram
+                      ? voter.user.telegram?.image_url
                       : `https://ui-avatars.com/api/?name=${voter.user.defaultAddress}&background=random`;
                     return (
                       <div key={voter.userId}>
@@ -163,7 +167,8 @@ export const VoteWidget = ({
                           </TooltipTrigger>
                           <TooltipContent className="mb-1 rounded-lg bg-white p-2 font-semibold">
                             {voter.user.twitter?.global_name ||
-                              voter.user.discord?.global_name}
+                              voter.user.discord?.global_name ||
+                              voter.user.telegram?.global_name}
                           </TooltipContent>
                         </Tooltip>
                       </div>

@@ -112,6 +112,7 @@ export default function LoginModal({
         `/profile/${
           user?.discord?.username ??
           user?.twitter?.username ??
+          user?.telegram?.username ??
           user?.defaultAddress ??
           session?.user.name ??
           publicKey.toString()
@@ -166,6 +167,7 @@ export default function LoginModal({
               imageURL={
                 user?.twitter?.image_url ??
                 user?.discord?.image_url ??
+                user?.telegram?.image_url ??
                 `https://ui-avatars.com/api/?name=${
                   user?.defaultAddress ??
                   session?.user.name ??
@@ -175,6 +177,7 @@ export default function LoginModal({
               username={
                 user?.twitter?.global_name ??
                 user?.discord?.global_name ??
+                user?.telegram?.global_name ??
                 shortAccount(user?.defaultAddress) ??
                 session?.user.name ??
                 publicKey?.toString()
@@ -183,6 +186,7 @@ export default function LoginModal({
               sessionKey={
                 user?.twitter?.username ??
                 user?.discord?.username ??
+                user?.telegram?.username ??
                 user?.defaultAddress ??
                 session?.user.name ??
                 publicKey?.toString()
