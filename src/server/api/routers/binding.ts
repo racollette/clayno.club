@@ -78,13 +78,18 @@ export const bindingRouter = createTRPCRouter({
           include: {
             discord: true,
             twitter: true,
+            telegram: true,
             wallets: true,
           },
         });
         return user;
       }
 
-      if (input.type === "discord" || input.type === "twitter") {
+      if (
+        input.type === "discord" ||
+        input.type === "twitter" ||
+        input.type === "telegram"
+      ) {
         const user = await prisma.user.findFirst({
           where: {
             OR: [
@@ -116,11 +121,26 @@ export const bindingRouter = createTRPCRouter({
                   },
                 },
               },
+              {
+                telegram: {
+                  username: {
+                    contains: input.id,
+                  },
+                },
+              },
+              {
+                telegram: {
+                  global_name: {
+                    contains: input.id,
+                  },
+                },
+              },
             ],
           },
           include: {
             discord: true,
             twitter: true,
+            telegram: true,
             wallets: true,
           },
         });
@@ -155,6 +175,7 @@ export const bindingRouter = createTRPCRouter({
         include: {
           discord: true,
           twitter: true,
+          telegram: true,
           wallets: true,
         },
       });
@@ -257,6 +278,47 @@ export const bindingRouter = createTRPCRouter({
     .input(z.string())
     .mutation(async ({ input }) => {
       const deleteProvider = await prisma.twitter.delete({
+        where: {
+          userId: input,
+        },
+      });
+
+      return deleteProvider;
+    }),
+
+  linkTelegram: protectedProcedure
+    .input(linkSocialProfileRequestSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const providerExists = await prisma.telegram.findUnique({
+          where: {
+            username: input.id,
+          },
+        });
+
+        if (!providerExists) {
+          const linkedSocial = await prisma.user.update({
+            where: {
+              id: input.id,
+            },
+            data: {
+              telegram: {
+                create: input.data,
+              },
+            },
+          });
+          return linkedSocial;
+        }
+      } catch (error) {
+        console.error("Error linking telegram:", error);
+        throw new Error("Failed to link Telegram account");
+      }
+    }),
+
+  unlinkTelegram: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      const deleteProvider = await prisma.telegram.delete({
         where: {
           userId: input,
         },
@@ -420,6 +482,7 @@ export const bindingRouter = createTRPCRouter({
           wallets: true,
           discord: true,
           twitter: true,
+          telegram: true,
         },
       });
     }),
@@ -432,6 +495,7 @@ export const bindingRouter = createTRPCRouter({
         wallets: true,
         discord: true,
         twitter: true,
+        telegram: true,
       },
     });
   }),

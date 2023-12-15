@@ -192,7 +192,6 @@ export default function FusionPage() {
 
   const handlePlace = (imageURL: string, motion: string, mint: string) => {
     let setItem = false;
-    console.log(motion);
     setGrid((prevGrid) =>
       prevGrid.map((row) =>
         row.map((cell) => {

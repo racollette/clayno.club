@@ -52,8 +52,6 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
-      // console.log(session);
-      // console.log(token);
       if (session.user) {
         // @ts-expect-error unknown type
         session.user.profile = token.profile;
@@ -77,14 +75,25 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.sub;
         session.user.image = `https://ui-avatars.com/api/?name=${token.sub}&background=random`;
       }
+
+      // @ts-expect-error unknown type
+      if (token.account.provider === "telegram") {
+        // @ts-expect-error unknown type
+        session.user = token.user;
+        session.user.type = "telegram";
+      }
+
       return Promise.resolve(session);
     },
-    async jwt({ token, account, profile }) {
+    async jwt({ user, token, account, profile }) {
       if (account) {
         token.account = account;
       }
       if (profile) {
         token.profile = profile;
+      }
+      if (user) {
+        token.user = user;
       }
       return Promise.resolve(token);
     },
@@ -227,12 +236,12 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     CredentialsProvider({
-      id: "telegram-login",
-      name: "Telegram Login",
+      id: "telegram",
+      name: "Telegram",
       credentials: {},
       async authorize(credentials, req) {
         const validator = new AuthDataValidator({
-          botToken: `${process.env.BOT_TOKEN}`,
+          botToken: `${process.env.TELEGRAM_BOT_TOKEN}`,
         });
 
         const data = objectToAuthDataMap(req.query || {});
@@ -241,16 +250,16 @@ export const authOptions: NextAuthOptions = {
         if (user.id && user.first_name) {
           const returned = {
             id: user.id.toString(),
-            email: user.id.toString(),
-            name: [user.first_name, user.last_name || ""].join(" "),
-            image: user.photo_url,
+            username: [user.first_name, user.last_name || ""].join(" "),
+            global_name: user.username,
+            image_url: user.photo_url,
           };
 
-          try {
-            // await createUserOrUpdate(user);
-          } catch {
-            console.log("Something went wrong while creating the user.");
-          }
+          // try {
+          //   await createUserOrUpdate(user);
+          // } catch {
+          //   console.log("Something went wrong while creating the user.");
+          // }
 
           return returned;
         }

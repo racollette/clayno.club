@@ -10,21 +10,26 @@ import AddWalletModal from "../../../components/profile/AddWalletModal";
 import { truncateAccount } from "~/utils/addresses";
 import useLocalStorage from "~/utils/storage";
 import AlertModal from "~/components/AlertModal";
-import router from "next/router";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import { useToast } from "~/@/components/ui/use-toast";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { LoginButton } from "@telegram-auth/react";
 
 const Settings = () => {
   const { toast } = useToast();
   const { data: session } = useSession();
   const { publicKey, connected } = useWallet();
+  const router = useRouter();
+  const { account } = router.query;
   // const { user, sessionType, isLoading, refetch } = getUserSession();
   const { sessionType, id } = getSessionDetails(session);
   const [userId, setUserId] = useState<string | undefined>();
   const [unlinkedDiscord, setUnlinkedDiscord] = useState<boolean>(false);
   const [unlinkedTwitter, setUnlinkedTwitter] = useState<boolean>(false);
+  const [unlinkedTelegram, setUnlinkedTelegram] = useState<boolean>(false);
   const [storedUserId, setStoredUserId] = useLocalStorage("userId", "");
+  const [showTelegramWidget, setShowTelegramWidget] = useState<boolean>(false);
 
   const {
     data: user,
@@ -54,8 +59,10 @@ const Settings = () => {
 
   const linkDiscord = api.binding.linkDiscord.useMutation();
   const linkTwitter = api.binding.linkTwitter.useMutation();
+  const linkTelegram = api.binding.linkTelegram.useMutation();
   const unlinkDiscord = api.binding.unlinkDiscord.useMutation();
   const unlinkTwitter = api.binding.unlinkTwitter.useMutation();
+  const unlinkTelegram = api.binding.unlinkTelegram.useMutation();
   const setDefaultWallet = api.binding.setDefaultWallet.useMutation();
   const deleteWallet = api.binding.deleteWallet.useMutation();
   const linkWallet = api.binding.linkWallet.useMutation();
@@ -71,7 +78,7 @@ const Settings = () => {
 
   useEffect(() => {
     refetch();
-  }, [linkTwitter, linkDiscord, linkWallet, refetch]);
+  }, [linkTwitter, linkDiscord, linkWallet, linkTelegram, refetch]);
 
   useEffect(() => {
     linkSocial();
@@ -107,6 +114,17 @@ const Settings = () => {
           });
           setUnlinkedTwitter(false);
         }
+      } else if (session?.user.type === "telegram") {
+        if (user?.telegram) return;
+        linkTelegram.mutate({
+          id: userId || storedUserId,
+          data: {
+            username: session.user.username,
+            global_name: session.user.global_name,
+            image_url: session.user.image_url,
+            id: session.user.id,
+          },
+        });
       }
     } catch (error) {
       console.error("Error writing data:", error);
@@ -126,6 +144,14 @@ const Settings = () => {
       try {
         unlinkTwitter.mutate(user?.id);
         setUnlinkedTwitter(true);
+      } catch (error) {
+        console.error("Error deleting data:", error);
+      }
+    }
+    if (user?.telegram && provider === "telegram") {
+      try {
+        unlinkTelegram.mutate(user?.id);
+        setUnlinkedTelegram(true);
       } catch (error) {
         console.error("Error deleting data:", error);
       }
@@ -303,6 +329,86 @@ const Settings = () => {
                         </div>
                       </div>
                     </button>
+                  )}
+                </div>
+              )}
+              {user?.telegram && !unlinkedTelegram ? (
+                <div className="flex flex-row justify-between gap-12">
+                  <div className="flex flex-row">
+                    <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
+                      <Image
+                        src={user?.telegram.image_url}
+                        fill
+                        alt="Avatar"
+                        onError={handleUserPFPDoesNotExist}
+                      />
+                    </div>
+                    <span className="self-center">
+                      {user?.telegram.global_name}
+                    </span>
+                  </div>
+                  <button
+                    className="self-end rounded-lg bg-neutral-900 px-4 py-3"
+                    onClick={() => handleUnlink("telegram")}
+                  >
+                    <div className="flex flex-row gap-2">
+                      <Image
+                        src="/icons/telegram.svg"
+                        alt="Telegram"
+                        width={24}
+                        height={24}
+                      />
+                      <div className="text-md flex flex-row whitespace-nowrap">
+                        <span>Unlink</span>
+                        <span className="hidden md:block">&nbsp;Telegram</span>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex align-middle">
+                  {linkTelegram.isLoading ? (
+                    <Spinner className="self-center" />
+                  ) : (
+                    <>
+                      {!showTelegramWidget ? (
+                        <button
+                          className="mr-4 rounded-lg bg-neutral-900 px-4 py-3"
+                          disabled={linkTelegram.isLoading}
+                          onClick={() => {
+                            setStoredUserId(userId);
+                            setShowTelegramWidget(true);
+                            // signIn("telegram");
+                          }}
+                        >
+                          <div className="flex flex-row gap-4">
+                            <Image
+                              src="/icons/telegram.svg"
+                              alt="Telegram"
+                              width={24}
+                              height={24}
+                            />
+                            <div className="text-md whitespace-nowrap">
+                              Connect Telegram
+                            </div>
+                          </div>
+                        </button>
+                      ) : (
+                        <LoginButton
+                          showAvatar={false}
+                          botUsername={"ClaynoClubBot"}
+                          onAuthCallback={(data) => {
+                            signIn(
+                              "telegram",
+                              {
+                                callbackUrl: `/profile/${account}/settings`,
+                              },
+                              data as any
+                            );
+                          }}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}
