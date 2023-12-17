@@ -143,7 +143,7 @@ model Telegram {
   global_name String
   image_url   String
   userId      String @unique
-  telegramId  String @unique
+  telegramId  Int    @unique
   User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

@@ -294,7 +294,7 @@ export const bindingRouter = createTRPCRouter({
           username: z.string(),
           global_name: z.string(),
           image_url: z.string(),
-          telegramId: z.string(),
+          telegramId: z.number(),
         }),
       })
     )

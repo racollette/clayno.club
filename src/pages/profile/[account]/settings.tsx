@@ -122,7 +122,7 @@ const Settings = () => {
             username: session.user.username,
             global_name: session.user.global_name,
             image_url: session.user.image_url,
-            telegramId: session.user.id,
+            telegramId: Number(session.user.id),
           },
         });
       }
