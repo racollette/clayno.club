@@ -287,12 +287,22 @@ export const bindingRouter = createTRPCRouter({
     }),
 
   linkTelegram: protectedProcedure
-    .input(linkSocialProfileRequestSchema)
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          username: z.string(),
+          global_name: z.string(),
+          image_url: z.string(),
+          telegramId: z.string(),
+        }),
+      })
+    )
     .mutation(async ({ input }) => {
       try {
         const providerExists = await prisma.telegram.findUnique({
           where: {
-            username: input.id,
+            telegramId: input.data.telegramId,
           },
         });
 

@@ -139,12 +139,12 @@ model Twitter {
 }
 
 model Telegram {
-  username    String  @unique
+  username    String @unique
   global_name String
   image_url   String
-  userId      String  @unique
-  id          String? @unique
-  User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String @unique
+  telegramId  String @unique
+  User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Wallet {
