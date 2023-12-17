@@ -303,7 +303,7 @@ export default function LoginModal({
                 <div className="mb-3 text-zinc-500">
                   Log in with your linked Twitter or Discord account.
                 </div>
-                <div className="flex flex-row justify-start gap-4">
+                <div className="grid grid-cols-2 justify-start gap-4 md:flex md:flex-row">
                   <button
                     className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
                     onClick={() => signIn("discord")}
