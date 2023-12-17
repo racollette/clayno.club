@@ -5,6 +5,7 @@ import VoterInfo from "./herds/VoterInfo";
 
 export default function Header() {
   const router = useRouter();
+  const isHerdsPage = router.pathname === "/herds";
 
   return (
     <Navbar className="bg-black text-white" fluid>
@@ -22,8 +23,8 @@ export default function Header() {
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
-        {/* {isHerdsPage && <VoterInfo />} */}
-        <VoterInfo />
+        {isHerdsPage && <VoterInfo />}
+        {/* <VoterInfo /> */}
         <LoginModal />
         <Navbar.Toggle className="bg-transparent text-white hover:bg-transparent focus:ring-zinc-500" />
       </div>
