@@ -338,7 +338,7 @@ export default function LoginModal({
                       </div>
                     </div>
                   </button>
-                  <button
+                  {/* <button
                     className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
                     onClick={() => signIn("telegram")}
                   >
@@ -354,7 +354,7 @@ export default function LoginModal({
                         <span className="hidden md:block">&nbsp;Login</span>
                       </div>
                     </div>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
