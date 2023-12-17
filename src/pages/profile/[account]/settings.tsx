@@ -115,6 +115,19 @@ const Settings = () => {
           setUnlinkedTwitter(false);
         }
       } else if (session?.user.type === "telegram") {
+        console.log("Attempting to link Telegram account");
+        console.log(`User: ${user}`);
+        console.log(`Session: ${session}`);
+        console.log("data", {
+          id: userId || storedUserId,
+          data: {
+            username: session.user.username,
+            global_name: session.user.global_name,
+            image_url: session.user.image_url,
+            telegramId: Number(session.user.id),
+          },
+        });
+
         if (user?.telegram) return;
         linkTelegram.mutate({
           id: userId || storedUserId,

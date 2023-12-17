@@ -83,6 +83,8 @@ export const authOptions: NextAuthOptions = {
         session.user.type = "telegram";
       }
 
+      console.log("user session", session);
+
       return Promise.resolve(session);
     },
     async jwt({ user, token, account, profile }) {
