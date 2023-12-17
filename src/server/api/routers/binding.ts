@@ -291,10 +291,10 @@ export const bindingRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         data: z.object({
-          username: z.string(),
+          username: z.string().optional(),
           global_name: z.string(),
           image_url: z.string(),
-          telegramId: z.number(),
+          telegramId: z.string(),
         }),
       })
     )
