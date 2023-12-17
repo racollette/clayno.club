@@ -338,6 +338,23 @@ export default function LoginModal({
                       </div>
                     </div>
                   </button>
+                  <button
+                    className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
+                    onClick={() => signIn("telegram")}
+                  >
+                    <div className="flex flex-row justify-center gap-2">
+                      <Image
+                        src="/icons/telegram.svg"
+                        alt="Telegram"
+                        width={24}
+                        height={24}
+                      />
+                      <div className="flex flex-row font-medium">
+                        Telegram
+                        <span className="hidden md:block">&nbsp;Login</span>
+                      </div>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
