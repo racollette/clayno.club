@@ -13,6 +13,7 @@ import { CollagePreview } from "~/components/CollagePreview";
 import { type GridItemProps } from "~/components/CollageModal";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import MetaTags from "~/components/MetaTags";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 // const WalletMultiButtonDynamic = dynamic(
 //   async () =>
@@ -35,6 +36,8 @@ export default function Profile() {
     type: isWallet ? "wallet" : "discord",
     id: queryString,
   });
+  const { username, userHandle, userPFP, favoriteDomain } =
+    extractProfileFromUser(user);
 
   const wallets = user?.wallets ?? [];
   const userHerds = api.useQueries((t) =>
@@ -98,13 +101,8 @@ export default function Profile() {
                       <Image
                         className="self-center rounded-full"
                         src={
-                          user.twitter
-                            ? user.twitter.image_url
-                            : user.discord
-                            ? user.discord.image_url
-                            : user.telegram
-                            ? user.telegram.image_url
-                            : `https://ui-avatars.com/api/?name=${user?.defaultAddress}&background=random`
+                          userPFP ??
+                          `https://ui-avatars.com/api/?name=${user?.defaultAddress}&background=random`
                         }
                         alt="Avatar"
                         width={75}
@@ -112,12 +110,8 @@ export default function Profile() {
                         onError={handleUserPFPDoesNotExist}
                       />
                       <div className="self-center p-2 font-extrabold text-white">
-                        {user.twitter
-                          ? user.twitter.global_name
-                          : user.discord
-                          ? user.discord.global_name
-                          : user.telegram
-                          ? user.telegram.global_name
+                        {userHandle ?? userHandle ?? favoriteDomain
+                          ? `${favoriteDomain}.sol`
                           : truncateAccount(user.defaultAddress)}
                       </div>
                     </div>
