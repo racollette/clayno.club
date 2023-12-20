@@ -17,6 +17,7 @@ import {
   getBorderColor,
 } from "~/utils/colors";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 type HerdProps = {
   herd: Herd & {
@@ -44,6 +45,9 @@ export default function Herd(props: HerdProps) {
   const { herd, showDactyl, showSaga, showOwner, showPFP, owner } = props;
   const [filteredHerd, setFilteredHerd] = useState(herd);
   const [isHovered, setIsHovered] = useState(false);
+
+  const { username, userHandle, userPFP, favoriteDomain } =
+    extractProfileFromUser(owner);
 
   useEffect(() => {
     let filteredHerd = herd.dinos;
@@ -110,31 +114,18 @@ export default function Herd(props: HerdProps) {
                 <div className="mr-2 flex">
                   <Link
                     className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
-                    href={`/profile/${
-                      owner?.twitter?.username ||
-                      owner?.discord?.username ||
-                      owner?.telegram?.username
-                    }`}
+                    href={`/profile/${username}`}
                     target="_blank"
                   >
                     <Image
                       className="mr-2 self-center rounded-md"
-                      src={
-                        owner?.twitter?.image_url ||
-                        owner?.discord?.image_url ||
-                        owner?.telegram?.image_url ||
-                        ""
-                      }
+                      src={userPFP ?? ""}
                       alt="Avatar"
                       width={24}
                       height={24}
                       onError={handleUserPFPDoesNotExist}
                     />
-                    <div className="self-center text-white">
-                      {owner?.twitter?.global_name ||
-                        owner?.discord?.global_name ||
-                        owner?.telegram?.global_name}
-                    </div>
+                    <div className="self-center text-white">{userHandle}</div>
                   </Link>
                 </div>
 
@@ -181,7 +172,9 @@ export default function Herd(props: HerdProps) {
                     />
                   </div>
                   <div className={`text-md self-center font-bold text-white`}>
-                    {truncateAccount(herd.owner)}
+                    {favoriteDomain
+                      ? `${favoriteDomain}.sol`
+                      : truncateAccount(herd.owner)}
                   </div>
                 </Link>
                 <Link
