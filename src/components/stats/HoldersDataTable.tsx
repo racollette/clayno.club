@@ -93,10 +93,21 @@ export default function HoldersDataTable<TData, TValue>({
                   <p className="ml-4 hidden md:block">{truncatedAddress}</p>
                 </div>
               ) : (
-                <div className="flex flex-row overflow-hidden whitespace-nowrap">
-                  <p className="block md:hidden">{truncatedAddress}</p>
-                  <p className="hidden md:block">{row.original.address}</p>
-                </div>
+                <>
+                  {row.original.owner.favoriteDomain ? (
+                    <div className="flex flex-row items-center gap-2 overflow-hidden whitespace-nowrap">
+                      <div className="rounded-lg bg-cyan-700 px-2 py-0.5 text-sm">
+                        {row.original.owner.favoriteDomain}.sol
+                      </div>
+                      <p className="ml-4">{truncatedAddress}</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-row overflow-hidden whitespace-nowrap">
+                      <p className="block md:hidden">{truncatedAddress}</p>
+                      <p className="hidden md:block">{row.original.address}</p>
+                    </div>
+                  )}
+                </>
               )}
             </>
           );
