@@ -31,6 +31,8 @@ const Inventory = () => {
   const [originalSpecies, setOriginalSpecies] = useState<Character[]>([]);
   const [sagaSpecies, setSagaSpecies] = useState<Character[]>([]);
 
+  // const favoriteDomain = getFavoriteDomain(wallets)
+
   const { data: holders, isLoading } = api.inventory.getUserItems.useQuery({
     wallets: wallets,
   });
