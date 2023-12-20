@@ -23,12 +23,13 @@ type FilterTraits = {
   [key: string]: string;
 };
 
-type Owner = {
+export type Owner = {
   userId: string | null;
   username: string | null;
   userHandle: string | null;
   userPFP: string | null;
   wallets: string[];
+  favoriteDomain: string | undefined | null;
 };
 
 const Holders = () => {
@@ -69,10 +70,11 @@ const Holders = () => {
       userHandle: null,
       userPFP: null,
       wallets: [],
+      favoriteDomain: null,
     };
 
     if (user) {
-      const { userId, username, userHandle, userPFP } =
+      const { userId, username, userHandle, userPFP, favoriteDomain } =
         extractProfileFromUser(user);
       owner = {
         userId,
@@ -80,6 +82,7 @@ const Holders = () => {
         userHandle,
         userPFP,
         wallets: user.wallets.map((wallet) => wallet.address),
+        favoriteDomain,
       };
     }
 

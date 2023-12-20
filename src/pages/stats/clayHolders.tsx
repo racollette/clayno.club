@@ -1,14 +1,7 @@
 import ClayDataTable from "../../components/stats/ClayDataTable";
 import { api } from "~/utils/api";
 import { extractProfileFromUser } from "~/utils/wallet";
-
-type Owner = {
-  userId: string | null;
-  username: string | null;
-  userHandle: string | null;
-  userPFP: string | null;
-  wallets: string[];
-};
+import { type Owner } from "./holders";
 
 const ClayHolders = () => {
   const { data: clayHolders } = api.stats.getClayHoldersByColor.useQuery();
@@ -25,10 +18,11 @@ const ClayHolders = () => {
       userHandle: null,
       userPFP: null,
       wallets: [],
+      favoriteDomain: null,
     };
 
     if (user) {
-      const { userId, username, userHandle, userPFP } =
+      const { userId, username, userHandle, userPFP, favoriteDomain } =
         extractProfileFromUser(user);
       owner = {
         userId,
@@ -36,6 +30,7 @@ const ClayHolders = () => {
         userHandle,
         userPFP,
         wallets: user.wallets.map((wallet) => wallet.address),
+        favoriteDomain,
       };
     }
 
