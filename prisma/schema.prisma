@@ -148,9 +148,10 @@ model Telegram {
 }
 
 model Wallet {
-  address String @id @unique
-  userId  String
-  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address        String  @id @unique
+  userId         String
+  favoriteDomain String?
+  User           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
