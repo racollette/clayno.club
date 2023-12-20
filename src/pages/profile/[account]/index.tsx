@@ -87,7 +87,7 @@ export default function Profile() {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Profile" />
+      <MetaTags title="Clayno.club | Profile" />
       <Layout>
         <section className="flex w-full flex-col items-center justify-center gap-8 py-4 md:flex-row md:items-start md:px-4 md:py-8">
           <div className="flex flex-row flex-wrap justify-center rounded-xl bg-neutral-800 p-4 align-middle">

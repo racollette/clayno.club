@@ -14,7 +14,7 @@ const Threads = () => {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Fusion" />
+      <MetaTags title="Clayno.club | Fusion" />
       <Layout>
         <section className="flex flex-col justify-center gap-x-4 md:flex-row md:justify-between lg:gap-x-8 xl:gap-x-16">
           <div className="flex flex-col items-center">

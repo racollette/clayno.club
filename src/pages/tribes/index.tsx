@@ -9,7 +9,7 @@ export default function TribesPage() {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Tribes" />
+      <MetaTags title="Clayno.club | Tribes" />
       <Layout>
         <section className="container relative m-4 aspect-[7/2] w-full overflow-clip">
           <Image

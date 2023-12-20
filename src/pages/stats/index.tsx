@@ -21,7 +21,7 @@ export default function StatsPage() {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Stats" />
+      <MetaTags title="Clayno.club | Stats" />
       <Layout>
         <section className="flex w-full flex-col items-center">
           <Tabs

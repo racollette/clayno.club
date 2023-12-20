@@ -86,7 +86,7 @@ const Inventory = () => {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Inventory" />
+      <MetaTags title="Clayno.club | Inventory" />
       <Layout>
         <section className="flex flex-col items-center justify-center gap-y-8 md:container md:p-2">
           <div className="flex flex-col gap-2">

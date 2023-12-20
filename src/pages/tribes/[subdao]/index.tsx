@@ -21,7 +21,7 @@ export default function SubDAO() {
 
   return (
     <>
-      <MetaTags title={data?.name ?? `DinoHerd`} />
+      <MetaTags title={data?.name ?? `Clayno.club`} />
       <Layout>
         <div className="flex w-full flex-col justify-center gap-4 align-middle lg:w-full xl:w-11/12 2xl:w-10/12">
           {!isLoading && data ? (

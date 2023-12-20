@@ -342,7 +342,7 @@ export default function FusionPage() {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Fusion" />
+      <MetaTags title="Clayno.club | Fusion" />
       <Layout>
         <section
           className={`my-10 flex ${

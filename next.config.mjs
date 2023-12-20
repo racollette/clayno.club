@@ -56,6 +56,14 @@ const config = {
         protocol: 'https',
         hostname: '**.dinoherd.cc',
       },
+      {
+        protocol: 'https',
+        hostname: '**.www.clayno.club',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.clayno.club',
+      },
     ],
     unoptimized: true
   },

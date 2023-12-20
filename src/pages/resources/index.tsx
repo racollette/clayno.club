@@ -5,7 +5,7 @@ import MetaTags from "~/components/MetaTags";
 const Resources = () => {
   return (
     <>
-      <MetaTags title="DinoHerd | Resources" />
+      <MetaTags title="Clayno.club | Resources" />
       <Layout>
         <section className="flex flex-col items-center justify-center gap-y-8 p-2 md:container">
           <div className="font-clayno text-3xl">Resources</div>

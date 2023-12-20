@@ -408,7 +408,7 @@ export default function Home() {
 
   return (
     <>
-      <MetaTags title="DinoHerd | Herds" />
+      <MetaTags title="Clayno.club | Herds" />
       <main className="relative flex min-h-screen flex-col items-center  bg-black">
         {allHerdsLoading ? (
           <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full text-white md:w-1/4">

@@ -19,7 +19,7 @@ export default function Header() {
           className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-claynoShadow hover:animate-wiggle dark:text-white md:text-xl"
           onClick={() => router.push(`/`)}
         >
-          DinoHerd.cc
+          Clayno.club
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">

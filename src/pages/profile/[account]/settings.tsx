@@ -11,7 +11,7 @@ import { truncateAccount } from "~/utils/addresses";
 import useLocalStorage from "~/utils/storage";
 import AlertModal from "~/components/AlertModal";
 import { useRouter } from "next/router";
-import Head from "next/head";
+import MetaTags from "~/components/MetaTags";
 import { useToast } from "~/@/components/ui/use-toast";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import { LoginButton } from "@telegram-auth/react";
@@ -204,9 +204,7 @@ const Settings = () => {
 
   return (
     <>
-      <Head>
-        <title>DinoHerd | Settings</title>
-      </Head>
+      <MetaTags title="Clayno.club | Resources" />
       <Layout>
         <div className="lg:w-1/2">
           <div>

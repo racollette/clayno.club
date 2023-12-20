@@ -1,12 +1,12 @@
 import Head from "next/head";
 
 const MetaTags = ({
-  title = "DinoHerd",
+  title = "Clayno.club",
   description = "Unofficial Claynosaurz Community Tools",
   ogTitle = "Unofficial Claynosaurz Community Tools",
   ogDescription = "Explore the dinos, herds and tribes of Claynotopia! Collectors collect.",
   ogImage = "/images/og.jpeg",
-  ogUrl = "https://dinoherd.cc",
+  ogUrl = "https://clayno.club",
   twitterCard = "Explore the dinos, herds and tribes of Claynotopia! Collectors collect.",
   twitterImage = "/images/og.jpeg",
 }) => {

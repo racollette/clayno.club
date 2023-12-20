@@ -1,4 +1,3 @@
-import Head from "next/head";
 import HoldersDataTable from "../../components/stats/HoldersDataTable";
 import { api } from "~/utils/api";
 import {
@@ -148,9 +147,6 @@ const Holders = () => {
 
   return (
     <div className="w-full">
-      <Head>
-        <title>DinoHerd | Holders</title>
-      </Head>
       <section className="flex w-full flex-col items-center justify-center gap-8 font-clayno md:px-4 ">
         <div className="flex flex-row flex-wrap gap-2">
           <FilterSelect
