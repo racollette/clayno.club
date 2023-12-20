@@ -15,6 +15,7 @@ import ImageExpander from "./Expander";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { fetchOtherWallets } from "~/utils/subdaos";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 type MemberProps = {
   owner: string;
@@ -48,7 +49,7 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
 
   useEffect(() => {
     if (wallets) {
-      if (acronym !== "CC") return;
+      if (acronym !== "cc") return;
       const mintArray = otherWallets?.flatMap((item) => item.mints);
       if (mintArray) {
         setUserDinos([...dinos, ...mintArray]);
@@ -61,28 +62,18 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
   const isUnowned = owner === "unowned";
 
-  const avatar = user?.twitter
-    ? user.twitter.image_url
-    : user?.discord
-    ? user?.discord.image_url
-    : user?.telegram
-    ? user?.telegram.image_url
-    : `https://ui-avatars.com/api/?name=${owner}&background=random`;
+  const { username, userHandle, userPFP, favoriteDomain } =
+    extractProfileFromUser(user);
 
-  const profile = user?.twitter
-    ? user?.twitter.username
-    : user?.discord
-    ? user?.discord.username
-    : user?.telegram
-    ? user?.telegram.username
-    : owner;
+  const avatar =
+    userPFP ?? `https://ui-avatars.com/api/?name=${owner}&background=random`;
 
-  const name = user?.twitter
-    ? user?.twitter.global_name
-    : user?.discord
-    ? user?.discord.global_name
-    : user?.telegram
-    ? user?.telegram.global_name
+  const profile = username ?? owner;
+
+  const name = userHandle
+    ? userHandle
+    : favoriteDomain
+    ? `${favoriteDomain}.sol`
     : isUnowned
     ? "Listed/Unowned"
     : shortAccount(owner);
