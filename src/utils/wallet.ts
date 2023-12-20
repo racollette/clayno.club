@@ -3,6 +3,7 @@ import {
   type Twitter,
   type Telegram,
   type Wallet,
+  type User,
 } from "@prisma/client";
 
 type UserWithSocials =
@@ -14,30 +15,49 @@ type UserWithSocials =
       defaultAddress: string;
       wallets: Wallet[];
     }
-  | undefined;
+  | undefined
+  | null;
 
 export const extractProfileFromUser = (user: UserWithSocials) => {
-  const username = user?.discord
-    ? user.discord.username
-    : user?.twitter
+  const favoriteDomain = user?.wallets
+    .map((wallet) => (wallet.favoriteDomain ? wallet.favoriteDomain : null))
+    .filter((domain) => domain !== null)[0];
+
+  const username = user?.twitter
     ? user.twitter.username
+    : user?.discord
+    ? user.discord.username
     : user?.telegram
     ? user.telegram.username
     : null;
-  const userHandle = user?.discord
-    ? user.discord.global_name
-    : user?.twitter
+  const userHandle = user?.twitter
     ? user.twitter.global_name
+    : user?.discord
+    ? user.discord.global_name
     : user?.telegram
     ? user.telegram.global_name
     : null;
-  const userPFP = user?.discord
-    ? user.discord.image_url
-    : user?.twitter
+  const userPFP = user?.twitter
     ? user.twitter.image_url
+    : user?.discord
+    ? user.discord.image_url
     : user?.telegram
     ? user.telegram.image_url
     : null;
 
-  return { userId: user?.id ?? null, username, userHandle, userPFP };
+  return {
+    userId: user?.id ?? null,
+    username,
+    userHandle,
+    userPFP,
+    favoriteDomain,
+  };
+};
+
+export const getFavoriteDomain = (wallets: Wallet[]) => {
+  const favoriteDomain = wallets
+    .map((wallet) => (wallet.favoriteDomain ? wallet.favoriteDomain : null))
+    .filter((domain) => domain !== null)[0];
+
+  return favoriteDomain;
 };
