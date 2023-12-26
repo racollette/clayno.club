@@ -15,7 +15,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { clusterApiUrl } from "@solana/web3.js";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
-import Home from ".";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -56,11 +55,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <WalletModalProvider>
           {/* Your app's components go here, nested within the context providers. */}
           <SessionProvider session={session}>
-            {Component === Home ? null : <Header />}
+            {/* {Component === Home ? null : <Header />} */}
+            <Header />
             <Component {...pageProps} />
             <Toaster />
             <Analytics />
-            {Component === Home ? null : <Footer />}
+            {/* {Component === Home ? null : <Footer />} */}
+            <Footer />
           </SessionProvider>
         </WalletModalProvider>
       </WalletProvider>

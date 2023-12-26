@@ -4,17 +4,19 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="flex flex-col items-center justify-center bg-black pb-6 text-center text-white md:text-lg">
-      <div className="flex items-center justify-center gap-2">
-        <span className="text-sm">Made with</span>
-        <Image src="/icons/heart.svg" alt="Love" width={16} height={16} />
-        <span className="text-sm">by</span>
-        <Link
-          href={`https://twitter.com/Decay235`}
-          className="text-sm text-sky-500"
-          target="_blank"
-        >
-          <span className="text-sm">Decay</span>
-        </Link>
+      <div className="flex items-center justify-center">
+        <span className="text-sm">
+          A{" "}
+          <Link
+            href={`https://clayno.capital`}
+            className="text-sm text-sky-500"
+            target="_blank"
+          >
+            Clayno Capital
+          </Link>{" "}
+          Product
+        </span>
+        {/* <Image src="/icons/heart.svg" alt="Love" width={16} height={16} /> */}
       </div>
     </footer>
   );

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import LoginModal from "./LoginModal";
 import { Navbar } from "flowbite-react";
 import VoterInfo from "./herds/VoterInfo";
+import Image from "next/image";
 
 export default function Header() {
   const router = useRouter();
@@ -16,9 +17,16 @@ export default function Header() {
           src="/favicon.svg"
         /> */}
         <span
-          className="text-md cursor-pointer self-center whitespace-nowrap px-2 font-clayno hover:animate-wiggle dark:text-white md:text-xl"
+          className="text-md flex cursor-pointer flex-row items-center gap-2 self-center whitespace-nowrap px-2 font-clayno hover:animate-wiggle dark:text-white md:text-xl"
           onClick={() => router.push(`/`)}
         >
+          <Image
+            src="/icons/dactyl_colored.svg"
+            width="40"
+            height="40"
+            alt="Clayno.club"
+            className="hover:animate-wiggle"
+          />
           Clayno.club
         </span>
       </Navbar.Brand>
