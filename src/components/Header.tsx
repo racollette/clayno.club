@@ -25,9 +25,9 @@ export default function Header() {
             width="40"
             height="40"
             alt="Clayno.club"
-            className="hover:animate-wiggle"
+            className="hidden hover:animate-wiggle md:block"
           />
-          Clayno.club
+          <p>Clayno.club</p>
         </span>
       </Navbar.Brand>
       <div className="flex gap-2 md:order-2">
