@@ -2,8 +2,12 @@ import { useRef } from "react";
 import Link from "next/link";
 import Metatags from "~/components/MetaTags";
 import Image from "next/image";
+import { useUser } from "~/hooks/useUser";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 export default function Home() {
+  const { user } = useUser();
+  const { username } = extractProfileFromUser(user);
   const browseSectionRef = useRef<HTMLElement | null>(null);
 
   const scrollToBrowse = () => {
@@ -51,9 +55,12 @@ export default function Home() {
                 >
                   Explore
                 </button>
-                <button className="rounded-lg border-2 border-cyan-700 px-8 py-2 hover:border-cyan-600 md:w-[200px]">
+                <Link
+                  href={username ? `/inventory/${username}` : `/inventory`}
+                  className="flex items-center justify-center rounded-lg border-2 border-cyan-700 px-8 py-2 hover:border-cyan-600 md:w-[200px]"
+                >
                   My Inventory
-                </button>
+                </Link>
               </div>
             </div>
             <div className="rounded-xl">
