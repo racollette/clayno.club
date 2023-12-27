@@ -38,7 +38,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
         icon={HiCollection}
         onClick={() => router.push(`/profile/${sessionKey}`)}
       >
-        Dashboard
+        Profile
       </Dropdown.Item>
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
