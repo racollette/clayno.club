@@ -43,4 +43,18 @@ export const inventoryRouter = createTRPCRouter({
         },
       });
     }),
+
+  findHolder: publicProcedure.input(z.string()).query(async ({ input }) => {
+    return prisma.holder.findMany({
+      where: {
+        owner: input, // Match owner with the provided input
+        // OR: [
+        //   { mints: { some: {} } }, // Check if mints array has elements
+        //   { clay: { some: {} } }, // Check if clay array has elements
+        //   { claymakers: { some: {} } }, // Check if claymakers array has elements
+        //   { consumables: { some: {} } }, // Check if consumables array has elements
+        // ],
+      },
+    });
+  }),
 });
