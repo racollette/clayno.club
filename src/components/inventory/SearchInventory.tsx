@@ -1,7 +1,7 @@
 import { type ChangeEvent, useState } from "react";
 import { api } from "~/utils/api";
 import Link from "next/link";
-import { HiExternalLink } from "react-icons/hi";
+import { HiExternalLink, HiXCircle } from "react-icons/hi";
 
 export const SearchInventory = () => {
   const [inputText, setInputText] = useState("");
@@ -22,21 +22,30 @@ export const SearchInventory = () => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4">
+      <h1 className="font-clayno text-xl">Inventory Search</h1>
       <div className="flex w-full flex-col gap-2 md:w-1/2">
-        <h2>Search Address</h2>
-        <input
-          type="text"
-          value={inputText}
-          onChange={handleInputChange}
-          placeholder="Solana Address"
-          className="rounded-lg text-black"
-        />
+        <h2 className="text-xs uppercase">Search Address</h2>
+        <div className="relative w-full">
+          <input
+            type="text"
+            value={inputText}
+            onChange={handleInputChange}
+            placeholder="Solana Address"
+            className="w-full rounded-lg text-sm text-black"
+          />
+          <HiXCircle
+            className="absolute right-2 top-2 cursor-pointer"
+            size={24}
+            color="black"
+            onClick={() => setInputText("")}
+          />
+        </div>
       </div>
       <div>
         <div className="flex flex-col items-center justify-center gap-4">
           {inventoryFound ? (
             <>
-              <p>Wallets found</p>
+              <p className="pt-4 text-xs uppercase">Wallets found</p>
               {existingInventories?.map((inventory) => (
                 <Link
                   href={`/inventory/${inventory.owner}`}
