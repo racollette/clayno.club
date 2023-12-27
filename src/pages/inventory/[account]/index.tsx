@@ -19,13 +19,14 @@ import { groupByColor, groupByEdition, groupBySymbol } from "~/utils/inventory";
 import { HiRefresh } from "react-icons/hi";
 import { zip } from "~/utils/zip";
 import MetaTags from "~/components/MetaTags";
-import { HiExternalLink } from "react-icons/hi";
+import { HiExternalLink, HiReply } from "react-icons/hi";
 import { shortAccount } from "~/utils/addresses";
 import { getQueryString } from "~/utils/routes";
 
 const Inventory = () => {
   const router = useRouter();
   const { account } = router.query;
+
   const { wallets } = useFetchUserWallets(account);
 
   const [originalSpecies, setOriginalSpecies] = useState<Character[]>([]);
@@ -89,46 +90,51 @@ const Inventory = () => {
       <MetaTags title="Clayno.club | Inventory" />
       <Layout>
         <section className="flex flex-col items-center justify-center gap-y-8 md:container md:p-2">
-          <div className="flex flex-col gap-2">
-            <div className="font-clayno text-2xl">
-              {account
-                ? account.length > 36
-                  ? `${shortAccount(getQueryString(account))}'s Inventory`
-                  : `${account}'s Inventory`
-                : `Inventory`}
-            </div>
-            <div className="flex flex-row items-center justify-center gap-4">
-              <Link
-                href={`/profile/${account}`}
-                className="text-md flex flex-row items-center justify-center gap-1 font-clayno hover:scale-125"
-              >
-                <HiExternalLink size={16} className="inline-block" />
-                Profile
-              </Link>
-              <Link
-                href={`https://tensor.trade/portfolio?wallet=${wallets[0]}`}
-                target="_blank"
-              >
-                <Image
-                  src="/icons/tensor.svg"
-                  width={24}
-                  height={24}
-                  alt="Tensor"
-                  className="hover:scale-125"
-                />
-              </Link>
-              <Link
-                href={`https://magiceden.io/u/${wallets[0]}`}
-                target="_blank"
-              >
-                <Image
-                  src="/icons/magic_eden.svg"
-                  width={24}
-                  height={24}
-                  alt="Magic Eden"
-                  className="hover:scale-125"
-                />
-              </Link>
+          <div className="relative flex w-full flex-row items-center justify-center gap-2">
+            <Link href={`/inventory`} className="absolute left-0 top-2">
+              <HiReply size={30} />
+            </Link>
+            <div className="flex flex-col gap-2">
+              <div className="font-clayno text-lg md:text-2xl">
+                {account
+                  ? account.length > 36
+                    ? `${shortAccount(getQueryString(account))}'s Inventory`
+                    : `${account}'s Inventory`
+                  : `Inventory`}
+              </div>
+              <div className="flex flex-row items-center justify-center gap-4">
+                <Link
+                  href={`/profile/${account}`}
+                  className="text-md flex flex-row items-center justify-center gap-1 font-clayno hover:scale-125"
+                >
+                  <HiExternalLink size={16} className="inline-block" />
+                  Profile
+                </Link>
+                <Link
+                  href={`https://tensor.trade/portfolio?wallet=${wallets[0]}`}
+                  target="_blank"
+                >
+                  <Image
+                    src="/icons/tensor.svg"
+                    width={24}
+                    height={24}
+                    alt="Tensor"
+                    className="hover:scale-125"
+                  />
+                </Link>
+                <Link
+                  href={`https://magiceden.io/u/${wallets[0]}`}
+                  target="_blank"
+                >
+                  <Image
+                    src="/icons/magic_eden.svg"
+                    width={24}
+                    height={24}
+                    alt="Magic Eden"
+                    className="hover:scale-125"
+                  />
+                </Link>
+              </div>
             </div>
           </div>
           <div className="flex w-full flex-col gap-4">
