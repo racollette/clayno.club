@@ -1,5 +1,5 @@
 import { Dropdown } from "flowbite-react";
-import { HiCog, HiLogout, HiViewGrid, HiCollection } from "react-icons/hi";
+import { HiCog, HiLogout, HiViewGrid, HiUser } from "react-icons/hi";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
@@ -35,7 +35,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
       {/* <Dropdown.Header></Dropdown.Header> */}
       <Dropdown.Item
         className="text-white hover:bg-neutral-900 focus:bg-neutral-900"
-        icon={HiCollection}
+        icon={HiUser}
         onClick={() => router.push(`/profile/${sessionKey}`)}
       >
         Profile
