@@ -122,7 +122,9 @@ const Settings = () => {
         const entry = {
           username: session.user.username ?? "",
           global_name: session.user.global_name,
-          image_url: session.user.image_url ?? "",
+          image_url:
+            session.user.image_url ??
+            `https://ui-avatars.com/api/?name=${session.user.global_name}&background=random`,
           telegramId: session.user.id,
         };
 
