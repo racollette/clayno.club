@@ -122,7 +122,7 @@ const Settings = () => {
         const entry = {
           username: session.user.username ?? "",
           global_name: session.user.global_name,
-          image_url: session.user.image_url,
+          image_url: session.user.image_url ?? "",
           telegramId: session.user.id,
         };
 
