@@ -301,7 +301,11 @@ export default function Home() {
       return;
     }
 
-    if (!user?.discord && !user?.twitter && !user?.telegram) {
+    if (
+      !user?.discord &&
+      !user?.twitter &&
+      (!user?.telegram || !user?.telegram?.isActive)
+    ) {
       toast({
         title: "Please connect a social account before voting",
         description: (

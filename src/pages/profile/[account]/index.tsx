@@ -110,7 +110,9 @@ export default function Profile() {
                         onError={handleUserPFPDoesNotExist}
                       />
                       <div className="self-center p-2 font-extrabold text-white">
-                        {userHandle ?? userHandle ?? favoriteDomain
+                        {userHandle
+                          ? userHandle
+                          : favoriteDomain
                           ? `${favoriteDomain}.sol`
                           : truncateAccount(user.defaultAddress)}
                       </div>
@@ -148,7 +150,7 @@ export default function Profile() {
                           </Link>
                         </div>
                       )}
-                      {user.telegram && (
+                      {user.telegram && user.telegram.isActive && (
                         <div>
                           <Link
                             className="flex flex-row gap-2 rounded-md p-2 align-middle text-white hover:bg-white/10"

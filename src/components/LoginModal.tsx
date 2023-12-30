@@ -18,6 +18,7 @@ import { connection } from "~/server/rpc";
 import ProfileButton from "./ProfileButton";
 import { shortAccount, truncateAccount } from "~/utils/addresses";
 import { useUser } from "~/hooks/useUser";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -50,6 +51,7 @@ export default function LoginModal({
   const signedIn = status === "authenticated";
 
   const { user, isLoading } = useUser();
+  const { username, userPFP } = extractProfileFromUser(user);
 
   useEffect(() => {
     setUseLedger(false);
@@ -112,10 +114,9 @@ export default function LoginModal({
         `/profile/${
           user?.discord?.username ??
           user?.twitter?.username ??
-          user?.telegram?.username ??
-          user?.defaultAddress ??
-          session?.user.name ??
-          publicKey.toString()
+          (user?.telegram?.username && user?.telegram.isActive)
+            ? user?.telegram?.username
+            : user?.defaultAddress ?? session?.user.name ?? publicKey.toString()
         }`
       );
 
@@ -165,9 +166,7 @@ export default function LoginModal({
           {!isLoading && user ? (
             <ProfileButton
               imageURL={
-                user?.twitter?.image_url ??
-                user?.discord?.image_url ??
-                user?.telegram?.image_url ??
+                userPFP ??
                 `https://ui-avatars.com/api/?name=${
                   user?.defaultAddress ??
                   session?.user.name ??
@@ -175,18 +174,14 @@ export default function LoginModal({
                 }&background=random`
               }
               username={
-                user?.twitter?.global_name ??
-                user?.discord?.global_name ??
-                user?.telegram?.global_name ??
+                username ??
                 shortAccount(user?.defaultAddress) ??
                 session?.user.name ??
                 publicKey?.toString()
               }
               handleSignout={handleSignOut}
               sessionKey={
-                user?.twitter?.username ??
-                user?.discord?.username ??
-                user?.telegram?.username ??
+                username ??
                 user?.defaultAddress ??
                 session?.user.name ??
                 publicKey?.toString()

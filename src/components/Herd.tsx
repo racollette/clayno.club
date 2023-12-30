@@ -109,7 +109,9 @@ export default function Herd(props: HerdProps) {
 
         {showOwner && (
           <>
-            {owner?.twitter || owner?.discord || owner?.telegram ? (
+            {owner?.twitter ||
+            owner?.discord ||
+            (owner?.telegram && owner?.telegram.isActive) ? (
               <div className="mx-3 flex flex-row justify-center align-middle">
                 <div className="mr-2 flex">
                   <Link

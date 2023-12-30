@@ -57,7 +57,10 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
     }
   }, [wallets]);
 
-  const isRegistered = user?.discord || user?.twitter || user?.telegram;
+  const isRegistered =
+    user?.discord ||
+    user?.twitter ||
+    (user?.telegram && user?.telegram.isActive);
   const expandable = userDinos ? userDinos.length > 1 : dinos.length > 1;
   const additionalDinos = userDinos ? userDinos.length - 1 : dinos.length - 1;
   const isUnowned = owner === "unowned";

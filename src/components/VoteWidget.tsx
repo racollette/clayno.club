@@ -25,6 +25,7 @@ import {
   DialogTrigger,
 } from "~/@/components/ui/dialog";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { extractProfileFromUser } from "~/utils/wallet";
 
 type VoteWidgetProps = {
   voterInfo:
@@ -147,7 +148,7 @@ export const VoteWidget = ({
                       ? voter.user.twitter.image_url
                       : voter.user.discord
                       ? voter.user.discord?.image_url
-                      : voter.user.telegram
+                      : voter.user.telegram && voter.user.telegram?.isActive
                       ? voter.user.telegram?.image_url
                       : `https://ui-avatars.com/api/?name=${voter.user.defaultAddress}&background=random`;
                     return (
@@ -168,7 +169,9 @@ export const VoteWidget = ({
                           <TooltipContent className="mb-1 rounded-lg bg-white p-2 font-semibold">
                             {voter.user.twitter?.global_name ||
                               voter.user.discord?.global_name ||
-                              voter.user.telegram?.global_name}
+                              (voter.user.telegram?.isActive &&
+                                voter.user.telegram?.global_name &&
+                                voter.user.telegram?.global_name)}
                           </TooltipContent>
                         </Tooltip>
                       </div>

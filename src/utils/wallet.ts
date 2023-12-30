@@ -27,21 +27,21 @@ export const extractProfileFromUser = (user: UserWithSocials) => {
     ? user.twitter.username
     : user?.discord
     ? user.discord.username
-    : user?.telegram
+    : user?.telegram && user.telegram.isActive
     ? user.telegram.username
     : null;
   const userHandle = user?.twitter
     ? user.twitter.global_name
     : user?.discord
     ? user.discord.global_name
-    : user?.telegram
+    : user?.telegram && user.telegram.isActive
     ? user.telegram.global_name
     : null;
   const userPFP = user?.twitter
     ? user.twitter.image_url
     : user?.discord
     ? user.discord.image_url
-    : user?.telegram
+    : user?.telegram && user.telegram.isActive
     ? user.telegram.image_url
     : null;
 
