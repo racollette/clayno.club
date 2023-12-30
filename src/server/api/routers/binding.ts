@@ -319,6 +319,18 @@ export const bindingRouter = createTRPCRouter({
           });
           return linkedSocial;
         }
+
+        if (!providerExists?.isActive) {
+          const reactivateLinkedSocial = await prisma.telegram.update({
+            where: {
+              telegramId: input.data.telegramId,
+            },
+            data: {
+              isActive: true,
+            },
+          });
+          return reactivateLinkedSocial;
+        }
       } catch (error) {
         console.error("Error linking telegram:", error);
         throw new Error("Failed to link Telegram account");
@@ -328,13 +340,24 @@ export const bindingRouter = createTRPCRouter({
   unlinkTelegram: protectedProcedure
     .input(z.string())
     .mutation(async ({ input }) => {
-      const deleteProvider = await prisma.telegram.delete({
+      // const deleteProvider = await prisma.telegram.delete({
+      //   where: {
+      //     userId: input,
+      //   },
+      // });
+
+      // return deleteProvider;
+
+      const inactivateProvider = await prisma.telegram.update({
         where: {
           userId: input,
         },
+        data: {
+          isActive: false,
+        },
       });
 
-      return deleteProvider;
+      return inactivateProvider;
     }),
 
   // getUserTwitter: protectedProcedure

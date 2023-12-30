@@ -338,7 +338,9 @@ const Settings = () => {
                   )}
                 </div>
               )}
-              {user?.telegram && !unlinkedTelegram ? (
+              {user?.telegram &&
+              user?.telegram.isActive &&
+              !unlinkedTelegram ? (
                 <div className="flex flex-row justify-between gap-12">
                   <div className="flex flex-row">
                     <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">

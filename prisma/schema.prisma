@@ -144,6 +144,7 @@ model Telegram {
   image_url   String
   userId      String  @unique
   telegramId  String  @unique
+  isActive    Boolean @default(true)
   User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -342,11 +343,27 @@ model Thread {
   tweetUrl   String?
 }
 
-model SubDAOToUser {
+model TelegramException {
+  global_name String  @unique
+  subDAOId    String?
+
+  @@index([subDAOId])
+}
+
+model TelegramBootQueue {
   A String
   B String
 
-  @@unique([A, B], map: "_SubDAOToUser_AB_unique")
-  @@index([B], map: "_SubDAOToUser_B_index")
-  @@map("_SubDAOToUser")
+  @@unique([A, B], map: "_TelegramBootQueue_AB_unique")
+  @@index([B], map: "_TelegramBootQueue_B_index")
+  @@map("_TelegramBootQueue")
+}
+
+model TelegramMembers {
+  A String
+  B String
+
+  @@unique([A, B], map: "_TelegramMembers_AB_unique")
+  @@index([B], map: "_TelegramMembers_B_index")
+  @@map("_TelegramMembers")
 }
