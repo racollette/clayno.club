@@ -75,18 +75,24 @@ export default function Home() {
           </section>
           <section className="flex flex-col items-center justify-center gap-8 rounded-lg bg-neutral-900 py-6">
             <div className="self-center font-clayno text-2xl">Services</div>
-            <div className="flex flex-col items-center gap-4 rounded-xl px-2 md:flex-row md:gap-8 md:px-12">
-              <div className="relative h-[150px] w-[150px] md:h-[200px] md:w-[200px]">
-                <Image
-                  src="/images/logo.png"
-                  fill
-                  alt="Clayno.club"
-                  className="rounded-full"
-                />
+            <div className="flex flex-row flex-wrap-reverse items-center justify-center gap-4 rounded-xl px-2 md:flex-row md:gap-8 md:px-12">
+              <div className="overflow-clip rounded-xl border-2 border-white">
+                <video autoPlay loop muted playsInline width="200">
+                  <source src="/videos/para_ding.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
               <div className="flex flex-col items-center justify-center gap-4 self-center md:items-start">
+                <div className="relative h-[100px] w-[100px] md:h-[100px] md:w-[100px]">
+                  <Image
+                    src="/images/logo.png"
+                    fill
+                    alt="Clayno.club"
+                    className="rounded-full"
+                  />
+                </div>
                 <h2 className="font-clayno text-lg">Telegram Bot</h2>
-                <div className="text-md flex md:w-[500px]">
+                <div className="text-md flex">
                   <ul>
                     <li>• Automated token gating</li>
                     <li>• Built in commands</li>
@@ -98,12 +104,12 @@ export default function Home() {
                   <Link
                     href="https://t.me/ClaynoClubBot"
                     target="_blank"
-                    className="flex w-full flex-row items-center justify-center gap-2 rounded-xl border-2 border-white px-4 py-2 hover:border-cyan-600 md:w-[250px] md:px-8 md:py-2"
+                    className="flex w-[200px] flex-row items-center justify-center gap-2 rounded-xl border-2 border-white px-4 py-2 text-sm hover:border-cyan-600 md:px-6 md:py-2"
                   >
                     <Image
                       src="/icons/telegram.svg"
-                      width="32"
-                      height="32"
+                      width="26"
+                      height="26"
                       alt="Telegram"
                     />
                     Take me there!
