@@ -29,13 +29,13 @@ export default function AlertModal({
   return (
     <>
       <button
-        className="flex flex-row justify-center rounded-md bg-red-700 px-2 py-1 align-middle text-sm hover:bg-red-800"
+        className="flex flex-row items-center justify-center rounded-md bg-red-700 px-2 py-1 align-middle text-sm hover:bg-red-800"
         onClick={() => {
           setOpenModal("dismissible");
         }}
       >
-        <HiTrash className="mr-1 self-center" width={24} height={24} />
-        <div className="font-extrabold">{button}</div>
+        <HiTrash className="mr-1 self-center" width={20} height={20} />
+        <div className="md:text-md text-xs font-extrabold">{button}</div>
       </button>
       <Modal
         theme={customTheme}

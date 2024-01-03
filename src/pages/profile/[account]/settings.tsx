@@ -218,7 +218,7 @@ const Settings = () => {
             <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
               {user?.discord && !unlinkedDiscord ? (
                 <div className="flex flex-row justify-between gap-4 md:gap-12">
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center justify-center">
                     <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
                       <Image
                         src={user?.discord.image_url}
@@ -227,22 +227,22 @@ const Settings = () => {
                         onError={handleUserPFPDoesNotExist}
                       />
                     </div>
-                    <span className="self-center">
+                    <span className="md:text-mdself-center text-sm">
                       {user?.discord.global_name}
                     </span>
                   </div>
                   <button
-                    className="self-end rounded-lg bg-neutral-900 px-4 py-3"
+                    className="self-end rounded-lg bg-neutral-900 px-3 py-2 md:px-4 md:py-3"
                     onClick={() => handleUnlink("discord")}
                   >
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row items-center justify-center gap-2">
                       <Image
                         src="/icons/discord.svg"
                         alt="Discord"
                         width={24}
                         height={24}
                       />
-                      <div className="text-md flex flex-row whitespace-nowrap">
+                      <div className="md:text-md flex flex-row whitespace-nowrap text-sm">
                         <span>Unlink</span>{" "}
                         <span className="hidden md:block">&nbsp;Discord</span>
                       </div>
@@ -255,21 +255,21 @@ const Settings = () => {
                     <Spinner className="self-center" />
                   ) : (
                     <button
-                      className="mr-4 rounded-lg bg-neutral-900 px-4 py-3"
+                      className="mr-4 rounded-lg bg-neutral-900 px-3 py-2 md:px-4 md:py-3"
                       disabled={linkDiscord.isLoading}
                       onClick={() => {
                         setStoredUserId(userId);
                         signIn("discord");
                       }}
                     >
-                      <div className="flex flex-row gap-4">
+                      <div className="flex flex-row items-center justify-center gap-4">
                         <Image
                           src="/icons/discord.svg"
                           alt="Discord"
                           width={24}
                           height={24}
                         />
-                        <div className="text-md whitespace-nowrap">
+                        <div className="md:text-md whitespace-nowrap text-sm">
                           Connect Discord
                         </div>
                       </div>
@@ -279,7 +279,7 @@ const Settings = () => {
               )}
               {user?.twitter && !unlinkedTwitter ? (
                 <div className="flex flex-row justify-between gap-12">
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center justify-center">
                     <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
                       <Image
                         src={user?.twitter.image_url}
@@ -288,22 +288,22 @@ const Settings = () => {
                         onError={handleUserPFPDoesNotExist}
                       />
                     </div>
-                    <span className="self-center">
+                    <span className="md:text-md self-center text-sm">
                       {user?.twitter.global_name}
                     </span>
                   </div>
                   <button
-                    className="self-end rounded-lg bg-neutral-900 px-4 py-3"
+                    className="self-end rounded-lg bg-neutral-900 px-3 py-2 md:px-4 md:py-3"
                     onClick={() => handleUnlink("twitter")}
                   >
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row items-center justify-center gap-2">
                       <Image
                         src="/icons/twitter.svg"
                         alt="Twitter"
                         width={24}
                         height={24}
                       />
-                      <div className="text-md flex flex-row whitespace-nowrap">
+                      <div className="md:text-md flex flex-row whitespace-nowrap text-sm">
                         <span>Unlink</span>
                         <span className="hidden md:block">&nbsp;Twitter</span>
                       </div>
@@ -316,21 +316,21 @@ const Settings = () => {
                     <Spinner className="self-center" />
                   ) : (
                     <button
-                      className="mr-4 rounded-lg bg-neutral-900 px-4 py-3"
+                      className="mr-4 rounded-lg bg-neutral-900 px-3 py-2 md:px-4 md:py-3"
                       disabled={linkTwitter.isLoading}
                       onClick={() => {
                         setStoredUserId(userId);
                         signIn("twitter");
                       }}
                     >
-                      <div className="flex flex-row gap-4">
+                      <div className="flex flex-row items-center justify-center gap-4">
                         <Image
                           src="/icons/twitter.svg"
                           alt="Twitter"
                           width={24}
                           height={24}
                         />
-                        <div className="text-md whitespace-nowrap">
+                        <div className="md:text-md whitespace-nowrap text-sm">
                           Connect Twitter
                         </div>
                       </div>
@@ -342,7 +342,7 @@ const Settings = () => {
               user?.telegram.isActive &&
               !unlinkedTelegram ? (
                 <div className="flex flex-row justify-between gap-12">
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center justify-center">
                     <div className="relative mr-4 h-10 w-10 overflow-clip rounded-lg">
                       <Image
                         src={user?.telegram.image_url}
@@ -351,22 +351,22 @@ const Settings = () => {
                         onError={handleUserPFPDoesNotExist}
                       />
                     </div>
-                    <span className="self-center">
+                    <span className="md:text-md self-center text-sm">
                       {user?.telegram.global_name}
                     </span>
                   </div>
                   <button
-                    className="self-end rounded-lg bg-neutral-900 px-4 py-3"
+                    className="self-end rounded-lg bg-neutral-900 px-3 py-2 md:px-4 md:py-3"
                     onClick={() => handleUnlink("telegram")}
                   >
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row items-center justify-center gap-2">
                       <Image
                         src="/icons/telegram.svg"
                         alt="Telegram"
                         width={24}
                         height={24}
                       />
-                      <div className="text-md flex flex-row whitespace-nowrap">
+                      <div className="text-md md:text-md flex flex-row whitespace-nowrap">
                         <span>Unlink</span>
                         <span className="hidden md:block">&nbsp;Telegram</span>
                       </div>
@@ -381,7 +381,7 @@ const Settings = () => {
                     <>
                       {!showTelegramWidget ? (
                         <button
-                          className="mr-4 rounded-lg bg-neutral-900 px-4 py-3"
+                          className="mr-4 rounded-lg bg-neutral-900 px-3 py-2 md:px-4 md:py-3"
                           disabled={linkTelegram.isLoading}
                           onClick={() => {
                             setStoredUserId(userId);
@@ -389,14 +389,14 @@ const Settings = () => {
                             // signIn("telegram");
                           }}
                         >
-                          <div className="flex flex-row gap-4">
+                          <div className="flex flex-row items-center justify-center gap-4">
                             <Image
                               src="/icons/telegram.svg"
                               alt="Telegram"
                               width={24}
                               height={24}
                             />
-                            <div className="text-md whitespace-nowrap">
+                            <div className="md:text-md whitespace-nowrap text-sm">
                               Connect Telegram
                             </div>
                           </div>
