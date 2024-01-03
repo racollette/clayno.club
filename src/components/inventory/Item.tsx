@@ -117,7 +117,7 @@ const Item = ({ item, type }: ItemProps) => {
             quality={75}
           />
         </DialogTrigger>
-        <DialogContent className="flex max-w-2xl flex-col gap-4 border-none bg-neutral-900/80 p-4">
+        <DialogContent className="flex w-11/12 max-w-2xl flex-col gap-4 rounded-lg border-none bg-neutral-900/80 p-4">
           <DialogHeader>
             <DialogTitle className="m-0 font-clayno text-white">
               {item.name}
@@ -210,7 +210,7 @@ const Item = ({ item, type }: ItemProps) => {
                 </div>
               </div>
             </div>
-            <div className="h-full w-2/3 items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3 md:w-full">
+            <div className="h-full w-full items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3">
               <div className="flex h-full flex-col justify-between">
                 <div className="flex flex-col">
                   <h1 className="pb-2">TRAITS</h1>
