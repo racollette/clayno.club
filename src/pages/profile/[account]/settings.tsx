@@ -120,7 +120,7 @@ const Settings = () => {
         // console.log(`Session: ${session}`);
         // console.log("data", {
         const entry = {
-          username: session.user.username ?? "",
+          username: session.user.username ?? session.user.global_name,
           global_name: session.user.global_name,
           image_url:
             session.user.image_url ??
