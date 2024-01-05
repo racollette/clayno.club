@@ -36,26 +36,26 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
   const [expanded, setExpanded] = useState(false);
   const [userDinos, setUserDinos] = useState<any>(dinos);
 
+  console.log(dinos);
+
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
 
-  const wallets =
-    user?.wallets
-      .map((wallet: Wallet) => wallet.address)
-      .filter((address: string) => user?.defaultAddress !== address) ?? [];
-
-  const { otherWallets } = fetchOtherWallets(wallets);
-
-  useEffect(() => {
-    if (wallets) {
-      if (acronym !== "cc") return;
-      const mintArray = otherWallets?.flatMap((item) => item.mints);
-      if (mintArray) {
-        setUserDinos([...dinos, ...mintArray]);
-      }
-    }
-  }, [wallets]);
+  // const wallets =
+  //   user?.wallets
+  //     .map((wallet: Wallet) => wallet.address)
+  //     .filter((address: string) => user?.defaultAddress !== address) ?? [];
+  // const { otherWallets } = fetchOtherWallets(wallets);
+  // useEffect(() => {
+  //   if (wallets) {
+  //     if (acronym !== "cc") return;
+  //     const mintArray = otherWallets?.flatMap((item) => item.mints);
+  //     if (mintArray) {
+  //       setUserDinos([...dinos, ...mintArray]);
+  //     }
+  //   }
+  // }, [wallets]);
 
   const isRegistered =
     user?.discord ||
