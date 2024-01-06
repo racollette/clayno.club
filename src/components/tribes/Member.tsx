@@ -36,8 +36,6 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
   const [expanded, setExpanded] = useState(false);
   const [userDinos, setUserDinos] = useState<any>(dinos);
 
-  console.log(dinos);
-
   const toggleExpand = () => {
     setExpanded(!expanded);
   };

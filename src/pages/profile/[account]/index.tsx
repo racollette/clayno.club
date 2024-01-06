@@ -36,8 +36,7 @@ export default function Profile() {
     type: isWallet ? "wallet" : "discord",
     id: queryString,
   });
-  const { username, userHandle, userPFP, favoriteDomain } =
-    extractProfileFromUser(user);
+  const { userHandle, userPFP, favoriteDomain } = extractProfileFromUser(user);
 
   const wallets = user?.wallets ?? [];
   const userHerds = api.useQueries((t) =>
@@ -131,7 +130,7 @@ export default function Profile() {
                           </div>
                         </div>
                       )}
-                      {user.twitter && (
+                      {user.twitter && !user.twitter.private && (
                         <div>
                           <Link
                             className="flex flex-row gap-2 rounded-md p-2 align-middle text-white hover:bg-white/10"
@@ -150,25 +149,27 @@ export default function Profile() {
                           </Link>
                         </div>
                       )}
-                      {user.telegram && user.telegram.isActive && (
-                        <div>
-                          <Link
-                            className="flex flex-row gap-2 rounded-md p-2 align-middle text-white hover:bg-white/10"
-                            href={`https://t.me/${user.telegram.username}`}
-                            target="_blank"
-                          >
-                            <Image
-                              src={"/icons/telegram.svg"}
-                              alt="Telegram"
-                              width={26}
-                              height={26}
-                            />
-                            <div className="self-center text-sm">
-                              @{user.telegram.username}
-                            </div>
-                          </Link>
-                        </div>
-                      )}
+                      {user.telegram &&
+                        !user.telegram.private &&
+                        user.telegram.isActive && (
+                          <div>
+                            <Link
+                              className="flex flex-row gap-2 rounded-md p-2 align-middle text-white hover:bg-white/10"
+                              href={`https://t.me/${user.telegram.username}`}
+                              target="_blank"
+                            >
+                              <Image
+                                src={"/icons/telegram.svg"}
+                                alt="Telegram"
+                                width={26}
+                                height={26}
+                              />
+                              <div className="self-center text-sm">
+                                @{user.telegram.username}
+                              </div>
+                            </Link>
+                          </div>
+                        )}
 
                       <div>
                         <Link
