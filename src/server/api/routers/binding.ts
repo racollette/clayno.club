@@ -144,6 +144,16 @@ export const bindingRouter = createTRPCRouter({
             wallets: true,
           },
         });
+
+        if (user?.twitter?.private === true) {
+          user.twitter.username = "hidden";
+        }
+
+        if (user?.telegram?.private === true) {
+          user.telegram.username = "hidden";
+          user.telegram.telegramId = "hidden";
+        }
+
         return user;
       }
 
@@ -179,6 +189,16 @@ export const bindingRouter = createTRPCRouter({
           wallets: true,
         },
       });
+
+      if (user?.twitter?.private === true) {
+        user.twitter.username = "hidden";
+      }
+
+      if (user?.telegram?.private === true) {
+        user.telegram.username = "hidden";
+        user.telegram.telegramId = "hidden";
+      }
+
       return user;
     }),
 
@@ -521,7 +541,7 @@ export const bindingRouter = createTRPCRouter({
     }),
 
   getAllUsers: publicProcedure.query(async ({}) => {
-    return prisma.user.findMany({
+    const users = await prisma.user.findMany({
       select: {
         id: true,
         defaultAddress: true,
@@ -531,9 +551,44 @@ export const bindingRouter = createTRPCRouter({
         telegram: true,
       },
     });
+
+    const usersFiltered = users.map((user) => {
+      if (user.twitter && user.twitter.private === true) {
+        user.twitter.username = "hidden";
+      }
+      if (user.telegram && user.telegram.private === true) {
+        user.telegram.username = "hidden";
+        user.telegram.telegramId = "hidden";
+      }
+      return user;
+    });
+
+    return usersFiltered;
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+  updatePrivacyStatus: protectedProcedure
+    .input(
+      z.object({ type: z.string(), private: z.boolean(), userId: z.string() })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const updatePrivacyStatus = await prisma.user.update({
+          where: {
+            id: input.userId,
+          },
+          data: {
+            [input.type]: {
+              update: {
+                private: input.private,
+              },
+            },
+          },
+        });
+
+        return updatePrivacyStatus;
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        throw new Error("Failed to delete user.");
+      }
+    }),
 });
