@@ -131,7 +131,7 @@ export default function Herd(props: HerdProps) {
                   </Link>
                 </div>
 
-                {owner.twitter && (
+                {/* {owner.twitter && !owner.twitter.private && (
                   <Link
                     className="self-center rounded-md px-2 py-2 text-white hover:bg-white/20"
                     href={`https://twitter.com/${owner.twitter.username}`}
@@ -144,7 +144,8 @@ export default function Herd(props: HerdProps) {
                       height={20}
                     />
                   </Link>
-                )}
+                )} */}
+
                 <Link
                   className="self-center rounded-md px-2 py-2 text-white hover:bg-white/20"
                   href={`https://www.tensor.trade/portfolio?wallet=${herd.owner}&portSlug=claynosaurz`}
