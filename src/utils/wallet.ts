@@ -3,7 +3,6 @@ import {
   type Twitter,
   type Telegram,
   type Wallet,
-  type User,
 } from "@prisma/client";
 
 type UserWithSocials =
@@ -24,11 +23,15 @@ export const extractProfileFromUser = (user: UserWithSocials) => {
     .filter((domain) => domain !== null)[0];
 
   const username = user?.twitter
-    ? user.twitter.username
+    ? user.twitter.private === true
+      ? user.twitter.global_name
+      : user.twitter.username
     : user?.discord
     ? user.discord.username
     : user?.telegram && user.telegram.isActive
-    ? user.telegram.username
+    ? user.telegram.private === true
+      ? user.telegram.global_name
+      : user.telegram.username
     : null;
   const userHandle = user?.twitter
     ? user.twitter.global_name
