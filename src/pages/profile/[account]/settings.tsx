@@ -15,6 +15,7 @@ import MetaTags from "~/components/MetaTags";
 import { useToast } from "~/@/components/ui/use-toast";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import { LoginButton } from "@telegram-auth/react";
+import ToggleSwitch from "~/components/ToggleSwitch";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -30,6 +31,20 @@ const Settings = () => {
   const [unlinkedTelegram, setUnlinkedTelegram] = useState<boolean>(false);
   const [storedUserId, setStoredUserId] = useLocalStorage("userId", "");
   const [showTelegramWidget, setShowTelegramWidget] = useState<boolean>(false);
+
+  const linkDiscord = api.binding.linkDiscord.useMutation();
+  const linkTwitter = api.binding.linkTwitter.useMutation();
+  const linkTelegram = api.binding.linkTelegram.useMutation();
+  const unlinkDiscord = api.binding.unlinkDiscord.useMutation();
+  const unlinkTwitter = api.binding.unlinkTwitter.useMutation();
+  const unlinkTelegram = api.binding.unlinkTelegram.useMutation();
+  const setDefaultWallet = api.binding.setDefaultWallet.useMutation();
+  const deleteWallet = api.binding.deleteWallet.useMutation();
+  const linkWallet = api.binding.linkWallet.useMutation();
+  const deleteAccount = api.binding.deleteUser.useMutation();
+  const createVoter = api.vote.createVoter.useMutation();
+  const issueVotes = api.vote.issueVotes.useMutation();
+  const updatePrivacyStatus = api.binding.updatePrivacyStatus.useMutation();
 
   const {
     data: user,
@@ -56,19 +71,6 @@ const Settings = () => {
     (holderData && holderData.flatMap((holder) => holder && holder?.mints)) ||
     [];
   const voteEligible = holderDinos?.length > 0;
-
-  const linkDiscord = api.binding.linkDiscord.useMutation();
-  const linkTwitter = api.binding.linkTwitter.useMutation();
-  const linkTelegram = api.binding.linkTelegram.useMutation();
-  const unlinkDiscord = api.binding.unlinkDiscord.useMutation();
-  const unlinkTwitter = api.binding.unlinkTwitter.useMutation();
-  const unlinkTelegram = api.binding.unlinkTelegram.useMutation();
-  const setDefaultWallet = api.binding.setDefaultWallet.useMutation();
-  const deleteWallet = api.binding.deleteWallet.useMutation();
-  const linkWallet = api.binding.linkWallet.useMutation();
-  const deleteAccount = api.binding.deleteUser.useMutation();
-  const createVoter = api.vote.createVoter.useMutation();
-  const issueVotes = api.vote.issueVotes.useMutation();
 
   useEffect(() => {
     if (user?.id) {
@@ -203,6 +205,25 @@ const Settings = () => {
       console.error("Error creating voter account:", error);
     }
   };
+
+  const [privacyStatus, setPrivacyStatus] = useState({
+    telegram: false,
+    twitter: false,
+  });
+
+  const handleTogglePrivacyStatus = (type: string, setPrivate: boolean) => {
+    if (userId) {
+      updatePrivacyStatus.mutate({ type, private: setPrivate, userId });
+      setPrivacyStatus({ ...privacyStatus, [type]: setPrivate });
+    }
+  };
+
+  useEffect(() => {
+    setPrivacyStatus({
+      twitter: user?.twitter?.private ?? false,
+      telegram: user?.telegram?.private ?? false,
+    });
+  }, [user]);
 
   return (
     <>
@@ -366,7 +387,7 @@ const Settings = () => {
                         width={24}
                         height={24}
                       />
-                      <div className="text-md md:text-md flex flex-row whitespace-nowrap">
+                      <div className="md:text-md flex flex-row whitespace-nowrap text-sm">
                         <span>Unlink</span>
                         <span className="hidden md:block">&nbsp;Telegram</span>
                       </div>
@@ -504,6 +525,44 @@ const Settings = () => {
               )}
             </div>
           </div>
+
+          {(user?.twitter || user?.telegram) && (
+            <div className="mt-8">
+              <div className="text-xl font-extrabold">Privacy</div>
+              <div className="py-2 text-sm text-zinc-500">
+                Choose which social accounts can be viewed by others.
+              </div>
+              <div className="flex flex-row gap-6 rounded-lg bg-neutral-800 p-4">
+                {user?.twitter && (
+                  <ToggleSwitch
+                    className="self-end"
+                    toggleState={!privacyStatus.twitter}
+                    label={"Twitter"}
+                    onToggle={() =>
+                      handleTogglePrivacyStatus(
+                        "twitter",
+                        !privacyStatus.twitter
+                      )
+                    }
+                  />
+                )}
+                {user?.telegram && (
+                  <ToggleSwitch
+                    className="self-end"
+                    toggleState={!privacyStatus.telegram}
+                    label={"Telegram"}
+                    onToggle={() =>
+                      handleTogglePrivacyStatus(
+                        "telegram",
+                        !privacyStatus.telegram
+                      )
+                    }
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="mt-8">
             <div className="text-xl font-extrabold">Voting</div>
             <div className="py-2 text-sm text-zinc-500">
