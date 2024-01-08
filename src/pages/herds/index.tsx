@@ -412,7 +412,10 @@ export default function Home() {
 
   return (
     <>
-      <MetaTags title="Clayno.club | Herds" />
+      <MetaTags
+        title="Claynosaurz Herds | Clayno Club"
+        description="Who has the finest herd of Claynotopia? Find the most popular Claynosaurz collections and vote for your favorite."
+      />
       <main className="relative flex min-h-screen flex-col items-center  bg-black">
         {allHerdsLoading ? (
           <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full text-white md:w-1/4">

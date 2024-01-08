@@ -9,7 +9,10 @@ export default function TribesPage() {
 
   return (
     <>
-      <MetaTags title="Clayno.club | Tribes" />
+      <MetaTags
+        title="Claynosaurz Tribes | Clayno Club"
+        description="Tribes are subcommunities within the world of Claynotopia. Learn more about the Crimson Clan, Clayno Capital and more!"
+      />
       <Layout>
         <section className="container relative m-4 aspect-[7/2] w-full overflow-clip">
           <Image

@@ -5,7 +5,10 @@ import MetaTags from "~/components/MetaTags";
 const Resources = () => {
   return (
     <>
-      <MetaTags title="Clayno.club | Resources" />
+      <MetaTags
+        title="Resources and links | Clayno Club"
+        description="New to the Claynosaurz ecosystem? Long term supporter who wants to learn more? We've got you covered. Learn more about Claynotopia."
+      />
       <Layout>
         <section className="flex flex-col items-center justify-center gap-y-8 p-2 md:container">
           <div className="font-clayno text-3xl">Resources</div>

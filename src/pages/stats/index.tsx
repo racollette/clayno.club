@@ -21,7 +21,10 @@ export default function StatsPage() {
 
   return (
     <>
-      <MetaTags title="Clayno.club | Stats" />
+      <MetaTags
+        title="Collection Statistics | Clayno Club"
+        description="Find the latest Claynosaurz statistics: Learn the numbers around Class Selection, collector data, ecosystem items and more!"
+      />
       <Layout>
         <section className="flex w-full flex-col items-center">
           <Tabs

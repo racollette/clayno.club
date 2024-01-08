@@ -342,7 +342,10 @@ export default function FusionPage() {
 
   return (
     <>
-      <MetaTags title="Clayno.club | Fusion" />
+      <MetaTags
+        title="Claynosaurz Collector Tools | Clayno Club"
+        description="Browse your digital collectibles and get a group photo of your herds. Find the latest collector tools at Clayno Club."
+      />
       <Layout>
         <section
           className={`my-10 flex ${
