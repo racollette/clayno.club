@@ -54,7 +54,9 @@ export const herdRouter = createTRPCRouter({
         include: {
           dinos: {
             orderBy: {
-              name: "desc",
+              attributes: {
+                background: "desc",
+              },
             },
             include: {
               attributes: true,
@@ -78,7 +80,9 @@ export const herdRouter = createTRPCRouter({
         include: {
           dinos: {
             orderBy: {
-              name: "desc",
+              attributes: {
+                background: "desc",
+              },
             },
             include: {
               attributes: true,
@@ -104,7 +108,9 @@ export const herdRouter = createTRPCRouter({
       include: {
         dinos: {
           orderBy: {
-            name: "desc",
+            attributes: {
+              background: "desc",
+            },
           },
           include: {
             attributes: true,
