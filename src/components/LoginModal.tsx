@@ -48,10 +48,14 @@ export default function LoginModal({
 
   const { data: session, status } = useSession();
 
+  console.log("session", session);
+
   const signedIn = status === "authenticated";
 
   const { user, isLoading } = useUser();
   const { username, userPFP } = extractProfileFromUser(user);
+
+  console.log("user", user);
 
   useEffect(() => {
     setUseLedger(false);
