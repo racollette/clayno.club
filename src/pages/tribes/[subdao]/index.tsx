@@ -25,8 +25,8 @@ export default function SubDAO() {
   const { data: airdropList, refetch } = api.subdao.getVerifiedMembers.useQuery(
     {
       acronym,
-    },
-    { enabled: fetchingAddressList }
+    }
+    // { enabled: fetchingAddressList }
   );
 
   const handleDownloadAirdropList = async () => {
