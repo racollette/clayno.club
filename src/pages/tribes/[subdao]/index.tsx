@@ -33,7 +33,7 @@ export default function SubDAO() {
     setFetchingAddressList(true);
 
     await refetch();
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const jsonContent = JSON.stringify(airdropList, null, 2);
     const blob = new Blob([jsonContent], { type: "application/json" });
 
