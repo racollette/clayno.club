@@ -6,18 +6,47 @@ import { getQueryString } from "~/utils/routes";
 import Link from "next/link";
 import { getTraitBadgeColor } from "~/utils/colors";
 import { groupAndFilter } from "~/utils/subdaos";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { type Attributes, type Dino } from "@prisma/client";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import MetaTags from "~/components/MetaTags";
+import { HiRefresh } from "react-icons/hi";
+import { api } from "~/utils/api";
 
 export default function SubDAO() {
   const router = useRouter();
   const { subdao } = router.query;
   const acronym = getQueryString(subdao);
   const { data, isLoading, sortedMap } = groupAndFilter(acronym);
+  const [fetchingAddressList, setFetchingAddressList] = useState(false);
 
   const lastUpdated = useTimeSinceLastUpdate("tribes");
+
+  const { data: airdropList, refetch } = api.subdao.getVerifiedMembers.useQuery(
+    {
+      acronym,
+    },
+    { enabled: fetchingAddressList }
+  );
+
+  const handleDownloadAirdropList = async () => {
+    setFetchingAddressList(true);
+
+    await refetch();
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const jsonContent = JSON.stringify(airdropList, null, 2);
+    const blob = new Blob([jsonContent], { type: "application/json" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${acronym}AddressList.json`;
+
+    document.body.appendChild(link);
+    link.click();
+
+    setFetchingAddressList(false);
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -172,6 +201,29 @@ export default function SubDAO() {
                         </div>
                       </div>
                     </div>
+                  )}
+                  {acronym === "cc" && (
+                    <>
+                      {!fetchingAddressList ? (
+                        <button
+                          className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-bold uppercase hover:bg-emerald-600"
+                          onClick={() => handleDownloadAirdropList()}
+                        >
+                          Airdrop List
+                        </button>
+                      ) : (
+                        <button
+                          className="flex flex-row items-center justify-center gap-2 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-bold uppercase"
+                          onClick={() => handleDownloadAirdropList()}
+                        >
+                          <HiRefresh
+                            size={20}
+                            className="inline-block animate-spin"
+                          />
+                          Generating
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </section>
