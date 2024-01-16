@@ -32,7 +32,7 @@ export const extractProfileFromUser = (user: UserWithSocials) => {
     ? user.telegram.private === true
       ? user.telegram.global_name
       : user.telegram.username
-    : null;
+    : user?.defaultAddress ?? null;
   const userHandle = user?.twitter
     ? user.twitter.global_name
     : user?.discord
