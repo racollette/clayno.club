@@ -288,8 +288,7 @@ export default function LoginModal({
                 Create Account or Log in
               </div>
               <div className="mb-3 text-zinc-500">
-                Signing in allows you to bind your name and socials to your
-                herd.
+                Accounts must be first created with a Solana wallet.
               </div>
               <WalletMultiButtonDynamic
                 style={{ backgroundColor: "#0369a1", borderRadius: "8px" }}
@@ -297,10 +296,10 @@ export default function LoginModal({
               {/* <Spinner aria-label="Info spinner example" color="info" /> */}
               <div className="mt-6 flex flex-col">
                 <div className="text-lg font-extrabold">
-                  Already have an account?
+                  Already set up your account?
                 </div>
                 <div className="mb-3 text-zinc-500">
-                  Log in with your linked Twitter or Discord account.
+                  Log in with your linked Twitter or Discord.
                 </div>
                 <div className="grid grid-cols-2 justify-start gap-4 md:flex md:flex-row">
                   <button
