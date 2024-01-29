@@ -19,6 +19,7 @@ import ProfileButton from "./ProfileButton";
 import { shortAccount, truncateAccount } from "~/utils/addresses";
 import { useUser } from "~/hooks/useUser";
 import { extractProfileFromUser } from "~/utils/wallet";
+import { useToast } from "~/@/components/ui/use-toast";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -39,12 +40,16 @@ export default function LoginModal({
   loginMessage?: string;
 }) {
   const router = useRouter();
+  const { toast } = useToast();
   const { publicKey, signMessage, disconnect, connected, signTransaction } =
     useWallet();
   const [host, setHost] = useState<string>();
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [useLedger, setUseLedger] = useState<boolean>(false);
   const walletModal = useWalletModal();
+
+  const { redirect, provider } = router.query;
+  const [attemptedLogin, setAttemptedLogin] = useState<boolean>(false);
 
   const { data: session, status } = useSession();
 
@@ -88,7 +93,7 @@ export default function LoginModal({
         const nonce = inx?.data.toString() || "";
         const verifySignatures = !tx.verifySignatures();
 
-        signIn("sendMemo", {
+        const loginAttempt = await signIn("sendMemo", {
           programId: programId,
           verifySignatures: verifySignatures,
           nonce: nonce,
@@ -96,6 +101,10 @@ export default function LoginModal({
           address: publicKey.toString(),
           redirect: false,
         });
+
+        if (loginAttempt?.status === 200) {
+          setAttemptedLogin(true);
+        }
       } else {
         const message = new SigninMessage({
           domain: host || "",
@@ -107,11 +116,15 @@ export default function LoginModal({
         const signature = await signMessage(data);
         const serializedSignature = bs58.encode(signature);
 
-        signIn("signMessage", {
+        const loginAttempt = await signIn("signMessage", {
           message: JSON.stringify(message),
           signature: serializedSignature,
           redirect: false,
         });
+
+        if (loginAttempt?.status === 200) {
+          setAttemptedLogin(true);
+        }
       }
 
       router.push(
@@ -140,14 +153,33 @@ export default function LoginModal({
     disconnect();
   };
 
-  // useEffect(() => {
-  //   if (connected && status === "unauthenticated") {
-  //     handleSignIn();
-  //   }
-  // }, [connected]);
+  useEffect(() => {
+    if (attemptedLogin) {
+      if (signedIn && !user) {
+        toast({
+          title: "No Clayno.club account found! Please create one first.",
+          variant: "destructive",
+        });
+      }
+      setAttemptedLogin(false);
+    } else if (redirect) {
+      // wait 1 second
+      setTimeout(() => {
+        if (signedIn && !user) {
+          toast({
+            title: "No Clayno.club account found! Please create one first.",
+            variant: "destructive",
+          });
+        }
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attemptedLogin, redirect]);
 
   return (
     <>
+      {/* Awkwardly force rerender */}
+      {attemptedLogin && <></>}
       {!signedIn ? (
         <Button
           size="sm"
@@ -304,7 +336,11 @@ export default function LoginModal({
                 <div className="grid grid-cols-2 justify-start gap-4 md:flex md:flex-row">
                   <button
                     className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
-                    onClick={() => signIn("discord")}
+                    onClick={() => {
+                      signIn("discord", {
+                        callbackUrl: "/?redirect=true&provider=discord",
+                      });
+                    }}
                   >
                     <div className="flex flex-row justify-center gap-2">
                       <Image
@@ -321,7 +357,11 @@ export default function LoginModal({
                   </button>
                   <button
                     className="rounded-lg bg-neutral-800 px-4 py-3 text-white"
-                    onClick={() => signIn("twitter")}
+                    onClick={() => {
+                      signIn("twitter", {
+                        callbackUrl: "/?redirect=true&provider=twitter",
+                      });
+                    }}
                   >
                     <div className="flex flex-row justify-center gap-2">
                       <Image
