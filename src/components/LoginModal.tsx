@@ -49,7 +49,6 @@ export default function LoginModal({
   const walletModal = useWalletModal();
 
   const { redirect, provider } = router.query;
-  const [attemptedLogin, setAttemptedLogin] = useState<boolean>(false);
 
   const { data: session, status } = useSession();
 
@@ -93,7 +92,7 @@ export default function LoginModal({
         const nonce = inx?.data.toString() || "";
         const verifySignatures = !tx.verifySignatures();
 
-        const loginAttempt = await signIn("sendMemo", {
+        await signIn("sendMemo", {
           programId: programId,
           verifySignatures: verifySignatures,
           nonce: nonce,
@@ -101,10 +100,6 @@ export default function LoginModal({
           address: publicKey.toString(),
           redirect: false,
         });
-
-        if (loginAttempt?.status === 200) {
-          setAttemptedLogin(true);
-        }
       } else {
         const message = new SigninMessage({
           domain: host || "",
@@ -116,15 +111,11 @@ export default function LoginModal({
         const signature = await signMessage(data);
         const serializedSignature = bs58.encode(signature);
 
-        const loginAttempt = await signIn("signMessage", {
+        await signIn("signMessage", {
           message: JSON.stringify(message),
           signature: serializedSignature,
           redirect: false,
         });
-
-        if (loginAttempt?.status === 200) {
-          setAttemptedLogin(true);
-        }
       }
 
       router.push(
@@ -154,32 +145,23 @@ export default function LoginModal({
   };
 
   useEffect(() => {
-    if (attemptedLogin) {
-      if (signedIn && !user) {
-        toast({
-          title: "No Clayno.club account found! Please create one first.",
-          variant: "destructive",
-        });
-      }
-      setAttemptedLogin(false);
-    } else if (redirect) {
+    if (redirect) {
       // wait 1 second
       setTimeout(() => {
         if (signedIn && !user) {
           toast({
-            title: "No Clayno.club account found! Please create one first.",
+            title: "No account found! Please create one first.",
             variant: "destructive",
           });
         }
-      }, 1000);
+      }, 1500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attemptedLogin, redirect]);
+  }, [redirect]);
 
   return (
     <>
       {/* Awkwardly force rerender */}
-      {attemptedLogin && <></>}
       {!signedIn ? (
         <Button
           size="sm"
