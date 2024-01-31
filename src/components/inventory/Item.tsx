@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  // DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -33,8 +33,13 @@ const Item = ({ item, type }: ItemProps) => {
 
   const attributesArray = Object.entries(item.attributes ?? {});
 
-  const handleDownload = (name: string, extension: string) => {
-    const blob = imageBlobs[imageState];
+  const handleDownload = async (name: string, extension: string) => {
+    let blob = imageBlobs[imageState];
+
+    if (!blob) {
+      // @ts-expect-error: just a quick fix
+      blob = await getImageBlob(imageState);
+    }
 
     if (blob) {
       const url = window.URL.createObjectURL(blob);
@@ -51,44 +56,38 @@ const Item = ({ item, type }: ItemProps) => {
     }
   };
 
-  useEffect(() => {
-    const getImageBlob = async (imageType: string) => {
-      try {
-        const response = await fetch(
-          `${
-            imageType === "pfp"
-              ? item.pfp
-              : imageType === "class"
-              ? item.classPFP
-              : isDino || isClaymaker || isClay
-              ? item.gif
-              : item.image
-          }`
-        );
+  const getImageBlob = async (imageType: string) => {
+    try {
+      const response = await fetch(
+        `${
+          imageType === "pfp"
+            ? item.pfp
+            : imageType === "class"
+            ? item.classPFP
+            : isDino || isClaymaker || isClay
+            ? item.gif
+            : item.image
+        }`
+      );
 
-        if (response.ok) {
-          const blob = await response.blob();
-          setImageBlobs((prevBlobs) => ({ ...prevBlobs, [imageType]: blob }));
-        } else {
-          throw new Error("Image download failed");
-        }
-      } catch (error) {
-        console.error("Error downloading image:", error);
+      if (response.ok) {
+        const blob = await response.blob();
+        setImageBlobs((prevBlobs) => ({ ...prevBlobs, [imageType]: blob }));
+        return blob;
+      } else {
+        throw new Error("Image download failed");
       }
-    };
+    } catch (error) {
+      console.error("Error downloading image:", error);
+    }
+  };
 
+  useEffect(() => {
     getImageBlob("pfp");
     getImageBlob("gif");
     getImageBlob("class");
-  }, [
-    item.pfp,
-    item.gif,
-    item.classPFP,
-    item.image,
-    isDino,
-    isClay,
-    isClaymaker,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
