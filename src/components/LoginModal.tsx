@@ -195,7 +195,7 @@ export default function LoginModal({
                 username ??
                 shortAccount(user?.defaultAddress) ??
                 session?.user.name ??
-                publicKey?.toString()
+                truncateAccount(publicKey?.toString() ?? "")
               }
               handleSignout={handleSignOut}
               sessionKey={
