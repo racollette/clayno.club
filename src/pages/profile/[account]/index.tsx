@@ -93,7 +93,7 @@ export default function Profile() {
             {isLoading ? (
               <Spinner className="self-center" />
             ) : (
-              <div className="self-center">
+              <div className="flex flex-col self-center">
                 {user ? (
                   <div className="grid grid-cols-2">
                     <div className="mr-2 flex flex-col justify-center">
@@ -233,6 +233,12 @@ export default function Profile() {
                     Edit Profile
                   </button>
                 )}
+                <Link
+                  href={`/inventory/${queryString}`}
+                  className="mt-2 w-full rounded-lg bg-cyan-700 px-2 py-2 text-center text-sm font-bold"
+                >
+                  Inventory
+                </Link>
               </div>
             )}
           </div>
@@ -288,35 +294,40 @@ export default function Profile() {
         )}
 
         <section className="flex w-full flex-col items-center gap-2">
-          <div className="mt-8 p-2 text-xl font-extrabold">Detected Herds</div>
           {isWallet ? (
             <>
-              {walletHerds && walletHerds.length > 0 ? (
-                <div className="flex w-full flex-col md:w-1/2 lg:w-2/5">
-                  {walletHerds.map((herd) => (
-                    <Herd
-                      key={herd.id}
-                      herd={herd}
-                      showDactyl={true}
-                      showSaga={true}
-                      showOwner={false}
-                      showPFP={false}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="relative flex aspect-square w-72 justify-center self-center">
-                  <Image
-                    src="/gifs/raptorSus_01.gif"
-                    alt="Sus"
-                    fill
-                    className="self-center rounded-lg"
-                  />
-                  <div className="absolute left-0 top-0 m-2 rounded-lg bg-black p-2 text-lg font-extrabold">
-                    No herds!?
-                  </div>
-                </div>
-              )}
+              {
+                walletHerds && walletHerds.length > 0 && (
+                  <>
+                    <div className="mt-8 p-2 text-xl font-extrabold">
+                      Detected Herds
+                    </div>
+                    <div className="flex w-full flex-col md:w-1/2 lg:w-2/5">
+                      {walletHerds.map((herd) => (
+                        <Herd
+                          key={herd.id}
+                          herd={herd}
+                          showDactyl={true}
+                          showSaga={true}
+                          showOwner={false}
+                          showPFP={false}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )
+                // <div className="relative flex aspect-square w-72 justify-center self-center">
+                //   <Image
+                //     src="/gifs/raptorSus_01.gif"
+                //     alt="Sus"
+                //     fill
+                //     className="self-center rounded-lg"
+                //   />
+                //   <div className="absolute left-0 top-0 m-2 rounded-lg bg-black p-2 text-lg font-extrabold">
+                //     No herds!?
+                //   </div>
+                // </div>
+              }
             </>
           ) : (
             <>
