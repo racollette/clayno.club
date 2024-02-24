@@ -78,6 +78,14 @@ module.exports = {
           "0%, 100%": { transform: "rotate(-3deg)" },
           "50%": { transform: "rotate(3deg)" },
         },
+        ticker: {
+          "0%": { transform: "translateX(200%)" },
+          "100%": { transform: "translateX(-200%)" },
+        },
+        "ticker-mobile": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -85,6 +93,8 @@ module.exports = {
         "homepage-dino-pattern": "homepage-dino-pattern 60s linear infinite",
         wiggle: "wiggle 1s ease-in-out infinite",
         "spin-slow": "spin 3s linear infinite",
+        ticker: "ticker 10s linear infinite",
+        "ticker-mobile": "ticker-mobile 10s linear infinite",
       },
     },
   },
