@@ -4,6 +4,8 @@ import Metatags from "~/components/MetaTags";
 import Image from "next/image";
 import { useUser } from "~/hooks/useUser";
 import { extractProfileFromUser } from "~/utils/wallet";
+import { EventAlert } from "~/components/attention/EventAlert";
+import { OLYMPICS_ONGOING } from "~/utils/constants";
 
 export default function Home() {
   const { user } = useUser();
@@ -23,6 +25,7 @@ export default function Home() {
         description="Clayno Club is a fan-curated portal for Claynosaurz collectors. Discover the collection, herds, tribes, and lore that define Claynotopia!"
       />
       <main className="bg-black text-white">
+        {OLYMPICS_ONGOING && <EventAlert />}
         <div className="flex flex-col gap-12 p-4 pb-16 md:container">
           <section className="flex flex-col items-center justify-center gap-4 rounded-xl px-4 py-12 md:flex-row md:gap-8">
             <div className="flex flex-col gap-4">
