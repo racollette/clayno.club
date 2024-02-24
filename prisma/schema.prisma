@@ -355,3 +355,57 @@ model TelegramMember {
   subDAOId    String
   userId      String?   @unique
 }
+
+model Competition {
+  id        Int       @id @default(autoincrement())
+  name      String
+  startDate DateTime?
+  endDate   DateTime?
+}
+
+model Event {
+  id            Int       @id @default(autoincrement())
+  name          String
+  date          DateTime?
+  competitionId Int
+  description   String?
+  scoringType   String?
+
+  @@index([competitionId])
+}
+
+model Meme {
+  id     String  @id
+  url    String
+  userId String  @unique
+  title  String?
+}
+
+model MemeVoter {
+  userId     String @id @unique
+  votesCast  Int
+  totalVotes Int
+
+  @@index([userId])
+}
+
+model Result {
+  id      Int     @id @default(autoincrement())
+  eventId Int
+  userId  String
+  score   Float
+  dinoId  String?
+
+  @@index([dinoId])
+  @@index([eventId])
+  @@index([userId])
+}
+
+model MemeToMemeVoter {
+  A String
+  B String
+
+  @@unique([A, B], map: "_MemeToMemeVoter_AB_unique")
+  @@index([B], map: "_MemeToMemeVoter_B_index")
+  @@map("_MemeToMemeVoter")
+}
