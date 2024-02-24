@@ -1,3 +1,7 @@
+// if date is between 2024-02-23 and 2024-03-01, show event alert
+export const OLYMPICS_ONGOING =
+  new Date() >= new Date("2024-02-26") && new Date() <= new Date("2024-03-01");
+
 export const COLORS = [
   "Amethyst",
   "Aqua",
