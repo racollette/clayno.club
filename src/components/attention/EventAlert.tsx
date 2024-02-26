@@ -36,7 +36,7 @@ export const EventAlert = () => {
   return (
     <>
       {showModal && (
-        <div className="fixed left-0 top-40 z-50 flex w-full items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed left-0 top-40 z-50 flex w-full items-center justify-center overflow-hidden">
           <div
             ref={modalContentRef}
             className="m-2 flex w-full flex-col items-center justify-center gap-2 rounded-lg bg-neutral-800 p-4 text-white md:w-1/2 md:p-8 lg:w-1/3 xl:w-1/4"
