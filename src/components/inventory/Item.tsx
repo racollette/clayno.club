@@ -13,12 +13,21 @@ import Link from "next/link";
 type ItemProps = {
   item: any;
   type: string;
+  displayMode?: ImageState;
 };
 
 type ImageState = "gif" | "pfp" | "class";
 
-const Item = ({ item, type }: ItemProps) => {
-  const [imageState, setImageState] = useState<ImageState>("gif");
+const Item = ({ item, type, displayMode }: ItemProps) => {
+  const [imageState, setImageState] = useState<ImageState>(
+    displayMode ?? "gif"
+  );
+
+  useEffect(() => {
+    setImageState(displayMode ?? "gif");
+  }, [displayMode]);
+
+  // console.log(imageState);
   const [imageBlobs, setImageBlobs] = useState({
     pfp: null,
     gif: null,
@@ -82,12 +91,12 @@ const Item = ({ item, type }: ItemProps) => {
     }
   };
 
-  useEffect(() => {
-    getImageBlob("pfp");
-    getImageBlob("gif");
-    getImageBlob("class");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  // getImageBlob("pfp");
+  // getImageBlob("gif");
+  // getImageBlob("class");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div
@@ -104,7 +113,7 @@ const Item = ({ item, type }: ItemProps) => {
                     imageState === "pfp"
                       ? item.pfp
                       : imageState === "class"
-                      ? item.classPFP
+                      ? item.classPFP || item.pfp
                       : item.gif
                   }`
                 : `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
@@ -132,7 +141,7 @@ const Item = ({ item, type }: ItemProps) => {
                   imageState === "pfp"
                     ? item.pfp
                     : imageState === "class"
-                    ? item.classPFP
+                    ? item.classPFP || item.pfp
                     : item.gif || item.image
                 }`}
                 alt={"Clayno"}
