@@ -2,11 +2,15 @@ import JSZip from "jszip";
 
 export const zip = async (items: any, type: string) => {
   const zip = new JSZip();
+
   const fetchAndAddToZip = async (item: any) => {
     try {
       const response = await fetch(
-        `${type === "gif" ? item.gif : type === "pfp" ? item.pfp : item.class}`
+        `${
+          type === "gif" ? item.gif : type === "pfp" ? item.pfp : item.classPFP
+        }`
       );
+
       const blob = await response.blob();
       zip.file(`${item.name}.${type === "gif" ? `gif` : `png`}`, blob);
     } catch (error) {
