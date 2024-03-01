@@ -182,17 +182,19 @@ const Inventory = () => {
                   </p>
                   <DownloadButton
                     data={originalSpecies}
-                    type="gifs"
+                    type="gif"
                     backgroundColor={`bg-pink-500`}
                   />
                   <DownloadButton
                     data={originalSpecies}
-                    type="pfps"
+                    type="pfp"
                     backgroundColor={`bg-cyan-600`}
                   />
                   <DownloadButton
-                    data={originalSpecies}
-                    type="classes"
+                    data={originalSpecies.filter(
+                      (dino) => dino.classPFP !== null
+                    )}
+                    type="class"
                     backgroundColor={`bg-purple-600`}
                   />
                 </div>
@@ -214,12 +216,12 @@ const Inventory = () => {
                   </p>
                   <DownloadButton
                     data={sagaSpecies}
-                    type="gifs"
+                    type="gif"
                     backgroundColor={`bg-pink-500`}
                   />
                   <DownloadButton
                     data={sagaSpecies}
-                    type="pfps"
+                    type="pfp"
                     backgroundColor={`bg-cyan-600`}
                   />
                 </div>
@@ -360,6 +362,7 @@ function DownloadButton({
 
   const handleDownload = async (items: Character[], type: string) => {
     setIsDownloading(true);
+    console.log(items);
     await zip(items, type);
     setIsDownloading(false);
   };
@@ -377,7 +380,9 @@ function DownloadButton({
         </div>
       ) : (
         <div>
-          <p className="font-clayno text-xs">{type}</p>
+          <p className="font-clayno text-xs">
+            {type === "class" ? "Classes" : `${type}s`}
+          </p>
         </div>
       )}
     </button>
