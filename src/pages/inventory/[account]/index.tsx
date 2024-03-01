@@ -81,7 +81,7 @@ const Inventory = () => {
       setSagaSpecies(sortByRarity(sagaSpecies));
     }
 
-    let originalSorted = sortByAttribute([...originalSpecies], attribute);
+    const originalSorted = sortByAttribute([...originalSpecies], attribute);
     if (attribute === "class") {
       originalSorted.reverse();
     }
