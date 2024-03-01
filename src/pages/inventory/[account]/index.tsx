@@ -31,6 +31,9 @@ const Inventory = () => {
 
   const [originalSpecies, setOriginalSpecies] = useState<Character[]>([]);
   const [sagaSpecies, setSagaSpecies] = useState<Character[]>([]);
+  const [displayMode, setDisplayMode] = useState<"gif" | "pfp" | "class">(
+    "gif"
+  );
 
   // const favoriteDomain = getFavoriteDomain(wallets)
 
@@ -78,11 +81,20 @@ const Inventory = () => {
       setSagaSpecies(sortByRarity(sagaSpecies));
     }
 
-    const originalSorted = sortByAttribute([...originalSpecies], attribute);
+    let originalSorted = sortByAttribute([...originalSpecies], attribute);
+    if (attribute === "class") {
+      originalSorted.reverse();
+    }
     setOriginalSpecies(originalSorted);
 
     const sagaSorted = sortByAttribute([...sagaSpecies], attribute);
     setSagaSpecies(sagaSorted);
+
+    if (attribute === "class") {
+      setDisplayMode("class");
+    } else {
+      setDisplayMode("gif");
+    }
   };
 
   return (
@@ -149,6 +161,7 @@ const Inventory = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-black font-clayno text-sm text-white">
                     <SelectItem value="rarity">Rarity</SelectItem>
+                    <SelectItem value="class">Class</SelectItem>
                     <SelectItem value="species">Species</SelectItem>
                     <SelectItem value="skin">Skin</SelectItem>
                     <SelectItem value="color">Color</SelectItem>
@@ -159,7 +172,7 @@ const Inventory = () => {
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {originalSpecies?.map((dino: any) => (
                 <div key={dino.mint}>
-                  <Item item={dino} type={"dino"} />
+                  <Item item={dino} type={"dino"} displayMode={displayMode} />
                 </div>
               ))}
               {originalSpecies?.length > 1 && (
@@ -169,13 +182,18 @@ const Inventory = () => {
                   </p>
                   <DownloadButton
                     data={originalSpecies}
-                    type="gif"
+                    type="gifs"
                     backgroundColor={`bg-pink-500`}
                   />
                   <DownloadButton
                     data={originalSpecies}
-                    type="pfp"
+                    type="pfps"
                     backgroundColor={`bg-cyan-600`}
+                  />
+                  <DownloadButton
+                    data={originalSpecies}
+                    type="classes"
+                    backgroundColor={`bg-purple-600`}
                   />
                 </div>
               )}
@@ -196,12 +214,12 @@ const Inventory = () => {
                   </p>
                   <DownloadButton
                     data={sagaSpecies}
-                    type="gif"
+                    type="gifs"
                     backgroundColor={`bg-pink-500`}
                   />
                   <DownloadButton
                     data={sagaSpecies}
-                    type="pfp"
+                    type="pfps"
                     backgroundColor={`bg-cyan-600`}
                   />
                 </div>
@@ -359,7 +377,7 @@ function DownloadButton({
         </div>
       ) : (
         <div>
-          <p className="font-clayno text-xs">{type}s</p>
+          <p className="font-clayno text-xs">{type}</p>
         </div>
       )}
     </button>
