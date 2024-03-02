@@ -1,5 +1,5 @@
 // if date is between 2024-02-23 and 2024-03-01, show event alert
-export const OLYMPICS_ONGOING = true;
+export const OLYMPICS_ONGOING = false;
 
 export const COLORS = [
   "Amethyst",
