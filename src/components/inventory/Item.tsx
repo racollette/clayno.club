@@ -201,7 +201,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                     onClick={() =>
                       handleDownload(
                         item.name,
-                        imageState === "pfp"
+                        imageState === "pfp" || imageState === "class"
                           ? "png"
                           : isDino
                           ? "gif"
