@@ -4,11 +4,11 @@ const MetaTags = ({
   title = "Clayno.club",
   description = "Unofficial Claynosaurz Community Tools",
   ogTitle = "Unofficial Claynosaurz Community Tools",
-  ogDescription = "Collectors collect.",
-  ogImage = "/images/og_club.jpeg",
+  ogDescription = "Collectors collect",
+  ogImage = "/images/og_club.jpg",
   ogUrl = "https://clayno.club",
-  twitterCard = "Collectors collect.",
-  twitterImage = "/images/og_club.jpeg",
+  twitterCard = "Collectors collect",
+  twitterImage = "/images/og_club.jpg",
 }) => {
   return (
     <Head>
