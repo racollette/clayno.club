@@ -88,11 +88,11 @@ export const statsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const whereClause: any = {
         holderOwner: { not: null },
-        NOT: {
-          attributes: {
-            species: { in: ["Spino", "Para"] },
-          },
-        },
+        // NOT: {
+        //   attributes: {
+        //     species: { in: ["Spino", "Para"] },
+        //   },
+        // },
       };
 
       const whereClauseSaga: any = {
@@ -165,7 +165,7 @@ export const statsRouter = createTRPCRouter({
         };
       }
 
-      const ogHolders = await ctx.prisma.dino.groupBy({
+      const holders = await ctx.prisma.dino.groupBy({
         by: ["holderOwner"],
         _count: {
           mint: true,
@@ -222,9 +222,9 @@ export const statsRouter = createTRPCRouter({
       });
 
       const combinedHolders: CombinedHolder[] = [];
-      for (const og of ogHolders) {
+      for (const holder of holders) {
         await fetchUserDetails(
-          og,
+          holder,
           ctx,
           combinedHolders,
           sagaHolders,
@@ -478,9 +478,12 @@ async function fetchUserDetails(
     (claymakerHolder: any) => claymakerHolder.holderOwner === og.holderOwner
   );
 
+  const ogCount =
+    og._count.mint - (matchingSagaHolder ? matchingSagaHolder._count.mint : 0);
+
   combinedHolders.push({
     address: og.holderOwner,
-    og: og._count.mint,
+    og: ogCount,
     saga: matchingSagaHolder ? matchingSagaHolder._count.mint : 0,
     clay: matchingClayHolder ? matchingClayHolder._count.mint : 0,
     claymakers: matchingClaymakerHolder
