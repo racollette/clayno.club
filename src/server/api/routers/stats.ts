@@ -402,7 +402,8 @@ export const statsRouter = createTRPCRouter({
           combinedHolders,
           sagaHolders,
           clayHolders,
-          claymakerHolders
+          claymakerHolders,
+          "cc"
         );
       }
 
@@ -466,7 +467,8 @@ async function fetchUserDetails(
   combinedHolders: any,
   sagaHolders: any,
   clayHolders: any,
-  claymakerHolders: any
+  claymakerHolders: any,
+  type?: string
 ) {
   const matchingSagaHolder = sagaHolders.find(
     (sagaHolder: any) => sagaHolder.holderOwner === og.holderOwner
@@ -479,7 +481,10 @@ async function fetchUserDetails(
   );
 
   const ogCount =
-    og._count.mint - (matchingSagaHolder ? matchingSagaHolder._count.mint : 0);
+    type === "cc"
+      ? og._count.mint
+      : og._count.mint -
+        (matchingSagaHolder ? matchingSagaHolder._count.mint : 0);
 
   combinedHolders.push({
     address: og.holderOwner,
