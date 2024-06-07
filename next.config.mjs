@@ -21,56 +21,48 @@ const config = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**.nftstorage.link',
+        protocol: "https",
+        hostname: "**.nftstorage.link",
       },
       {
-        protocol: 'https',
-        hostname: '**.arweave.net',
+        protocol: "https",
+        hostname: "**.arweave.net",
       },
       {
-        protocol: 'https',
-        hostname: '**.prod-image-cdn.tensor.trade',
+        protocol: "https",
+        hostname: "**.prod-image-cdn.tensor.trade",
       },
       {
-        protocol: 'https',
-        hostname: '**.pbs.twimg.com',
+        protocol: "https",
+        hostname: "**.pbs.twimg.com",
       },
       {
-        protocol: 'https',
-        hostname: '**.ton.twitter.com',
+        protocol: "https",
+        hostname: "**.ton.twitter.com",
       },
       {
-        protocol: 'https',
-        hostname: '**.cdn.discordapp.com',
+        protocol: "https",
+        hostname: "**.cdn.discordapp.com",
       },
       {
-        protocol: 'https',
-        hostname: '**.ui-avatars.com',
+        protocol: "https",
+        hostname: "**.ui-avatars.com",
       },
       {
-        protocol: 'https',
-        hostname: '**.www.dinoherd.cc',
+        protocol: "https",
+        hostname: "**.www.clayno.club",
       },
       {
-        protocol: 'https',
-        hostname: '**.dinoherd.cc',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.www.clayno.club',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.clayno.club',
+        protocol: "https",
+        hostname: "**.clayno.club",
       },
     ],
-    unoptimized: true
+    unoptimized: true,
   },
   publicRuntimeConfig: {
-    myRPC: process.env.RPC
+    myRPC: process.env.RPC,
   },
-  transpilePackages: ['react-tweet']
+  transpilePackages: ["react-tweet"],
 };
 
 export default config;

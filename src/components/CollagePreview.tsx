@@ -92,7 +92,7 @@ export const CollagePreview = (props: CollageGridProps) => {
         };
         setJobProgress(newJobProgress);
         if (newJobProgress.state === "completed") {
-          setVideoURL(`https://api.dinoherd.cc/videos/${id}.mp4`);
+          setVideoURL(`https://api.clayno.club/videos/${id}.mp4`);
           setMonitorJob(false);
         }
       }

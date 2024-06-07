@@ -41,7 +41,7 @@ function FileUpload({ userId, refetch }: { userId: string; refetch: any }) {
 
     try {
       const response = await fetch(
-        `https://api.dinoherd.cc/audio?userId=${userId}`,
+        `https://api.clayno.club/audio?userId=${userId}`,
         {
           method: "POST",
           body: formData,

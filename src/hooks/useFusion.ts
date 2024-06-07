@@ -11,7 +11,7 @@ const useFusion = () => {
 
     try {
       const response = await axios.post(
-        `https://api.dinoherd.cc/queue-job/${id}?audio=${audioClipId}`,
+        `https://api.clayno.club/queue-job/${id}?audio=${audioClipId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const useFusion = () => {
   const jobStatus = async (id: string) => {
     try {
       const response = await axios.get(
-        `https://api.dinoherd.cc/job-progress/${id}`,
+        `https://api.clayno.club/job-progress/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
