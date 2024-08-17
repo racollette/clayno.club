@@ -101,6 +101,7 @@ export const subdaoRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.prisma.subDAO.findMany({
         where: {
+          active: true,
           OR: [
             {
               dinos: {
