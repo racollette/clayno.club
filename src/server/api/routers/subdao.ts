@@ -46,7 +46,11 @@ export const subdaoRouter = createTRPCRouter({
     }),
 
   getAllSubDAOs: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.subDAO.findMany({});
+    return ctx.prisma.subDAO.findMany({
+      where: {
+        active: true,
+      },
+    });
   }),
 
   getHolders: publicProcedure

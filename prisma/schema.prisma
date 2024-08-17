@@ -176,6 +176,7 @@ model SubDAO {
   verifiedAddresses Int?
   grouping          Boolean?
   telegramGroup     String?
+  active            Boolean     @default(true)
   dinos             Dino[]
   holders           Holder[]
   claymakers        Claymaker[]
@@ -346,14 +347,18 @@ model Thread {
 }
 
 model TelegramMember {
-  telegramId  String    @unique
-  username    String?   @unique
+  telegramId  String
+  username    String?
   global_name String
   joinedAt    DateTime  @default(now())
   kickAt      DateTime?
   exception   Boolean   @default(false)
   subDAOId    String
-  userId      String?   @unique
+  userId      String?
+  id          String    @id
+
+  @@index([subDAOId])
+  @@index([userId])
 }
 
 model Competition {
@@ -408,4 +413,21 @@ model MemeToMemeVoter {
   @@unique([A, B], map: "_MemeToMemeVoter_AB_unique")
   @@index([B], map: "_MemeToMemeVoter_B_index")
   @@map("_MemeToMemeVoter")
+}
+
+model ListingNotification {
+  id         Int      @id @default(autoincrement())
+  telegramId String
+  type       String
+  createdAt  DateTime @default(now())
+  details    String?
+}
+
+model DinoToListingNotification {
+  A String
+  B Int
+
+  @@unique([A, B], map: "_DinoToListingNotification_AB_unique")
+  @@index([B], map: "_DinoToListingNotification_B_index")
+  @@map("_DinoToListingNotification")
 }
