@@ -121,7 +121,7 @@ const SignUpTutorial = () => {
                 className="rounded-lg shadow-md"
               />
               <p className="mt-2 text-center text-xs text-gray-400">
-                Verifying your number in the bot
+                Verifying your number
               </p>
             </div>
             <p className="mb-8">
@@ -227,12 +227,12 @@ const SignUpTutorial = () => {
               <p className="mt-2 text-center text-xs text-gray-400">
                 Selecting the group you want to join
               </p>
-              <p className="pt-4 font-bold text-pink-500">
-                {
-                  "To be eligible, your connected wallets must hold the required NFTs. If you are having problems, check your Clayno.club profile settings to make sure it was connected properly."
-                }
-              </p>
             </div>
+            <p className="mb-8 font-bold text-pink-500">
+              {
+                "To be eligible, your connected wallets must hold the required NFTs. If you are having problems, check your Clayno.club profile settings to make sure it was connected properly."
+              }
+            </p>
             <p className="mb-8">
               {
                 "If you're eligible, the bot will generate a unique invite link for you. Click 'Join' and you're in!"
