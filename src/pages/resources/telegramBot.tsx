@@ -8,7 +8,7 @@ const SignUpTutorial = () => {
     <>
       <MetaTags title="Clayno.club | How to Sign Up for Gated Access" />
       <Layout>
-        <section className="mx-auto max-w-4xl px-4 py-8">
+        <section className="mx-auto max-w-4xl px-0 py-4 md:px-4 md:py-8">
           <h1 className="mb-8 text-center font-clayno text-2xl text-white md:text-3xl">
             How to Join Clayno.club Gated Telegram Groups
           </h1>
