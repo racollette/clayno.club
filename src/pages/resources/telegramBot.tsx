@@ -230,7 +230,7 @@ const SignUpTutorial = () => {
             </div>
             <p className="mb-8 font-bold text-pink-500">
               {
-                "To be eligible, your connected wallets must hold the required NFTs. If you are having problems, check your Clayno.club profile settings to make sure it was connected properly."
+                "To be eligible, your connected wallets must hold the required NFTs. If you are having problems, check your Clayno.club profile settings to make sure all wallets were connected properly."
               }
             </p>
             <p className="mb-8">
