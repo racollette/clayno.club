@@ -6,6 +6,7 @@ import { useUser } from "~/hooks/useUser";
 import { extractProfileFromUser } from "~/utils/wallet";
 import { EventAlert } from "~/components/attention/EventAlert";
 import { OLYMPICS_ONGOING } from "~/utils/constants";
+import { FaQuestion } from "react-icons/fa";
 
 export default function Home() {
   const { user } = useUser();
@@ -88,7 +89,7 @@ export default function Home() {
                   Your browser does not support the video tag.
                 </video>
               </div>
-              <div className="flex flex-col items-center justify-center gap-4 self-center md:items-start">
+              <div className="flex flex-col items-center justify-center gap-3 self-center md:items-start">
                 <div className="relative h-[100px] w-[100px] md:h-[100px] md:w-[100px]">
                   <Image
                     src="/images/logo.png"
@@ -101,9 +102,9 @@ export default function Home() {
                 <div className="text-md flex">
                   <ul>
                     <li>• Automated token gating</li>
-                    <li>• Built in commands</li>
+                    <li>• Custom listing notifications</li>
+                    <li>• Sales feeds</li>
                     <li>• Community stats</li>
-                    <li>• Trait specific sales feeds</li>
                   </ul>
                 </div>
                 <div className="flex flex-row gap-2">
@@ -119,6 +120,17 @@ export default function Home() {
                       alt="Telegram"
                     />
                     Take me there!
+                  </Link>
+                </div>
+                <div className="flex flex-row gap-2">
+                  <Link
+                    href="/resources/telegramBot"
+                    className="flex w-[200px] flex-row items-center justify-center gap-2 rounded-xl border-2 border-white px-2 py-2 text-sm hover:border-pink-500 md:px-6 md:py-2"
+                  >
+                    <div className="text-pink-500">
+                      <FaQuestion size={16} />
+                    </div>
+                    Setup Guide
                   </Link>
                 </div>
               </div>
