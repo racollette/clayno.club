@@ -24,7 +24,7 @@ const SignUpTutorial = () => {
                 On the homepage, click on the {"'Connect Wallet'"} button and
                 select your preferred Solana wallet (e.g., Phantom, Backpack,
                 etc.).
-                <div className="m-8">
+                <div className="m-2 md:m-8">
                   <Image
                     src="/images/telegramBot/create_account.png"
                     alt="Create Account Screenshot"
@@ -42,7 +42,7 @@ const SignUpTutorial = () => {
                 After connecting your wallet, follow the prompts to sign a
                 message and create your account. Note the ledger toggle option
                 if your Claynos are on a hardware wallet.
-                <p className="py-2 font-bold text-pink-500">
+                <p className="py-2 text-sm font-bold text-pink-500">
                   If you prefer to not sign a transaction with your cold storage
                   device, create an account using any hot wallet and message{" "}
                   <Link
@@ -55,7 +55,7 @@ const SignUpTutorial = () => {
                   with your ledger address to have it attached to your account
                   manually.
                 </p>
-                <div className="m-8">
+                <div className="m-2 md:m-8">
                   <Image
                     src="/images/telegramBot/sign_message.png"
                     alt="Sign Message"
@@ -96,7 +96,7 @@ const SignUpTutorial = () => {
               find an option to link your Telegram account. Follow the
               instructions to complete the linking process.
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/login_with_telegram1.png"
                 alt="Login with Telegram"
@@ -112,7 +112,7 @@ const SignUpTutorial = () => {
               Telegram will prompt you to authenticate the mobile number
               attached to your account. Enter it and press next.
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/verify_number1.png"
                 alt="Verify Number Screenshot"
@@ -127,7 +127,7 @@ const SignUpTutorial = () => {
             <p className="mb-8">
               Telegram will now send you a direct message in Telegram.
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/confirm_on_telegram1.png"
                 alt="Confirm on Telegram"
@@ -143,7 +143,7 @@ const SignUpTutorial = () => {
               Press confirm to complete linking your Telegram account to your
               Clayno.club account.
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/successful_login1.png"
                 alt="Successful Login"
@@ -160,7 +160,7 @@ const SignUpTutorial = () => {
                 "That's it! X and Discord can also be linked (used to display names next to holdings), but this is optional. You're now ready to chat with the bot."
               }
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/link_socials.png"
                 alt="Link Socials Screenshot"
@@ -194,7 +194,7 @@ const SignUpTutorial = () => {
               This will open a conversation where you can be invited to gated
               groups if you hold an eligible Claynosaurz NFT.
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/speak_with_bot.png"
                 alt="Speak with Bot Screenshot"
@@ -216,7 +216,7 @@ const SignUpTutorial = () => {
                 "Simply follow the prompts to check your account status and see if you're eligible to join any of the gated groups."
               }
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/select_group.png"
                 alt="Select Group Screenshot"
@@ -229,7 +229,7 @@ const SignUpTutorial = () => {
               </p>
               <p className="pt-4 font-bold text-pink-500">
                 {
-                  "To be eligible your connected wallets must hold the required NFTs. If you're having problems, check your Clayno.club profile settings to make sure it was connected properly."
+                  "To be eligible, your connected wallets must hold the required NFTs. If you are having problems, check your Clayno.club profile settings to make sure it was connected properly."
                 }
               </p>
             </div>
@@ -238,7 +238,7 @@ const SignUpTutorial = () => {
                 "If you're eligible, the bot will generate a unique invite link for you. Click 'Join' and you're in!"
               }
             </p>
-            <div className="mb-10">
+            <div className="m-2 md:m-8">
               <Image
                 src="/images/telegramBot/verify_holdings_and_join.png"
                 alt="Verify Holdings and Join Screenshot"
