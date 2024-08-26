@@ -14,7 +14,7 @@ const Resources = () => {
           <div className="font-clayno text-3xl">Resources</div>
           <div className="flex w-full flex-row justify-center gap-4">
             <Link
-              className="min-w-2xl flex aspect-square cursor-pointer flex-col items-center justify-center gap-4 rounded-lg p-4 hover:animate-wiggle md:w-1/4"
+              className="min-w-2xl flex aspect-square cursor-pointer flex-col items-center justify-end gap-4 rounded-lg p-4 hover:animate-wiggle md:w-1/4"
               style={{
                 background: `url('/images/threads.jpeg')`,
                 backgroundSize: `cover`,
@@ -27,6 +27,18 @@ const Resources = () => {
               <p className="md:text-md rounded-md bg-black px-4 py-2 text-center font-clayno text-sm">
                 Explore the best X threads on Claynos!
               </p>
+            </Link>
+            <Link
+              className="min-w-2xl flex aspect-square cursor-pointer flex-col items-center justify-end gap-4 rounded-lg p-4 hover:animate-wiggle md:w-1/4"
+              style={{
+                background: `url('/images/guides.jpg')`,
+                backgroundSize: `cover`,
+              }}
+              href={`/resources/telegramBot`}
+            >
+              <h2 className="text-md rounded-md bg-black px-4 py-2 text-center font-clayno md:text-lg">
+                Clayno.Club Telegram Bot Tutorial
+              </h2>
             </Link>
           </div>
         </section>
