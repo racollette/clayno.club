@@ -176,8 +176,8 @@ const Inventory = () => {
                 </div>
               ))}
               {originalSpecies?.length > 1 && (
-                <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
-                  <p className="font-clayno text-sm text-white md:text-lg">
+                <div className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-md p-1 sm:h-28 sm:w-28 sm:gap-2 sm:p-2 lg:h-40 lg:w-40">
+                  <p className="font-clayno text-[10px] text-white sm:text-xs lg:text-sm">
                     Download All
                   </p>
                   <DownloadButton
@@ -370,20 +370,17 @@ function DownloadButton({
   return (
     <button
       onClick={() => handleDownload(data, type)}
-      className={`w-4/5 rounded-lg px-4 py-2 ${backgroundColor}`}
+      className={`w-full rounded-lg px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm ${backgroundColor}`}
     >
-      {}
       {isDownloading ? (
         <div className="flex flex-row items-center justify-center gap-1">
-          <p className="font-clayno text-xs">Fetching</p>
-          <HiRefresh size={16} className="ml-2 inline-block animate-spin" />
+          <p className="font-clayno">Fetching</p>
+          <HiRefresh size={14} className="ml-1 inline-block animate-spin sm:ml-2 sm:text-base" />
         </div>
       ) : (
-        <div>
-          <p className="font-clayno text-xs">
-            {type === "class" ? "Classes" : `${type}s`}
-          </p>
-        </div>
+        <p className="font-clayno">
+          {type === "class" ? "Classes" : `${type}s`}
+        </p>
       )}
     </button>
   );
