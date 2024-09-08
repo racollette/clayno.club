@@ -149,7 +149,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
             <DialogTitle className="font-clayno text-lg text-white pr-8 truncate">
               {item.name}
             </DialogTitle>
-            <DialogClose className="absolute right-4 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <DialogClose className="absolute right-4 top-2 rounded-sm opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
               <HiX className="h-6 w-6 text-white" />
               <span className="sr-only">Close</span>
             </DialogClose>
