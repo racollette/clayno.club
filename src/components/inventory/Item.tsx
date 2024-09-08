@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import {
   Dialog,
   DialogContent,
@@ -25,33 +26,23 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
   const [imageState, setImageState] = useState<ImageState>(
     displayMode ?? "gif"
   );
+  const router = useRouter();
 
   useEffect(() => {
-    if (isOpen) {
-      // Push a new state to the history when the modal is opened
-      window.history.pushState({ modal: true }, "");
+    // Open the modal if the URL has a specific query parameter
+    if (router.query.modal === item.mint) {
+      setIsOpen(true);
     }
-
-    // Handle the popstate event (when the user presses back)
-    const handlePopState = (event: PopStateEvent) => {
-      if (event.state && event.state.modal) {
-        setIsOpen(false);
-      }
-    };
-
-    window.addEventListener("popstate", handlePopState);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, [isOpen]);
+  }, [router.query, item.mint]);
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
-    if (!open) {
-      // If the modal is being closed, go back in history
-      window.history.back();
+    if (open) {
+      // Add a query parameter when opening the modal
+      router.push(`${router.pathname}?modal=${item.mint}`, undefined, { shallow: true });
+    } else {
+      // Remove the query parameter when closing the modal
+      router.push(router.pathname, undefined, { shallow: true });
     }
   };
 
