@@ -177,7 +177,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                   alt={"Clayno"}
                   fill
                 />
-                <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between rounded-md bg-black/80 px-2 py-2">
+                <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between rounded-md bg-black/80 text-white px-2 py-2">
                   <div className="flex flex-row gap-1">
                     <button
                       onClick={() => setImageState("gif")}
