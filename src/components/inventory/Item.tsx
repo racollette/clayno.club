@@ -32,17 +32,47 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
     // Open the modal if the URL has a specific query parameter
     if (router.query.modal === item.mint) {
       setIsOpen(true);
+    } else {
+      setIsOpen(false);
     }
+
+    // Add popstate event listener
+    const handlePopState = () => {
+      if (router.query.modal !== item.mint) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, [router.query, item.mint]);
 
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
     if (open) {
       // Add a query parameter when opening the modal
-      router.push(`${router.pathname}?modal=${item.mint}`, undefined, { shallow: true });
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, modal: item.mint }
+        },
+        undefined,
+        { shallow: true }
+      );
     } else {
       // Remove the query parameter when closing the modal
-      router.push(router.pathname, undefined, { shallow: true });
+      const { modal, ...restQuery } = router.query;
+      router.push(
+        {
+          pathname: router.pathname,
+          query: restQuery
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   };
 
