@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogClose,
   // DialogDescription,
   DialogHeader,
   DialogTitle,
