@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "~/@/components/ui/dialog";
 import Link from "next/link";
+import { HiX } from "react-icons/hi";
 
 type ItemProps = {
   item: any;
@@ -125,17 +126,18 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
             quality={75}
           />
         </DialogTrigger>
-        <DialogContent className="flex w-11/12 max-w-2xl flex-col gap-4 rounded-lg border-none bg-neutral-900/80 p-4">
-          <DialogHeader>
-            <DialogTitle className="m-0 font-clayno text-white">
+        <DialogContent className="flex w-11/12 max-w-2xl flex-col gap-4 rounded-lg border-none bg-neutral-900/80 p-0 overflow-hidden">
+          <div className="sticky top-0 z-10 flex items-center justify-between bg-black p-4">
+            <DialogTitle className="m-0 font-clayno text-white pr-8 truncate">
               {item.name}
             </DialogTitle>
-          </DialogHeader>
-          {/* <DialogDescription className="text-neutral-500">
-            Filter herds by traits
-          </DialogDescription> */}
-          <div className="flex flex-col items-start justify-start gap-4 md:grid md:grid-cols-8 md:gap-0">
-            <div className="relative flex aspect-square w-full flex-wrap items-center justify-center gap-4 overflow-clip rounded-lg p-4 text-white md:col-span-5">
+            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+              <HiX className="h-4 w-4 text-white" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          </div>
+          <div className="flex flex-col items-start justify-start gap-4 p-4 md:grid md:grid-cols-8 md:gap-0">
+            <div className="relative flex aspect-square w-full flex-wrap items-center justify-center gap-4 overflow-hidden rounded-lg p-4 text-white md:col-span-5">
               <Image
                 src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
                   imageState === "pfp"
@@ -147,75 +149,43 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                 alt={"Clayno"}
                 fill
               />
-              <div className="absolute bottom-2 flex w-[95%] flex-row justify-between rounded-md bg-black px-2 py-2">
-                <div className="flex flex-row gap-2">
+              <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between rounded-md bg-black/80 px-2 py-2">
+                <div className="flex flex-row gap-1">
                   <button
-                    onClick={() => {
-                      setImageState("gif");
-                    }}
-                    className={`rounded-sm px-4 py-1 font-clayno text-xs font-bold ${
+                    onClick={() => setImageState("gif")}
+                    className={`rounded-sm px-2 py-1 font-clayno text-xs font-bold ${
                       imageState === "gif" ? `bg-emerald-600` : `bg-neutral-500`
                     }`}
                   >
-                    {isClay
-                      ? `IMAGE`
-                      : isClaymaker
-                      ? `GIF`
-                      : isDino
-                      ? `GIF`
-                      : `IMAGE`}
+                    {isClay ? `IMAGE` : isClaymaker ? `GIF` : isDino ? `GIF` : `IMAGE`}
                   </button>
                   {item.pfp && (
                     <button
-                      onClick={() => {
-                        setImageState("pfp");
-                      }}
-                      className={`rounded-sm  px-4 py-1 font-clayno text-xs font-bold ${
-                        imageState === "pfp"
-                          ? `bg-emerald-600`
-                          : `bg-neutral-500`
+                      onClick={() => setImageState("pfp")}
+                      className={`rounded-sm px-2 py-1 font-clayno text-xs font-bold ${
+                        imageState === "pfp" ? `bg-emerald-600` : `bg-neutral-500`
                       }`}
                     >
                       PFP
                     </button>
                   )}
-
                   {item.classPFP && (
                     <button
-                      onClick={() => {
-                        setImageState("class");
-                      }}
-                      className={`rounded-sm px-4 py-1 font-clayno text-xs font-bold ${
-                        imageState === "class"
-                          ? `bg-emerald-600`
-                          : `bg-neutral-500`
+                      onClick={() => setImageState("class")}
+                      className={`rounded-sm px-2 py-1 font-clayno text-xs font-bold ${
+                        imageState === "class" ? `bg-emerald-600` : `bg-neutral-500`
                       }`}
                     >
                       CLASS
                     </button>
                   )}
                 </div>
-                <div>
-                  <button
-                    className="rounded-sm bg-cyan-600 px-4 py-1 font-clayno text-xs font-bold"
-                    onClick={() =>
-                      handleDownload(
-                        item.name,
-                        imageState === "pfp" || imageState === "class"
-                          ? "png"
-                          : isDino
-                          ? "gif"
-                          : isClaymaker
-                          ? "gif"
-                          : isPizza
-                          ? "gif"
-                          : "png"
-                      )
-                    }
-                  >
-                    DOWNLOAD
-                  </button>
-                </div>
+                <button
+                  className="rounded-sm bg-cyan-600 px-2 py-1 font-clayno text-xs font-bold"
+                  onClick={() => handleDownload(item.name, imageState === "pfp" || imageState === "class" ? "png" : isDino ? "gif" : isClaymaker ? "gif" : isPizza ? "gif" : "png")}
+                >
+                  DOWNLOAD
+                </button>
               </div>
             </div>
             <div className="h-full w-full items-center gap-4 px-4 font-clayno text-lg text-white md:col-span-3">
