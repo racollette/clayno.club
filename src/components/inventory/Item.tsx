@@ -21,13 +21,39 @@ type ItemProps = {
 type ImageState = "gif" | "pfp" | "class";
 
 const Item = ({ item, type, displayMode }: ItemProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [imageState, setImageState] = useState<ImageState>(
     displayMode ?? "gif"
   );
 
   useEffect(() => {
-    setImageState(displayMode ?? "gif");
-  }, [displayMode]);
+    if (isOpen) {
+      // Push a new state to the history when the modal is opened
+      window.history.pushState({ modal: true }, "");
+    }
+
+    // Handle the popstate event (when the user presses back)
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.modal) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isOpen]);
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      // If the modal is being closed, go back in history
+      window.history.back();
+    }
+  };
 
   // console.log(imageState);
   const [imageBlobs, setImageBlobs] = useState({
@@ -105,7 +131,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
       key={item.mint}
       className={`relative flex h-24 w-24 cursor-pointer justify-center overflow-clip rounded-md lg:h-40 lg:w-40`}
     >
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <Image
             className="transform-gpu transition-transform hover:scale-125"
@@ -128,8 +154,8 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
           />
         </DialogTrigger>
         <DialogContent className="flex w-11/12 max-w-2xl flex-col gap-4 rounded-lg border-none bg-neutral-900/80 p-0 overflow-hidden">
-          <div className="sticky top-0 z-10 flex items-center justify-between bg-black p-4">
-            <DialogTitle className="m-0 font-clayno text-white pr-8 truncate">
+          <div className="relative p-4">
+            <DialogTitle className="font-clayno text-lg text-white pr-8 truncate">
               {item.name}
             </DialogTitle>
             <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
@@ -137,8 +163,8 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
               <span className="sr-only">Close</span>
             </DialogClose>
           </div>
-          <div className="flex flex-col items-start justify-start gap-4 p-4 md:grid md:grid-cols-8 md:gap-0">
-            <div className="relative flex aspect-square w-full flex-wrap items-center justify-center gap-4 overflow-hidden rounded-lg p-4 text-white md:col-span-5">
+          <div className="flex flex-col items-start justify-start gap-4 px-4 pb-4 md:grid md:grid-cols-8 md:gap-0">
+            <div className="relative flex aspect-square w-full flex-wrap items-center justify-center overflow-hidden rounded-lg md:col-span-5">
               <Image
                 src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
                   imageState === "pfp"
@@ -154,7 +180,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                 <div className="flex flex-row gap-1">
                   <button
                     onClick={() => setImageState("gif")}
-                    className={`rounded-sm px-2 py-1 font-clayno text-xs font-bold ${
+                    className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
                       imageState === "gif" ? `bg-emerald-600` : `bg-neutral-500`
                     }`}
                   >
@@ -163,7 +189,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                   {item.pfp && (
                     <button
                       onClick={() => setImageState("pfp")}
-                      className={`rounded-sm px-2 py-1 font-clayno text-xs font-bold ${
+                      className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
                         imageState === "pfp" ? `bg-emerald-600` : `bg-neutral-500`
                       }`}
                     >
@@ -173,7 +199,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                   {item.classPFP && (
                     <button
                       onClick={() => setImageState("class")}
-                      className={`rounded-sm px-2 py-1 font-clayno text-xs font-bold ${
+                      className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
                         imageState === "class" ? `bg-emerald-600` : `bg-neutral-500`
                       }`}
                     >
@@ -182,7 +208,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                   )}
                 </div>
                 <button
-                  className="rounded-sm bg-cyan-600 px-2 py-1 font-clayno text-xs font-bold"
+                  className="rounded-sm bg-cyan-600 px-1.5 py-0.5 font-clayno text-[10px] font-bold"
                   onClick={() => handleDownload(item.name, imageState === "pfp" || imageState === "class" ? "png" : isDino ? "gif" : isClaymaker ? "gif" : isPizza ? "gif" : "png")}
                 >
                   DOWNLOAD
