@@ -80,8 +80,8 @@ export default function Home() {
               />
             </div>
           </section>
-          <section className="flex flex-col items-center justify-center gap-8 rounded-lg bg-neutral-900 py-6">
-            <div className="self-center font-clayno text-2xl">Services</div>
+          <section className="flex flex-col items-center justify-center gap-8 rounded-lg py-6">
+            {/* <div className="self-center font-clayno text-2xl">Services</div> */}
             <div className="flex flex-row flex-wrap-reverse items-center justify-center gap-4 rounded-xl px-2 md:flex-row md:gap-8 md:px-12">
               <div className="overflow-clip rounded-xl border-2 border-white">
                 <video autoPlay loop muted playsInline width="200">
