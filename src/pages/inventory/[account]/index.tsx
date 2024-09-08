@@ -210,8 +210,8 @@ const Inventory = () => {
                 </div>
               ))}
               {sagaSpecies?.length > 1 && (
-                <div className="flex h-28 w-28 flex-col items-center justify-center gap-2 rounded-md lg:h-40 lg:w-40">
-                  <p className="font-clayno text-sm text-white md:text-lg">
+                <div className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-md p-1 sm:h-28 sm:w-28 sm:gap-2 sm:p-2 lg:h-40 lg:w-40">
+                  <p className="font-clayno text-[10px] text-white sm:text-xs lg:text-sm">
                     Download All
                   </p>
                   <DownloadButton
