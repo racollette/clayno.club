@@ -54,7 +54,7 @@ export default function Profile() {
     session &&
     (session.user.name === user?.discord?.username ||
       session?.user.name === user?.twitter?.username ||
-      session?.user.name === user?.telegram?.username ||
+      session?.user.username === user?.telegram?.username ||
       authWallet);
 
   console.log(session);
