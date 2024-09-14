@@ -225,7 +225,7 @@ export default function Profile() {
                     </div>
                   </div>
                 )}
-                {isOwner && (
+                {isOwner && user && (
                   <button
                     className="mt-2 w-full rounded-lg bg-orange-500 px-2 py-2 text-sm font-bold"
                     onClick={() => router.push(`${router.asPath}/settings`)}
