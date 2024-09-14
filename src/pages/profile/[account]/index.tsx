@@ -57,6 +57,9 @@ export default function Profile() {
       session?.user.name === user?.telegram?.username ||
       authWallet);
 
+  console.log(session);
+  console.log(user);
+
   const { data: collages } = api.fusion.getPublicCollages.useQuery({
     userId: user?.id || "None",
     isOwner: isOwner ? isOwner : false,
