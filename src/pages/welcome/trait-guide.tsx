@@ -1,78 +1,79 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { api } from "~/utils/api"; // Adjust the import based on your project structure
+import { useState, useCallback, useEffect } from "react";
+import Image from "next/image";
+import { RefreshCw } from "lucide-react";
+import { Button } from "~/@/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "~/@/components/ui/card";
-import Image from "next/image";
-import { Progress } from "~/@/components/ui/progress";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "~/@/components/ui/tabs";
-import { Button } from "~/@/components/ui/button";
-import { RefreshCw } from "lucide-react"; // Import the refresh icon
+import { api } from "~/utils/api";
+import { cn } from "~/@/lib/utils";
 
 const TRAITS = {
   SPECIES: [
-    { name: "Rex", rarity: 6.89 },
-    { name: "Raptor", rarity: 8.25 },
-    { name: "Bronto", rarity: 5.47 },
-    { name: "Stego", rarity: 7.36 },
-    { name: "Ankylo", rarity: 4.78 },
-    { name: "Trice", rarity: 6.52 },
-    { name: "Dactyl", rarity: 9.14 },
-    { name: "Spino", rarity: 5.93 },
-    { name: "Para", rarity: 7.81 },
+    { name: "Rex", rarity: 17.47 },
+    { name: "Trice", rarity: 15.54 },
+    { name: "Stego", rarity: 13.79 },
+    { name: "Ankylo", rarity: 13.2 },
+    { name: "Bronto", rarity: 11.45 },
+    { name: "Raptor", rarity: 10.24 },
+    { name: "Spino", rarity: 8.18 },
+    { name: "Para", rarity: 8.18 },
+    { name: "Dactyl", rarity: 1.78 },
   ],
   SKIN: [
-    { name: "Apres", rarity: 5.23 },
-    { name: "Toxic", rarity: 7.81 },
-    { name: "Elektra", rarity: 4.92 },
-    { name: "Amazonia", rarity: 6.15 },
-    { name: "Coral", rarity: 8.74 },
-    { name: "Jurassic", rarity: 3.56 },
-    { name: "Mirage", rarity: 9.37 },
-    { name: "Savanna", rarity: 7.02 },
-    { name: "Oceania", rarity: 5.68 },
-    { name: "Cristalline", rarity: 4.13 },
+    { name: "Mirage", rarity: 20.17 },
+    { name: "Amazonia", rarity: 13.39 },
+    { name: "Jurassic", rarity: 12.96 },
+    { name: "Savanna", rarity: 11.34 },
+    { name: "Cristalline", rarity: 8.79 },
+    { name: "Coral", rarity: 8.36 },
+    { name: "Oceania", rarity: 8.0 },
+    { name: "Elektra", rarity: 7.72 },
+    { name: "Toxic", rarity: 6.09 },
+    { name: "Apres", rarity: 2.97 },
   ],
   MOOD: [
-    { name: "Happy", rarity: 6.32 },
-    { name: "Scared", rarity: 8.74 },
-    { name: "Bored", rarity: 7.15 },
-    { name: "Smug", rarity: 5.93 },
-    { name: "Confident", rarity: 9.46 },
-    { name: "Sad", rarity: 4.87 },
-    { name: "Excited", rarity: 8.29 },
-    { name: "Sleepy", rarity: 6.78 },
+    { name: "Confident", rarity: 12.95 },
+    { name: "Sad", rarity: 12.73 },
+    { name: "Excited", rarity: 12.6 },
+    { name: "Bored", rarity: 12.56 },
+    { name: "Scared", rarity: 12.45 },
+    { name: "Happy", rarity: 12.29 },
+    { name: "Sleepy", rarity: 12.19 },
+    { name: "Smug", rarity: 12.12 },
   ],
   COLOR: [
-    { name: "Spring", rarity: 8.93 },
-    { name: "Amethyst", rarity: 5.67 },
-    { name: "Desert", rarity: 7.89 },
-    { name: "Volcanic", rarity: 4.32 },
-    { name: "Tropic", rarity: 9.15 },
-    { name: "Aqua", rarity: 6.76 },
-    { name: "Mist", rarity: 7.54 },
-    { name: "Charcoal", rarity: 6.21 },
+    { name: "Volcanic", rarity: 19.53 },
+    { name: "Desert", rarity: 18.7 },
+    { name: "Tropic", rarity: 17.21 },
+    { name: "Aqua", rarity: 17.01 },
+    { name: "Spring", rarity: 9.97 },
+    { name: "Amethyst", rarity: 8.57 },
+    { name: "Charcoal", rarity: 4.9 },
+    { name: "Mist", rarity: 3.89 },
   ],
   MOTION: [
-    { name: "Idle", rarity: 5.67 },
-    { name: "Slow Walk", rarity: 7.23 },
-    { name: "Walk", rarity: 6.34 },
-    { name: "Trot", rarity: 7.89 },
-    { name: "Run", rarity: 8.45 },
-    { name: "Gallop", rarity: 9.12 },
-    // { name: "Fly", rarity: 4.56 },
-    // { name: "Glide", rarity: 8.78 },
-    // { name: "Flap", rarity: 6.91 },
+    { name: "Slow Walk", rarity: 19.75 },
+    { name: "Walk", rarity: 19.73 },
+    { name: "Trot", rarity: 19.74 },
+    { name: "Idle", rarity: 19.52 },
+    { name: "Gallop", rarity: 10.54 },
+    { name: "Run", rarity: 8.72 },
+    { name: "Flap", rarity: 0.61 },
+    { name: "Glide", rarity: 0.41 },
+    { name: "Fly", rarity: 0.38 },
+    { name: "Soar", rarity: 0.38 },
   ],
   BACKGROUND: [
     { name: "Lavender", rarity: 7.34 },
@@ -83,11 +84,11 @@ const TRAITS = {
     { name: "Dune", rarity: 7.89 },
   ],
   LAYERS: [
-    { name: "0", rarity: 8.45 },
-    { name: "1", rarity: 8.45 },
-    { name: "2", rarity: 6.78 },
-    { name: "3", rarity: 7.23 },
-    { name: "4", rarity: 9.12 },
+    { name: "1", rarity: 37.45 },
+    { name: "2", rarity: 32.82 },
+    { name: "3", rarity: 24.01 },
+    { name: "4", rarity: 3.51 },
+    { name: "0", rarity: 2.0 },
   ],
   CLASS: [
     { name: "Warrior", rarity: 8.12 },
@@ -249,11 +250,41 @@ export default function TraitGuide() {
                           </span>
                         )}
                       </CardTitle>
-                      <div className="mb-1 flex items-center justify-between text-xs text-neutral-300">
-                        <span>Rarity</span>
-                        <span>{rarity.toFixed(2)}%</span>
+                      <div className="mb-1 flex items-center justify-between text-xs">
+                        <span className="text-neutral-300">Rarity</span>
+                        <span
+                          className={cn(
+                            rarity <= 1
+                              ? "text-red-500"
+                              : rarity <= 5
+                              ? "text-orange-500"
+                              : rarity <= 10
+                              ? "text-yellow-500"
+                              : rarity <= 15
+                              ? "text-green-500"
+                              : "text-blue-500"
+                          )}
+                        >
+                          {rarity.toFixed(2)}%
+                        </span>
                       </div>
-                      <Progress value={rarity} className="h-1 bg-neutral-600" />
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-700">
+                        <div
+                          className={cn(
+                            "h-full",
+                            rarity <= 1
+                              ? "bg-red-500"
+                              : rarity <= 5
+                              ? "bg-orange-500"
+                              : rarity <= 10
+                              ? "bg-yellow-500"
+                              : rarity <= 15
+                              ? "bg-green-500"
+                              : "bg-blue-500"
+                          )}
+                          style={{ width: `${Math.min(rarity * 2, 100)}%` }}
+                        ></div>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
