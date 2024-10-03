@@ -204,10 +204,13 @@ export function TraitGuide() {
                       <div className="relative aspect-square w-full overflow-hidden">
                         <Image
                           src={
-                            `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                              randomDinos[category as TraitCategory]?.[index]
-                                ?.gif
-                            }` ?? `/images/travolta.gif`
+                            randomDinos[category as TraitCategory]?.[index]?.gif
+                              ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
+                                  randomDinos[category as TraitCategory]?.[
+                                    index
+                                  ]?.gif
+                                }`
+                              : `/images/travolta.gif`
                           }
                           alt={`${category} - ${name}`}
                           fill
