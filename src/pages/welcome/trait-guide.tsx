@@ -102,13 +102,13 @@ const TRAITS = {
 
 const COLLECTIONS = {
   GENESIS: {
-    name: "The Genesis Collection",
+    name: "Genesis",
     description:
       "10,222 characters comprising of 7 unique species (Ankylo, Bronto, Dactyl, Raptor, Rex, Stego, Trice) released in November 2022.",
     species: ["Ankylo", "Bronto", "Dactyl", "Raptor", "Rex", "Stego", "Trice"],
   },
   SAGA: {
-    name: "Claynosaurz: The Call of Saga",
+    name: "The Call of Saga",
     description:
       "The Expansion Collection. 2,000 characters comprising of 2 unique species (Para & Spino) released in partnership with Solana Mobile in 2023.",
     species: ["Para", "Spino"],
@@ -158,10 +158,8 @@ export default function TraitGuide() {
     fetchRandomDinos(selectedCategory);
   }, [selectedCategory, fetchRandomDinos]);
 
-  console.log(randomDinos);
-
   return (
-    <div className="min-h-screen bg-black px-4 py-8 text-white sm:px-6 lg:px-8">
+    <div className="min-h-screen rounded-2xl bg-black px-4 py-8 text-neutral-200 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Collection introduction */}
         <div className="mb-8 space-y-4">
@@ -170,17 +168,18 @@ export default function TraitGuide() {
               key={collection.name}
               className="rounded-lg bg-neutral-900 p-4"
             >
-              <h2 className="mb-2 text-xl font-semibold">{collection.name}</h2>
-              <p className="text-sm text-neutral-300">
+              <h2 className="mb-2 text-xl font-semibold text-neutral-100">
+                {collection.name}
+              </h2>
+              <p className="text-sm text-neutral-400">
                 {collection.description}
               </p>
             </div>
           ))}
         </div>
 
-        {/* <h1 className="mb-8 text-center text-3xl font-bold text-white">
-          Trait Guide
-        </h1> */}
+        <div className="pb-4 text-lg font-bold">Trait Explorer</div>
+
         <Tabs
           defaultValue="SPECIES"
           onValueChange={(value) => setSelectedCategory(value as TraitCategory)}
@@ -192,7 +191,7 @@ export default function TraitGuide() {
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="rounded-sm px-3 py-1 text-sm font-medium text-white ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                  className="rounded-sm px-3 py-1 text-sm font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm"
                 >
                   {category}
                 </TabsTrigger>
@@ -202,7 +201,7 @@ export default function TraitGuide() {
               onClick={refreshDinos}
               variant="default"
               size="icon"
-              className="ml-2 bg-neutral-900 text-white hover:bg-neutral-700"
+              className="ml-2 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -233,7 +232,7 @@ export default function TraitGuide() {
                       </div>
                     </CardHeader>
                     <CardContent className="p-4">
-                      <CardTitle className="mb-2 text-lg text-white">
+                      <CardTitle className="mb-2 text-lg text-neutral-100">
                         {name}
                         {category === "SPECIES" && (
                           <span
@@ -250,7 +249,7 @@ export default function TraitGuide() {
                         )}
                       </CardTitle>
                       <div className="mb-1 flex items-center justify-between text-xs">
-                        <span className="text-neutral-300">Rarity</span>
+                        <span className="text-neutral-400">Rarity</span>
                         <span
                           className={cn(
                             rarity <= 1
