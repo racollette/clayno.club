@@ -148,6 +148,11 @@ export default function TraitGuide() {
     [getRandomDinosByTrait, randomDinos]
   );
 
+  const refreshDinos = useCallback(() => {
+    setRandomDinos({});
+    fetchRandomDinos(selectedCategory);
+  }, [selectedCategory, fetchRandomDinos]);
+
   useEffect(() => {
     fetchRandomDinos(selectedCategory);
   }, [selectedCategory, fetchRandomDinos]);
@@ -181,17 +186,27 @@ export default function TraitGuide() {
           onValueChange={(value) => setSelectedCategory(value as TraitCategory)}
           className="space-y-6"
         >
-          <TabsList className="flex flex-wrap justify-center gap-2 rounded-md bg-neutral-800">
-            {Object.keys(TRAITS).map((category) => (
-              <TabsTrigger
-                key={category}
-                value={category}
-                className="rounded-sm px-3 py-1 text-sm font-medium text-white ring-offset-neutral-950 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
-              >
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="flex items-center justify-between">
+            <TabsList className="flex flex-wrap justify-center gap-2 rounded-md bg-neutral-800">
+              {Object.keys(TRAITS).map((category) => (
+                <TabsTrigger
+                  key={category}
+                  value={category}
+                  className="rounded-sm px-3 py-1 text-sm font-medium text-white ring-offset-neutral-950 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                >
+                  {category}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <Button
+              onClick={refreshDinos}
+              variant="default"
+              size="icon"
+              className="ml-2 bg-neutral-800 text-white hover:bg-neutral-600"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </div>
           {Object.entries(TRAITS).map(([category, traits]) => (
             <TabsContent key={category} value={category} className="mt-6">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
