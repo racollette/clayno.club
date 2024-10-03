@@ -163,16 +163,12 @@ export default function TraitGuide() {
   return (
     <div className="min-h-screen bg-black px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <h1 className="mb-8 text-center text-3xl font-bold text-white">
-          Trait Guide
-        </h1>
-
         {/* Collection introduction */}
         <div className="mb-8 space-y-4">
           {Object.values(COLLECTIONS).map((collection) => (
             <div
               key={collection.name}
-              className="rounded-lg bg-neutral-800 p-4"
+              className="rounded-lg bg-neutral-900 p-4"
             >
               <h2 className="mb-2 text-xl font-semibold">{collection.name}</h2>
               <p className="text-sm text-neutral-300">
@@ -182,18 +178,21 @@ export default function TraitGuide() {
           ))}
         </div>
 
+        {/* <h1 className="mb-8 text-center text-3xl font-bold text-white">
+          Trait Guide
+        </h1> */}
         <Tabs
           defaultValue="SPECIES"
           onValueChange={(value) => setSelectedCategory(value as TraitCategory)}
           className="space-y-6"
         >
           <div className="flex items-center justify-between">
-            <TabsList className="flex flex-wrap justify-center gap-2 rounded-md bg-neutral-800">
+            <TabsList className="flex flex-wrap justify-center gap-2 rounded-md bg-neutral-900">
               {Object.keys(TRAITS).map((category) => (
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="rounded-sm px-3 py-1 text-sm font-medium text-white ring-offset-neutral-950 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                  className="rounded-sm px-3 py-1 text-sm font-medium text-white ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
                 >
                   {category}
                 </TabsTrigger>
@@ -203,7 +202,7 @@ export default function TraitGuide() {
               onClick={refreshDinos}
               variant="default"
               size="icon"
-              className="ml-2 bg-neutral-800 text-white hover:bg-neutral-600"
+              className="ml-2 bg-neutral-900 text-white hover:bg-neutral-700"
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -214,7 +213,7 @@ export default function TraitGuide() {
                 {traits.map(({ name, rarity }, index) => (
                   <Card
                     key={name}
-                    className="overflow-hidden border-neutral-700 bg-neutral-800"
+                    className="overflow-hidden border-neutral-800 bg-neutral-900"
                   >
                     <CardHeader className="p-0">
                       <div className="relative aspect-square w-full overflow-hidden">
