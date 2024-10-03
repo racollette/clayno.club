@@ -114,10 +114,6 @@ const COLLECTIONS = {
   },
 };
 
-interface SpeciesData {
-  gif: string;
-}
-
 type TraitCategory = keyof typeof TRAITS;
 type RandomDinosState = { [key in TraitCategory]?: any[] };
 
@@ -127,10 +123,11 @@ export function TraitGuide() {
   const [randomDinos, setRandomDinos] = useState<RandomDinosState>({});
 
   const species = TRAITS.SPECIES.map((s) => s.name);
+  const randomSpecies = species[Math.floor(Math.random() * species.length)];
   const traits = TRAITS[selectedCategory].map((t) => t.name);
 
   const getRandomDinosByTrait = api.trait.getRandomDinosByTrait.useQuery({
-    species: "Rex",
+    species: randomSpecies ?? "Rex",
     attributeName:
       selectedCategory === "LAYERS"
         ? "layerCount"
@@ -207,8 +204,10 @@ export function TraitGuide() {
                       <div className="relative aspect-square w-full overflow-hidden">
                         <Image
                           src={
-                            randomDinos[category as TraitCategory]?.[index]
-                              ?.gif ?? `/images/placeholder.png`
+                            `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
+                              randomDinos[category as TraitCategory]?.[index]
+                                ?.gif
+                            }` ?? `/images/travolta.gif`
                           }
                           alt={`${category} - ${name}`}
                           fill
