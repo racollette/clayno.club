@@ -117,7 +117,7 @@ const COLLECTIONS = {
 type TraitCategory = keyof typeof TRAITS;
 type RandomDinosState = { [key in TraitCategory]?: any[] };
 
-export function TraitGuide() {
+export default function TraitGuide() {
   const [selectedCategory, setSelectedCategory] =
     useState<TraitCategory>("SPECIES");
   const [randomDinos, setRandomDinos] = useState<RandomDinosState>({});
