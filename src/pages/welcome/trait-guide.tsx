@@ -178,12 +178,12 @@ export default function TraitGuide() {
           ))}
         </div>
 
-        <div className="pb-4 text-lg font-bold">Trait Explorer</div>
+        <div className="p-2 text-lg font-bold">Trait Explorer</div>
 
         <Tabs
           defaultValue="SPECIES"
           onValueChange={(value) => setSelectedCategory(value as TraitCategory)}
-          className="space-y-6"
+          className="space-y-4"
         >
           <div className="flex items-center justify-between">
             <TabsList className="flex flex-wrap justify-center gap-2 rounded-md bg-neutral-900">
@@ -259,8 +259,8 @@ export default function TraitGuide() {
                               : rarity <= 10
                               ? "text-yellow-500"
                               : rarity <= 15
-                              ? "text-green-500"
-                              : "text-blue-500"
+                              ? "text-blue-500"
+                              : "text-green-500"
                           )}
                         >
                           {rarity.toFixed(2)}%
@@ -277,8 +277,8 @@ export default function TraitGuide() {
                               : rarity <= 10
                               ? "bg-yellow-500"
                               : rarity <= 15
-                              ? "bg-green-500"
-                              : "bg-blue-500"
+                              ? "bg-blue-500"
+                              : "bg-green-500"
                           )}
                           style={{ width: `${Math.min(rarity * 2, 100)}%` }}
                         ></div>
