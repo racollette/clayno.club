@@ -586,7 +586,7 @@ const Settings = () => {
                     placeholder="Enter Aptos address"
                     value={aptosAddress}
                     onChange={(e) => setAptosAddress(e.target.value)}
-                    disabled={user?.aptosWallet && !isUpdatingAptos}
+                    disabled={Boolean(user?.aptosWallet) && !isUpdatingAptos}
                   />
                   {user?.aptosWallet ? (
                     <>
