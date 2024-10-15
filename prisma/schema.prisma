@@ -115,6 +115,7 @@ model User {
   twitter        Twitter?
   telegram       Telegram?
   wallets        Wallet[]
+  aptosWallet    String? // Add this line
   collages       Collage[]
   AudioFile      AudioFile[]
   Voter          Voter?

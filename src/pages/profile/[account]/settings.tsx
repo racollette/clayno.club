@@ -4,10 +4,10 @@ import { type Key, useEffect, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import { Spinner } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import { getSessionDetails } from "~/utils/session";
 import AddWalletModal from "../../../components/profile/AddWalletModal";
-import { truncateAccount } from "~/utils/addresses";
+import { isValidAptosAddress, truncateAccount } from "~/utils/addresses";
 import useLocalStorage from "~/utils/storage";
 import AlertModal from "~/components/AlertModal";
 import { useRouter } from "next/router";
@@ -31,6 +31,9 @@ const Settings = () => {
   const [unlinkedTelegram, setUnlinkedTelegram] = useState<boolean>(false);
   const [storedUserId, setStoredUserId] = useLocalStorage("userId", "");
   const [showTelegramWidget, setShowTelegramWidget] = useState<boolean>(false);
+  const [aptosAddress, setAptosAddress] = useState("");
+  const [aptosAddressError, setAptosAddressError] = useState("");
+  const [isUpdatingAptos, setIsUpdatingAptos] = useState(false);
 
   const linkDiscord = api.binding.linkDiscord.useMutation();
   const linkTwitter = api.binding.linkTwitter.useMutation();
@@ -45,6 +48,8 @@ const Settings = () => {
   const createVoter = api.vote.createVoter.useMutation();
   const issueVotes = api.vote.issueVotes.useMutation();
   const updatePrivacyStatus = api.binding.updatePrivacyStatus.useMutation();
+  const linkAptosWallet = api.binding.linkAptosWallet.useMutation();
+  const unlinkAptosWallet = api.binding.unlinkAptosWallet.useMutation();
 
   const {
     data: user,
@@ -85,6 +90,12 @@ const Settings = () => {
   useEffect(() => {
     linkSocial();
   }, [isLoading]);
+
+  useEffect(() => {
+    if (user?.aptosWallet) {
+      setAptosAddress(user.aptosWallet);
+    }
+  }, [user]);
 
   const linkSocial = async () => {
     try {
@@ -224,6 +235,33 @@ const Settings = () => {
       telegram: user?.telegram?.private ?? false,
     });
   }, [user]);
+
+  const handleAptosAddressSubmit = () => {
+    if (isValidAptosAddress(aptosAddress)) {
+      if (userId) {
+        linkAptosWallet.mutate({ id: userId, address: aptosAddress });
+        setAptosAddressError("");
+        setIsUpdatingAptos(false);
+        toast({
+          title: "Aptos wallet linked successfully",
+        });
+      } else {
+        setAptosAddressError("User not signed in");
+      }
+    } else {
+      setAptosAddressError("Invalid Aptos address");
+    }
+  };
+
+  const handleEraseAptosWallet = () => {
+    if (userId) {
+      unlinkAptosWallet.mutate({ id: userId });
+      setAptosAddress("");
+      toast({
+        title: "Aptos wallet unlinked successfully",
+      });
+    }
+  };
 
   return (
     <>
@@ -523,6 +561,49 @@ const Settings = () => {
               {userId && (
                 <AddWalletModal linkWallet={linkWallet} userId={userId} />
               )}
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <div className="text-xl font-extrabold">Other Chains</div>
+            <div className="py-2 text-sm text-zinc-500">
+              Submit wallet addresses from other networks. This may be used for
+              airdrops to Claynosaurz holders.
+            </div>
+            <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
+              <div>
+                <label
+                  htmlFor="aptosAddress"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Aptos
+                </label>
+                <div className="flex flex-row gap-2">
+                  <input
+                    type="text"
+                    id="aptosAddress"
+                    className="block w-full rounded-lg border border-neutral-600 bg-neutral-700 p-2.5 text-sm text-white focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Enter Aptos address"
+                    value={aptosAddress}
+                    onChange={(e) => setAptosAddress(e.target.value)}
+                    disabled={user?.aptosWallet && !isUpdatingAptos}
+                  />
+                  {user?.aptosWallet ? (
+                    <>
+                      <Button color="failure" onClick={handleEraseAptosWallet}>
+                        Unlink
+                      </Button>
+                    </>
+                  ) : (
+                    <Button onClick={handleAptosAddressSubmit}>Link</Button>
+                  )}
+                </div>
+                {aptosAddressError && (
+                  <p className="mt-2 text-sm text-red-500">
+                    {aptosAddressError}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 

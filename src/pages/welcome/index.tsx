@@ -1,5 +1,6 @@
 import React from "react";
 import TraitGuide from "./trait-guide";
+import AncientsCansArtifacts from "./oneofones";
 
 const WelcomePage: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const WelcomePage: React.FC = () => {
           <div className="mb-6">
             <h3 className="mb-4 text-2xl font-semibold">Collections</h3>
             <TraitGuide />
+            <AncientsCansArtifacts />
 
             {/* Repeat for other collections */}
           </div>
