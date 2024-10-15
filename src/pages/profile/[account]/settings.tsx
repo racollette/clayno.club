@@ -567,8 +567,8 @@ const Settings = () => {
           <div className="mt-8">
             <div className="text-xl font-extrabold">Other Chains</div>
             <div className="py-2 text-sm text-zinc-500">
-              Submit wallet addresses from other networks. This may be used for
-              airdrops to Claynosaurz holders.
+              Submit wallet addresses from other networks. They may be used to
+              airdrop to Claynosaurz holders.
             </div>
             <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
               <div>
