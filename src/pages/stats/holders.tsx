@@ -244,11 +244,13 @@ function FilterSelect({ searchTraits, data, type, value }: FilterSelectProps) {
             </>
           ) : (
             <>
-              {data.map((trait: string) => (
-                <SelectItem key={trait} value={trait.toLowerCase()}>
-                  {trait}
-                </SelectItem>
-              ))}
+              {data.map((trait: string) => {
+                return (
+                  <SelectItem key={trait} value={trait.toLowerCase()}>
+                    {trait}
+                  </SelectItem>
+                );
+              })}
             </>
           )}
         </SelectContent>

@@ -124,7 +124,7 @@ export const statsRouter = createTRPCRouter({
           };
         } else {
           whereClause.attributes = {
-            ...whereClause.attributes,
+            // ...whereClause.attributes,
             species: input.species,
           };
         }
@@ -225,11 +225,12 @@ export const statsRouter = createTRPCRouter({
       for (const holder of holders) {
         await fetchUserDetails(
           holder,
-          ctx,
           combinedHolders,
           sagaHolders,
           clayHolders,
-          claymakerHolders
+          claymakerHolders,
+          "trait",
+          input.species
         );
       }
 
@@ -305,7 +306,7 @@ export const statsRouter = createTRPCRouter({
           };
         } else {
           whereClause.attributes = {
-            ...whereClause.attributes,
+            // ...whereClause.attributes,
             species: input.species,
           };
         }
@@ -398,7 +399,6 @@ export const statsRouter = createTRPCRouter({
       for (const og of ogHolders) {
         await fetchUserDetails(
           og,
-          ctx,
           combinedHolders,
           sagaHolders,
           clayHolders,
@@ -460,15 +460,14 @@ export const statsRouter = createTRPCRouter({
       // return clayColorsByOwner.sort((a, b) => b._count.color - a._count.color);
     }),
 });
-
 async function fetchUserDetails(
   og: any,
-  ctx: any,
   combinedHolders: any,
   sagaHolders: any,
   clayHolders: any,
   claymakerHolders: any,
-  type?: string
+  type?: string,
+  species?: string
 ) {
   const matchingSagaHolder = sagaHolders.find(
     (sagaHolder: any) => sagaHolder.holderOwner === og.holderOwner
@@ -480,11 +479,15 @@ async function fetchUserDetails(
     (claymakerHolder: any) => claymakerHolder.holderOwner === og.holderOwner
   );
 
-  const ogCount =
-    type === "cc"
-      ? og._count.mint
-      : og._count.mint -
-        (matchingSagaHolder ? matchingSagaHolder._count.mint : 0);
+  const isSpecialCase = species === "para" || species === "spino";
+  const isAllSpecies = species === "all";
+
+  let ogCount = 0;
+  if (type === "cc" || (species && !isAllSpecies && !isSpecialCase)) {
+    ogCount = og._count.mint;
+  } else if (isAllSpecies) {
+    ogCount = og._count.mint - (matchingSagaHolder?._count.mint || 0);
+  }
 
   combinedHolders.push({
     address: og.holderOwner,
