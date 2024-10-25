@@ -11,15 +11,16 @@ export const useUser = () => {
   const [userId, setUserId] = useState<string | undefined>();
   const { id, sessionType } = getSessionDetails(session);
 
-  const { data: user, isLoading } = api.binding.getUser.useQuery({
+  const { data: user, isLoading: userLoading } = api.binding.getUser.useQuery({
     type: sessionType ?? "none",
     id: id ?? "none",
   });
 
   const { data: voterInfo, isLoading: voterInfoLoading } =
-    api.vote.getVoterInfo.useQuery({
-      userId: userId || "none",
-    });
+    api.vote.getVoterInfo.useQuery(
+      { userId: userId || "none" },
+      { enabled: !!userId }
+    );
 
   useEffect(() => {
     if (user?.id) {
@@ -31,7 +32,7 @@ export const useUser = () => {
     user,
     voterInfo,
     voterInfoLoading,
-    isLoading,
+    isLoading: userLoading,
     session,
     sessionStatus: status,
   };

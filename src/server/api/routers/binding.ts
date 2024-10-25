@@ -591,4 +591,58 @@ export const bindingRouter = createTRPCRouter({
         throw new Error("Failed to delete user.");
       }
     }),
+
+  linkAptosWallet: protectedProcedure
+    .input(z.object({ id: z.string(), address: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const existingUser = await prisma.user.findFirst({
+          where: { aptosWallet: input.address },
+        });
+
+        if (existingUser) {
+          throw new Error("This Aptos wallet is already linked to an account.");
+        }
+
+        const updatedUser = await prisma.user.update({
+          where: { id: input.id },
+          data: { aptosWallet: input.address },
+        });
+
+        return updatedUser;
+      } catch (error) {
+        console.error("Error linking Aptos wallet:", error);
+        throw new Error("Failed to link Aptos wallet");
+      }
+    }),
+
+  unlinkAptosWallet: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const updatedUser = await prisma.user.update({
+          where: { id: input.id },
+          data: { aptosWallet: null },
+        });
+        return updatedUser;
+      } catch (error) {
+        console.error("Error unlinking Aptos wallet:", error);
+        throw new Error("Failed to unlink Aptos wallet");
+      }
+    }),
+
+  getAptosWallet: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: input.id },
+          select: { aptosWallet: true },
+        });
+        return user?.aptosWallet;
+      } catch (error) {
+        console.error("Error fetching Aptos wallet:", error);
+        throw new Error("Failed to fetch Aptos wallet");
+      }
+    }),
 });
