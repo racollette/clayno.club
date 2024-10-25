@@ -50,6 +50,7 @@ export const SPECIES = [
   "Trice",
   "Para",
   "Spino",
+  "Dactyl",
 ];
 
 export const TIERS = ["Insane", "Perfect", "Epic", "Rare", "Scrappy"];
