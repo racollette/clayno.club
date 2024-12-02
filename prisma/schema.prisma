@@ -9,13 +9,13 @@ datasource db {
 }
 
 model Holder {
-  owner       String       @id
-  amount      Int
-  mints       Dino[]
-  subdaos     SubDAO[]
-  claymakers  Claymaker[]
-  clay        Clay[]
-  consumables Consumable[]
+  owner      String      @id
+  amount     Int
+  mints      Dino[]
+  subdaos    SubDAO[]
+  claymakers Claymaker[]
+  clay       Clay[]
+  cosmetics  Cosmetic[]
 }
 
 model Dino {
@@ -110,12 +110,12 @@ model User {
   name           String?
   image          String?
   defaultAddress String      @unique
+  aptosWallet    String?
   accounts       Account[]
   discord        Discord?
   twitter        Twitter?
   telegram       Telegram?
   wallets        Wallet[]
-  aptosWallet    String? // Add this line
   collages       Collage[]
   AudioFile      AudioFile[]
   Voter          Voter?
@@ -213,20 +213,6 @@ model Claymaker {
   @@index([holderOwner])
 }
 
-model Consumable {
-  name          String
-  symbol        String?
-  description   String?
-  image         String
-  attributes    Json?
-  holderOwner   String?
-  mint          String  @id
-  animation_url String?
-  holder        Holder? @relation(fields: [holderOwner], references: [owner])
-
-  @@index([holderOwner])
-}
-
 model Collage {
   id          String    @id @default(cuid())
   columns     Int
@@ -295,13 +281,13 @@ model ClaymakerToSubDAO {
 }
 
 model LastUpdated {
-  id          String   @id
-  holders     DateTime
-  tribes      DateTime
-  herds       DateTime
-  clay        DateTime @default(now())
-  claymakers  DateTime @default(now())
-  consumables DateTime @default(now())
+  id         String   @id
+  holders    DateTime
+  tribes     DateTime
+  herds      DateTime
+  clay       DateTime @default(now())
+  claymakers DateTime @default(now())
+  cosmetics  DateTime @default(now())
 }
 
 model HerdToVoter {
@@ -431,4 +417,19 @@ model DinoToListingNotification {
   @@unique([A, B], map: "_DinoToListingNotification_AB_unique")
   @@index([B], map: "_DinoToListingNotification_B_index")
   @@map("_DinoToListingNotification")
+}
+
+model Cosmetic {
+  name          String
+  symbol        String?
+  description   String? @db.VarChar(500)
+  image         String
+  cardImage     String?
+  consumedImage String?
+  attributes    Json?   @db.Json
+  holderOwner   String?
+  mint          String  @id
+  Holder        Holder? @relation(fields: [holderOwner], references: [owner])
+
+  @@index([holderOwner])
 }

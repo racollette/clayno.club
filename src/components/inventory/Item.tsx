@@ -19,7 +19,7 @@ type ItemProps = {
   displayMode?: ImageState;
 };
 
-type ImageState = "gif" | "pfp" | "class";
+type ImageState = "gif" | "pfp" | "class" | "card" | "consumed";
 
 const Item = ({ item, type, displayMode }: ItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,11 +43,11 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
 
     // Cleanup function
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, [router.query, item.mint]);
 
@@ -57,7 +57,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
       router.push(
         {
           pathname: router.pathname,
-          query: { ...router.query, modal: item.mint }
+          query: { ...router.query, modal: item.mint },
         },
         undefined,
         { shallow: true }
@@ -68,7 +68,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
       router.push(
         {
           pathname: router.pathname,
-          query: restQuery
+          query: restQuery,
         },
         undefined,
         { shallow: true }
@@ -77,17 +77,18 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
   };
 
   // console.log(imageState);
-  const [imageBlobs, setImageBlobs] = useState({
+  const [imageBlobs, setImageBlobs] = useState<Record<ImageState, null>>({
     pfp: null,
     gif: null,
     class: null,
+    card: null,
+    consumed: null,
   });
 
   const isDino = type === "dino";
   const isClay = type === "clay";
   const isClaymaker = type === "claymaker";
-  const isConsumable = type === "consumable";
-  const isPizza = item.symbol === "PIZZA";
+  const isCosmetic = type === "cosmetic";
 
   const attributesArray = Object.entries(item.attributes ?? {});
 
@@ -174,9 +175,9 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
             quality={75}
           />
         </DialogTrigger>
-        <DialogContent className="flex w-11/12 max-w-2xl flex-col rounded-lg border-none bg-neutral-900/80 gap-0 p-0 overflow-hidden max-h-[90vh]">
+        <DialogContent className="flex max-h-[90vh] w-11/12 max-w-2xl flex-col gap-0 overflow-hidden rounded-lg border-none bg-neutral-900/80 p-0">
           <div className="sticky top-0 z-10 flex items-center justify-between bg-neutral-900/80 px-4 py-2">
-            <DialogTitle className="font-clayno text-lg text-white pr-8 truncate">
+            <DialogTitle className="truncate pr-8 font-clayno text-lg text-white">
               {item.name}
             </DialogTitle>
             <DialogClose className="absolute right-4 top-2 rounded-sm opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
@@ -193,26 +194,40 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                       ? item.pfp
                       : imageState === "class"
                       ? item.classPFP || item.pfp
+                      : imageState === "card"
+                      ? item.cardImage
+                      : imageState === "consumed"
+                      ? item.consumedImage
                       : item.gif || item.image
                   }`}
                   alt={"Clayno"}
                   fill
                 />
-                <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between rounded-md bg-black/80 text-white px-2 py-2">
+                <div className="absolute bottom-2 left-2 right-2 flex flex-row justify-between rounded-md bg-black/80 px-2 py-2 text-white">
                   <div className="flex flex-row gap-1">
                     <button
                       onClick={() => setImageState("gif")}
                       className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
-                        imageState === "gif" ? `bg-emerald-600` : `bg-neutral-500`
+                        imageState === "gif"
+                          ? `bg-emerald-600`
+                          : `bg-neutral-500`
                       }`}
                     >
-                      {isClay ? `IMAGE` : isClaymaker ? `GIF` : isDino ? `GIF` : `IMAGE`}
+                      {isClay
+                        ? `IMAGE`
+                        : isClaymaker
+                        ? `GIF`
+                        : isDino
+                        ? `GIF`
+                        : `IMAGE`}
                     </button>
                     {item.pfp && (
                       <button
                         onClick={() => setImageState("pfp")}
                         className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
-                          imageState === "pfp" ? `bg-emerald-600` : `bg-neutral-500`
+                          imageState === "pfp"
+                            ? `bg-emerald-600`
+                            : `bg-neutral-500`
                         }`}
                       >
                         PFP
@@ -222,16 +237,55 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                       <button
                         onClick={() => setImageState("class")}
                         className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
-                          imageState === "class" ? `bg-emerald-600` : `bg-neutral-500`
+                          imageState === "class"
+                            ? `bg-emerald-600`
+                            : `bg-neutral-500`
                         }`}
                       >
                         CLASS
                       </button>
                     )}
+                    {isCosmetic && item.cardImage && (
+                      <button
+                        onClick={() => setImageState("card")}
+                        className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
+                          imageState === "card"
+                            ? `bg-emerald-600`
+                            : `bg-neutral-500`
+                        }`}
+                      >
+                        CARD
+                      </button>
+                    )}
+                    {isCosmetic && item.consumedImage && (
+                      <button
+                        onClick={() => setImageState("consumed")}
+                        className={`rounded-sm px-1.5 py-0.5 font-clayno text-[10px] font-bold ${
+                          imageState === "consumed"
+                            ? `bg-emerald-600`
+                            : `bg-neutral-500`
+                        }`}
+                      >
+                        CONSUMED
+                      </button>
+                    )}
                   </div>
                   <button
                     className="rounded-sm bg-cyan-600 px-1.5 py-0.5 font-clayno text-[10px] font-bold"
-                    onClick={() => handleDownload(item.name, imageState === "pfp" || imageState === "class" ? "png" : isDino ? "gif" : isClaymaker ? "gif" : isPizza ? "gif" : "png")}
+                    onClick={() =>
+                      handleDownload(
+                        item.name,
+                        imageState === "pfp" || imageState === "class"
+                          ? "png"
+                          : isDino
+                          ? "gif"
+                          : isClaymaker
+                          ? "gif"
+                          : isCosmetic
+                          ? "gif"
+                          : "png"
+                      )
+                    }
                   >
                     DOWNLOAD
                   </button>
@@ -272,7 +326,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                       </div>
                     )}
 
-                    {isConsumable && (
+                    {isCosmetic && (
                       <>
                         {item.attributes &&
                           item.attributes.map(

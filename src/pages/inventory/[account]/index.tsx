@@ -44,7 +44,7 @@ const Inventory = () => {
   let dinos = holders?.[0]?.mints;
   let clay = holders?.[0]?.clay;
   let claymakers = holders?.[0]?.claymakers;
-  let consumables = holders?.[0]?.consumables;
+  let cosmetics = holders?.[0]?.cosmetics;
 
   if (holders) {
     for (let i = 1; i < holders.length; i++) {
@@ -52,7 +52,7 @@ const Inventory = () => {
         dinos = dinos?.concat(holders?.[i]?.mints ?? []);
         claymakers = claymakers?.concat(holders?.[i]?.claymakers ?? []);
         clay = clay?.concat(holders?.[i]?.clay ?? []);
-        consumables = consumables?.concat(holders?.[i]?.consumables ?? []);
+        cosmetics = cosmetics?.concat(holders?.[i]?.cosmetics ?? []);
       }
     }
   }
@@ -299,42 +299,27 @@ const Inventory = () => {
               )}
             </div>
             <div className="font-clayno text-lg text-white md:text-2xl">
-              Consumables {`(${consumables?.length})`}
+              Cosmetics {`(${cosmetics?.length})`}
             </div>
             <div className="mb-8 flex flex-row flex-wrap gap-2">
-              {consumables && (
+              {cosmetics && (
                 <>
-                  {Object.keys(groupBySymbol(consumables)).map((symbol) => {
-                    if (symbol !== "ART") {
-                      const firstConsumable = groupBySymbol(consumables ?? [])[
-                        symbol
-                      ][0];
-                      const symbolCount = groupBySymbol(consumables ?? [])[
-                        symbol
-                      ].length;
-                      return (
-                        <div
-                          key={symbol}
-                          className="relative flex flex-row flex-wrap gap-2"
-                        >
-                          <Item item={firstConsumable} type={"consumable"} />
-                          <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
-                            {symbolCount}
-                          </p>
-                        </div>
-                      );
-                    }
-
+                  {cosmetics.map((cosmetic) => {
+                    // const firstcosmetic = groupBySymbol(cosmetics ?? [])[
+                    //   symbol
+                    // ][0];
+                    // const symbolCount = groupBySymbol(cosmetics ?? [])[symbol]
+                    //   .length;
                     return (
-                      <>
-                        {groupBySymbol(consumables ?? [])["ART"].map(
-                          (artifact: any) => (
-                            <div key={artifact.mint} className="relative">
-                              <Item item={artifact} type={"consumable"} />
-                            </div>
-                          )
-                        )}
-                      </>
+                      <div
+                        key={cosmetic.mint}
+                        className="relative flex flex-row flex-wrap gap-2"
+                      >
+                        <Item item={cosmetic} type={"cosmetic"} />
+                        {/* <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
+                          {symbolCount}
+                        </p> */}
+                      </div>
                     );
                   })}
                 </>
@@ -375,7 +360,10 @@ function DownloadButton({
       {isDownloading ? (
         <div className="flex flex-row items-center justify-center gap-1">
           <p className="font-clayno">Fetching</p>
-          <HiRefresh size={14} className="ml-1 inline-block animate-spin sm:ml-2 sm:text-base" />
+          <HiRefresh
+            size={14}
+            className="ml-1 inline-block animate-spin sm:ml-2 sm:text-base"
+          />
         </div>
       ) : (
         <p className="font-clayno">
