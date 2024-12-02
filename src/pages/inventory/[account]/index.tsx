@@ -304,24 +304,16 @@ const Inventory = () => {
             <div className="mb-8 flex flex-row flex-wrap gap-2">
               {cosmetics && (
                 <>
-                  {cosmetics.map((cosmetic) => {
-                    // const firstcosmetic = groupBySymbol(cosmetics ?? [])[
-                    //   symbol
-                    // ][0];
-                    // const symbolCount = groupBySymbol(cosmetics ?? [])[symbol]
-                    //   .length;
-                    return (
+                  {[...cosmetics]
+                    .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
+                    .map((cosmetic) => (
                       <div
                         key={cosmetic.mint}
                         className="relative flex flex-row flex-wrap gap-2"
                       >
                         <Item item={cosmetic} type={"cosmetic"} />
-                        {/* <p className="absolute left-2 top-2 font-clayno text-2xl text-white">
-                          {symbolCount}
-                        </p> */}
                       </div>
-                    );
-                  })}
+                    ))}
                 </>
               )}
             </div>
