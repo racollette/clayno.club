@@ -57,7 +57,10 @@ const Holders = () => {
 
   const { data: users } = api.binding.getAllUsers.useQuery();
 
-  const tableType = searchTraits.tribe === "cc" ? ccHolders : holders;
+  const tableType =
+    searchTraits.tribe === "cc" || searchTraits.tribe === "sec"
+      ? ccHolders
+      : holders;
   const tableData = tableType?.map((holder) => {
     const user = users?.find((user) =>
       user.wallets.some((wallet) => wallet.address === holder.address)

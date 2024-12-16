@@ -489,6 +489,10 @@ async function fetchUserDetails(
     ogCount = og._count.mint - (matchingSagaHolder?._count.mint || 0);
   }
 
+  // if (type === "sec") {
+  //   ogCount = 0;
+  // }
+
   combinedHolders.push({
     address: og.holderOwner,
     og: ogCount,
