@@ -8,6 +8,9 @@ export const groupAndFilter = (acronym: string) => {
   const { data: users } = api.binding.getAllUsers.useQuery();
 
   if (data?.type === "Quantity") {
+    if (acronym === "sec") {
+      return processSagaQuantityData(data, isLoading, users);
+    }
     return processQuantityTypeData(data, isLoading, users);
   } else {
     return processTraitAndSpeciesData(data, isLoading, users);
@@ -31,6 +34,31 @@ function processQuantityTypeData(data: any, isLoading: boolean, users: any) {
   }, new Map());
 
   const sortedGroupedDinos = new Map(sortByAmount(sagaFiltered));
+
+  return {
+    data: data,
+    isLoading: isLoading,
+    sortedMap: processDinosMap(sortedGroupedDinos, users),
+  };
+}
+
+function processSagaQuantityData(data: any, isLoading: boolean, users: any) {
+  const ogFiltered = data.holders.reduce((quantityMap: any, holder: any) => {
+    const key = holder.owner || "unowned";
+    const dinos = quantityMap.get(key) || [];
+    holder.mints.forEach((dino: any) => {
+      if (
+        dino.attributes?.species === "Para" ||
+        dino.attributes?.species === "Spino"
+      ) {
+        dinos.push(dino);
+      }
+    });
+    quantityMap.set(key, dinos);
+    return quantityMap;
+  }, new Map());
+
+  const sortedGroupedDinos = new Map(sortByAmount(ogFiltered));
 
   return {
     data: data,

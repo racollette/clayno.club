@@ -52,14 +52,14 @@ const Holders = () => {
   const { data: holders } =
     api.stats.getDinoHoldersByTrait.useQuery(searchTraits);
 
-  const { data: ccHolders } =
+  const { data: quantityHolders } =
     api.stats.getDinoHoldersByCount.useQuery(searchTraits);
 
   const { data: users } = api.binding.getAllUsers.useQuery();
 
   const tableType =
     searchTraits.tribe === "cc" || searchTraits.tribe === "sec"
-      ? ccHolders
+      ? quantityHolders
       : holders;
   const tableData = tableType?.map((holder) => {
     const user = users?.find((user) =>
