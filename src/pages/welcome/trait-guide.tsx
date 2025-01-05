@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { RefreshCw } from "lucide-react";
+import { Dices } from "lucide-react";
 import { Button } from "~/@/components/ui/button";
 import {
   Card,
@@ -203,7 +203,7 @@ export default function TraitGuide() {
               size="icon"
               className="ml-2 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
             >
-              <RefreshCw className="h-4 w-4" />
+              <Dices className="h-4 w-4" />
             </Button>
           </div>
           {Object.entries(TRAITS).map(([category, traits]) => (
@@ -216,19 +216,30 @@ export default function TraitGuide() {
                   >
                     <CardHeader className="p-0">
                       <div className="relative aspect-square w-full overflow-hidden">
-                        <Image
-                          src={
-                            randomDinos[category as TraitCategory]?.[index]?.gif
-                              ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                                  randomDinos[category as TraitCategory]?.[
-                                    index
-                                  ]?.gif
-                                }`
-                              : `/images/travolta.gif`
-                          }
-                          alt={`${category} - ${name}`}
-                          fill
-                        />
+                        {randomDinos[category as TraitCategory]?.[index]
+                          ?.gif ? (
+                          <Image
+                            src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
+                              randomDinos[category as TraitCategory]?.[index]
+                                ?.gif
+                            }`}
+                            alt={`${category} - ${name}`}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-neutral-800">
+                            <div className="flex flex-col items-center gap-4">
+                              <div className="h-24 w-24 animate-pulse rounded-lg bg-neutral-700">
+                                <div className="h-full w-full bg-gradient-to-br from-neutral-600 to-neutral-700 opacity-50" />
+                              </div>
+                              <div className="space-y-2">
+                                <div className="h-3 w-32 animate-pulse rounded-md bg-neutral-700" />
+                                <div className="h-3 w-24 animate-pulse rounded-md bg-neutral-700" />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardHeader>
                     <CardContent className="p-4">
