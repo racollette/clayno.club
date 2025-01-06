@@ -28,6 +28,41 @@ const WelcomePage: React.FC = () => {
 
           {/* Main Content */}
           <section className="rounded-3xl bg-neutral-900 p-8 shadow-2xl">
+            {/* The Characters Introduction */}
+            <div className="mb-12">
+              <h2 className="mb-6 font-clayno text-3xl text-white">
+                The Characters
+              </h2>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="rounded-lg bg-neutral-800 p-6">
+                  <h3 className="font-clayno text-xl text-blue-400">
+                    Genesis Collection
+                    <span className="ml-2 text-sm text-neutral-400">
+                      1st Edition
+                    </span>
+                  </h3>
+                  <p className="mt-2 text-neutral-300">
+                    10,222 original Claynosaurz released in November 2022
+                    featuring seven species: Rex, Trice, Stego, Ankylo, Bronto,
+                    Raptor, and Dactyl.
+                  </p>
+                </div>
+                <div className="rounded-lg bg-neutral-800 p-6">
+                  <h3 className="font-clayno text-xl text-yellow-400">
+                    Call of Saga
+                    <span className="ml-2 text-sm text-neutral-400">
+                      2nd Edition
+                    </span>
+                  </h3>
+                  <p className="mt-2 text-neutral-300">
+                    The Expansion Collection. 2,000 characters comprising of 2
+                    unique species (Para & Spino) released in partnership with
+                    Solana Mobile in March of 2023.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="mb-8">
               <h2 className="mb-6 font-clayno text-2xl text-white">
                 Trait Explorer
@@ -36,6 +71,9 @@ const WelcomePage: React.FC = () => {
             </div>
 
             <div className="mt-16">
+              <h2 className="mb-6 font-clayno text-2xl text-white">
+                One of Ones
+              </h2>
               <AncientsCansArtifacts />
             </div>
           </section>

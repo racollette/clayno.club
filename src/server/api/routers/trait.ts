@@ -84,4 +84,34 @@ export const traitRouter = createTRPCRouter({
 
       return randomDinos.filter(Boolean);
     }),
+
+  getDinosByMints: publicProcedure
+    .input(z.array(z.string()))
+    .query(async ({ ctx, input: mints }) => {
+      const dinos = await ctx.prisma.dino.findMany({
+        where: {
+          mint: {
+            in: mints,
+          },
+        },
+        select: {
+          mint: true,
+          gif: true,
+          attributes: {
+            select: {
+              species: true,
+              skin: true,
+              mood: true,
+              color: true,
+              motion: true,
+              background: true,
+              layerCount: true,
+              class: true,
+            },
+          },
+        },
+      });
+
+      return dinos;
+    }),
 });
