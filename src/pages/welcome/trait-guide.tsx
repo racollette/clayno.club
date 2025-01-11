@@ -18,6 +18,8 @@ import {
 } from "~/@/components/ui/tabs";
 import { api } from "~/utils/api";
 import { cn } from "~/@/lib/utils";
+import { useImageViewer } from "~/hooks/useImageViewer";
+import ImageViewer from "~/components/ImageViewer";
 
 const SPECIES_CLASSES = {
   Rex: ["Warrior", "Mystic", "Stalker"],
@@ -248,6 +250,7 @@ export default function TraitGuide() {
     useState<TraitCategory>("SPECIES");
   const [selectedSpecies, setSelectedSpecies] = useState<string>("Rex");
   const [randomDinos, setRandomDinos] = useState<RandomDinosState>({});
+  const { selectedImage, isOpen, openImage, closeImage } = useImageViewer();
 
   const species = TRAITS.SPECIES.map((s) => s.name);
   const traits = TRAITS[selectedCategory].map((t) => t.name);
@@ -375,19 +378,44 @@ export default function TraitGuide() {
                         className="overflow-hidden border-neutral-800 bg-neutral-900"
                       >
                         <CardHeader className="p-0">
-                          <div className="relative aspect-square w-full overflow-hidden">
+                          <div className="relative aspect-square w-full cursor-pointer overflow-hidden">
                             {randomDinos[category as TraitCategory]?.[index]
                               ?.gif ? (
-                              <Image
-                                src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                                  randomDinos[category as TraitCategory]?.[
-                                    index
-                                  ]?.gif
-                                }`}
-                                alt={`${category} - ${name}`}
-                                fill
-                                className="object-cover"
-                              />
+                              <div
+                                className="relative h-full w-full"
+                                onClick={() =>
+                                  openImage(
+                                    category === "CLASS" &&
+                                      randomDinos[category as TraitCategory]?.[
+                                        index
+                                      ]?.classPFP
+                                      ? randomDinos[
+                                          category as TraitCategory
+                                        ]?.[index]?.classPFP
+                                      : randomDinos[
+                                          category as TraitCategory
+                                        ]?.[index]?.gif
+                                  )
+                                }
+                              >
+                                <Image
+                                  src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
+                                    category === "CLASS" &&
+                                    randomDinos[category as TraitCategory]?.[
+                                      index
+                                    ]?.classPFP
+                                      ? randomDinos[
+                                          category as TraitCategory
+                                        ]?.[index]?.classPFP
+                                      : randomDinos[
+                                          category as TraitCategory
+                                        ]?.[index]?.gif
+                                  }`}
+                                  alt={`${category} - ${name}`}
+                                  fill
+                                  className="object-cover transition-transform hover:scale-105"
+                                />
+                              </div>
                             ) : (
                               <div className="absolute inset-0 flex items-center justify-center bg-neutral-800">
                                 <div className="flex flex-col items-center gap-4">
@@ -478,6 +506,11 @@ export default function TraitGuide() {
           ))}
         </Tabs>
       </div>
+      <ImageViewer
+        isOpen={isOpen}
+        imageUrl={selectedImage || ""}
+        onClose={closeImage}
+      />
     </div>
   );
 }
