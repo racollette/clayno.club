@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 // Create a singleton state outside the hook
 let globalSelectedImage: string | null = null;
 let globalSetSelectedImage: ((url: string | null) => void) | null = null;
-let subscribers = new Set<() => void>();
+const subscribers = new Set<() => void>();
 
 export const useImageViewer = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(
