@@ -159,7 +159,7 @@ export default function OneofOnes() {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Ancients Box */}
         <div
-          className={`rounded-lg bg-neutral-800 p-6 text-left ${
+          className={`rounded-lg bg-neutral-800 p-6 text-left transition-colors hover:bg-neutral-700 ${
             selectedCategory === "ANCIENTS" ? "ring-2 ring-amber-500" : ""
           }`}
         >
@@ -211,7 +211,7 @@ export default function OneofOnes() {
 
         {/* Spray Cans Box */}
         <div
-          className={`rounded-lg bg-neutral-800 p-6 text-left ${
+          className={`rounded-lg bg-neutral-800 p-6 text-left transition-colors hover:bg-neutral-700 ${
             selectedCategory === "SPRAYCANS" ? "ring-2 ring-blue-500" : ""
           }`}
         >
