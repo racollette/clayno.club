@@ -128,10 +128,10 @@ export default function OneofOnes() {
             >
               <h3 className="font-clayno text-xl text-amber-400">Ancients</h3>
               <p className="mt-2 text-neutral-300">
-                22 legendary characters deeply woven into Claynotopia's rich
-                lore. These mythical beings play pivotal roles in the world's
-                history and will be featured throughout the upcoming episodic
-                content.
+                22 legendary characters deeply woven into Claynotopia&apos;s
+                rich lore. These mythical beings play pivotal roles in the
+                world&apos;s history and will be featured throughout the
+                upcoming episodic content.
               </p>
             </button>
             <div className="ml-4 flex gap-2">
@@ -182,7 +182,7 @@ export default function OneofOnes() {
               <p className="mt-2 text-neutral-300">
                 10 ultra-rare prizes discovered in physical Booster Packs during
                 LA and NYC events in 2023. Each Spray Can features a unique
-                Clayno designed by one of Solana's top artists.
+                Clayno designed by one of Solana&apos;s top artists.
               </p>
             </button>
             <div className="ml-4 flex gap-2">

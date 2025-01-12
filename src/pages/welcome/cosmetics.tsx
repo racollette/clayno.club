@@ -440,7 +440,6 @@ export default function CosmeticsExplorer() {
     <>
       <div className="space-y-8">
         <h3 className="font-clayno text-2xl text-white">GEAR</h3>
-
         <div className="grid gap-6 md:grid-cols-3">
           {/* Artifacts Box */}
           <button
@@ -452,8 +451,8 @@ export default function CosmeticsExplorer() {
             <h3 className="font-clayno text-xl text-purple-400">Artifacts</h3>
             <p className="mt-2 text-neutral-300">
               Special full-set transformations that completely change your
-              Clayno's appearance. These rare items were distributed through
-              physical Booster Packs at exclusive events.
+              Clayno&apos;s appearance. These rare items were distributed
+              through physical Booster Packs at exclusive events.
             </p>
           </button>
 
@@ -469,8 +468,8 @@ export default function CosmeticsExplorer() {
             </h3>
             <p className="mt-2 text-neutral-300">
               A complete armor set featuring head, body, and feet pieces
-              inspired by LA's coastal culture. This set brings a unique aquatic
-              aesthetic to your Clayno.
+              inspired by LA&apos;s coastal culture. This set brings a unique
+              aquatic aesthetic to your Clayno.
             </p>
           </button>
 

@@ -20,6 +20,7 @@ import {
   TabsContent,
 } from "~/@/components/ui/tabs";
 import { cn } from "~/@/lib/utils";
+import Link from "next/link";
 
 type ResourceItem = {
   name: string;
@@ -576,16 +577,17 @@ const WelcomePage: React.FC = () => {
                           Class Selection
                         </h3>
                         <p className="text-neutral-300">
-                          Choose your Clayno's role for the upcoming Gameloft
-                          game. Requires 3x Clay and 1x Claymaker use. Original
-                          species can choose from 3 specific classes each, with
-                          Dactyls, Paras & Spinos classes coming soon. Visit the{" "}
-                          <a
+                          Choose your Clayno&apos;s role for the upcoming
+                          Gameloft game. Requires 3x Clay and 1x Claymaker use.
+                          Original species can choose from 3 specific classes
+                          each, with Dactyls, Paras & Spinos classes coming
+                          soon. Visit the{" "}
+                          <Link
                             href="/stats"
                             className="text-blue-400 hover:underline"
                           >
                             Stats page
-                          </a>{" "}
+                          </Link>{" "}
                           to see current class distribution and supply numbers.
                         </p>
                       </div>
