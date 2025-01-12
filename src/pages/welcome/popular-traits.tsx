@@ -80,6 +80,15 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     imageUrl: "/images/traits/mist_elektra.gif",
   },
   {
+    name: "Amethyst Apres",
+    description:
+      "The mystical Amethyst color paired with the premium Apres skin creates a majestic, royal appearance.",
+    traits: ["Skin: Apres", "Color: Amethyst"],
+    rarity: "Super Rare",
+    tribe: "The Lodge",
+    imageUrl: "/images/traits/amethyst_apres.gif",
+  },
+  {
     name: "Spring Apres",
     description:
       "The vibrant Spring color combined with the premium Apres skin creates a stunning, springtime aesthetic.",
@@ -126,6 +135,14 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
   },
   // Rare
   {
+    name: "Solana Skin",
+    description:
+      "The Amethyst color combined with the Coral skin and green Belly is emblematic of the Solana logo.",
+    traits: ["Skin: Coral", "Color: Amethyst", "Belly: On"],
+    rarity: "Rare",
+    imageUrl: "/images/traits/solana.gif",
+  },
+  {
     name: "Amethyst Elektra",
     description:
       "A highly desirable combination of the mystical Amethyst color with the energetic Elektra skin.",
@@ -148,14 +165,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Coral", "Color: Mist"],
     rarity: "Rare",
     imageUrl: "/images/traits/mist_coral.gif",
-  },
-  {
-    name: "Solana Skin",
-    description:
-      "The Amethyst color combined with the Coral skin and green Belly is emblematic of the Solana logo.",
-    traits: ["Skin: Coral", "Color: Amethyst", "Belly: On"],
-    rarity: "Rare",
-    imageUrl: "/images/traits/solana.gif",
   },
   {
     name: "Dactyl",
