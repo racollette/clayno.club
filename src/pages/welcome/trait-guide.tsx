@@ -499,11 +499,9 @@ export default function TraitGuide() {
               ))}
             </TabsList>
             <div className="flex items-center gap-2">
-              {selectedCategory !== "SPECIES" && (
-                <div className="rounded-md bg-neutral-800 px-2 py-1 text-sm text-neutral-300">
-                  {selectedSpecies}
-                </div>
-              )}
+              <div className="rounded-md bg-neutral-800 px-2 py-1 text-sm text-neutral-300">
+                {selectedSpecies}
+              </div>
               <Button
                 onClick={refreshDinos}
                 variant="default"
