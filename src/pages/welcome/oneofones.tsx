@@ -35,35 +35,70 @@ export const ANCIENTS = [
   "AFxpYpFYScQgjr7whSNMay4V3Hg27pz7MMgiUgBVfVTp", // Midas Trice
 ];
 
-export const SPRAYCANS = [
-  "Ge6ptEDXBC9gJdDAoEoB4fJMFJ4dSEWRsK1dFJTJ7RGu", // Joyce Liu
-  "GPfn9DTp9cVWukMifr8DEvo6GBnbJrDKnVF16HKpeSwE", // John Le
-  "a3Mi5uCzdvVZD6Fuw4nNp9NUq7xvPDKEvNaK3FzwKPs", // Hyblinxx
-  "FTJxU3XziqmuKJ47G4FsrKCF6KnWC8iDQkeJ3M4Zfudh", // Zeno0
-  "9HWP8WSEVCHqiYPcDKa6CtwWcSaM7ffyuN8aXB3HyRmC", // Duke+1
-  "GS4RvEUgd3qLgLJTFEwR37c8ZsgyWLoNsdXKSjecqfoP", // Mr. Uramaki
-  "8GL55j9vEGgRLyAs7r56iTGdQMxLvoy9QMtepoVZALV3", // Scum
-  "CHDXcyEZgUadbstQ3FGPHhq4Zr1BfVisU4FXpZ7tA8Rq", // Ricardo Cavolo
-  "Dgy3bPa2HhdV3fqGT4A6tG2bLufD6St32zSsUxwExcZh", // Gossip Goblin
-  "YjXsghPa1dsy6xc4FLG2W1VLi8CgjntdtYMi3FoTqqw", // Ben Bauchau
-];
-
-export const SPRAYCAN_NAMES: Record<string, string> = {
-  Ge6ptEDXBC9gJdDAoEoB4fJMFJ4dSEWRsK1dFJTJ7RGu: "Joyce Liu",
-  GPfn9DTp9cVWukMifr8DEvo6GBnbJrDKnVF16HKpeSwE: "John Le",
-  a3Mi5uCzdvVZD6Fuw4nNp9NUq7xvPDKEvNaK3FzwKPs: "Hyblinxx",
-  FTJxU3XziqmuKJ47G4FsrKCF6KnWC8iDQkeJ3M4Zfudh: "Zeno0",
-  "9HWP8WSEVCHqiYPcDKa6CtwWcSaM7ffyuN8aXB3HyRmC": "Duke+1",
-  GS4RvEUgd3qLgLJTFEwR37c8ZsgyWLoNsdXKSjecqfoP: "Mr. Uramaki",
-  "8GL55j9vEGgRLyAs7r56iTGdQMxLvoy9QMtepoVZALV3": "Scum",
-  CHDXcyEZgUadbstQ3FGPHhq4Zr1BfVisU4FXpZ7tA8Rq: "Ricardo Cavolo",
-  Dgy3bPa2HhdV3fqGT4A6tG2bLufD6St32zSsUxwExcZh: "Gossip Goblin",
-  YjXsghPa1dsy6xc4FLG2W1VLi8CgjntdtYMi3FoTqqw: "Ben Bauchau",
+type SpraycanItem = {
+  mint: string;
+  name: string;
+  twitter: string;
 };
+
+export const SPRAYCANS: SpraycanItem[] = [
+  {
+    mint: "Ge6ptEDXBC9gJdDAoEoB4fJMFJ4dSEWRsK1dFJTJ7RGu",
+    name: "Joyce Liu",
+    twitter: "joycelliu",
+  },
+  {
+    mint: "GPfn9DTp9cVWukMifr8DEvo6GBnbJrDKnVF16HKpeSwE",
+    name: "John Le",
+    twitter: "ProjectJohnLe",
+  },
+  {
+    mint: "a3Mi5uCzdvVZD6Fuw4nNp9NUq7xvPDKEvNaK3FzwKPs",
+    name: "Hyblinxx",
+    twitter: "hyblinxx",
+  },
+  {
+    mint: "FTJxU3XziqmuKJ47G4FsrKCF6KnWC8iDQkeJ3M4Zfudh",
+    name: "Zeno0",
+    twitter: "zen0m",
+  },
+  {
+    mint: "9HWP8WSEVCHqiYPcDKa6CtwWcSaM7ffyuN8aXB3HyRmC",
+    name: "Duke+1",
+    twitter: "dukeplus1",
+  },
+  {
+    mint: "GS4RvEUgd3qLgLJTFEwR37c8ZsgyWLoNsdXKSjecqfoP",
+    name: "Mr. Uramaki",
+    twitter: "mr_uramaki",
+  },
+  {
+    mint: "8GL55j9vEGgRLyAs7r56iTGdQMxLvoy9QMtepoVZALV3",
+    name: "Scum",
+    twitter: "scumscumscum",
+  },
+  {
+    mint: "CHDXcyEZgUadbstQ3FGPHhq4Zr1BfVisU4FXpZ7tA8Rq",
+    name: "Ricardo Cavolo",
+    twitter: "ricardocavolo",
+  },
+  {
+    mint: "Dgy3bPa2HhdV3fqGT4A6tG2bLufD6St32zSsUxwExcZh",
+    name: "Gossip Goblin",
+    twitter: "gossipgoblin",
+  },
+  {
+    mint: "YjXsghPa1dsy6xc4FLG2W1VLi8CgjntdtYMi3FoTqqw",
+    name: "Ben Bauchau",
+    twitter: "benbauchau",
+  },
+];
 
 type SpecialItem = {
   name: string;
   url: string;
+  mint?: string;
+  twitter?: string;
   attributes?: Record<string, any> | null;
 };
 
@@ -77,7 +112,9 @@ export default function OneofOnes() {
     useState<keyof Categories>("ANCIENTS");
 
   const { data: ancientDinos } = api.trait.getDinosByMints.useQuery(ANCIENTS);
-  const { data: spraycanDinos } = api.trait.getDinosByMints.useQuery(SPRAYCANS);
+  const { data: spraycanDinos } = api.trait.getDinosByMints.useQuery(
+    SPRAYCANS.map((s) => s.mint)
+  );
 
   const specialsData: Categories = {
     ANCIENTS:
@@ -101,13 +138,18 @@ export default function OneofOnes() {
           return a.name.localeCompare(b.name);
         }) || [],
     SPRAYCANS:
-      spraycanDinos?.map((dino) => ({
-        name: SPRAYCAN_NAMES[dino.mint] ?? "Unknown",
-        url: dino.gif
-          ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`
-          : "",
-        attributes: dino.attributes,
-      })) || [],
+      spraycanDinos?.map((dino) => {
+        const spraycan = SPRAYCANS.find((s) => s.mint === dino.mint);
+        return {
+          name: spraycan?.name ?? "Unknown",
+          url: dino.gif
+            ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`
+            : "",
+          mint: dino.mint,
+          twitter: spraycan?.twitter,
+          attributes: dino.attributes,
+        };
+      }) || [],
   };
 
   const { selectedImage, isOpen, openImage, closeImage } = useImageViewer();
@@ -221,36 +263,61 @@ export default function OneofOnes() {
 
       <div className="mt-8">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {specialsData[selectedCategory].map(({ name, url, attributes }) => (
-            <Card
-              key={name}
-              className="overflow-hidden border-neutral-800 bg-neutral-900"
-            >
-              <CardHeader className="p-0">
-                <div
-                  className="relative aspect-square w-full cursor-pointer overflow-hidden"
-                  onClick={() =>
-                    openImage(
-                      url.replace(
-                        "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
-                        ""
+          {specialsData[selectedCategory].map(
+            ({ name, url, mint, twitter, attributes }) => (
+              <Card
+                key={name}
+                className="overflow-hidden border-neutral-800 bg-neutral-900"
+              >
+                <CardHeader className="p-0">
+                  <div
+                    className="relative aspect-square w-full cursor-pointer overflow-hidden"
+                    onClick={() =>
+                      openImage(
+                        url.replace(
+                          "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
+                          ""
+                        )
                       )
-                    )
-                  }
-                >
-                  <Image
-                    src={url}
-                    alt={name}
-                    fill
-                    className="transition-transform hover:scale-105"
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="p-4">
-                <h3 className="text-lg font-bold text-neutral-100">{name}</h3>
-              </CardContent>
-            </Card>
-          ))}
+                    }
+                  >
+                    <Image
+                      src={url}
+                      alt={name}
+                      fill
+                      className="transition-transform hover:scale-105"
+                    />
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="min-w-0 truncate text-lg font-bold text-neutral-100">
+                      {name}
+                    </h3>
+                    {selectedCategory === "SPRAYCANS" && twitter && (
+                      <a
+                        href={`https://x.com/${twitter}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex flex-shrink-0 items-center gap-1 rounded bg-neutral-800 px-2 py-1 text-xs text-neutral-300 hover:bg-neutral-700"
+                      >
+                        <svg
+                          className="h-3 w-3"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                        @{twitter}
+                      </a>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          )}
         </div>
       </div>
       <ImageViewer
