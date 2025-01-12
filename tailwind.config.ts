@@ -86,6 +86,17 @@ module.exports = {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.8" },
+        },
+        "spin-bounce": {
+          "0%": { transform: "rotate(0deg)" },
+          "15%": { transform: "rotate(180deg)" },
+          "30%": { transform: "rotate(360deg)" },
+          "45%": { transform: "rotate(360deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -95,6 +106,8 @@ module.exports = {
         "spin-slow": "spin 3s linear infinite",
         ticker: "ticker 10s linear infinite",
         "ticker-mobile": "ticker-mobile 10s linear infinite",
+        "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "spin-bounce": "spin-bounce 5s ease-in-out infinite",
       },
     },
   },

@@ -251,6 +251,7 @@ export default function TraitGuide() {
   const [selectedSpecies, setSelectedSpecies] = useState<string>("Rex");
   const [randomDinos, setRandomDinos] = useState<RandomDinosState>({});
   const { selectedImage, isOpen, openImage, closeImage } = useImageViewer();
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const species = TRAITS.SPECIES.map((s) => s.name);
   const traits = TRAITS[selectedCategory].map((t) => t.name);
@@ -291,6 +292,14 @@ export default function TraitGuide() {
     fetchRandomDinos(selectedCategory);
   }, [selectedCategory, fetchRandomDinos]);
 
+  useEffect(() => {
+    // Remove the first load state after 5 seconds
+    const timer = setTimeout(() => {
+      setIsFirstLoad(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Filter traits based on selected species and category
   const getFilteredTraits = (category: TraitCategory, traits: Trait[]) => {
     if (category === "SPECIES") return traits;
@@ -329,7 +338,14 @@ export default function TraitGuide() {
               onClick={refreshDinos}
               variant="default"
               size="icon"
-              className="ml-2 bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+              className={cn(
+                "relative ml-2 bg-neutral-800 text-neutral-200 transition-all hover:animate-spin-bounce hover:bg-neutral-700",
+                isFirstLoad && [
+                  "animate-spin-bounce",
+                  "after:absolute after:inset-0 after:z-[-1] after:animate-pulse-glow after:rounded-md after:bg-neutral-400/20",
+                  "before:absolute before:inset-0 before:z-[-1] before:animate-pulse-glow before:rounded-md before:bg-neutral-400/20 before:blur-sm",
+                ]
+              )}
             >
               <Dices className="h-4 w-4" />
             </Button>

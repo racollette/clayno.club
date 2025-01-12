@@ -21,6 +21,7 @@ type ArtifactItem = {
   name: string;
   type: "Full Set";
   description: string;
+  twitter?: string;
   images: {
     full: string;
     card: string;
@@ -103,11 +104,111 @@ const COSMETICS_DATA: Categories = {
     {
       name: "Ben Bauchau",
       type: "Full Set",
-      description: "A rare full-set transformation",
+      description: "Exclusive armor set designed by Ben Bauchau.",
+      twitter: "benbauchau",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ben_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ben_card.png",
         art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ben_art.png",
+      },
+    },
+    {
+      name: "Duke+1",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Duke+1.",
+      twitter: "dukeplus1",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/duke_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/duke_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/duke_art.png",
+      },
+    },
+    {
+      name: "Gossip Goblin",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Gossip Goblin.",
+      twitter: "gossipgoblin",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/gossip_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/gossip_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/gossip_art.png",
+      },
+    },
+    {
+      name: "Hyblinxx",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Hyblinxx.",
+      twitter: "hyblinxx",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/hyblinxx_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/hyblinxx_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/hyblinxx_art.png",
+      },
+    },
+    {
+      name: "John Le",
+      type: "Full Set",
+      description: "Exclusive armor set designed by John Le.",
+      twitter: "ProjectJohnLe",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/john_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/john_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/john_art.png",
+      },
+    },
+    {
+      name: "Joyce Liu",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Joyce Liu.",
+      twitter: "joycelliu",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/joyce_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/joyce_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/joyce_art.png",
+      },
+    },
+    {
+      name: "Mr. Uramaki",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Mr. Uramaki.",
+      twitter: "mr_uramaki",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/uramaki_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/uramaki_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/uramaki_art.png",
+      },
+    },
+    {
+      name: "Ricardo Cavolo",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Ricardo Cavolo.",
+      twitter: "ricardocavolo",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ricardo_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ricardo_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ricardo_art.png",
+      },
+    },
+    {
+      name: "Scum",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Scum.",
+      twitter: "scumscumscum",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/scum_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/scum_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/scum_art.png",
+      },
+    },
+    {
+      name: "Zen0",
+      type: "Full Set",
+      description: "Exclusive armor set designed by Zen0.",
+      twitter: "zen0m",
+      images: {
+        full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/zen0_full.png",
+        card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/zen0_card.png",
+        art: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/zen0_art.png",
       },
     },
   ],
@@ -284,8 +385,33 @@ function ArtifactCard({ item }: { item: ArtifactItem }) {
         </div>
       </CardHeader>
       <CardContent className="p-4">
-        <h3 className="text-lg font-bold text-neutral-100">{item.name}</h3>
-        <p className="text-sm text-neutral-400">{item.description}</p>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="min-w-0 truncate text-lg font-bold text-neutral-100">
+              {item.name}
+            </h3>
+            {item.twitter && (
+              <a
+                href={`https://x.com/${item.twitter}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex flex-shrink-0 items-center gap-1 rounded bg-neutral-800 px-2 py-1 text-xs text-neutral-300 hover:bg-neutral-700"
+              >
+                <svg
+                  className="h-3 w-3"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                @{item.twitter}
+              </a>
+            )}
+          </div>
+          <p className="text-sm text-neutral-400">{item.description}</p>
+        </div>
       </CardContent>
     </Card>
   );
@@ -313,39 +439,7 @@ export default function CosmeticsExplorer() {
   return (
     <>
       <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <h3 className="font-clayno text-2xl text-white">Gear</h3>
-          <div className="flex gap-2">
-            <a
-              href="https://www.tensor.trade/trade/claynosaurz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
-            >
-              <Image
-                src="/icons/tensor.svg"
-                alt="View on Tensor"
-                width={20}
-                height={20}
-                className="opacity-80"
-              />
-            </a>
-            <a
-              href="https://magiceden.io/marketplace/claynosaurz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
-            >
-              <Image
-                src="/icons/magic_eden.svg"
-                alt="View on Magic Eden"
-                width={20}
-                height={20}
-                className="opacity-80"
-              />
-            </a>
-          </div>
-        </div>
+        <h3 className="font-clayno text-2xl text-white">GEAR</h3>
 
         <div className="grid gap-6 md:grid-cols-3">
           {/* Artifacts Box */}

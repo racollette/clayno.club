@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TraitGuide from "./trait-guide";
 import AncientsCansArtifacts from "./oneofones";
 import CosmeticsExplorer from "./cosmetics";
+import PopularTraits from "./popular-traits";
 import MetaTags from "~/components/MetaTags";
 import { useImageViewer } from "~/hooks/useImageViewer";
 import ImageViewer from "~/components/ImageViewer";
@@ -12,6 +13,13 @@ import {
   ORIGINAL_CLAY_SUPPLY,
   ORIGINAL_CLAYMAKER_SUPPLY,
 } from "~/utils/constants";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "~/@/components/ui/tabs";
+import { cn } from "~/@/lib/utils";
 
 type ResourceItem = {
   name: string;
@@ -179,16 +187,36 @@ const WelcomePage: React.FC = () => {
       <div className="min-h-screen bg-black">
         <main className="mx-auto max-w-[1400px] px-4 py-12">
           {/* Hero Section */}
-          <section className="mb-12 rounded-3xl bg-neutral-900 p-8 shadow-xl">
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="mb-6 font-clayno text-5xl text-white">
-                Welcome to Claynotopia!
-              </h1>
-              <p className="text-xl font-medium leading-relaxed text-neutral-200">
-                Welcome to the world of Claynosaurz —an exciting journey awaits.
-                Our Collectors Guide is here to help you navigate the ins and
-                outs of Claynotopia.
-              </p>
+          <section className="relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-900 to-neutral-800 shadow-xl">
+            <div
+              className="absolute inset-0 opacity-[0.25]"
+              style={{
+                backgroundImage: 'url("/images/clayno_bg.svg")',
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }}
+            />
+            <div className="mx-auto max-w-3xl">
+              <div className="relative flex items-center gap-8">
+                <div className="flex-shrink-0">
+                  <Image
+                    src="/images/clayno_logo_vertical_1024x1024.png"
+                    alt="Claynosaurz"
+                    width={200}
+                    height={200}
+                  />
+                </div>
+                <div>
+                  <h1 className="mb-6 font-clayno text-4xl text-white">
+                    Welcome to Claynotopia!
+                  </h1>
+                  <p className="text-lg font-medium leading-relaxed text-neutral-200">
+                    An exciting journey awaits. Our Collectors Guide is here to
+                    help you navigate the ins and outs of Claynosaurz.
+                  </p>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -303,10 +331,42 @@ const WelcomePage: React.FC = () => {
               </div>
 
               <div className="mt-8">
-                <h3 className="mb-6 font-clayno text-2xl text-white">
-                  Trait Explorer
-                </h3>
-                <TraitGuide />
+                <div className="mb-6">
+                  <h3 className="font-clayno text-2xl text-white">
+                    Trait Explorer
+                  </h3>
+                  <p className="mt-2 text-neutral-400">
+                    Compare the different traits side-by-side, or check out the
+                    most sought-after combinations.
+                  </p>
+                </div>
+                <Tabs defaultValue="all-traits" className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-neutral-800 pb-4">
+                    <TabsList className="flex gap-2 rounded-md bg-neutral-900">
+                      <TabsTrigger
+                        value="all-traits"
+                        className="rounded-sm px-3 py-1 text-sm font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm"
+                      >
+                        All Traits
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="popular-traits"
+                        className={cn(
+                          "relative rounded-sm px-3 py-1 text-sm font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm",
+                          "after:absolute after:right-0 after:top-0 after:h-2 after:w-2 after:-translate-y-1 after:translate-x-1 after:animate-pulse after:rounded-full after:bg-purple-500"
+                        )}
+                      >
+                        Popular Combinations
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <TabsContent value="all-traits">
+                    <TraitGuide />
+                  </TabsContent>
+                  <TabsContent value="popular-traits">
+                    <PopularTraits />
+                  </TabsContent>
+                </Tabs>
               </div>
 
               <div className="mt-16">
@@ -321,10 +381,40 @@ const WelcomePage: React.FC = () => {
           {/* Cosmetics Section */}
           <section className="mt-12 rounded-3xl bg-neutral-900 p-8 shadow-2xl">
             <div>
-              <h2 className="mb-4 font-clayno text-3xl text-white">
-                Cosmetics
-              </h2>
-              <p className="mb-8 text-lg text-neutral-300">
+              <div className="flex items-center justify-between">
+                <h2 className="font-clayno text-3xl text-white">COSMETICS</h2>
+                <div className="flex gap-2">
+                  <a
+                    href="https://www.tensor.trade/trade/saga"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
+                  >
+                    <Image
+                      src="/icons/tensor.svg"
+                      alt="View on Tensor"
+                      width={20}
+                      height={20}
+                      className="opacity-80"
+                    />
+                  </a>
+                  <a
+                    href="https://magiceden.io/marketplace/claynosaurz_saga"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
+                  >
+                    <Image
+                      src="/icons/magic_eden.svg"
+                      alt="View on Magic Eden"
+                      width={20}
+                      height={20}
+                      className="opacity-80"
+                    />
+                  </a>
+                </div>
+              </div>
+              <p className="mb-8 mt-4 text-lg text-neutral-300">
                 The Cosmetics Collection holds unique gear, emotes, and poses to
                 customize your Claynosaurz characters. These items will be
                 redeemable in the Claynosaurz mobile game (under development).

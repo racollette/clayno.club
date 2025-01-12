@@ -21,6 +21,7 @@ export const ANCIENTS = [
   "HthgzJVNKYeH4PjcwdAnq8qM4HzxzWNK1iEYSrcjAyfe", // Trevor
   "GGVBRK4FS7QvY1yTGeqJCGudad3SRZzQmozDQ2MQQ9dP", // Tiffany
   "83JwcQXVArbrG2oDRmRPeLzg58DZmm82foARd9MR3V1H", // Tyson
+  "BBNF7WT3Uo3kHyGveHssQ1KGbKxHL3UsF9J8qYGskXSF", // Kevin
 
   // Midas characters
   "6R8rK8rK7mShNEXHgPjLyZrGbdSbrg27EHw79E75yxTP", // Midas Ankylo
@@ -125,14 +126,12 @@ export default function OneofOnes() {
               onClick={() => setSelectedCategory("ANCIENTS")}
               className="flex-1 text-left"
             >
-              <h3 className="font-clayno text-xl text-amber-400">
-                Ancients
-                <span className="ml-2 text-sm text-neutral-400">22 Supply</span>
-              </h3>
+              <h3 className="font-clayno text-xl text-amber-400">Ancients</h3>
               <p className="mt-2 text-neutral-300">
-                Legendary characters deeply woven into Claynotopia's rich lore.
-                These mythical beings play pivotal roles in the world's history
-                and will be featured throughout the upcoming episodic content.
+                22 legendary characters deeply woven into Claynotopia's rich
+                lore. These mythical beings play pivotal roles in the world's
+                history and will be featured throughout the upcoming episodic
+                content.
               </p>
             </button>
             <div className="ml-4 flex gap-2">
@@ -179,14 +178,11 @@ export default function OneofOnes() {
               onClick={() => setSelectedCategory("SPRAYCANS")}
               className="flex-1 text-left"
             >
-              <h3 className="font-clayno text-xl text-blue-400">
-                Spray Cans
-                <span className="ml-2 text-sm text-neutral-400">10 Supply</span>
-              </h3>
+              <h3 className="font-clayno text-xl text-blue-400">Spray Cans</h3>
               <p className="mt-2 text-neutral-300">
-                Ultra-rare prizes discovered in physical Booster Packs during LA
-                and NYC events in 2023. Each Spray Can features a unique Clayno
-                designed by one of Solana's top artists.
+                10 ultra-rare prizes discovered in physical Booster Packs during
+                LA and NYC events in 2023. Each Spray Can features a unique
+                Clayno designed by one of Solana's top artists.
               </p>
             </button>
             <div className="ml-4 flex gap-2">
