@@ -66,6 +66,7 @@ export const traitRouter = createTRPCRouter({
             },
             select: {
               gif: true,
+              classPFP: true,
               attributes: {
                 select: {
                   [attributeName]: true,

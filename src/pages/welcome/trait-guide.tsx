@@ -28,32 +28,31 @@ const SPECIES_CLASSES = {
   Ankylo: ["Defender", "Warrior", "Mender"],
   Bronto: ["Mender", "Mystic", "Defender"],
   Raptor: ["Tracker", "Stalker", "Warrior"],
-  Spino: ["Stalker", "Warrior", "Mystic"],
-  Para: ["Mender", "Tracker", "Defender"],
-  Dactyl: ["Tracker", "Mystic", "Stalker"],
+  Spino: [],
+  Para: [],
+  Dactyl: [],
 } as const;
 
-type BaseTrait = {
+interface BaseTrait {
   name: string;
   rarity: number;
-};
-
-type SpeciesRestrictedTrait = BaseTrait & {
-  species: string[];
+  species?: string[];
   speciesNote?: string;
-};
+}
 
-type Trait = BaseTrait | SpeciesRestrictedTrait;
+type Trait = BaseTrait;
+
+type TraitCategory = keyof typeof TRAITS;
 
 type TraitsType = {
   SPECIES: BaseTrait[];
   SKIN: BaseTrait[];
   MOOD: BaseTrait[];
   COLOR: BaseTrait[];
-  MOTION: SpeciesRestrictedTrait[];
+  MOTION: BaseTrait[];
   BACKGROUND: BaseTrait[];
   LAYERS: BaseTrait[];
-  CLASS: SpeciesRestrictedTrait[];
+  CLASS: BaseTrait[];
 };
 
 const TRAITS: TraitsType = {
@@ -69,16 +68,150 @@ const TRAITS: TraitsType = {
     { name: "Dactyl", rarity: 1.78 },
   ],
   SKIN: [
-    { name: "Mirage", rarity: 20.17 },
-    { name: "Amazonia", rarity: 13.39 },
-    { name: "Jurassic", rarity: 12.96 },
-    { name: "Savanna", rarity: 11.34 },
-    { name: "Cristalline", rarity: 8.79 },
-    { name: "Coral", rarity: 8.36 },
-    { name: "Oceania", rarity: 8.0 },
-    { name: "Elektra", rarity: 7.72 },
-    { name: "Toxic", rarity: 6.09 },
-    { name: "Apres", rarity: 2.97 },
+    {
+      name: "Mirage",
+      rarity: 20.17,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+      ],
+    },
+    {
+      name: "Amazonia",
+      rarity: 13.39,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+      ],
+    },
+    {
+      name: "Jurassic",
+      rarity: 12.96,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+        "Dactyl",
+      ],
+    },
+    {
+      name: "Savanna",
+      rarity: 11.34,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+      ],
+    },
+    {
+      name: "Cristalline",
+      rarity: 8.79,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+      ],
+    },
+    {
+      name: "Coral",
+      rarity: 8.36,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+        "Dactyl",
+      ],
+    },
+    {
+      name: "Oceania",
+      rarity: 8.0,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+      ],
+    },
+    {
+      name: "Elektra",
+      rarity: 7.72,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+      ],
+    },
+    {
+      name: "Toxic",
+      rarity: 6.09,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+        "Dactyl",
+      ],
+    },
+    {
+      name: "Apres",
+      rarity: 2.97,
+      species: [
+        "Rex",
+        "Trice",
+        "Stego",
+        "Ankylo",
+        "Bronto",
+        "Raptor",
+        "Spino",
+        "Para",
+        "Dactyl",
+      ],
+    },
   ],
   MOOD: [
     { name: "Confident", rarity: 12.95 },
@@ -242,8 +375,12 @@ const COLLECTIONS = {
   },
 };
 
-type TraitCategory = keyof typeof TRAITS;
-type RandomDinosState = { [key in TraitCategory]?: any[] };
+interface RandomDino extends BaseTrait {
+  gif?: string;
+  classPFP?: string;
+}
+
+type RandomDinosState = { [key in TraitCategory]?: RandomDino[] };
 
 export default function TraitGuide() {
   const [selectedCategory, setSelectedCategory] =
@@ -302,15 +439,42 @@ export default function TraitGuide() {
 
   // Filter traits based on selected species and category
   const getFilteredTraits = (category: TraitCategory, traits: Trait[]) => {
+    // Handle species tab
     if (category === "SPECIES") return traits;
-    if (category === "MOTION" || category === "CLASS") {
+
+    // Handle class tab
+    if (category === "CLASS") {
+      const availableClasses = traits.filter((trait) => {
+        if ("species" in trait && trait.species) {
+          return trait.species.includes(selectedSpecies);
+        }
+        return false;
+      });
+
+      if (availableClasses.length === 0) {
+        return [
+          {
+            name: "Coming Soon",
+            rarity: 0,
+            species: [selectedSpecies],
+            speciesNote: "Classes for this species are not yet available",
+          },
+        ];
+      }
+      return availableClasses;
+    }
+
+    // Handle motion and skin tabs
+    if (category === "MOTION" || category === "SKIN") {
       return traits.filter((trait) => {
-        if ("species" in trait) {
+        if ("species" in trait && trait.species) {
           return trait.species.includes(selectedSpecies);
         }
         return true;
       });
     }
+
+    // Return unfiltered traits for other categories
     return traits;
   };
 
@@ -334,21 +498,28 @@ export default function TraitGuide() {
                 </TabsTrigger>
               ))}
             </TabsList>
-            <Button
-              onClick={refreshDinos}
-              variant="default"
-              size="icon"
-              className={cn(
-                "relative ml-2 bg-neutral-800 text-neutral-200 transition-all hover:animate-spin-bounce hover:bg-neutral-700",
-                isFirstLoad && [
-                  "animate-spin-bounce",
-                  "after:absolute after:inset-0 after:z-[-1] after:animate-pulse-glow after:rounded-md after:bg-neutral-400/20",
-                  "before:absolute before:inset-0 before:z-[-1] before:animate-pulse-glow before:rounded-md before:bg-neutral-400/20 before:blur-sm",
-                ]
+            <div className="flex items-center gap-2">
+              {selectedCategory !== "SPECIES" && (
+                <div className="rounded-md bg-neutral-800 px-2 py-1 text-sm text-neutral-300">
+                  {selectedSpecies}
+                </div>
               )}
-            >
-              <Dices className="h-4 w-4" />
-            </Button>
+              <Button
+                onClick={refreshDinos}
+                variant="default"
+                size="icon"
+                className={cn(
+                  "relative bg-neutral-800 text-neutral-200 transition-all hover:animate-spin-bounce hover:bg-neutral-700",
+                  isFirstLoad && [
+                    "animate-spin-bounce",
+                    "after:absolute after:inset-0 after:z-[-1] after:animate-pulse-glow after:rounded-md after:bg-neutral-400/20",
+                    "before:absolute before:inset-0 before:z-[-1] before:animate-pulse-glow before:rounded-md before:bg-neutral-400/20 before:blur-sm",
+                  ]
+                )}
+              >
+                <Dices className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Species Selection (only show when not on SPECIES tab) */}
@@ -395,37 +566,51 @@ export default function TraitGuide() {
                       >
                         <CardHeader className="p-0">
                           <div className="relative aspect-square w-full cursor-pointer overflow-hidden">
-                            {randomDinos[category as TraitCategory]?.[index]
-                              ?.gif ? (
+                            {(
+                              randomDinos[category as TraitCategory]?.[
+                                index
+                              ] as RandomDino | undefined
+                            )?.gif ||
+                            (category === "CLASS" &&
+                              (
+                                randomDinos[category as TraitCategory]?.[
+                                  index
+                                ] as RandomDino | undefined
+                              )?.classPFP) ? (
                               <div
                                 className="relative h-full w-full"
-                                onClick={() =>
-                                  openImage(
-                                    category === "CLASS" &&
-                                      randomDinos[category as TraitCategory]?.[
-                                        index
-                                      ]?.classPFP
-                                      ? randomDinos[
-                                          category as TraitCategory
-                                        ]?.[index]?.classPFP
-                                      : randomDinos[
-                                          category as TraitCategory
-                                        ]?.[index]?.gif
-                                  )
-                                }
+                                onClick={() => {
+                                  const imageUrl =
+                                    category === "CLASS"
+                                      ? (
+                                          randomDinos[
+                                            category as TraitCategory
+                                          ]?.[index] as RandomDino | undefined
+                                        )?.classPFP?.replace(".gif", ".png")
+                                      : (
+                                          randomDinos[
+                                            category as TraitCategory
+                                          ]?.[index] as RandomDino | undefined
+                                        )?.gif;
+                                  if (imageUrl) {
+                                    openImage(imageUrl);
+                                  }
+                                }}
                               >
                                 <Image
                                   src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${
-                                    category === "CLASS" &&
-                                    randomDinos[category as TraitCategory]?.[
-                                      index
-                                    ]?.classPFP
-                                      ? randomDinos[
-                                          category as TraitCategory
-                                        ]?.[index]?.classPFP
-                                      : randomDinos[
-                                          category as TraitCategory
-                                        ]?.[index]?.gif
+                                    category === "CLASS"
+                                      ? (
+                                          randomDinos[
+                                            category as TraitCategory
+                                          ]?.[index] as RandomDino | undefined
+                                        )?.classPFP?.replace(".gif", ".png") ??
+                                        ""
+                                      : (
+                                          randomDinos[
+                                            category as TraitCategory
+                                          ]?.[index] as RandomDino | undefined
+                                        )?.gif ?? ""
                                   }`}
                                   alt={`${category} - ${name}`}
                                   fill

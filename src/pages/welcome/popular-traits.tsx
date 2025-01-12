@@ -41,7 +41,7 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
   {
     name: "Crimson Clan",
     description:
-      "The legendary Charcoal Coral combination with Belly trait. Known as the 'Crimson Clan', these are among the most valuable Claynos.",
+      "The legendary Charcoal Coral combination with Belly trait. Known as the 'Crimson Clan'.",
     traits: ["Skin: Coral", "Color: Charcoal", "Trait: Belly On"],
     rarity: "Super Rare",
     tribe: "Crimson Clan",
