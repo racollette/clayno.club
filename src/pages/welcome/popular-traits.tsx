@@ -152,7 +152,7 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
   {
     name: "Solana Skin",
     description:
-      "The mystical Amethyst color combined with the Coral skin creates a stunning visual effect.",
+      "The Amethyst color combined with the Coral skin and green Belly is emblematic of the Solana logo.",
     traits: ["Skin: Coral", "Color: Amethyst", "Belly: On"],
     rarity: "Rare",
     imageUrl: "/images/traits/solana.gif",
