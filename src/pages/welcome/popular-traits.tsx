@@ -27,10 +27,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     rarity: "Legendary",
     tribe: "The Lodge",
     imageUrl: "/images/traits/mist_apres.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Mist%22%5D%2C%22Skin%22%3A%5B%22Apres%22%5D%7D",
-    },
   },
   {
     name: "Charcoal Apres",
@@ -40,11 +36,8 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     rarity: "Legendary",
     tribe: "The Lodge",
     imageUrl: "/images/traits/charcoal_apres.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Charcoal%22%5D%2C%22Skin%22%3A%5B%22Apres%22%5D%7D",
-    },
   },
+  // Super Rare
   {
     name: "Crimson Clan",
     description:
@@ -53,47 +46,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     rarity: "Super Rare",
     tribe: "Crimson Clan",
     imageUrl: "/images/traits/crimson_clan.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Charcoal%22%5D%2C%22Skin%22%3A%5B%22Coral%22%5D%2C%22Belly%22%3A%5B%22On%22%5D%7D",
-    },
-  },
-  // Super Rare
-  {
-    name: "Charcoal Elektra",
-    description:
-      "A premium combination featuring the rare Charcoal color with the electric Elektra skin texture.",
-    traits: ["Skin: Elektra", "Color: Charcoal"],
-    rarity: "Super Rare",
-    imageUrl: "/images/traits/charcoal_elektra.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Charcoal%22%5D%2C%22Skin%22%3A%5B%22Elektra%22%5D%7D",
-    },
-  },
-  {
-    name: "Mist Elektra",
-    description:
-      "The ethereal Mist color combined with the dynamic Elektra skin creates a striking appearance.",
-    traits: ["Skin: Elektra", "Color: Mist"],
-    rarity: "Super Rare",
-    imageUrl: "/images/traits/mist_elektra.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Mist%22%5D%2C%22Skin%22%3A%5B%22Elektra%22%5D%7D",
-    },
-  },
-  {
-    name: "Amethyst Elektra",
-    description:
-      "A highly desirable combination of the mystical Amethyst color with the energetic Elektra skin.",
-    traits: ["Skin: Elektra", "Color: Amethyst"],
-    rarity: "Rare",
-    imageUrl: "/images/traits/amethyst_elektra.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Amethyst%22%5D%2C%22Skin%22%3A%5B%22Elektra%22%5D%7D",
-    },
   },
   {
     name: "Toxic Charcoal",
@@ -102,24 +54,92 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Toxic", "Color: Charcoal"],
     rarity: "Super Rare",
     imageUrl: "/images/traits/charcoal_toxic.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Charcoal%22%5D%2C%22Skin%22%3A%5B%22Toxic%22%5D%7D",
-    },
+  },
+  {
+    name: "Charcoal Elektra",
+    description:
+      "A premium combination featuring the rare Charcoal color with the electric Elektra skin texture.",
+    traits: ["Skin: Elektra", "Color: Charcoal"],
+    rarity: "Super Rare",
+    imageUrl: "/images/traits/charcoal_elektra.gif",
+  },
+  {
+    name: "Toxic Mist",
+    description:
+      "The rare Mist color paired with the edgy Toxic skin creates a powerful combination.",
+    traits: ["Skin: Toxic", "Color: Mist"],
+    rarity: "Super Rare",
+    imageUrl: "/images/traits/mist_toxic.gif",
+  },
+  {
+    name: "Mist Elektra",
+    description:
+      "The ethereal Mist color combined with the dynamic Elektra skin creates a striking appearance.",
+    traits: ["Skin: Elektra", "Color: Mist"],
+    rarity: "Super Rare",
+    imageUrl: "/images/traits/mist_elektra.gif",
+  },
+  {
+    name: "Spring Apres",
+    description:
+      "The vibrant Spring color combined with the premium Apres skin creates a stunning, springtime aesthetic.",
+    traits: ["Skin: Apres", "Color: Spring"],
+    rarity: "Super Rare",
+    tribe: "The Lodge",
+    imageUrl: "/images/traits/spring_apres.gif",
+  },
+  {
+    name: "Aqua Apres",
+    description:
+      "The cool Aqua color paired with the premium Apres skin creates a refreshing, oceanic appearance.",
+    traits: ["Skin: Apres", "Color: Aqua"],
+    rarity: "Super Rare",
+    tribe: "The Lodge",
+    imageUrl: "/images/traits/aqua_apres.gif",
+  },
+  {
+    name: "Desert Apres",
+    description:
+      "The warm Desert color combined with the premium Apres skin creates a sandy, sun-kissed look.",
+    traits: ["Skin: Apres", "Color: Desert"],
+    rarity: "Super Rare",
+    tribe: "The Lodge",
+    imageUrl: "/images/traits/desert_apres.gif",
+  },
+  {
+    name: "Volcanic Apres",
+    description:
+      "The intense Volcanic color paired with the premium Apres skin creates a fiery, dramatic appearance.",
+    traits: ["Skin: Apres", "Color: Volcanic"],
+    rarity: "Super Rare",
+    tribe: "The Lodge",
+    imageUrl: "/images/traits/volcanic_apres.gif",
+  },
+  {
+    name: "Tropic Apres",
+    description:
+      "The lush Tropic color combined with the premium Apres skin creates an exotic, jungle-inspired look.",
+    traits: ["Skin: Apres", "Color: Tropic"],
+    rarity: "Super Rare",
+    tribe: "The Lodge",
+    imageUrl: "/images/traits/tropic_apres.gif",
   },
   // Rare
   {
-    name: "Dactyl",
+    name: "Amethyst Elektra",
     description:
-      "The rarest and most valuable species, Dactyls are highly sought after in any color/skin combination. Members of 'The Nest', these flying Claynos are the most exclusive tribe.",
-    traits: ["Species: Dactyl"],
+      "A highly desirable combination of the mystical Amethyst color with the energetic Elektra skin.",
+    traits: ["Skin: Elektra", "Color: Amethyst"],
     rarity: "Rare",
-    tribe: "The Nest",
-    imageUrl: "/images/traits/dactyl.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Species%22%3A%5B%22Dactyl%22%5D%7D",
-    },
+    imageUrl: "/images/traits/amethyst_elektra.gif",
+  },
+  {
+    name: "Toxic Amethyst",
+    description:
+      "A highly desirable combination of the mystical Amethyst color with the edgy Toxic skin.",
+    traits: ["Skin: Toxic", "Color: Amethyst"],
+    rarity: "Rare",
+    imageUrl: "/images/traits/amethyst_toxic.gif",
   },
   {
     name: "Coral Mist",
@@ -128,10 +148,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Coral", "Color: Mist"],
     rarity: "Rare",
     imageUrl: "/images/traits/mist_coral.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Mist%22%5D%2C%22Skin%22%3A%5B%22Coral%22%5D%7D",
-    },
   },
   {
     name: "Solana Skin",
@@ -140,10 +156,15 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Coral", "Color: Amethyst", "Belly: On"],
     rarity: "Rare",
     imageUrl: "/images/traits/solana.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Amethyst%22%5D%2C%22Skin%22%3A%5B%22Coral%22%5D%7D",
-    },
+  },
+  {
+    name: "Dactyl",
+    description:
+      "The rarest and most valuable species, Dactyls are highly sought after in any color/skin combination. Members of 'The Nest', these flying Claynos are the most exclusive tribe.",
+    traits: ["Species: Dactyl"],
+    rarity: "Rare",
+    tribe: "The Nest",
+    imageUrl: "/images/traits/dactyl.gif",
   },
   {
     name: "4-Layer",
@@ -152,10 +173,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Back: On", "Belly: On", "Pattern: On", "Details: On"],
     rarity: "Rare",
     imageUrl: "/images/traits/four_layer.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Base%22%3A%5B%22On%22%5D%2C%22Pattern%22%3A%5B%22On%22%5D%2C%22Belly%22%3A%5B%22On%22%5D%2C%22Feet%22%3A%5B%22On%22%5D%7D",
-    },
   },
   {
     name: "0-Layer",
@@ -164,23 +181,16 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Back: Off", "Belly: Off", "Pattern: Off", "Details: Off"],
     rarity: "Rare",
     imageUrl: "/images/traits/zero_layer.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Base%22%3A%5B%22Off%22%5D%2C%22Pattern%22%3A%5B%22Off%22%5D%2C%22Belly%22%3A%5B%22Off%22%5D%2C%22Feet%22%3A%5B%22Off%22%5D%7D",
-    },
   },
   // Uncommon
   {
     name: "Bored Rex",
     description:
-      "The iconic Rex species with the Bored mood trait. A popular combination in the community.",
+      "The iconic Rex species with the Bored mood trait. A popular combination in the community. Members of the 'Bored Bunch' tribe are known for their laid-back attitude.",
     traits: ["Species: Rex", "Mood: Bored"],
     rarity: "Uncommon",
+    tribe: "Bored Bunch",
     imageUrl: "/images/traits/bored_rex.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Species%22%3A%5B%22Rex%22%5D%2C%22Mood%22%3A%5B%22Bored%22%5D%7D",
-    },
   },
   {
     name: "Sandspark",
@@ -190,10 +200,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     rarity: "Uncommon",
     tribe: "Sandspark",
     imageUrl: "/images/traits/sandspark.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Desert%22%5D%2C%22Skin%22%3A%5B%22Elektra%22%5D%7D",
-    },
   },
   {
     name: "Barney",
@@ -202,10 +208,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Color: Spring", "Skin: Crystalline", "Belly: On"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/barney.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Spring%22%5D%7D",
-    },
   },
   {
     name: "Spyro",
@@ -214,10 +216,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Color: Amethyst", "Skin: Crystalline", "Belly: On"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/spyro.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Amethyst%22%5D%2C%22Skin%22%3A%5B%22Elektra%22%5D%7D",
-    },
   },
   {
     name: "Yoshi",
@@ -226,10 +224,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Color: Tropic", "Skin: Amazonia", "Belly: On"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/yoshi.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Spring%22%5D%7D",
-    },
   },
   {
     name: "Toxic",
@@ -238,10 +232,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Toxic"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/spring_toxic.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Skin%22%3A%5B%22Toxic%22%5D%7D",
-    },
   },
   {
     name: "Coral",
@@ -250,10 +240,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Coral"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/aqua_coral.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Skin%22%3A%5B%22Coral%22%5D%7D",
-    },
   },
   {
     name: "Elektra",
@@ -262,10 +248,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Skin: Elektra"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/aqua_elektra.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Skin%22%3A%5B%22Elektra%22%5D%7D",
-    },
   },
   {
     name: "Charcoal",
@@ -274,10 +256,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Color: Charcoal"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/charcoal_base.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Charcoal%22%5D%7D",
-    },
   },
   {
     name: "Mist",
@@ -286,10 +264,6 @@ const POPULAR_TRAIT_COMBOS: PopularTraitCombo[] = [
     traits: ["Color: Mist"],
     rarity: "Uncommon",
     imageUrl: "/images/traits/mist_base.gif",
-    marketplaceLinks: {
-      tensor:
-        "https://www.tensor.trade/trade/claynosaurz?traits=%7B%22Color%22%3A%5B%22Mist%22%5D%7D",
-    },
   },
 ];
 
@@ -359,14 +333,36 @@ function TraitComboCard({ combo }: { combo: PopularTraitCombo }) {
             </span>
           ))}
           {combo.tribe && (
-            <span className="rounded-full bg-amber-900/50 px-2 py-1 text-xs font-medium text-amber-200">
+            <a
+              href={getTribeUrl(combo.tribe)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-amber-900/50 px-2 py-1 text-xs font-medium text-amber-200 hover:bg-amber-900/70"
+            >
               {combo.tribe}
-            </span>
+            </a>
           )}
         </div>
       </CardContent>
     </Card>
   );
+}
+
+function getTribeUrl(tribe: string): string {
+  switch (tribe) {
+    case "Bored Bunch":
+      return "/tribes/bored";
+    case "Crimson Clan":
+      return "/tribes/tcc";
+    case "The Nest":
+      return "/tribes/nest";
+    case "The Lodge":
+      return "/tribes/lodge";
+    case "Sandspark":
+      return "/tribes/sparks";
+    default:
+      return "#";
+  }
 }
 
 export default function PopularTraits() {
