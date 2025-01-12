@@ -163,22 +163,22 @@ export default function LoginModal({
     <>
       {/* Awkwardly force rerender */}
       {!signedIn ? (
-        <Button
-          size="sm"
+        <button
+          className="flex items-center gap-2 rounded-lg bg-neutral-800 px-3 py-2 font-clayno text-sm text-neutral-200 transition-all hover:bg-neutral-700"
           onClick={() => {
             handleDisconnect();
             setOpenModal("dismissible");
           }}
         >
-          {isLoading ? (
-            <div className="flex flex-row gap-2 align-middle">
-              <Spinner size="sm" />
-              <div>Signing In</div>
-            </div>
+          {status === "loading" ? (
+            <>
+              <Spinner size="sm" className="fill-neutral-200" />
+              <span>Connecting...</span>
+            </>
           ) : (
-            <div>{loginMessage}</div>
+            <span>{loginMessage}</span>
           )}
-        </Button>
+        </button>
       ) : (
         <>
           {!isLoading && user ? (
@@ -199,28 +199,21 @@ export default function LoginModal({
               }
               handleSignout={handleSignOut}
               sessionKey={
-                username ??
+                user?.discord?.username ??
+                user?.twitter?.username ??
+                user?.telegram?.username ??
                 user?.defaultAddress ??
-                session?.user.name ??
-                publicKey?.toString()
+                session?.user?.name ??
+                publicKey?.toString() ??
+                "unknown"
               }
             />
           ) : (
-            <div className="flex flex-row gap-6">
-              {/* {!isLoading && (
-                <DefaultToast
-                  message={"Account not found. Please create one first."}
-                  type={"error"}
-                />
-              )} */}
-              <Button
-                onClick={() => {
-                  handleDisconnect();
-                  setOpenModal("dismissible");
-                }}
-              >
-                Sign In
-              </Button>
+            <div className="flex items-center gap-2 rounded-lg bg-neutral-800 px-3 py-2">
+              <Spinner size="sm" className="fill-neutral-200" />
+              <span className="text-sm text-neutral-200">
+                Loading profile...
+              </span>
             </div>
           )}
         </>
