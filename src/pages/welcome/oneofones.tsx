@@ -41,15 +41,6 @@ type SpraycanItem = {
   twitter: string;
 };
 
-interface Dino {
-  mint: string;
-  gif: string;
-  attributes: {
-    species?: string;
-    [key: string]: any;
-  };
-}
-
 export const SPRAYCANS: SpraycanItem[] = [
   {
     mint: "Ge6ptEDXBC9gJdDAoEoB4fJMFJ4dSEWRsK1dFJTJ7RGu",
@@ -128,7 +119,7 @@ export default function OneofOnes() {
   const specialsData: Categories = {
     ANCIENTS:
       ancientDinos
-        ?.map((dino: Dino) => ({
+        ?.map((dino) => ({
           name: dino.attributes?.species ?? "Unknown",
           url: dino.gif
             ? `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.gif}`
@@ -147,7 +138,7 @@ export default function OneofOnes() {
           return a.name.localeCompare(b.name);
         }) || [],
     SPRAYCANS:
-      spraycanDinos?.map((dino: Dino) => {
+      spraycanDinos?.map((dino) => {
         const spraycan = SPRAYCANS.find((s) => s.mint === dino.mint);
         return {
           name: spraycan?.name ?? "Unknown",
