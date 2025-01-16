@@ -202,8 +202,8 @@ export default function OneofOnes() {
             </div>
             <p className="text-sm text-neutral-300">
               22 legendary characters deeply woven into Claynotopia&apos;s
-              rich lore. These mythical beings play pivotal roles in the
-              world&apos;s history and will be featured throughout the
+              lore. These mythical beings play pivotal roles in the
+              world&apos;s history and will be featured in
               upcoming episodic content.
             </p>
           </div>
