@@ -302,7 +302,7 @@ export default function Resources() {
 
         <div className="mt-6 sm:mt-8">
           {selectedResource === "CLAY" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
               {CLAY_ITEMS.map((item) => (
                 <ResourceCard key={item.name} item={item} openImage={openImage} />
               ))}
