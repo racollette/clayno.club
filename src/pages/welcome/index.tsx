@@ -233,12 +233,10 @@ const WelcomePage: React.FC = () => {
             {/* The Characters Introduction */}
             <div>
               <h2 className="mb-2 font-clayno text-2xl text-white sm:mb-4 sm:text-3xl">
-                The Claynosaurz
+                The Claynos
               </h2>
               <p className="mb-4 text-sm text-neutral-300 sm:mb-8 sm:text-lg">
-                Claynos are your access passes to the ecosystem.
-                Each character, whether from Genesis or Saga, carries the same
-                core utility and benefits. You'll want one of these to fully experience Claynotopia.
+                {"Claynosauz are your access passes to the ecosystem.Each character, whether from Genesis or Saga, carries the same core utility and benefits. You'll want one of these to start."}
               </p>
               <div className="grid gap-3 sm:gap-6 md:grid-cols-2">
                 <div className="rounded-lg bg-neutral-800 p-3 sm:p-6">
