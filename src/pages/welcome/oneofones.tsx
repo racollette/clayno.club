@@ -158,24 +158,21 @@ export default function OneofOnes() {
     <div className="space-y-8">
       <div className="grid gap-6 md:grid-cols-2">
         {/* Ancients Box */}
-        <div
-          className={`rounded-lg bg-neutral-800 p-3 text-left transition-colors hover:bg-neutral-700 sm:p-6 ${
+        <button
+          onClick={() => setSelectedCategory("ANCIENTS")}
+          className={`w-full rounded-lg bg-neutral-800 p-3 text-left transition-colors hover:bg-neutral-700 sm:p-6 ${
             selectedCategory === "ANCIENTS" ? "ring-2 ring-amber-500" : ""
           }`}
         >
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <button
-                onClick={() => setSelectedCategory("ANCIENTS")}
-                className="flex-1 text-left"
-              >
-                <h3 className="font-clayno text-lg text-amber-400 sm:text-xl">Ancients</h3>
-              </button>
+              <h3 className="font-clayno text-lg text-amber-400 sm:text-xl">Ancients</h3>
               <div className="flex gap-1 sm:gap-2">
                 <a
                   href="https://www.tensor.trade/trade/claynosaurz"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
                 >
                   <Image
@@ -190,6 +187,7 @@ export default function OneofOnes() {
                   href="https://magiceden.io/marketplace/claynosaurz"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
                 >
                   <Image
@@ -209,27 +207,24 @@ export default function OneofOnes() {
               upcoming episodic content.
             </p>
           </div>
-        </div>
+        </button>
 
         {/* Spray Cans Box */}
-        <div
-          className={`rounded-lg bg-neutral-800 p-3 text-left transition-colors hover:bg-neutral-700 sm:p-6 ${
+        <button
+          onClick={() => setSelectedCategory("SPRAYCANS")}
+          className={`w-full rounded-lg bg-neutral-800 p-3 text-left transition-colors hover:bg-neutral-700 sm:p-6 ${
             selectedCategory === "SPRAYCANS" ? "ring-2 ring-blue-500" : ""
           }`}
         >
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <button
-                onClick={() => setSelectedCategory("SPRAYCANS")}
-                className="flex-1 text-left"
-              >
-                <h3 className="font-clayno text-lg text-blue-400 sm:text-xl">Spray Cans</h3>
-              </button>
+              <h3 className="font-clayno text-lg text-blue-400 sm:text-xl">Spray Cans</h3>
               <div className="flex gap-1 sm:gap-2">
                 <a
                   href="https://www.tensor.trade/trade/claynosaurz"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
                 >
                   <Image
@@ -244,6 +239,7 @@ export default function OneofOnes() {
                   href="https://magiceden.io/marketplace/claynosaurz"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
                 >
                   <Image
@@ -262,7 +258,7 @@ export default function OneofOnes() {
               Clayno designed by one of Solana&apos;s top artists.
             </p>
           </div>
-        </div>
+        </button>
       </div>
 
       <div className="mt-8">

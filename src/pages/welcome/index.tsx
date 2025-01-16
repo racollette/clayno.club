@@ -190,32 +190,38 @@ const WelcomePage: React.FC = () => {
           {/* Hero Section */}
           <section className="relative mb-4 overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 shadow-xl sm:mb-12 sm:rounded-3xl">
             <div
-              className="absolute inset-0 opacity-[0.25]"
+              className="absolute inset-0 opacity-[0.25] animate-[float_20s_ease-in-out_infinite]"
               style={{
                 backgroundImage: 'url("/images/clayno_bg.svg")',
-                backgroundSize: "cover",
+                backgroundSize: "110%",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
               }}
             />
+            <style jsx>{`
+              @keyframes float {
+                0%, 100% { transform: scale(1.1) rotate(0deg); }
+                50% { transform: scale(1.15) rotate(1deg); }
+              }
+            `}</style>
             <div className="mx-auto max-w-3xl">
               <div className="relative flex flex-col items-center gap-3 p-4 text-center sm:flex-row sm:gap-8 sm:p-8 sm:text-left">
                 <div className="flex-shrink-0">
                   <Image
                     src="/images/clayno_logo_vertical_1024x1024.png"
                     alt="Claynosaurz"
-                    width={100}
-                    height={100}
+                    width={200}
+                    height={200}
                     className="sm:w-[200px]"
                   />
                 </div>
                 <div>
                   <h1 className="mb-2 font-clayno text-3xl text-white sm:mb-6 sm:text-4xl">
-                    Welcome to Claynotopia!
+                    Welcome!
                   </h1>
-                  <p className="text-sm leading-relaxed text-neutral-200/90 sm:text-lg">
+                  <p className="text-sm leading-relaxed font-bold text-neutral-200/90 sm:text-lg">
                     An exciting journey awaits. Our Collectors Guide is here to
-                    help you navigate the ins and outs of Claynosaurz.
+                    help you navigate the collectible world of Claynosaurz.
                   </p>
                 </div>
               </div>
@@ -227,12 +233,12 @@ const WelcomePage: React.FC = () => {
             {/* The Characters Introduction */}
             <div>
               <h2 className="mb-2 font-clayno text-2xl text-white sm:mb-4 sm:text-3xl">
-                The Characters
+                The Claynosaurz
               </h2>
               <p className="mb-4 text-sm text-neutral-300 sm:mb-8 sm:text-lg">
-                Characters are your access passes to the Claynotopia ecosystem.
+                Claynos are your access passes to the ecosystem.
                 Each character, whether from Genesis or Saga, carries the same
-                core utility and benefits.
+                core utility and benefits. You'll want one of these to fully experience Claynotopia.
               </p>
               <div className="grid gap-3 sm:gap-6 md:grid-cols-2">
                 <div className="rounded-lg bg-neutral-800 p-3 sm:p-6">
@@ -416,9 +422,10 @@ const WelcomePage: React.FC = () => {
                 </div>
               </div>
               <p className="mb-4 mt-3 text-sm text-neutral-300 sm:mb-8 sm:mt-4 sm:text-lg">
-                The Cosmetics Collection holds unique gear, emotes, and poses to
+                The Cosmetics Collection holds optional gear, emotes, and poses to
                 customize your Claynosaurz characters. These items will be
                 redeemable in the Claynosaurz mobile game (under development).
+                Not required for gameplay, but they add extra flair to your character.
               </p>
               <div>
                 <div className="mt-4 sm:mt-8">
