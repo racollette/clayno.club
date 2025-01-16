@@ -479,76 +479,51 @@ export default function TraitGuide() {
   };
 
   return (
-    <div className="rounded-2xl bg-black px-4 py-8 text-neutral-200 sm:px-6 lg:px-8">
+    <div className="rounded-2xl bg-black px-1 py-2 text-neutral-200 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <Tabs
           defaultValue="SPECIES"
           onValueChange={(value) => setSelectedCategory(value as TraitCategory)}
-          className="space-y-4"
+          className="space-y-2 sm:space-y-4"
         >
-          <div className="flex items-center justify-between">
-            <TabsList className="flex flex-wrap justify-center gap-2 rounded-md bg-neutral-900">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <TabsList className="flex w-full flex-wrap gap-1 rounded-md bg-neutral-900 p-1 sm:w-auto sm:gap-2">
               {Object.keys(TRAITS).map((category) => (
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="rounded-sm px-3 py-1 text-sm font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm"
+                  className="flex-1 rounded-sm px-2 py-1 text-[10px] font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm sm:flex-none sm:px-3 sm:py-1.5 sm:text-sm"
                 >
                   {category}
                 </TabsTrigger>
               ))}
             </TabsList>
-            <div className="flex items-center gap-2">
-              <div className="rounded-md bg-neutral-800 px-2 py-1 text-sm text-neutral-300">
-                {selectedSpecies}
+            <div className="flex items-center justify-end gap-2">
+              <div className="flex items-center gap-2 rounded-md bg-neutral-800/50 px-2 py-1 text-[10px] text-neutral-300 backdrop-blur-sm sm:text-sm">
+                <span className="text-neutral-500">Species:</span>
+                <span className="font-medium text-neutral-200">{selectedSpecies}</span>
               </div>
               <Button
                 onClick={refreshDinos}
                 variant="default"
                 size="icon"
                 className={cn(
-                  "relative bg-neutral-800 text-neutral-200 transition-all hover:animate-spin-bounce hover:bg-neutral-700",
+                  "relative h-7 w-7 bg-purple-500/10 p-1 text-purple-400 transition-all hover:bg-purple-500/20 hover:text-purple-300 sm:h-8 sm:w-8 sm:p-1.5",
                   isFirstLoad && [
                     "animate-spin-bounce",
-                    "after:absolute after:inset-0 after:z-[-1] after:animate-pulse-glow after:rounded-md after:bg-neutral-400/20",
-                    "before:absolute before:inset-0 before:z-[-1] before:animate-pulse-glow before:rounded-md before:bg-neutral-400/20 before:blur-sm",
+                    "after:absolute after:inset-0 after:z-[-1] after:animate-pulse-glow after:rounded-md after:bg-purple-400/20",
+                    "before:absolute before:inset-0 before:z-[-1] before:animate-pulse-glow before:rounded-md before:bg-purple-400/20 before:blur-sm",
                   ]
                 )}
               >
-                <Dices className="h-4 w-4" />
+                <Dices className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </div>
           </div>
 
-          {/* Species Selection (only show when not on SPECIES tab) */}
-          {/* {selectedCategory !== "SPECIES" && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {species.map((speciesName) => (
-                <Button
-                  key={speciesName}
-                  onClick={() => {
-                    setSelectedSpecies(speciesName);
-                    setRandomDinos({});
-                  }}
-                  variant={
-                    selectedSpecies === speciesName ? "default" : "outline"
-                  }
-                  className={cn(
-                    "text-sm",
-                    selectedSpecies === speciesName
-                      ? "bg-neutral-700 text-neutral-100"
-                      : "bg-transparent text-neutral-400 hover:bg-neutral-800"
-                  )}
-                >
-                  {speciesName}
-                </Button>
-              ))}
-            </div>
-          )} */}
-
           {Object.entries(TRAITS).map(([category, traits]) => (
-            <TabsContent key={category} value={category} className="mt-6">
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <TabsContent key={category} value={category} className="mt-2 sm:mt-6">
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
                 {getFilteredTraits(category as TraitCategory, traits).map(
                   (trait: Trait, index) => {
                     const { name, rarity } = trait;
@@ -618,24 +593,24 @@ export default function TraitGuide() {
                             ) : (
                               <div className="absolute inset-0 flex items-center justify-center bg-neutral-800">
                                 <div className="flex flex-col items-center gap-4">
-                                  <div className="h-24 w-24 animate-pulse rounded-lg bg-neutral-700">
+                                  <div className="h-16 w-16 animate-pulse rounded-lg bg-neutral-700 sm:h-24 sm:w-24">
                                     <div className="h-full w-full bg-gradient-to-br from-neutral-600 to-neutral-700 opacity-50" />
                                   </div>
                                   <div className="space-y-2">
-                                    <div className="h-3 w-32 animate-pulse rounded-md bg-neutral-700" />
-                                    <div className="h-3 w-24 animate-pulse rounded-md bg-neutral-700" />
+                                    <div className="h-2 w-24 animate-pulse rounded-md bg-neutral-700 sm:h-3 sm:w-32" />
+                                    <div className="h-2 w-16 animate-pulse rounded-md bg-neutral-700 sm:h-3 sm:w-24" />
                                   </div>
                                 </div>
                               </div>
                             )}
                           </div>
                         </CardHeader>
-                        <CardContent className="p-4">
-                          <CardTitle className="mb-2 text-lg text-neutral-100">
+                        <CardContent className="p-1.5 sm:p-4">
+                          <CardTitle className="mb-1 text-sm text-neutral-100 sm:mb-2 sm:text-lg">
                             {name}
                             {category === "SPECIES" && (
                               <span
-                                className={`ml-2 text-xs ${
+                                className={`ml-1 text-[10px] font-medium sm:ml-2 sm:text-xs ${
                                   COLLECTIONS.SAGA.species.includes(name)
                                     ? "text-yellow-400"
                                     : "text-blue-400"
@@ -648,7 +623,7 @@ export default function TraitGuide() {
                             )}
                             {allowedSpecies &&
                               selectedCategory === "SPECIES" && (
-                                <div className="mt-1 text-xs text-neutral-400">
+                                <div className="mt-0.5 text-[10px] text-neutral-400 sm:mt-1 sm:text-xs">
                                   {allowedSpecies.length === 1
                                     ? `${allowedSpecies[0]} only`
                                     : `Available for ${allowedSpecies.length} species`}
@@ -660,7 +635,7 @@ export default function TraitGuide() {
                                 </div>
                               )}
                           </CardTitle>
-                          <div className="mb-1 flex items-center justify-between text-xs">
+                          <div className="mb-1 flex items-center justify-between text-[10px] sm:text-xs">
                             <span className="text-neutral-400">Rarity</span>
                             <span
                               className={cn(
@@ -678,7 +653,7 @@ export default function TraitGuide() {
                               {rarity.toFixed(2)}%
                             </span>
                           </div>
-                          <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-700">
+                          <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-700 sm:h-2">
                             <div
                               className={cn(
                                 "h-full",

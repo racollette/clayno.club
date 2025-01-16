@@ -493,21 +493,21 @@ export default function CosmeticsExplorer() {
 
         <div className="mt-8">
           {selectedSet === "ARTIFACTS" && (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
               {COSMETICS_DATA.ARTIFACTS.map((item) => (
                 <ArtifactCard key={item.name} item={item} />
               ))}
             </div>
           )}
           {selectedSet === "BAJA" && (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
               {bajaFishArmor.map((item) => (
                 <ArmorCard key={item.name} item={item} />
               ))}
             </div>
           )}
           {selectedSet === "BUTTER" && (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
               {butterBallArmor.map((item) => (
                 <ArmorCard key={item.name} item={item} />
               ))}

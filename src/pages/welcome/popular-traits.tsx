@@ -387,15 +387,15 @@ export default function PopularTraits() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {(
             ["All", "Uncommon", "Rare", "Super Rare", "Legendary"] as const
           ).map((rarity) => (
             <button
               key={rarity}
               onClick={() => setFilter(rarity)}
-              className={`rounded px-3 py-1 text-sm transition-colors ${
+              className={`rounded px-2 py-1 text-xs transition-colors sm:px-3 sm:text-sm ${
                 filter === rarity
                   ? "bg-neutral-100 text-neutral-900"
                   : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
@@ -407,7 +407,7 @@ export default function PopularTraits() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
         {filteredCombos.map((combo) => (
           <TraitComboCard key={combo.name} combo={combo} />
         ))}

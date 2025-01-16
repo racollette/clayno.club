@@ -159,112 +159,116 @@ export default function OneofOnes() {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Ancients Box */}
         <div
-          className={`rounded-lg bg-neutral-800 p-6 text-left transition-colors hover:bg-neutral-700 ${
+          className={`rounded-lg bg-neutral-800 p-3 text-left transition-colors hover:bg-neutral-700 sm:p-6 ${
             selectedCategory === "ANCIENTS" ? "ring-2 ring-amber-500" : ""
           }`}
         >
-          <div className="flex items-start justify-between">
-            <button
-              onClick={() => setSelectedCategory("ANCIENTS")}
-              className="flex-1 text-left"
-            >
-              <h3 className="font-clayno text-xl text-amber-400">Ancients</h3>
-              <p className="mt-2 text-neutral-300">
-                22 legendary characters deeply woven into Claynotopia&apos;s
-                rich lore. These mythical beings play pivotal roles in the
-                world&apos;s history and will be featured throughout the
-                upcoming episodic content.
-              </p>
-            </button>
-            <div className="ml-4 flex gap-2">
-              <a
-                href="https://www.tensor.trade/trade/claynosaurz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setSelectedCategory("ANCIENTS")}
+                className="flex-1 text-left"
               >
-                <Image
-                  src="/icons/tensor.svg"
-                  alt="View on Tensor"
-                  width={20}
-                  height={20}
-                  className="opacity-80"
-                />
-              </a>
-              <a
-                href="https://magiceden.io/marketplace/claynosaurz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
-              >
-                <Image
-                  src="/icons/magic_eden.svg"
-                  alt="View on Magic Eden"
-                  width={20}
-                  height={20}
-                  className="opacity-80"
-                />
-              </a>
+                <h3 className="font-clayno text-lg text-amber-400 sm:text-xl">Ancients</h3>
+              </button>
+              <div className="flex gap-1 sm:gap-2">
+                <a
+                  href="https://www.tensor.trade/trade/claynosaurz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
+                >
+                  <Image
+                    src="/icons/tensor.svg"
+                    alt="View on Tensor"
+                    width={16}
+                    height={16}
+                    className="opacity-80 sm:h-5 sm:w-5"
+                  />
+                </a>
+                <a
+                  href="https://magiceden.io/marketplace/claynosaurz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
+                >
+                  <Image
+                    src="/icons/magic_eden.svg"
+                    alt="View on Magic Eden"
+                    width={16}
+                    height={16}
+                    className="opacity-80 sm:h-5 sm:w-5"
+                  />
+                </a>
+              </div>
             </div>
+            <p className="text-sm text-neutral-300">
+              22 legendary characters deeply woven into Claynotopia&apos;s
+              rich lore. These mythical beings play pivotal roles in the
+              world&apos;s history and will be featured throughout the
+              upcoming episodic content.
+            </p>
           </div>
         </div>
 
         {/* Spray Cans Box */}
         <div
-          className={`rounded-lg bg-neutral-800 p-6 text-left transition-colors hover:bg-neutral-700 ${
+          className={`rounded-lg bg-neutral-800 p-3 text-left transition-colors hover:bg-neutral-700 sm:p-6 ${
             selectedCategory === "SPRAYCANS" ? "ring-2 ring-blue-500" : ""
           }`}
         >
-          <div className="flex items-start justify-between">
-            <button
-              onClick={() => setSelectedCategory("SPRAYCANS")}
-              className="flex-1 text-left"
-            >
-              <h3 className="font-clayno text-xl text-blue-400">Spray Cans</h3>
-              <p className="mt-2 text-neutral-300">
-                10 ultra-rare prizes discovered in physical Booster Packs during
-                LA and NYC events in 2023. Each Spray Can features a unique
-                Clayno designed by one of Solana&apos;s top artists.
-              </p>
-            </button>
-            <div className="ml-4 flex gap-2">
-              <a
-                href="https://www.tensor.trade/trade/claynosaurz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setSelectedCategory("SPRAYCANS")}
+                className="flex-1 text-left"
               >
-                <Image
-                  src="/icons/tensor.svg"
-                  alt="View on Tensor"
-                  width={20}
-                  height={20}
-                  className="opacity-80"
-                />
-              </a>
-              <a
-                href="https://magiceden.io/marketplace/claynosaurz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600"
-              >
-                <Image
-                  src="/icons/magic_eden.svg"
-                  alt="View on Magic Eden"
-                  width={20}
-                  height={20}
-                  className="opacity-80"
-                />
-              </a>
+                <h3 className="font-clayno text-lg text-blue-400 sm:text-xl">Spray Cans</h3>
+              </button>
+              <div className="flex gap-1 sm:gap-2">
+                <a
+                  href="https://www.tensor.trade/trade/claynosaurz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
+                >
+                  <Image
+                    src="/icons/tensor.svg"
+                    alt="View on Tensor"
+                    width={16}
+                    height={16}
+                    className="opacity-80 sm:h-5 sm:w-5"
+                  />
+                </a>
+                <a
+                  href="https://magiceden.io/marketplace/claynosaurz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700 p-1.5 transition-colors hover:bg-neutral-600 sm:h-8 sm:w-8"
+                >
+                  <Image
+                    src="/icons/magic_eden.svg"
+                    alt="View on Magic Eden"
+                    width={16}
+                    height={16}
+                    className="opacity-80 sm:h-5 sm:w-5"
+                  />
+                </a>
+              </div>
             </div>
+            <p className="text-sm text-neutral-300">
+              10 ultra-rare prizes discovered in physical Booster Packs during
+              LA and NYC events in 2023. Each Spray Can features a unique
+              Clayno designed by one of Solana&apos;s top artists.
+            </p>
           </div>
         </div>
       </div>
 
       <div className="mt-8">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {specialsData[selectedCategory].map(
-            ({ name, url, mint, twitter, attributes }) => (
+        {selectedCategory === "ANCIENTS" && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
+            {specialsData[selectedCategory].map(({ name, url, attributes }) => (
               <Card
                 key={name}
                 className="overflow-hidden border-neutral-800 bg-neutral-900"
@@ -294,7 +298,45 @@ export default function OneofOnes() {
                     <h3 className="min-w-0 truncate text-lg font-bold text-neutral-100">
                       {name}
                     </h3>
-                    {selectedCategory === "SPRAYCANS" && twitter && (
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+        {selectedCategory === "SPRAYCANS" && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
+            {specialsData[selectedCategory].map(({ name, url, mint, twitter, attributes }) => (
+              <Card
+                key={name}
+                className="overflow-hidden border-neutral-800 bg-neutral-900"
+              >
+                <CardHeader className="p-0">
+                  <div
+                    className="relative aspect-square w-full cursor-pointer overflow-hidden"
+                    onClick={() =>
+                      openImage(
+                        url.replace(
+                          "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
+                          ""
+                        )
+                      )
+                    }
+                  >
+                    <Image
+                      src={url}
+                      alt={name}
+                      fill
+                      className="transition-transform hover:scale-105"
+                    />
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="min-w-0 truncate text-lg font-bold text-neutral-100">
+                      {name}
+                    </h3>
+                    {twitter && (
                       <a
                         href={`https://x.com/${twitter}`}
                         target="_blank"
@@ -316,9 +358,9 @@ export default function OneofOnes() {
                   </div>
                 </CardContent>
               </Card>
-            )
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
       <ImageViewer
         isOpen={isOpen}
