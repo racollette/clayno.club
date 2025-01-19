@@ -70,18 +70,18 @@ export default function ToolsPage() {
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90" />
                   <div className="absolute inset-0 flex flex-col items-start justify-end p-8">
                     <h2 className="mb-3 font-clayno text-3xl">Telegram Bot</h2>
-                    <p className="text-lg font-medium text-neutral-300">
+                    <p className="mb-12 text-lg font-medium text-neutral-300">
                       Automated token gating for tribes, custom listing
                       notifications, sales feeds, and community stats.
                     </p>
-                    <Link
-                      href="/resources/telegramBot"
-                      className="mt-4 flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300"
-                    >
-                      <span>View Setup Guide</span>
-                      <RiArrowRightDoubleLine className="h-7 w-7 transition-transform group-hover:translate-x-1" />
-                    </Link>
                   </div>
+                </Link>
+                <Link
+                  href="/resources/telegramBot"
+                  className="absolute bottom-8 left-8 z-20 flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300"
+                >
+                  <span>View Setup Guide</span>
+                  <RiArrowRightDoubleLine className="h-7 w-7 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
                   href="/resources/telegramBot"
