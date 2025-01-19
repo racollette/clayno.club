@@ -178,10 +178,28 @@ model SubDAO {
   grouping          Boolean?
   telegramGroup     String?
   active            Boolean     @default(true)
+  accessType        AccessType  @default(BOT_MANAGED)
+  groupType         GroupType   @default(PRIVATE_TG)
   dinos             Dino[]
   holders           Holder[]
   claymakers        Claymaker[]
   clay              Clay[]
+}
+
+enum AccessType {
+  BOT_MANAGED   // Managed by Clayno Club bot on Telegram
+  VOTE_IN       // Requires member voting
+  CLOSED        // Not accepting new members
+  APPLICATION   // Application required
+  INVITE_ONLY   // By invitation only
+  NO_GROUP      // No group
+}
+
+enum GroupType {
+  PRIVATE_X      // Private group on X/Twitter
+  PRIVATE_TG     // Private group on Telegram (not bot managed)
+  DISCORD        // Discord server/channel
+  MULTI_PLATFORM // Multiple platforms
 }
 
 model Clay {
