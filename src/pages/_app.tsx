@@ -15,6 +15,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { clusterApiUrl } from "@solana/web3.js";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
+import { useRouter } from "next/router";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -23,6 +24,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const router = useRouter();
+  const isHomePage = router.pathname === "/";
+
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Mainnet;
 
@@ -53,15 +57,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          {/* Your app's components go here, nested within the context providers. */}
           <SessionProvider session={session}>
-            {/* {Component === Home ? null : <Header />} */}
-            <Header />
-            <Component {...pageProps} />
-            <Toaster />
-            <Analytics />
-            {/* {Component === Home ? null : <Footer />} */}
-            <Footer />
+            <div className={`min-h-screen ${!isHomePage ? "bg-black" : ""}`}>
+              <Header />
+              <Component {...pageProps} />
+              <Toaster />
+              <Analytics />
+              <Footer />
+            </div>
           </SessionProvider>
         </WalletModalProvider>
       </WalletProvider>
