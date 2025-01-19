@@ -23,6 +23,13 @@ import { HiExternalLink, HiReply } from "react-icons/hi";
 import { shortAccount } from "~/utils/addresses";
 import { getQueryString } from "~/utils/routes";
 
+const SAGA_ANCIENTS = [
+  "8845gLdhgx1dtm2NSKSPEW5SWoZwQRGcT3vS9bMCkWQX", // Kim
+  "12rDcQBjjB4i1x7wzSxaSyhdEMBhwWaEeG8JHS3se4fb", // Kyle
+  "Dt3XDSAdXAJbHqvuycgCTHykKCC7tntMFGMmSvfBbpTL", // Midas Para
+  "Begwd6UB99zLnTjqyy3oTvdvLAcvEJKa6Y3iGxypGrCu", // Midas Spino
+];
+
 const Inventory = () => {
   const router = useRouter();
   const { account } = router.query;
@@ -61,7 +68,8 @@ const Inventory = () => {
     const originalSpecies = dinos?.filter(
       (dino) =>
         dino?.attributes?.species !== "Spino" &&
-        dino?.attributes?.species !== "Para"
+        dino?.attributes?.species !== "Para" &&
+        !SAGA_ANCIENTS.includes(dino.mint)
     );
 
     setOriginalSpecies(originalSpecies ?? []);
@@ -69,7 +77,8 @@ const Inventory = () => {
     const sagaSpecies = dinos?.filter(
       (dino) =>
         dino?.attributes?.species === "Spino" ||
-        dino?.attributes?.species === "Para"
+        dino?.attributes?.species === "Para" ||
+        SAGA_ANCIENTS.includes(dino.mint)
     );
     setSagaSpecies(sagaSpecies ?? []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
