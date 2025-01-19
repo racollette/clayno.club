@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <>
       {OLYMPICS_ONGOING && <NewsTicker />}
-      <Navbar className="bg-black text-white" fluid>
+      <Navbar className="bg-transparent text-white" fluid>
         <Navbar.Brand>
           {/* <img
           alt="Flowbite React Logo"
