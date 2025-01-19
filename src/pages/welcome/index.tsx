@@ -36,7 +36,7 @@ const WelcomePage: React.FC = () => {
           {/* Hero Section */}
           <section className="relative mb-4 overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 shadow-xl sm:mb-12 sm:rounded-3xl">
             <div
-              className="absolute inset-0 opacity-[0.25] animate-[float_20s_ease-in-out_infinite]"
+              className="absolute inset-0 animate-[float_20s_ease-in-out_infinite] opacity-[0.25]"
               style={{
                 backgroundImage: 'url("/images/clayno_bg.svg")',
                 backgroundSize: "110%",
@@ -46,8 +46,13 @@ const WelcomePage: React.FC = () => {
             />
             <style jsx>{`
               @keyframes float {
-                0%, 100% { transform: scale(1.1) rotate(0deg); }
-                50% { transform: scale(1.15) rotate(1deg); }
+                0%,
+                100% {
+                  transform: scale(1.1) rotate(0deg);
+                }
+                50% {
+                  transform: scale(1.15) rotate(1deg);
+                }
               }
             `}</style>
             <div className="mx-auto max-w-4xl">
@@ -66,9 +71,9 @@ const WelcomePage: React.FC = () => {
                   <h1 className="mb-2 font-clayno text-xl text-white sm:mb-3 sm:text-3xl">
                     Welcome to Claynotopia!
                   </h1>
-                  <p className="text-sm leading-relaxed text-neutral-200/90 sm:text-base">
-                    An exciting journey awaits. Our Collectors Guide is here to help you navigate 
-                    the ins and outs of the Claynosaurz ecosystem.
+                  <p className="max-w-md text-sm font-semibold leading-relaxed text-neutral-200/90 sm:text-base">
+                    An exciting journey awaits. Our Collectors Guide is here to
+                    help you navigate the collectible ecosystem.
                   </p>
                 </div>
               </div>
@@ -83,7 +88,9 @@ const WelcomePage: React.FC = () => {
                 The Claynos
               </h2>
               <p className="mb-4 text-sm text-neutral-300 sm:mb-8 sm:text-lg">
-                {"Claynosauz are your access passes to the ecosystem. Each character (Genesis or Saga) carries the same core utility and benefits. You'll want one of these to begin your journey."}
+                {
+                  "Claynosauz are your access passes to the ecosystem. Each character (Genesis or Saga) carries the same core utility and benefits. You'll want one of these to begin your journey."
+                }
               </p>
               <div className="grid gap-3 sm:gap-6 md:grid-cols-2">
                 <div className="rounded-lg bg-neutral-800 p-3 sm:p-6">
@@ -174,9 +181,9 @@ const WelcomePage: React.FC = () => {
                       </div>
                     </div>
                     <p className="text-sm text-neutral-300">
-                      The Expansion Collection. 2,000 characters comprising of
-                      2 unique species (Para & Spino) released in partnership
-                      with Solana Mobile in March of 2023.
+                      The Expansion Collection. 2,000 characters comprising of 2
+                      unique species (Para & Spino) released in partnership with
+                      Solana Mobile in March of 2023.
                     </p>
                   </div>
                 </div>
@@ -188,11 +195,14 @@ const WelcomePage: React.FC = () => {
                     Trait Explorer
                   </h3>
                   <p className="text-xs text-neutral-400 sm:text-base">
-                    Compare the different Claynosaurz traits side-by-side, or check out the
-                    most sought-after combinations.
+                    Compare the different Claynosaurz traits side-by-side, or
+                    check out the most sought-after combinations.
                   </p>
                 </div>
-                <Tabs defaultValue="all-traits" className="space-y-3 sm:space-y-4">
+                <Tabs
+                  defaultValue="all-traits"
+                  className="space-y-3 sm:space-y-4"
+                >
                   <div className="flex items-center justify-between">
                     <TabsList className="flex gap-1 rounded-md bg-neutral-900 sm:gap-2">
                       <TabsTrigger
@@ -234,7 +244,9 @@ const WelcomePage: React.FC = () => {
           <section className="mb-4 rounded-2xl bg-neutral-900 p-3 shadow-2xl sm:mb-12 sm:rounded-3xl sm:p-8">
             <div>
               <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                <h2 className="font-clayno text-xl text-white sm:text-3xl">COSMETICS</h2>
+                <h2 className="font-clayno text-xl text-white sm:text-3xl">
+                  COSMETICS
+                </h2>
                 <div className="flex gap-1 sm:gap-2">
                   <a
                     href="https://www.tensor.trade/trade/saga"
@@ -267,16 +279,17 @@ const WelcomePage: React.FC = () => {
                 </div>
               </div>
               <p className="mb-4 mt-3 text-sm text-neutral-300 sm:mb-8 sm:mt-4 sm:text-lg">
-                The Cosmetics Collection holds optional gear, emotes, and poses to
-                customize your Claynosaurz characters. These items will be
+                The Cosmetics Collection holds optional gear, emotes, and poses
+                to customize your Claynosaurz characters. These items will be
                 redeemable in the Claynosaurz mobile game (under development).
-                Not required for gameplay, but they add extra flair to your character.
+                Not required for gameplay, but they add extra flair to your
+                character.
               </p>
               <div>
                 <div className="mt-4 sm:mt-8">
                   <CosmeticsExplorer />
                 </div>
-              </div> 
+              </div>
             </div>
           </section>
 
