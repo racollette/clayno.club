@@ -164,7 +164,7 @@ export default function LoginModal({
       {/* Awkwardly force rerender */}
       {!signedIn ? (
         <button
-          className="flex items-center gap-2 rounded-lg bg-neutral-800 px-3 py-2 font-clayno text-sm text-neutral-200 transition-all hover:bg-neutral-700"
+          className="flex items-center gap-2 rounded-lg bg-neutral-900 px-3 py-2 font-clayno text-sm text-neutral-200 transition-all hover:bg-neutral-800"
           onClick={() => {
             handleDisconnect();
             setOpenModal("dismissible");

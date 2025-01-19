@@ -179,7 +179,7 @@ export default function Home() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group relative w-full overflow-hidden rounded-lg border border-neutral-700 bg-black/50 px-8 py-3 font-medium transition-all hover:border-neutral-600 hover:bg-black/70"
+                    className="group relative w-full overflow-hidden rounded-lg  bg-neutral-900 px-8 py-3 font-medium transition-all hover:bg-neutral-800"
                     onClick={scrollToBrowse}
                   >
                     <span className="relative z-10 font-clayno font-bold">
@@ -192,7 +192,7 @@ export default function Home() {
                   >
                     <Link
                       href={username ? `/inventory/${username}` : `/inventory`}
-                      className="group relative flex w-full items-center justify-center overflow-hidden rounded-lg border border-neutral-700 bg-black/50 px-8 py-3 font-medium transition-all hover:border-neutral-600 hover:bg-black/70"
+                      className="group relative flex w-full items-center justify-center overflow-hidden rounded-lg bg-neutral-900 px-8 py-3 font-medium transition-all hover:bg-neutral-800"
                     >
                       <span className="relative z-10 font-clayno font-bold">
                         Inventory
