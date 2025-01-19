@@ -4,6 +4,7 @@ import Layout from "~/components/Layout";
 import MetaTags from "~/components/MetaTags";
 import { motion } from "framer-motion";
 import { FaQuestion } from "react-icons/fa";
+import { RiArrowRightDoubleLine } from "react-icons/ri";
 
 export default function ToolsPage() {
   return (
@@ -38,7 +39,7 @@ export default function ToolsPage() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                <div className="absolute inset-0 flex flex-col items-start justify-end p-8">
                   <h2 className="mb-3 font-clayno text-3xl">Fusion</h2>
                   <p className="text-lg font-medium text-neutral-300">
                     Create videos collages of your Claynosaurz collection.
@@ -67,20 +68,18 @@ export default function ToolsPage() {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="absolute inset-0 flex flex-col items-start justify-end p-8">
                     <h2 className="mb-3 font-clayno text-3xl">Telegram Bot</h2>
-                    <p className="mb-4 text-lg font-medium text-neutral-300">
+                    <p className="text-lg font-medium text-neutral-300">
                       Automated token gating for tribes, custom listing
                       notifications, sales feeds, and community stats.
                     </p>
                     <Link
                       href="/resources/telegramBot"
-                      className="flex items-center justify-center gap-2 text-sm text-cyan-400 hover:text-cyan-300"
+                      className="mt-4 flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300"
                     >
                       <span>View Setup Guide</span>
-                      <span className="transition-transform group-hover:translate-x-1">
-                        →
-                      </span>
+                      <RiArrowRightDoubleLine className="h-7 w-7 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </div>
                 </Link>
@@ -114,7 +113,7 @@ export default function ToolsPage() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                <div className="absolute inset-0 flex flex-col items-start justify-end p-8">
                   <h2 className="mb-3 font-clayno text-3xl">Sales Bot</h2>
                   <p className="text-lg font-medium text-neutral-300">
                     Follow sales activity on X.
