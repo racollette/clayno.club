@@ -8,7 +8,6 @@ import MetaTags from "~/components/MetaTags";
 import { useImageViewer } from "~/hooks/useImageViewer";
 import ImageViewer from "~/components/ImageViewer";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Tabs,
   TabsList,
@@ -89,7 +88,7 @@ const WelcomePage: React.FC = () => {
               </h2>
               <p className="mb-4 text-sm text-neutral-300 sm:mb-8 sm:text-lg">
                 {
-                  "Claynosauz are your access passes to the ecosystem. Each character (Genesis or Saga) carries the same core utility and benefits. You'll want one of these to begin your journey."
+                  "Claynosaurz are your access passes to the ecosystem. Each character (Genesis or Saga) carries the same core utility and benefits. You'll want one of these to begin your journey."
                 }
               </p>
               <div className="grid gap-3 sm:gap-6 md:grid-cols-2">
@@ -214,7 +213,8 @@ const WelcomePage: React.FC = () => {
                         value="popular-traits"
                         className={cn(
                           "relative rounded-sm px-2 py-1 text-xs font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm sm:px-3 sm:text-sm",
-                          "after:absolute after:right-0 after:top-0 after:h-2 after:w-2 after:-translate-y-1 after:translate-x-0.5 after:animate-pulse after:rounded-full after:bg-purple-500/90 after:shadow-[0_0_8px_rgba(168,85,247,0.4)] sm:after:h-2.5 sm:after:w-2.5"
+                          "after:absolute after:right-0 after:top-0 after:h-2.5 after:w-2.5 after:-translate-y-1 after:translate-x-0.5 after:animate-pulse after:rounded-full after:bg-purple-500/90 after:shadow-[0_0_8px_rgba(168,85,247,0.4)] sm:after:h-3 sm:after:w-3",
+                          "animate-pulse bg-purple-500/10 hover:bg-purple-500/20"
                         )}
                       >
                         Popular Combinations

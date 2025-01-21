@@ -45,12 +45,12 @@ export const SPRAYCANS: SpraycanItem[] = [
   {
     mint: "Ge6ptEDXBC9gJdDAoEoB4fJMFJ4dSEWRsK1dFJTJ7RGu",
     name: "Joyce Liu",
-    twitter: "joycelliu",
+    twitter: "joiceloo_art",
   },
   {
     mint: "GPfn9DTp9cVWukMifr8DEvo6GBnbJrDKnVF16HKpeSwE",
     name: "John Le",
-    twitter: "ProjectJohnLe",
+    twitter: "notjohnlestudio",
   },
   {
     mint: "a3Mi5uCzdvVZD6Fuw4nNp9NUq7xvPDKEvNaK3FzwKPs",
@@ -65,27 +65,27 @@ export const SPRAYCANS: SpraycanItem[] = [
   {
     mint: "9HWP8WSEVCHqiYPcDKa6CtwWcSaM7ffyuN8aXB3HyRmC",
     name: "Duke+1",
-    twitter: "dukeplus1",
+    twitter: "lateduke",
   },
   {
     mint: "GS4RvEUgd3qLgLJTFEwR37c8ZsgyWLoNsdXKSjecqfoP",
     name: "Mr. Uramaki",
-    twitter: "mr_uramaki",
+    twitter: "MrUramaki",
   },
   {
     mint: "8GL55j9vEGgRLyAs7r56iTGdQMxLvoy9QMtepoVZALV3",
     name: "Scum",
-    twitter: "scumscumscum",
+    twitter: "SCUMSOL",
   },
   {
     mint: "CHDXcyEZgUadbstQ3FGPHhq4Zr1BfVisU4FXpZ7tA8Rq",
     name: "Ricardo Cavolo",
-    twitter: "ricardocavolo",
+    twitter: "RicardoCavolo",
   },
   {
     mint: "Dgy3bPa2HhdV3fqGT4A6tG2bLufD6St32zSsUxwExcZh",
     name: "Gossip Goblin",
-    twitter: "gossipgoblin",
+    twitter: "Gossip_Goblin",
   },
   {
     mint: "YjXsghPa1dsy6xc4FLG2W1VLi8CgjntdtYMi3FoTqqw",
@@ -166,7 +166,9 @@ export default function OneofOnes() {
         >
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-clayno text-lg text-amber-400 sm:text-xl">Ancients</h3>
+              <h3 className="font-clayno text-lg text-amber-400 sm:text-xl">
+                Ancients
+              </h3>
               <div className="flex gap-1 sm:gap-2">
                 <a
                   href="https://www.tensor.trade/trade/claynosaurz"
@@ -201,10 +203,9 @@ export default function OneofOnes() {
               </div>
             </div>
             <p className="text-sm text-neutral-300">
-              22 legendary characters deeply woven into Claynotopia&apos;s
-              lore. These mythical beings play pivotal roles in the
-              world&apos;s history and will be featured in
-              upcoming episodic content.
+              22 legendary characters deeply woven into Claynotopia&apos;s lore.
+              These mythical beings play pivotal roles in the world&apos;s
+              history and will be featured in upcoming episodic content.
             </p>
           </div>
         </button>
@@ -218,7 +219,9 @@ export default function OneofOnes() {
         >
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-clayno text-lg text-blue-400 sm:text-xl">Spray Cans</h3>
+              <h3 className="font-clayno text-lg text-blue-400 sm:text-xl">
+                Spray Cans
+              </h3>
               <div className="flex gap-1 sm:gap-2">
                 <a
                   href="https://www.tensor.trade/trade/claynosaurz"
@@ -254,8 +257,8 @@ export default function OneofOnes() {
             </div>
             <p className="text-sm text-neutral-300">
               10 ultra-rare prizes discovered in physical Booster Packs during
-              LA and NYC events in 2023. Each Spray Can features a unique
-              Clayno designed by one of Solana&apos;s top artists.
+              LA and NYC events in 2023. Each Spray Can features a unique Clayno
+              designed by one of Solana&apos;s top artists.
             </p>
           </div>
         </button>
@@ -263,7 +266,7 @@ export default function OneofOnes() {
 
       <div className="mt-8">
         {selectedCategory === "ANCIENTS" && (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {specialsData[selectedCategory].map(({ name, url, attributes }) => (
               <Card
                 key={name}
@@ -301,60 +304,62 @@ export default function OneofOnes() {
           </div>
         )}
         {selectedCategory === "SPRAYCANS" && (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
-            {specialsData[selectedCategory].map(({ name, url, mint, twitter, attributes }) => (
-              <Card
-                key={name}
-                className="overflow-hidden border-neutral-800 bg-neutral-900"
-              >
-                <CardHeader className="p-0">
-                  <div
-                    className="relative aspect-square w-full cursor-pointer overflow-hidden"
-                    onClick={() =>
-                      openImage(
-                        url.replace(
-                          "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
-                          ""
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {specialsData[selectedCategory].map(
+              ({ name, url, mint, twitter, attributes }) => (
+                <Card
+                  key={name}
+                  className="overflow-hidden border-neutral-800 bg-neutral-900"
+                >
+                  <CardHeader className="p-0">
+                    <div
+                      className="relative aspect-square w-full cursor-pointer overflow-hidden"
+                      onClick={() =>
+                        openImage(
+                          url.replace(
+                            "https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/",
+                            ""
+                          )
                         )
-                      )
-                    }
-                  >
-                    <Image
-                      src={url}
-                      alt={name}
-                      fill
-                      className="transition-transform hover:scale-105"
-                    />
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="min-w-0 truncate text-lg font-bold text-neutral-100">
-                      {name}
-                    </h3>
-                    {twitter && (
-                      <a
-                        href={`https://x.com/${twitter}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex flex-shrink-0 items-center gap-1 rounded bg-neutral-800 px-2 py-1 text-xs text-neutral-300 hover:bg-neutral-700"
-                      >
-                        <svg
-                          className="h-3 w-3"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
+                      }
+                    >
+                      <Image
+                        src={url}
+                        alt={name}
+                        fill
+                        className="transition-transform hover:scale-105"
+                      />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="min-w-0 truncate text-lg font-bold text-neutral-100">
+                        {name}
+                      </h3>
+                      {twitter && (
+                        <a
+                          href={`https://x.com/${twitter}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex flex-shrink-0 items-center gap-1 rounded bg-neutral-800 px-2 py-1 text-xs text-neutral-300 hover:bg-neutral-700"
                         >
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                        @{twitter}
-                      </a>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                          <svg
+                            className="h-3 w-3"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </svg>
+                          @{twitter}
+                        </a>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            )}
           </div>
         )}
       </div>

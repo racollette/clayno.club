@@ -7,7 +7,10 @@ import { Card, CardContent, CardHeader } from "~/@/components/ui/card";
 import { api } from "~/utils/api";
 import ImageViewer from "~/components/ImageViewer";
 import { useImageViewer } from "~/hooks/useImageViewer";
-import { ORIGINAL_CLAY_SUPPLY, ORIGINAL_CLAYMAKER_SUPPLY } from "~/utils/constants";
+import {
+  ORIGINAL_CLAY_SUPPLY,
+  ORIGINAL_CLAYMAKER_SUPPLY,
+} from "~/utils/constants";
 
 type ResourceItem = {
   name: string;
@@ -16,7 +19,13 @@ type ResourceItem = {
   imageUrl: string;
 };
 
-function ResourceCard({ item, openImage }: { item: ResourceItem; openImage: (url: string) => void }) {
+function ResourceCard({
+  item,
+  openImage,
+}: {
+  item: ResourceItem;
+  openImage: (url: string) => void;
+}) {
   return (
     <Card className="overflow-hidden border-neutral-800 bg-neutral-900">
       <CardHeader className="p-0">
@@ -218,7 +227,8 @@ export default function Resources() {
                 </div>
               </div>
               <p className="text-sm text-neutral-300">
-                The primary crafting resource in Claynotopia. Currently used for class selection. Released October 17, 2023.
+                The primary crafting resource in Claynotopia. Currently used for
+                class selection. Released October 17, 2023.
               </p>
             </div>
           </button>
@@ -269,7 +279,9 @@ export default function Resources() {
                 </div>
               </div>
               <p className="text-sm text-neutral-300">
-                Essential crafting tools used to modify and customize your Clayno. Required for class selection. Released February 10, 2023.
+                Essential crafting tools used to modify and customize your
+                Clayno. Required for class selection. Released February 10,
+                2023.
               </p>
             </div>
           </button>
@@ -288,9 +300,10 @@ export default function Resources() {
                 </h3>
               </div>
               <p className="text-sm text-neutral-300">
-                Choose your Clayno&apos;s role for the upcoming Gameloft game. Requires 3x Clay and 1x Claymaker use.
-                Original species can choose from 3 specific classes each, with Dactyls, Paras & Spinos classes coming
-                soon. Visit the{" "}
+                Choose your Clayno&apos;s role for the upcoming Gameloft game.
+                Requires 3x Clay and 1x Claymaker use. Original species can
+                choose from 3 specific classes each, with Dactyls, Paras and
+                Spinos classes coming soon. Visit the{" "}
                 <Link href="/stats" className="text-blue-400 hover:underline">
                   Stats page
                 </Link>{" "}
@@ -304,21 +317,33 @@ export default function Resources() {
           {selectedResource === "CLAY" && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
               {CLAY_ITEMS.map((item) => (
-                <ResourceCard key={item.name} item={item} openImage={openImage} />
+                <ResourceCard
+                  key={item.name}
+                  item={item}
+                  openImage={openImage}
+                />
               ))}
             </div>
           )}
           {selectedResource === "CLAYMAKERS" && (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
               {CLAYMAKER_ITEMS.map((item) => (
-                <ResourceCard key={item.name} item={item} openImage={openImage} />
+                <ResourceCard
+                  key={item.name}
+                  item={item}
+                  openImage={openImage}
+                />
               ))}
             </div>
           )}
           {selectedResource === "CLASSES" && (
             <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
               {CLASSES_ITEMS.map((item) => (
-                <ResourceCard key={item.name} item={item} openImage={openImage} />
+                <ResourceCard
+                  key={item.name}
+                  item={item}
+                  openImage={openImage}
+                />
               ))}
             </div>
           )}
@@ -326,4 +351,4 @@ export default function Resources() {
       </div>
     </>
   );
-} 
+}

@@ -20,18 +20,13 @@ import { api } from "~/utils/api";
 import { cn } from "~/@/lib/utils";
 import { useImageViewer } from "~/hooks/useImageViewer";
 import ImageViewer from "~/components/ImageViewer";
-
-const SPECIES_CLASSES = {
-  Rex: ["Warrior", "Mystic", "Stalker"],
-  Trice: ["Warrior", "Defender", "Tracker"],
-  Stego: ["Defender", "Mender", "Mystic"],
-  Ankylo: ["Defender", "Warrior", "Mender"],
-  Bronto: ["Mender", "Mystic", "Defender"],
-  Raptor: ["Tracker", "Stalker", "Warrior"],
-  Spino: [],
-  Para: [],
-  Dactyl: [],
-} as const;
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/@/components/ui/select";
 
 interface BaseTrait {
   name: string;
@@ -417,11 +412,8 @@ export default function TraitGuide() {
 
   const refreshDinos = useCallback(() => {
     setRandomDinos({});
-    if (selectedCategory !== "SPECIES") {
-      const randomSpecies =
-        species[Math.floor(Math.random() * species.length)]!;
-      setSelectedSpecies(randomSpecies);
-    }
+    const randomSpecies = species[Math.floor(Math.random() * species.length)]!;
+    setSelectedSpecies(randomSpecies);
     fetchRandomDinos(selectedCategory);
   }, [selectedCategory, fetchRandomDinos, species]);
 
@@ -499,10 +491,34 @@ export default function TraitGuide() {
               ))}
             </TabsList>
             <div className="flex items-center justify-end gap-2">
-              <div className="flex items-center gap-2 rounded-md bg-neutral-800/50 px-2 py-1 text-[10px] text-neutral-300 backdrop-blur-sm sm:text-sm">
-                <span className="text-neutral-500">Species:</span>
-                <span className="font-medium text-neutral-200">{selectedSpecies}</span>
-              </div>
+              <Select
+                value={selectedSpecies}
+                onValueChange={(value) => {
+                  setSelectedSpecies(value);
+                  setRandomDinos({});
+                  fetchRandomDinos(selectedCategory);
+                }}
+              >
+                <SelectTrigger className="h-auto w-auto border-0 bg-neutral-800/50 p-0 hover:bg-neutral-700/50 focus:ring-0">
+                  <div className="flex items-center gap-2 px-2 py-1 text-[10px] text-neutral-300 sm:text-sm">
+                    <span className="text-neutral-500">Species:</span>
+                    <span className="font-medium text-neutral-200">
+                      {selectedSpecies}
+                    </span>
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="border-neutral-700 bg-neutral-800 text-neutral-200">
+                  {species.map((specie) => (
+                    <SelectItem
+                      key={specie}
+                      value={specie}
+                      className="cursor-pointer text-neutral-200 focus:bg-neutral-700 focus:text-neutral-100 data-[highlighted]:bg-neutral-700 data-[highlighted]:text-neutral-100"
+                    >
+                      {specie}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Button
                 onClick={refreshDinos}
                 variant="default"
@@ -522,7 +538,11 @@ export default function TraitGuide() {
           </div>
 
           {Object.entries(TRAITS).map(([category, traits]) => (
-            <TabsContent key={category} value={category} className="mt-2 sm:mt-6">
+            <TabsContent
+              key={category}
+              value={category}
+              className="mt-2 sm:mt-6"
+            >
               <div className="grid grid-cols-2 gap-1.5 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
                 {getFilteredTraits(category as TraitCategory, traits).map(
                   (trait: Trait, index) => {
