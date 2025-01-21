@@ -316,10 +316,10 @@ const WelcomePage: React.FC = () => {
                 </h1>
                 <div className="space-y-4">
                   <p className="text-sm leading-relaxed text-neutral-200/90 sm:text-base">
-                    If you already found your favorite collectibles, it's time
-                    to unlock exclusive perks, connect with fellow collectors,
-                    and experience the next evolution of digital fandom with
-                    Claynosaurz.
+                    If you already found your favorite collectibles, it&apos;s
+                    time to unlock exclusive perks, connect with fellow
+                    collectors, and experience the next evolution of digital
+                    fandom with Claynosaurz.
                   </p>
                   <p className="text-sm leading-relaxed text-neutral-200/90 sm:text-base">
                     Please find the most frequently asked questions below.
@@ -378,7 +378,7 @@ const WelcomePage: React.FC = () => {
                       <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
                         Claynosaurz collectors can enjoy exclusive access to the
                         Claynosaurz ecosystem. This includes but is not limited
-                        to events, early releases, access to holders' gated
+                        to events, early releases, access to holders&apos; gated
                         content, and other activations.
                       </p>
                     </div>
@@ -405,8 +405,8 @@ const WelcomePage: React.FC = () => {
                         means a specific group of Claynosaurz collectibles owned
                         by one collector. This can mean anything from collecting
                         one of each species or going after more specific
-                        "perfect" herds with multiple matching traits and/or
-                        backgrounds.{" "}
+                        &quot;perfect&quot; herds with multiple matching traits
+                        and/or backgrounds.{" "}
                         <a
                           href="https://clayno.club/herds"
                           className="text-yellow-400 transition-colors hover:text-yellow-300 hover:underline"
@@ -497,7 +497,7 @@ const WelcomePage: React.FC = () => {
                         </a>{" "}
                         is a group of high-conviction collectors who hold 25 OG
                         Claynosaurz or an Ancient. Clayno.Club and the
-                        collector's tools are hosted by Clayno Capital.
+                        collector&apos;s tools are hosted by Clayno Capital.
                       </p>
                     </div>
                   </div>
