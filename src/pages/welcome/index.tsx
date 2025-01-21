@@ -23,8 +23,8 @@ const WelcomePage: React.FC = () => {
   return (
     <>
       <MetaTags
-        title="Welcome to Claynotopia | Clayno Club"
-        description="Welcome to the world of Claynosaurz —an exciting journey awaits. Our Collectors Guide is here to help you navigate the ins and outs of Claynotopia."
+        title="Welcome to Claynotopia | Claynosaurz Collectibles explained"
+        description="Welcome to the world of Claynosaurz —an exciting journey awaits. Our Collectors Guide is here to help you navigate the ins and outs of the digital collectibles of Claynotopia."
       />
       <ImageViewer
         isOpen={isOpen}
@@ -68,9 +68,9 @@ const WelcomePage: React.FC = () => {
                   />
                 </div>
                 <div className="max-w-2xl">
-                  <h1 className="mb-2 font-clayno text-xl text-white sm:mb-3 sm:text-3xl">
+                  <h2 className="mb-2 font-clayno text-xl text-white sm:mb-3 sm:text-3xl">
                     Welcome to Claynotopia!
-                  </h1>
+                  </h2>
                   <p className="max-w-md text-sm font-semibold leading-relaxed text-neutral-200/90 sm:text-base">
                     An exciting journey awaits. Our Collectors Guide is here to
                     help you navigate the collectible ecosystem.
@@ -134,7 +134,7 @@ const WelcomePage: React.FC = () => {
                       </div>
                     </div>
                     <p className="text-sm text-neutral-300">
-                      10,222 original Claynosaurz released in November 2022
+                      10,232 original Claynosaurz released in November 2022
                       featuring seven species: Rex, Trice, Stego, Ankylo,
                       Bronto, Raptor, and Dactyl.
                     </p>
@@ -182,8 +182,7 @@ const WelcomePage: React.FC = () => {
                     </div>
                     <p className="text-sm text-neutral-300">
                       The Expansion Collection. 2,000 characters comprising of 2
-                      unique species (Para & Spino) released in partnership with
-                      Solana Mobile in March of 2023.
+                      unique species (Para & Spino) released in March 2023.
                     </p>
                   </div>
                 </div>
@@ -215,7 +214,7 @@ const WelcomePage: React.FC = () => {
                         value="popular-traits"
                         className={cn(
                           "relative rounded-sm px-2 py-1 text-xs font-medium text-neutral-300 ring-offset-black transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm sm:px-3 sm:text-sm",
-                          "after:absolute after:right-0 after:top-0 after:h-1.5 after:w-1.5 after:-translate-y-1 after:translate-x-0.5 after:animate-pulse after:rounded-full after:bg-purple-500 sm:after:h-2 sm:after:w-2"
+                          "after:absolute after:right-0 after:top-0 after:h-2 after:w-2 after:-translate-y-1 after:translate-x-0.5 after:animate-pulse after:rounded-full after:bg-purple-500/90 after:shadow-[0_0_8px_rgba(168,85,247,0.4)] sm:after:h-2.5 sm:after:w-2.5"
                         )}
                       >
                         Popular Combinations
@@ -304,6 +303,206 @@ const WelcomePage: React.FC = () => {
                 enhance the utility and experience of character holders.
               </p>
               <Resources />
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="relative mb-4 overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 p-3 shadow-xl sm:mb-12 sm:rounded-3xl sm:p-8">
+            <div className="relative">
+              {/* FAQ Header */}
+              <div className="mb-12 pt-3 sm:pt-4">
+                <h1 className="mb-6 font-clayno text-3xl uppercase tracking-wide text-yellow-400 sm:text-4xl">
+                  Explore the world of Claynosaurz collectibles
+                </h1>
+                <div className="space-y-4">
+                  <p className="text-sm leading-relaxed text-neutral-200/90 sm:text-base">
+                    If you already found your favorite collectibles, it's time
+                    to unlock exclusive perks, connect with fellow collectors,
+                    and experience the next evolution of digital fandom with
+                    Claynosaurz.
+                  </p>
+                  <p className="text-sm leading-relaxed text-neutral-200/90 sm:text-base">
+                    Please find the most frequently asked questions below.
+                  </p>
+                </div>
+              </div>
+
+              <h3 className="mb-8 font-clayno text-xl uppercase tracking-wide text-yellow-400/90 sm:text-2xl">
+                Frequently Asked Questions
+              </h3>
+              <div className="space-y-6">
+                <div
+                  itemScope
+                  itemType="https://schema.org/Question"
+                  className="group overflow-hidden rounded-xl bg-neutral-800 transition-all duration-300 hover:bg-neutral-700"
+                >
+                  <div className="p-6">
+                    <h4 className="mb-4 text-lg font-medium text-white sm:text-xl">
+                      How do I join the Claynosaurz community?
+                    </h4>
+                    <div
+                      itemScope
+                      itemType="https://schema.org/Answer"
+                      className="rounded-lg bg-neutral-900/50 p-4"
+                    >
+                      <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
+                        You are part of the herd if you own any Claynosaurz
+                        digital collectibles (NFTs). Join token-gated chats
+                        through Clayno.Club and verify your assets in the
+                        official Claynosaurz Discord. When you have verified
+                        your collectibles, you can participate in community
+                        meetups, sign up for events, or participate in community
+                        giveaways.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Update the same classes for all FAQ items */}
+                {/* Example for one more item, repeat for others */}
+                <div
+                  itemScope
+                  itemType="https://schema.org/Question"
+                  className="group overflow-hidden rounded-xl bg-neutral-800 transition-all duration-300 hover:bg-neutral-700"
+                >
+                  <div className="p-6">
+                    <h4 className="mb-4 text-lg font-medium text-white sm:text-xl">
+                      What benefits do collectible holders get aside from owning
+                      the artwork?
+                    </h4>
+                    <div
+                      itemScope
+                      itemType="https://schema.org/Answer"
+                      className="rounded-lg bg-neutral-900/50 p-4"
+                    >
+                      <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
+                        Claynosaurz collectors can enjoy exclusive access to the
+                        Claynosaurz ecosystem. This includes but is not limited
+                        to events, early releases, access to holders' gated
+                        content, and other activations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  itemScope
+                  itemType="https://schema.org/Question"
+                  className="group overflow-hidden rounded-xl bg-neutral-800 transition-all duration-300 hover:bg-neutral-700"
+                >
+                  <div className="p-6">
+                    <h4 className="mb-4 text-lg font-medium text-white sm:text-xl">
+                      What are herds? Some collectors display their herds in
+                      their socials.
+                    </h4>
+                    <div
+                      itemScope
+                      itemType="https://schema.org/Answer"
+                      className="rounded-lg bg-neutral-900/50 p-4"
+                    >
+                      <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
+                        While there is no official definition of a herd, a herd
+                        means a specific group of Claynosaurz collectibles owned
+                        by one collector. This can mean anything from collecting
+                        one of each species or going after more specific
+                        "perfect" herds with multiple matching traits and/or
+                        backgrounds.{" "}
+                        <a
+                          href="https://clayno.club/herds"
+                          className="text-yellow-400 transition-colors hover:text-yellow-300 hover:underline"
+                        >
+                          View herds
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  itemScope
+                  itemType="https://schema.org/Question"
+                  className="group overflow-hidden rounded-xl bg-neutral-800 transition-all duration-300 hover:bg-neutral-700"
+                >
+                  <div className="p-6">
+                    <h4 className="mb-4 text-lg font-medium text-white sm:text-xl">
+                      What determines the rarity and value of a Claynosaurz
+                      collectible?
+                    </h4>
+                    <div
+                      itemScope
+                      itemType="https://schema.org/Answer"
+                      className="rounded-lg bg-neutral-900/50 p-4"
+                    >
+                      <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
+                        Collectors value traits and trait combos over strict
+                        mathematical rarity. When diving into the collection,
+                        you will find multiple sought-after collectible
+                        features. You can browse the features of the
+                        collectibles above and get to know the most popular
+                        traits and trait combinations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  itemScope
+                  itemType="https://schema.org/Question"
+                  className="group overflow-hidden rounded-xl bg-neutral-800 transition-all duration-300 hover:bg-neutral-700"
+                >
+                  <div className="p-6">
+                    <h4 className="mb-4 text-lg font-medium text-white sm:text-xl">
+                      What is the total supply of Claynosaurz, and will there be
+                      more?
+                    </h4>
+                    <div
+                      itemScope
+                      itemType="https://schema.org/Answer"
+                      className="rounded-lg bg-neutral-900/50 p-4"
+                    >
+                      <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
+                        The first edition collection (Claynosaurz) has a supply
+                        of 10,232, and the second edition (Claynosaurz: The Call
+                        of Saga) has a supply of 2000. These two collections are
+                        considered the original Claynosaurz collectibles. Other
+                        supporting collections have a bigger supply, and the
+                        team has hinted about further expansions.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  itemScope
+                  itemType="https://schema.org/Question"
+                  className="group overflow-hidden rounded-xl bg-neutral-800 transition-all duration-300 hover:bg-neutral-700"
+                >
+                  <div className="p-6">
+                    <h4 className="mb-4 text-lg font-medium text-white sm:text-xl">
+                      What is Clayno Capital?
+                    </h4>
+                    <div
+                      itemScope
+                      itemType="https://schema.org/Answer"
+                      className="rounded-lg bg-neutral-900/50 p-4"
+                    >
+                      <p className="text-sm leading-relaxed text-neutral-300 sm:text-base">
+                        <a
+                          href="https://clayno.capital"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-yellow-400 transition-colors hover:text-yellow-300 hover:underline"
+                        >
+                          Clayno Capital
+                        </a>{" "}
+                        is a group of high-conviction collectors who hold 25 OG
+                        Claynosaurz or an Ancient. Clayno.Club and the
+                        collector's tools are hosted by Clayno Capital.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </main>
