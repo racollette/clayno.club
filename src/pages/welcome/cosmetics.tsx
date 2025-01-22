@@ -116,7 +116,7 @@ const COSMETICS_DATA: Categories = {
       name: "Duke+1",
       type: "Full Set",
       description: "Exclusive armor set designed by Duke+1.",
-      twitter: "dukeplus1",
+      twitter: "lateduke",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/duke_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/duke_card.png",
@@ -127,7 +127,7 @@ const COSMETICS_DATA: Categories = {
       name: "Gossip Goblin",
       type: "Full Set",
       description: "Exclusive armor set designed by Gossip Goblin.",
-      twitter: "gossipgoblin",
+      twitter: "Gossip_Goblin",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/gossip_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/gossip_card.png",
@@ -149,7 +149,7 @@ const COSMETICS_DATA: Categories = {
       name: "John Le",
       type: "Full Set",
       description: "Exclusive armor set designed by John Le.",
-      twitter: "ProjectJohnLe",
+      twitter: "notjohnlestudio",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/john_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/john_card.png",
@@ -160,7 +160,7 @@ const COSMETICS_DATA: Categories = {
       name: "Joyce Liu",
       type: "Full Set",
       description: "Exclusive armor set designed by Joyce Liu.",
-      twitter: "joycelliu",
+      twitter: "joiceloo_art",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/joyce_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/joyce_card.png",
@@ -171,7 +171,7 @@ const COSMETICS_DATA: Categories = {
       name: "Mr. Uramaki",
       type: "Full Set",
       description: "Exclusive armor set designed by Mr. Uramaki.",
-      twitter: "mr_uramaki",
+      twitter: "MrUramaki",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/uramaki_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/uramaki_card.png",
@@ -182,7 +182,7 @@ const COSMETICS_DATA: Categories = {
       name: "Ricardo Cavolo",
       type: "Full Set",
       description: "Exclusive armor set designed by Ricardo Cavolo.",
-      twitter: "ricardocavolo",
+      twitter: "RicardoCavolo",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ricardo_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/ricardo_card.png",
@@ -193,7 +193,7 @@ const COSMETICS_DATA: Categories = {
       name: "Scum",
       type: "Full Set",
       description: "Exclusive armor set designed by Scum.",
-      twitter: "scumscumscum",
+      twitter: "SCUMSOL",
       images: {
         full: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/scum_full.png",
         card: "https://arweave.net/Ibs2SrPfQ-ccN_YUYD_01yICSxzFD1O58FFmlXsDWfM/scum_card.png",
@@ -493,21 +493,21 @@ export default function CosmeticsExplorer() {
 
         <div className="mt-8">
           {selectedSet === "ARTIFACTS" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {COSMETICS_DATA.ARTIFACTS.map((item) => (
                 <ArtifactCard key={item.name} item={item} />
               ))}
             </div>
           )}
           {selectedSet === "BAJA" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {bajaFishArmor.map((item) => (
                 <ArmorCard key={item.name} item={item} />
               ))}
             </div>
           )}
           {selectedSet === "BUTTER" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 sm:gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {butterBallArmor.map((item) => (
                 <ArmorCard key={item.name} item={item} />
               ))}
