@@ -228,7 +228,7 @@ export default function Resources() {
               </div>
               <p className="text-sm text-neutral-300">
                 The primary crafting resource in Claynotopia. Currently used for
-                class selection. Released October 17, 2023.
+                class selection. Released January 28th 2023.
               </p>
             </div>
           </button>
@@ -280,7 +280,7 @@ export default function Resources() {
               </div>
               <p className="text-sm text-neutral-300">
                 Essential crafting tools used to modify and customize your
-                Clayno. Required for class selection. Released February 10,
+                Clayno. Required for class selection. Released December 12th
                 2023.
               </p>
             </div>
