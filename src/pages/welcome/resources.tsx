@@ -281,7 +281,7 @@ export default function Resources() {
               <p className="text-sm text-neutral-300">
                 Essential crafting tools used to modify and customize your
                 Clayno. Required for class selection. Released December 12th
-                2023.
+                2022.
               </p>
             </div>
           </button>
