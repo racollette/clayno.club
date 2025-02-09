@@ -309,16 +309,16 @@ async function createUser(address: string) {
       },
     });
     const dinosOwned = checkHolderStatus?.amount || 0;
-    const votesToIssue = dinosOwned > 0 ? 20 : 0;
+    // const votesToIssue = dinosOwned > 0 ? 20 : 0;
 
-    await prisma.voter.create({
-      data: {
-        votesAvailable: votesToIssue,
-        votesCast: 0,
-        userId: createdUser.id,
-        votesIssued: votesToIssue > 0,
-      },
-    });
+    // await prisma.voter.create({
+    //   data: {
+    //     userId: user.id,
+    //     votesAvailable: votesToIssue,
+    //     votesCast: 0,
+    //     votesIssued: votesToIssue > 0,
+    //   },
+    // });
 
     await prisma.account.create({
       data: {

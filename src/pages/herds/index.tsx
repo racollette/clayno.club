@@ -10,7 +10,6 @@ import type {
   Herd as HerdType,
   Attributes,
   Dino,
-  Voter,
   User,
   Discord,
   Twitter,
@@ -19,8 +18,7 @@ import type {
 } from "@prisma/client";
 import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
-import { VoteWidget } from "~/components/VoteWidget";
-import { HiExternalLink, HiX, HiRefresh } from "react-icons/hi";
+import { HiX, HiRefresh } from "react-icons/hi";
 import FilterDialog from "../../components/herds/FilterDialog";
 import MetaTags from "~/components/MetaTags";
 // const getHerdRarity = (herd: any) => {
@@ -50,16 +48,9 @@ type HerdWithIncludes =
       dinos: (Dino & {
         attributes: Attributes | null;
       })[];
-      voters: (Voter & {
-        user: User & {
-          discord: Discord | null;
-          twitter: Twitter | null;
-          telegram: Telegram | null;
-        };
-      })[];
     };
 
-// Custom hook to filter herds
+// Custom hook to filter and sort herds
 function filterHerds(
   allHerds: HerdWithIncludes[] | undefined,
   color: string | null,
@@ -67,8 +58,14 @@ function filterHerds(
   background: string | null,
   tier: string | null,
   belly: string | null
-) {
-  return allHerds?.filter((herd) => {
+): HerdWithIncludes[] {
+  // Early return if allHerds is undefined or empty
+  if (!allHerds?.length) return [];
+
+  // First filter the herds
+  const filteredHerds = allHerds.filter((herd): herd is HerdWithIncludes => {
+    if (!herd?.matches) return false;
+
     const herdMatchesLower = herd.matches.toLowerCase();
     const colorFilter =
       !color || color === "all" || herdMatchesLower.includes(color);
@@ -90,7 +87,6 @@ function filterHerds(
         : tier === "scrappy"
         ? 4
         : 0;
-    // const tierFilter = !tier || tier === "all" || herd.tier === tierValue;
     const tierFilter =
       !tier || tier === "all" ? herd.tier !== 4 : herd.tier === tierValue;
     const bellyFilter =
@@ -100,6 +96,38 @@ function filterHerds(
       colorFilter && skinFilter && backgroundFilter && tierFilter && bellyFilter
     );
   });
+
+  // Create separate arrays for each tier group
+  const topTierHerds = filteredHerds.filter((h) => h.tier <= 2);
+  const rareHerds = filteredHerds.filter((h) => h.tier === 3);
+  const scrappyHerds = filteredHerds.filter((h) => h.tier === 4);
+
+  // Sort top tier herds by rarity with randomization
+  const sortedTopTier = [...topTierHerds].sort((a, b) => {
+    const rarityDiff = a.rarity - b.rarity;
+    const aRandomFactor = Math.random() * (a.rarity + 1);
+    const bRandomFactor = Math.random() * (b.rarity + 1);
+    return rarityDiff + (aRandomFactor - bRandomFactor);
+  });
+
+  // Function to shuffle an array
+  function shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = shuffled[i]!;
+      shuffled[i] = shuffled[j]!;
+      shuffled[j] = temp;
+    }
+    return shuffled;
+  }
+
+  // Combine all groups in order, ensuring each array exists
+  return [
+    ...sortedTopTier,
+    ...shuffleArray(rareHerds),
+    ...shuffleArray(scrappyHerds),
+  ];
 }
 
 function useHerdOwners(walletAddresses: string[]) {
@@ -113,97 +141,10 @@ function useHerdOwners(walletAddresses: string[]) {
 export default function Home() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const { user, voterInfo, session, sessionStatus } = useUser();
+  const { user } = useUser();
   const { data: allHerds, isLoading: allHerdsLoading } =
     api.herd.getAllHerds.useQuery();
-  const [castVoteLoading, setCastVoteLoading] = useState(false);
-  const [removeVoteLoading, setRemoveVoteLoading] = useState(false);
   const utils = api.useContext();
-
-  const castVote = api.vote.castVote.useMutation({
-    async onMutate(updateVoterInfo) {
-      await utils.vote.getVoterInfo.cancel();
-
-      const prevData = utils.vote.getVoterInfo.getData({
-        userId: updateVoterInfo.userId,
-      });
-
-      if (user && prevData) {
-        const newData = {
-          ...prevData,
-          votes: [
-            ...prevData.votes,
-            { id: updateVoterInfo.herdId } as HerdType,
-          ],
-          votesAvailable: prevData.votesAvailable - 1,
-          votesCast: prevData.votesCast + 1,
-        };
-
-        utils.vote.getVoterInfo.setData(
-          { userId: updateVoterInfo.userId },
-          newData
-        );
-      }
-
-      return { prevData };
-    },
-    onError(err, updatedVoterInfo, ctx) {
-      if (user) {
-        utils.vote.getVoterInfo.setData({ userId: user.id }, ctx?.prevData);
-      }
-    },
-    onSettled() {
-      // Sync with server once mutation has settled
-      utils.vote.getVoterInfo.invalidate();
-      utils.herd.getAllHerds.invalidate();
-      setTimeout(() => {
-        setCastVoteLoading(false);
-      }, 1000);
-    },
-  });
-
-  const removeVote = api.vote.removeVote.useMutation({
-    async onMutate(updateVoterInfo) {
-      await utils.vote.getVoterInfo.cancel();
-
-      const prevData = utils.vote.getVoterInfo.getData({
-        userId: updateVoterInfo.userId,
-      });
-
-      if (user && prevData) {
-        const newData = {
-          ...prevData,
-          votes: [
-            ...prevData.votes,
-            { id: updateVoterInfo.herdId } as HerdType,
-          ],
-          votesAvailable: prevData.votesAvailable + 1,
-          votesCast: prevData.votesCast - 1,
-        };
-
-        utils.vote.getVoterInfo.setData(
-          { userId: updateVoterInfo.userId },
-          newData
-        );
-      }
-
-      return { prevData };
-    },
-    onError(err, updatedVoterInfo, ctx) {
-      // If the mutation fails, use the context-value from onMutate
-      if (user) {
-        utils.vote.getVoterInfo.setData({ userId: user.id }, ctx?.prevData);
-      }
-    },
-    onSettled() {
-      // Sync with server once mutation has settled
-      utils.vote.getVoterInfo.invalidate();
-      utils.herd.getAllHerds.invalidate();
-      setTimeout(() => {
-        setRemoveVoteLoading(false);
-      }, 1000);
-    },
-  });
 
   const color = searchParams.get("color") || "all";
   const skin = searchParams.get("skin") || "all";
@@ -215,11 +156,6 @@ export default function Home() {
   const [showDactyl, setShowDactyl] = useState(true);
   const [showSaga, setShowSaga] = useState(true);
   const [showPFP, setShowPFP] = useState(false);
-  const [showVoted, setShowVoted] = useState(false);
-
-  const myVotes = allHerds?.filter((herd) =>
-    herd.voters.some((voter) => voter.userId === user?.id)
-  );
 
   const [filteredHerds, setFilteredHerds] = useState<
     HerdWithIncludes[] | undefined
@@ -255,152 +191,6 @@ export default function Home() {
     setShowPFP(newToggleState);
   };
 
-  const toggleVoted = (newToggleState: boolean) => {
-    setShowVoted(newToggleState);
-    if (newToggleState) {
-      setFilteredHerds(myVotes);
-    } else {
-      setFilteredHerds(
-        filterHerds(allHerds, color, skin, background, tier, belly)
-      );
-    }
-  };
-
-  const handleCastVote = (herdId: string) => {
-    if (castVoteLoading || removeVoteLoading) {
-      return;
-    }
-
-    if (sessionStatus === "unauthenticated") {
-      toast({
-        title: "Sign in first!",
-      });
-      return;
-    }
-
-    if (!voterInfo) {
-      toast({
-        title: "Not eligible to vote 😔",
-      });
-      return;
-    }
-
-    if (voterInfo && voterInfo.votesAvailable <= 0) {
-      toast({
-        title: "No votes remaining!",
-      });
-      return;
-    }
-
-    if (voterInfo?.votesAvailable === null) {
-      toast({
-        title: "Could not retrieve voter status",
-        description: "Please try again",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (
-      !user?.discord &&
-      !user?.twitter &&
-      (!user?.telegram || !user?.telegram?.isActive)
-    ) {
-      toast({
-        title: "Please connect a social account before voting",
-        description: (
-          <div className="rounded-md bg-black px-3 py-2">
-            <a
-              href={`/profile/${user?.defaultAddress}/settings`}
-              className="flex flex-row items-center gap-2 "
-            >
-              <span className="text-white">Settings</span>
-              <HiExternalLink size={24} />
-            </a>
-          </div>
-        ),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const alreadyVoted =
-      filteredHerds &&
-      filteredHerds.some(
-        (herd) =>
-          herd.id === herdId &&
-          herd.voters.some((voter) => voter.userId === user?.id)
-      );
-
-    if (alreadyVoted) {
-      toast({
-        title: "You already voted for this herd!",
-      });
-      return;
-    }
-    if (user) {
-      try {
-        setCastVoteLoading(true);
-        castVote.mutate({ userId: user.id, herdId });
-        // toast({
-        //   title: "Vote cast!",
-        // });
-      } catch (error) {
-        console.error("Error casting vote:", error);
-        toast({
-          title: "An error occurred while casting your vote.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      toast({
-        title: "Must be signed in to vote!",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRemoveVote = (herdId: string) => {
-    if (castVoteLoading || removeVoteLoading) {
-      return;
-    }
-
-    if (voterInfo?.votesAvailable === null) {
-      toast({
-        title: "Could not retrieve voter status",
-        description: "Please try again",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (user) {
-      try {
-        setRemoveVoteLoading(true);
-        removeVote.mutateAsync({ userId: user.id, herdId });
-        // toast({
-        //   title: "Vote removed!",
-        // });
-      } catch (error) {
-        console.error("Error removing vote:", error);
-        toast({
-          title: "An error occurred while removing your vote.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      toast({
-        title: "Must be signed in to vote!",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // const herds = api.useQueries((t) =>
-  //   [1, 2, 3].map((tier) => t.herd.getHerdTier({ tier: tier }))
-  // );
-  // const isLoading = herds.some((queryResult) => queryResult.isLoading);
-
   const lastUpdated = useTimeSinceLastUpdate("herds");
   const filtersActive = [color, skin, background, tier, belly].filter(
     (filter) => filter !== "all"
@@ -414,7 +204,7 @@ export default function Home() {
     <>
       <MetaTags
         title="Claynosaurz Herds | Clayno Club"
-        description="Who has the finest herd of Claynotopia? Find the most popular Claynosaurz collections and vote for your favorite."
+        description="Who has the finest herd of Claynotopia? Find the most popular Claynosaurz collections."
       />
       <main className="relative flex min-h-screen flex-col items-center  bg-black">
         {allHerdsLoading ? (
@@ -499,36 +289,20 @@ export default function Home() {
 
             <section className="w-full md:w-4/5 lg:w-2/3 xl:w-3/5 2xl:w-1/2">
               <TabSelection
-                labels={["3 Trait", "2 Trait", "1 Trait"]}
+                labels={["Top Tier", "Rare", "Scrappy"]}
                 counts={[
-                  // herds[0]?.data?.length ?? 0,
-                  // herds[1]?.data?.length ?? 0,
-                  // herds[2]?.data?.length ?? 0,
-                  0, 0, 0,
+                  filteredHerds?.filter((h) => h.tier <= 2).length ?? 0,
+                  filteredHerds?.filter((h) => h.tier === 3).length ?? 0,
+                  filteredHerds?.filter((h) => h.tier === 4).length ?? 0,
                 ]}
                 showDactyl={showDactyl}
                 showSaga={showSaga}
                 showPFP={showPFP}
-                showVoted={showVoted}
                 toggleDactyl={toggleDactyl}
                 toggleSaga={toggleSaga}
                 togglePFP={togglePFP}
-                toggleVoted={toggleVoted}
               >
-                {/* {herds.map((tier, index) => ( */}
                 <div className="mt-4 flex flex-col items-center justify-center gap-2">
-                  {/* {tier.data &&
-                      tier.data?.map((herd) => (
-                        <Herd
-                          key={herd.id}
-                          herd={herd}
-                          showDactyl={showDactyl}
-                          showSaga={showSaga}
-                          showOwner={true}
-                          showPFP={showPFP}
-                        />
-                      ))} */}
-
                   {filteredResults === 0 && (
                     <div className="mt-10 flex flex-col items-center justify-center gap-2">
                       {allHerdsLoading ? (
@@ -573,18 +347,10 @@ export default function Home() {
                           showPFP={showPFP}
                           owner={foundUser}
                         />
-                        <VoteWidget
-                          voterInfo={voterInfo}
-                          herd={herd}
-                          handleRemoveVote={handleRemoveVote}
-                          handleCastVote={handleCastVote}
-                          voteLoading={castVoteLoading || removeVoteLoading}
-                        />
                       </div>
                     );
                   })}
                 </div>
-                {/* ))} */}
               </TabSelection>
             </section>
           </div>

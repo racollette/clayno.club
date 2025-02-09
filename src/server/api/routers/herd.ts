@@ -8,17 +8,13 @@ import {
 export const herdRouter = createTRPCRouter({
   getAllHerds: publicProcedure.query(({ ctx, input }) => {
     return ctx.prisma.herd.findMany({
-      orderBy: [
-        {
-          voters: {
-            _count: "desc", // Sort by the number of voters in descending order
-          },
-        },
-        {
-          rarity: "asc", // Sort by rarity in ascending order
-        },
-      ],
+      orderBy: {
+        // voters: {
+        //   _count: "desc", // Sort by the number of voters in descending order
+        // },
+      },
       include: {
+        // voters: true,
         dinos: {
           orderBy: {
             attributes: {
@@ -27,17 +23,6 @@ export const herdRouter = createTRPCRouter({
           },
           include: {
             attributes: true,
-          },
-        },
-        voters: {
-          include: {
-            user: {
-              include: {
-                discord: true,
-                twitter: true,
-                telegram: true,
-              },
-            },
           },
         },
       },
@@ -62,7 +47,7 @@ export const herdRouter = createTRPCRouter({
               attributes: true,
             },
           },
-          voters: true,
+          // voters: true,
         },
       });
     }),

@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import LoginModal from "./LoginModal";
 import { Navbar } from "flowbite-react";
-import VoterInfo from "./herds/VoterInfo";
 import Image from "next/image";
 import { NewsTicker } from "./attention/NewsTicker";
 import { OLYMPICS_ONGOING } from "~/utils/constants";
@@ -34,12 +33,6 @@ export default function Header() {
             <p>Clayno.club</p>
           </span>
         </Navbar.Brand>
-        <div className="flex gap-2 md:order-2">
-          {isHerdsPage && <VoterInfo />}
-          {/* <VoterInfo /> */}
-          <LoginModal />
-          <Navbar.Toggle className="bg-transparent text-white hover:bg-transparent focus:ring-zinc-500" />
-        </div>
         <Navbar.Collapse>
           <Navbar.Link
             className="text-md cursor-pointer font-clayno text-white"

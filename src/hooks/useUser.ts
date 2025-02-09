@@ -16,11 +16,13 @@ export const useUser = () => {
     id: id ?? "none",
   });
 
-  const { data: voterInfo, isLoading: voterInfoLoading } =
-    api.vote.getVoterInfo.useQuery(
-      { userId: userId || "none" },
-      { enabled: !!userId }
-    );
+  // const { data: voterInfo, isLoading: voterInfoLoading } =
+  //   api.vote.getVoterInfo.useQuery(
+  //     undefined,
+  //     {
+  //       enabled: !!session?.user,
+  //     }
+  //   );
 
   useEffect(() => {
     if (user?.id) {
@@ -30,8 +32,8 @@ export const useUser = () => {
 
   return {
     user,
-    voterInfo,
-    voterInfoLoading,
+    // voterInfo,
+    // voterInfoLoading,
     isLoading: userLoading,
     session,
     sessionStatus: status,

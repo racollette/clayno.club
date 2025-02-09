@@ -15,11 +15,9 @@ type TabSelectionProps = {
   showDactyl: boolean;
   showSaga: boolean;
   showPFP: boolean;
-  showVoted: boolean;
   toggleDactyl: (toggleState: boolean) => void;
   toggleSaga: (toggleState: boolean) => void;
   togglePFP: (toggleState: boolean) => void;
-  toggleVoted: (toggleState: boolean) => void;
 };
 
 const TabSelection = ({
@@ -29,11 +27,9 @@ const TabSelection = ({
   showDactyl,
   showSaga,
   showPFP,
-  showVoted,
   toggleDactyl,
   toggleSaga,
   togglePFP,
-  toggleVoted,
 }: TabSelectionProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
@@ -43,17 +39,6 @@ const TabSelection = ({
 
   return (
     <>
-      {/* <div className="flex flex-wrap justify-center border-gray-300 p-4 md:p-10">
-        {labels.map((category: string, index: number) => (
-          <TabButton
-            key={category}
-            label={category}
-            active={activeTab === index}
-            count={counts[index]}
-            onClick={() => handleTabClick(index)}
-          />
-        ))}
-      </div> */}
       <div className="mx-10 mt-2 grid grid-cols-2 justify-center gap-y-2 align-middle md:flex md:flex-row md:gap-x-6">
         <ToggleSwitch
           className=""
@@ -73,14 +58,7 @@ const TabSelection = ({
           label={"PFP Mode"}
           onToggle={togglePFP}
         />
-        <ToggleSwitch
-          className=""
-          toggleState={showVoted}
-          label={"My Votes"}
-          onToggle={toggleVoted}
-        />
       </div>
-      {/* eslint-disable */}
       <div className="p-4">{children}</div>
     </>
   );

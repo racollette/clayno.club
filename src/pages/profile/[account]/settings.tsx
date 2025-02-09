@@ -16,6 +16,7 @@ import { useToast } from "~/@/components/ui/use-toast";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import { LoginButton } from "@telegram-auth/react";
 import ToggleSwitch from "~/components/ToggleSwitch";
+import { useUser } from "~/hooks/useUser";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -45,8 +46,6 @@ const Settings = () => {
   const deleteWallet = api.binding.deleteWallet.useMutation();
   const linkWallet = api.binding.linkWallet.useMutation();
   const deleteAccount = api.binding.deleteUser.useMutation();
-  const createVoter = api.vote.createVoter.useMutation();
-  const issueVotes = api.vote.issueVotes.useMutation();
   const updatePrivacyStatus = api.binding.updatePrivacyStatus.useMutation();
   const linkAptosWallet = api.binding.linkAptosWallet.useMutation();
   const unlinkAptosWallet = api.binding.unlinkAptosWallet.useMutation();
@@ -62,10 +61,6 @@ const Settings = () => {
       : connected && publicKey
       ? publicKey.toString()
       : id ?? "none",
-  });
-
-  const { data: voterInfo } = api.vote.getVoterInfo.useQuery({
-    userId: user?.id ?? "none",
   });
 
   const { data: holderData } = api.general.getHolderDinos.useQuery({
@@ -188,32 +183,6 @@ const Settings = () => {
       }
     } catch (error) {
       console.error("Error deleting data:", error);
-    }
-  };
-
-  const handleCreateVoter = async () => {
-    try {
-      if (user) {
-        if (voterInfo?.votesIssued === false) {
-          issueVotes.mutate({
-            userId: user.id,
-            wallets: user.wallets.map((wallet) => wallet.address),
-          });
-          toast({
-            title: "Votes issued",
-          });
-        } else {
-          createVoter.mutate({
-            userId: user.id,
-            wallets: user.wallets.map((wallet) => wallet.address),
-          });
-          toast({
-            title: "Voter account created",
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error creating voter account:", error);
     }
   };
 
@@ -643,23 +612,6 @@ const Settings = () => {
               </div>
             </div>
           )}
-
-          <div className="mt-8">
-            <div className="text-xl font-extrabold">Voting</div>
-            <div className="py-2 text-sm text-zinc-500">
-              You can request votes here if they are not automatically added to
-              your account.
-            </div>
-            <div className="flex flex-col gap-6 rounded-lg bg-neutral-800 p-4">
-              <button
-                className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-neutral-700"
-                disabled={!voteEligible || voterInfo?.votesIssued}
-                onClick={handleCreateVoter}
-              >
-                Request Votes
-              </button>
-            </div>
-          </div>
         </div>
       </Layout>
     </>

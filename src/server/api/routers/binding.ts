@@ -41,16 +41,16 @@ export const bindingRouter = createTRPCRouter({
           },
         });
         const dinosOwned = checkHolderStatus?.amount || 0;
-        const votesToIssue = dinosOwned > 0 ? 20 : 0;
+        // const votesToIssue = dinosOwned > 0 ? 20 : 0;
 
-        await prisma.voter.create({
-          data: {
-            votesAvailable: votesToIssue,
-            votesCast: 0,
-            userId: createdUser.id,
-            votesIssued: votesToIssue > 0,
-          },
-        });
+        // await prisma.voter.create({
+        //   data: {
+        //     userId: ctx.session.user.id,
+        //     votesAvailable: votesToIssue,
+        //     votesCast: 0,
+        //     votesIssued: votesToIssue > 0,
+        //   },
+        // });
 
         await prisma.account.create({
           data: {
@@ -419,35 +419,36 @@ export const bindingRouter = createTRPCRouter({
         });
         const dinosOwned = checkHolderStatus?.amount || 0;
 
-        const voterInfo = await prisma.voter.findUnique({
-          where: {
-            userId: input.id,
-          },
-        });
+        // const voterInfo = await prisma.voter.findUnique({
+        //   where: {
+        //     userId: ctx.session.user.id,
+        //   },
+        // });
 
-        if (!voterInfo) {
-          await prisma.voter.create({
-            data: {
-              votesAvailable: dinosOwned > 0 ? 20 : 0,
-              votesCast: 0,
-              votesIssued: dinosOwned > 0 ? true : false,
-              userId: input.id,
-            },
-          });
-        } else {
-          await prisma.voter.update({
-            where: {
-              userId: input.id,
-            },
-            data: {
-              votesAvailable: voterInfo?.votesIssued
-                ? voterInfo.votesAvailable
-                : dinosOwned > 0
-                ? 20
-                : 0,
-            },
-          });
-        }
+        // if (!voterInfo) {
+        //   await prisma.voter.create({
+        //     data: {
+        //       userId: ctx.session.user.id,
+        //       votesAvailable: dinosOwned > 0 ? 20 : 0,
+        //       votesCast: 0,
+        //       votesIssued: dinosOwned > 0 ? true : false,
+        //     },
+        //   });
+        // } else {
+        //   await prisma.voter.update({
+        //     where: {
+        //       userId: ctx.session.user.id,
+        //     },
+        //     data: {
+        //       votesAvailable: voterInfo?.votesIssued
+        //         ? voterInfo.votesAvailable
+        //         : dinosOwned > 0
+        //         ? 20
+        //         : 0,
+        //       votesIssued: dinosOwned > 0 ? true : false,
+        //     },
+        //   });
+        // }
 
         return linkedWallet;
       } catch (error) {
@@ -490,19 +491,19 @@ export const bindingRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       try {
-        const voterExists = await prisma.voter.findUnique({
-          where: {
-            userId: input.id,
-          },
-        });
+        // const voterExists = await prisma.voter.findUnique({
+        //   where: {
+        //     userId: ctx.session.user.id,
+        //   },
+        // });
 
-        if (voterExists) {
-          await prisma.voter.delete({
-            where: {
-              userId: input.id,
-            },
-          });
-        }
+        // if (voterExists) {
+        //   await prisma.voter.delete({
+        //     where: {
+        //       userId: ctx.session.user.id,
+        //     },
+        //   });
+        // }
         const deleteUser = await prisma.user.delete({
           where: {
             id: input.id,
