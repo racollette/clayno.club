@@ -33,6 +33,10 @@ export default function Header() {
             <p>Clayno.club</p>
           </span>
         </Navbar.Brand>
+        <div className="flex gap-2 md:order-2">
+          <LoginModal />
+          <Navbar.Toggle className="bg-transparent text-white hover:bg-transparent focus:ring-zinc-500" />
+        </div>
         <Navbar.Collapse>
           <Navbar.Link
             className="text-md cursor-pointer font-clayno text-white"
