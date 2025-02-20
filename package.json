@@ -50,7 +50,7 @@
     "axios": "^1.5.0",
     "bs58": "^5.0.0",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.1",
     "flowbite": "^1.7.0",
     "flowbite-react": "^0.4.11",
     "framer-motion": "^11.5.4",
@@ -66,7 +66,7 @@
     "react-query": "^3.39.3",
     "react-tweet": "^3.1.1",
     "superjson": "1.12.2",
-    "tailwind-merge": "^1.14.0",
+    "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.6",
     "tweetnacl": "^1.0.3",
     "zod": "^3.21.4"

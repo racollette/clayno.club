@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "~/@/components/ui/dialog";
 import Link from "next/link";
-import { HiX } from "react-icons/hi";
+import { HiX, HiRefresh } from "react-icons/hi";
 
 type ItemProps = {
   item: any;
@@ -26,6 +26,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
   const [imageState, setImageState] = useState<ImageState>(
     displayMode ?? "gif"
   );
+  const [isDownloading, setIsDownloading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -93,25 +94,32 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
   const attributesArray = Object.entries(item.attributes ?? {});
 
   const handleDownload = async (name: string, extension: string) => {
+    setIsDownloading(true);
     let blob = imageBlobs[imageState];
 
-    if (!blob) {
-      // @ts-expect-error: just a quick fix
-      blob = await getImageBlob(imageState);
-    }
+    try {
+      if (!blob) {
+        // @ts-expect-error: just a quick fix
+        blob = await getImageBlob(imageState);
+      }
 
-    if (blob) {
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      const imageName =
-        imageState === "class"
-          ? `${item.name}_${item.attributes.class}`
-          : item.name;
-      link.setAttribute("download", `${imageName}.${extension}`);
-      document.body.appendChild(link);
-      link.click();
-      link?.parentNode?.removeChild(link);
+      if (blob) {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        const imageName =
+          imageState === "class"
+            ? `${item.name}_${item.attributes.class}`
+            : item.name;
+        link.setAttribute("download", `${imageName}.${extension}`);
+        document.body.appendChild(link);
+        link.click();
+        link?.parentNode?.removeChild(link);
+      }
+    } catch (error) {
+      console.error("Error downloading:", error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -151,7 +159,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
   return (
     <div
       key={item.mint}
-      className={`relative flex h-24 w-24 cursor-pointer justify-center overflow-clip rounded-md lg:h-40 lg:w-40`}
+      className="relative aspect-square w-full cursor-pointer overflow-clip rounded-md"
     >
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
@@ -271,7 +279,7 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                     )}
                   </div>
                   <button
-                    className="rounded-sm bg-cyan-600 px-1.5 py-0.5 font-clayno text-[10px] font-bold"
+                    className="rounded-sm bg-cyan-600 px-1.5 py-0.5 font-clayno text-[10px] font-bold disabled:opacity-50"
                     onClick={() =>
                       handleDownload(
                         item.name,
@@ -286,8 +294,16 @@ const Item = ({ item, type, displayMode }: ItemProps) => {
                           : "png"
                       )
                     }
+                    disabled={isDownloading}
                   >
-                    DOWNLOAD
+                    {isDownloading ? (
+                      <div className="flex items-center gap-1">
+                        <span>DOWNLOADING</span>
+                        <HiRefresh className="animate-spin" />
+                      </div>
+                    ) : (
+                      "DOWNLOAD"
+                    )}
                   </button>
                 </div>
               </div>
