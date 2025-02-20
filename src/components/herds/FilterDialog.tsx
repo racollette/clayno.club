@@ -14,11 +14,12 @@ import { Label } from "~/@/components/ui/label";
 import Link from "next/link";
 
 type FilterDialogProps = {
-  skin: string;
-  color: string;
-  background: string;
-  tier: string;
-  belly: string;
+  skin: string | null;
+  color: string | null;
+  background: string | null;
+  tier: string | null;
+  belly: string | null;
+  className?: string;
 };
 
 const FilterDialog = ({
@@ -27,6 +28,7 @@ const FilterDialog = ({
   background,
   tier,
   belly,
+  className,
 }: FilterDialogProps) => {
   const params = {
     skin: skin,
@@ -39,7 +41,12 @@ const FilterDialog = ({
     <div className="flex flex-col items-center gap-4">
       <Dialog>
         <DialogTrigger asChild>
-          <button className="flex flex-row items-center gap-2 rounded-md bg-cyan-700 px-4 py-2 text-sm font-bold hover:bg-cyan-600">
+          <button
+            className={
+              className ||
+              "flex flex-row items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
+            }
+          >
             Filters
             <HiAdjustments className="rotate-90" size={20} />
           </button>

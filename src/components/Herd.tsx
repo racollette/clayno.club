@@ -18,6 +18,16 @@ import {
 } from "~/utils/colors";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import { extractProfileFromUser } from "~/utils/wallet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/@/components/ui/dialog";
+import { Button } from "~/@/components/ui/button";
+import { api } from "~/utils/api";
+import DinoSelector from "./DinoSelector";
 
 type HerdProps = {
   herd: Herd & {
@@ -45,6 +55,18 @@ export default function Herd(props: HerdProps) {
   const { herd, showDactyl, showSaga, showOwner, showPFP, owner } = props;
   const [filteredHerd, setFilteredHerd] = useState(herd);
   const [isHovered, setIsHovered] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedDinos, setSelectedDinos] = useState<string[]>(
+    herd.dinos.map((d) => d.mint)
+  );
+
+  const utils = api.useContext();
+  const updateHerdMutation = api.herd.updateHerd.useMutation({
+    onSuccess: () => {
+      utils.herd.getAllHerds.invalidate();
+      setIsEditing(false);
+    },
+  });
 
   const { username, userHandle, userPFP, favoriteDomain } =
     extractProfileFromUser(owner);
@@ -80,6 +102,13 @@ export default function Herd(props: HerdProps) {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+  };
+
+  const handleSaveEdit = () => {
+    updateHerdMutation.mutate({
+      herdId: herd.id,
+      dinoMints: selectedDinos,
+    });
   };
 
   return (
@@ -248,6 +277,39 @@ export default function Herd(props: HerdProps) {
           </div>
         ))}
       </div>
+
+      {owner?.wallets.some((wallet) => wallet.address === herd.owner) && (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              className="mt-2 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Herd
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="gap-0 border-neutral-700 bg-neutral-900 p-4 font-clayno text-white">
+            <DialogHeader>
+              <DialogTitle>Edit Herd</DialogTitle>
+            </DialogHeader>
+            <div className="flex max-h-[80vh] flex-col gap-4 py-2">
+              <DinoSelector
+                owner={herd.owner}
+                currentHerd={herd.dinos}
+                onSelectionChange={setSelectedDinos}
+                wallets={owner.wallets}
+              />
+              <Button
+                onClick={handleSaveEdit}
+                className="bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Save Changes
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

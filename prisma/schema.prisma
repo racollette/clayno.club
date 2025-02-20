@@ -57,15 +57,16 @@ model Attributes {
 }
 
 model Herd {
-  id      String  @id @default(cuid())
-  owner   String
-  tier    Int
-  type    String
-  matches String
-  rarity  Int
-  key     String  @unique
-  dinos   Dino[]
-  voters  Voter[]
+  id        String   @id @default(cuid())
+  owner     String
+  tier      Int
+  type      String
+  matches   String
+  rarity    Int
+  key       String   @unique
+  isEdited  Boolean  @default(false)
+  dinos     Dino[]
+  voters    Voter[]
 }
 
 model Voter {

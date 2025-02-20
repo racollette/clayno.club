@@ -156,6 +156,7 @@ export default function Home() {
   const [showDactyl, setShowDactyl] = useState(true);
   const [showSaga, setShowSaga] = useState(true);
   const [showPFP, setShowPFP] = useState(false);
+  const [showMyHerds, setShowMyHerds] = useState(false);
 
   const [filteredHerds, setFilteredHerds] = useState<
     HerdWithIncludes[] | undefined
@@ -172,12 +173,36 @@ export default function Home() {
 
   useEffect(() => {
     if (allHerds && !allHerdsLoading) {
-      // Calculate and set the filteredHerds based on the latest allHerds data
-      setFilteredHerds(
-        filterHerds(allHerds, color, skin, background, tier, belly)
+      let filtered = filterHerds(
+        allHerds,
+        color,
+        skin,
+        background,
+        tier,
+        belly
       );
+
+      // Filter for user's herds if toggle is on
+      if (showMyHerds && user?.wallets) {
+        const userAddresses = user.wallets.map((wallet) => wallet.address);
+        filtered = filtered.filter((herd) =>
+          userAddresses.includes(herd.owner)
+        );
+      }
+
+      setFilteredHerds(filtered);
     }
-  }, [color, background, skin, tier, allHerds, belly, allHerdsLoading]);
+  }, [
+    color,
+    background,
+    skin,
+    tier,
+    belly,
+    allHerds,
+    allHerdsLoading,
+    showMyHerds,
+    user?.wallets,
+  ]);
 
   const toggleDactyl = (newToggleState: boolean) => {
     setShowDactyl(newToggleState);
@@ -257,31 +282,48 @@ export default function Home() {
             </div> */}
 
             <section className="flex flex-row items-center justify-center gap-2 p-2 text-white md:gap-4 md:p-4">
-              <FilterDialog
-                color={color}
-                skin={skin}
-                background={background}
-                tier={tier}
-                belly={belly}
-              />
+              <div className="flex flex-row items-center gap-2">
+                <FilterDialog
+                  color={color}
+                  skin={skin}
+                  background={background}
+                  tier={tier}
+                  belly={belly}
+                  className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
+                />
+
+                {user && (
+                  <button
+                    onClick={() => setShowMyHerds(!showMyHerds)}
+                    className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-colors ${
+                      showMyHerds
+                        ? "bg-neutral-800 text-cyan-400"
+                        : "bg-neutral-800 text-white"
+                    } hover:bg-neutral-700`}
+                  >
+                    {showMyHerds ? "All Herds" : "My Herds"}
+                  </button>
+                )}
+              </div>
 
               {filtersActive > 0 && (
                 <div className="flex flex-row flex-nowrap rounded-md bg-red-700 p-2 hover:bg-red-500">
                   <Link
                     href={`?skin=all&color=all&background=all&tier=all`}
-                    className="flex flex-row flex-nowrap items-center justify-center gap-2 text-sm font-bold text-white "
+                    className="flex flex-row flex-nowrap items-center justify-center gap-2 text-sm font-bold text-white"
                   >
                     [{filtersActive}]
                     <HiX size={20} className="text-white" />
                   </Link>
                 </div>
               )}
+
               <div className="text-sm font-bold text-white">
                 <div>
-                  {filteredResults} herd
-                  {filteredResults !== 1 && `s`}
+                  {filteredResults} herd{filteredResults !== 1 && "s"}
                 </div>
               </div>
+
               <div className="hidden text-right text-xs italic text-zinc-500 md:block">
                 {`Updated ${lastUpdated}`}
               </div>
