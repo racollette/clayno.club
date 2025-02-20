@@ -1,11 +1,6 @@
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import Image from "next/image";
-import {
-  Button,
-  type CustomFlowbiteTheme,
-  Modal,
-  Spinner,
-} from "flowbite-react";
+import { type CustomFlowbiteTheme, Modal, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
@@ -20,6 +15,7 @@ import { shortAccount, truncateAccount } from "~/utils/addresses";
 import { useUser } from "~/hooks/useUser";
 import { extractProfileFromUser } from "~/utils/wallet";
 import { useToast } from "~/@/components/ui/use-toast";
+import { Skeleton } from "~/@/components/ui/skeleton";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -210,10 +206,8 @@ export default function LoginModal({
             />
           ) : (
             <div className="flex items-center gap-2 rounded-lg bg-neutral-800 px-3 py-2">
-              <Spinner size="sm" className="fill-neutral-200" />
-              <span className="text-sm text-neutral-200">
-                Loading profile...
-              </span>
+              <Skeleton className="h-6 w-6 rounded-full" />
+              <Skeleton className="h-5 w-24" />
             </div>
           )}
         </>

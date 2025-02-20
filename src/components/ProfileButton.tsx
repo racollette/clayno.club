@@ -4,19 +4,30 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { handleUserPFPDoesNotExist } from "~/utils/images";
 import { shortAccount } from "~/utils/addresses";
+import { Skeleton } from "~/@/components/ui/skeleton";
 
 type ProfileButtonProps = {
   imageURL: string;
   username: string;
   handleSignout: () => void;
   sessionKey: string;
+  isLoading?: boolean;
 };
 
 export default function ProfileButton(props: ProfileButtonProps) {
-  const { imageURL, username, handleSignout, sessionKey } = props;
+  const { imageURL, username, handleSignout, sessionKey, isLoading } = props;
   const router = useRouter();
 
   const displayName = username?.length > 30 ? shortAccount(username) : username;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 rounded-lg bg-neutral-800 px-3 py-2">
+        <Skeleton className="h-6 w-6 rounded-full" />
+        <Skeleton className="hidden h-5 w-24 md:block" />
+      </div>
+    );
+  }
 
   return (
     <Dropdown
