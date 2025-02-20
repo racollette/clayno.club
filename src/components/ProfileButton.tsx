@@ -64,7 +64,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
         <Dropdown.Item
           className="rounded-md px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-white focus:bg-neutral-700"
           icon={HiCog}
-          onClick={() => router.push(`/inventory/${sessionKey}/settings`)}
+          onClick={() => router.push(`/profile/${sessionKey}/settings`)}
         >
           Settings
         </Dropdown.Item>

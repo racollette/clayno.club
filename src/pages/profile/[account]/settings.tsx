@@ -437,7 +437,7 @@ const Settings = () => {
                             signIn(
                               "telegram",
                               {
-                                callbackUrl: `/inventory/${account}/settings`,
+                                callbackUrl: `/profile/${account}/settings`,
                               },
                               data as any
                             );
