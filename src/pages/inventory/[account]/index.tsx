@@ -92,9 +92,8 @@ const Inventory = () => {
   const { account } = router.query;
   const { data: session } = useSession();
 
-  const { wallets } = useFetchUserWallets(account) as {
-    wallets: { address: string }[];
-  };
+  const { wallets: walletAddresses } = useFetchUserWallets(account);
+  const walletStrings = walletAddresses.map((address) => address);
   const queryString = getQueryString(account);
 
   const { data: user, isLoading: isUserLoading } = api.binding.getUser.useQuery(
@@ -106,9 +105,7 @@ const Inventory = () => {
 
   const { userHandle, userPFP, favoriteDomain } = extractProfileFromUser(user);
 
-  const authWallet = wallets.some(
-    (item) => item.address === session?.user.name
-  );
+  const authWallet = walletStrings.some((item) => item === session?.user.name);
 
   const isOwner =
     session &&
@@ -126,7 +123,7 @@ const Inventory = () => {
   // const favoriteDomain = getFavoriteDomain(wallets)
 
   const { data: holders, isLoading } = api.inventory.getUserItems.useQuery({
-    wallets: wallets,
+    wallets: walletStrings,
   });
 
   let dinos = holders?.[0]?.mints;
@@ -147,10 +144,10 @@ const Inventory = () => {
 
   const { data: userTribes } = api.subdao.getUserSubDAOs.useQuery(
     {
-      wallets: wallets.length > 0 ? wallets : [queryString],
+      wallets: walletStrings.length > 0 ? walletStrings : [queryString],
     },
     {
-      enabled: !!(wallets.length > 0 || queryString),
+      enabled: !!(walletStrings.length > 0 || queryString),
     }
   );
 
@@ -236,7 +233,7 @@ const Inventory = () => {
                           <div className="flex items-center gap-2">
                             <div className="mx-1 h-4 w-px bg-neutral-700 md:mx-2 md:h-5" />
                             <Link
-                              href={`https://tensor.trade/portfolio?wallet=${wallets[0]}`}
+                              href={`https://tensor.trade/portfolio?wallet=${walletStrings[0]}`}
                               target="_blank"
                               className="flex items-center"
                             >
@@ -249,7 +246,7 @@ const Inventory = () => {
                               />
                             </Link>
                             <Link
-                              href={`https://magiceden.io/u/${wallets[0]}`}
+                              href={`https://magiceden.io/u/${walletStrings[0]}`}
                               target="_blank"
                               className="flex items-center"
                             >
@@ -570,7 +567,9 @@ function DownloadButton({
           <button className="group relative aspect-square w-full overflow-hidden rounded-md bg-neutral-800">
             <div className="absolute inset-0 flex items-center justify-center">
               <Image
-                src={data[0]?.gif || data[0]?.image}
+                src={
+                  data[0]?.gif ?? "/images/clayno_logo_vertical_1024x1024.png"
+                }
                 alt="Preview"
                 fill
                 className="object-cover opacity-50 transition-transform group-hover:scale-110"
