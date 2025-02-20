@@ -116,7 +116,7 @@ export default function Herd(props: HerdProps) {
                 <div className="mr-2 flex">
                   <Link
                     className="flex flex-row rounded-md px-2 py-2 text-white hover:bg-white/20"
-                    href={`/profile/${username}`}
+                    href={`/inventory/${username}`}
                     target="_blank"
                   >
                     <Image
@@ -163,7 +163,7 @@ export default function Herd(props: HerdProps) {
               <div className="flex flex-row gap-2 align-middle">
                 <Link
                   className="flex flex-row gap-2 rounded-md px-2 py-2 text-white hover:bg-white/20"
-                  href={`/profile/${herd.owner}`}
+                  href={`/inventory/${herd.owner}`}
                 >
                   <div className="relative aspect-square self-center">
                     <Image

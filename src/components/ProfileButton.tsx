@@ -20,7 +20,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
 
   return (
     <Dropdown
-      className="border-none bg-neutral-700 font-clayno"
+      className="rounded-lg border-neutral-700 bg-neutral-800 font-clayno"
       inline={true}
       arrowIcon={false}
       label={
@@ -45,13 +45,6 @@ export default function ProfileButton(props: ProfileButtonProps) {
       <div className="rounded-lg border border-neutral-700 bg-neutral-800 p-1 shadow-lg">
         <Dropdown.Item
           className="rounded-md px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-white focus:bg-neutral-700"
-          icon={HiUser}
-          onClick={() => router.push(`/profile/${sessionKey}`)}
-        >
-          Profile
-        </Dropdown.Item>
-        <Dropdown.Item
-          className="rounded-md px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-white focus:bg-neutral-700"
           icon={HiViewGrid}
           onClick={() => router.push(`/inventory/${sessionKey}`)}
         >
@@ -60,7 +53,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
         <Dropdown.Item
           className="rounded-md px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-white focus:bg-neutral-700"
           icon={HiCog}
-          onClick={() => router.push(`/profile/${sessionKey}/settings`)}
+          onClick={() => router.push(`/inventory/${sessionKey}/settings`)}
         >
           Settings
         </Dropdown.Item>

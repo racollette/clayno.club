@@ -98,7 +98,7 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
           }  gap-1 py-1 md:gap-4 md:pt-2`}
         >
           <Link
-            href={`/profile/${profile}`}
+            href={`/inventory/${profile}`}
             className={`flex ${
               !expanded && `w-full`
             } flex-row items-center justify-start gap-1 overflow-hidden rounded-lg px-2 py-1 hover:bg-stone-700`}

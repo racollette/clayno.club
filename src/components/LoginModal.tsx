@@ -119,7 +119,7 @@ export default function LoginModal({
       }
 
       router.push(
-        `/profile/${
+        `/inventory/${
           user?.discord?.username ??
           user?.twitter?.username ??
           (user?.telegram?.username && user?.telegram.isActive)
