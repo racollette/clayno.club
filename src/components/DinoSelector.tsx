@@ -33,9 +33,16 @@ export default function DinoSelector({
   wallets,
 }: DinoSelectorProps) {
   const [selectedSpecies, setSelectedSpecies] = useState<string | null>(null);
-  const [selectedReplacement, setSelectedReplacement] = useState<string | null>(
-    null
+  const [selectedDinos, setSelectedDinos] = useState<Record<string, string>>(
+    // Initialize with current herd selections
+    currentHerd.reduce((acc, dino) => {
+      if (dino.attributes?.species) {
+        acc[dino.attributes.species] = dino.mint;
+      }
+      return acc;
+    }, {} as Record<string, string>)
   );
+
   const { data: userDinos } = api.inventory.getUserItems.useQuery({
     wallets: wallets.map((w) => w.address),
   });
@@ -57,13 +64,31 @@ export default function DinoSelector({
   }, {} as Record<string, typeof allDinos>);
 
   const handleDinoSwap = (newDino: (typeof allDinos)[0]) => {
-    console.log("selectedSpecies", selectedSpecies);
-    if (!selectedSpecies) return;
-    setSelectedReplacement(newDino.mint);
-    console.log("newDino", newDino);
-    const newMints = currentHerd.map((dino) =>
-      dino.attributes?.species === selectedSpecies ? newDino.mint : dino.mint
-    );
+    if (!selectedSpecies || !newDino.attributes?.species) return;
+
+    // Update the selected dinos for this species
+    const updatedSelections = {
+      ...selectedDinos,
+      [selectedSpecies]: newDino.mint,
+    };
+    setSelectedDinos(updatedSelections);
+
+    // Convert selections back to array of mints for the parent component
+    const newMints = currentHerd.map((dino) => {
+      const species = dino.attributes?.species;
+      if (species && updatedSelections[species]) {
+        return updatedSelections[species];
+      }
+      return dino.mint;
+    });
+
+    // Add any new selections that weren't in the original herd
+    Object.entries(updatedSelections).forEach(([species, mint]) => {
+      if (!newMints.includes(mint)) {
+        newMints.push(mint);
+      }
+    });
+
     onSelectionChange(newMints);
   };
 
@@ -72,21 +97,20 @@ export default function DinoSelector({
       {/* Current Herd Display */}
       <div className="grid grid-cols-3 gap-2">
         {currentHerd.map((dino) => {
+          const species = dino.attributes?.species;
           const replacementDino =
-            selectedSpecies === dino.attributes?.species && selectedReplacement
-              ? dinosBySpecies[selectedSpecies]?.find(
-                  (d) => d.mint === selectedReplacement
+            species && selectedDinos[species]
+              ? dinosBySpecies[species]?.find(
+                  (d) => d.mint === selectedDinos[species]
                 )
               : dino;
 
           return (
             <div
               key={dino.mint}
-              onClick={() =>
-                setSelectedSpecies(dino.attributes?.species ?? null)
-              }
+              onClick={() => setSelectedSpecies(species ?? null)}
               className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border bg-neutral-800 p-1.5 ${
-                selectedSpecies === dino.attributes?.species
+                selectedSpecies === species
                   ? "border-blue-500"
                   : "border-neutral-700 hover:border-neutral-600"
               }`}
@@ -117,9 +141,9 @@ export default function DinoSelector({
 
           if (!hasSpecies) {
             const replacementDino =
-              selectedSpecies === species && selectedReplacement
+              selectedSpecies === species && selectedDinos[species]
                 ? dinosBySpecies[species]?.find(
-                    (d) => d.mint === selectedReplacement
+                    (d) => d.mint === selectedDinos[species]
                   )
                 : null;
 

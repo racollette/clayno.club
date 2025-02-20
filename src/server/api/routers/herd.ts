@@ -4,17 +4,17 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { calculateHerdStats } from "~/utils/calculateHerdStats";
 
 export const herdRouter = createTRPCRouter({
-  getAllHerds: publicProcedure.query(({ ctx, input }) => {
+  getAllHerds: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.herd.findMany({
-      orderBy: {
-        // voters: {
-        //   _count: "desc", // Sort by the number of voters in descending order
-        // },
+      where: {
+        NOT: {
+          type: "Null",
+        },
       },
       include: {
-        // voters: true,
         dinos: {
           orderBy: {
             attributes: {
@@ -77,79 +77,115 @@ export const herdRouter = createTRPCRouter({
       });
     }),
 
-  getUserHerds: publicProcedure.input(z.string()).query(({ input, ctx }) => {
-    return ctx.prisma.herd.findMany({
-      where: {
-        owner: input,
-      },
-      orderBy: [
-        {
-          tier: "asc",
+  getUserHerds: publicProcedure
+    .input(z.array(z.string()))
+    .query(({ input: walletAddresses, ctx }) => {
+      return ctx.prisma.herd.findMany({
+        where: {
+          owner: { in: walletAddresses },
         },
-        {
-          rarity: "asc",
-        },
-      ],
-      include: {
-        dinos: {
-          orderBy: {
-            attributes: {
-              background: "desc",
+        orderBy: [
+          {
+            tier: "asc",
+          },
+          {
+            rarity: "asc",
+          },
+        ],
+        include: {
+          dinos: {
+            orderBy: {
+              attributes: {
+                background: "desc",
+              },
+            },
+            include: {
+              attributes: true,
             },
           },
-          include: {
-            attributes: true,
-          },
         },
-      },
-    });
-  }),
+      });
+    }),
 
   updateHerd: protectedProcedure
     .input(
       z.object({
         herdId: z.string(),
-        dinoMints: z.array(z.string()), // Array of dino mint addresses to include
+        dinoMints: z.array(z.string()),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("Starting herd update for:", input.herdId);
+      console.log("New dino mints:", input.dinoMints);
+
       // Verify user owns the herd
       const herd = await ctx.prisma.herd.findUnique({
         where: { id: input.herdId },
         include: { dinos: true },
       });
 
-      if (!herd || herd.owner !== ctx.session.user.id) {
-        throw new Error("Unauthorized");
+      if (!herd) {
+        console.error("Herd not found:", input.herdId);
+        throw new Error("Herd not found");
       }
+
+      console.log("Current herd state:", {
+        id: herd.id,
+        owner: herd.owner,
+        currentDinos: herd.dinos.map((d) => d.mint),
+      });
 
       // Get the new dinos
       const newDinos = await ctx.prisma.dino.findMany({
         where: {
           mint: { in: input.dinoMints },
-          holderOwner: herd.owner, // Ensure user owns these dinos
+          holderOwner: herd.owner,
         },
         include: { attributes: true },
       });
 
-      if (newDinos.length !== 6) {
-        throw new Error("Must include exactly 6 dinos");
-      }
+      console.log(
+        "Found new dinos:",
+        newDinos.map((d) => ({
+          mint: d.mint,
+          species: d.attributes?.species,
+          rarity: d.rarity,
+        }))
+      );
 
-      // Calculate new matches and rarity based on the selected dinos
-      const { matches, rarity, tier } = calculateHerdStats(newDinos);
+      // Calculate new herd stats
+      const { tier, type, matches, rarity } = calculateHerdStats(newDinos);
+      console.log("Calculated new herd stats:", {
+        tier,
+        type,
+        matches,
+        rarity,
+      });
 
       // Update the herd
-      return ctx.prisma.herd.update({
-        where: { id: input.herdId },
-        data: {
-          dinos: { set: newDinos },
-          matches,
-          rarity,
-          tier,
-          isEdited: true,
-        },
-        include: { dinos: { include: { attributes: true } } },
-      });
+      try {
+        const updated = await ctx.prisma.herd.update({
+          where: { id: input.herdId },
+          data: {
+            dinos: {
+              set: input.dinoMints.map((mint) => ({ mint })),
+            },
+            tier,
+            type,
+            matches,
+            rarity,
+            isEdited: true,
+          },
+          include: { dinos: { include: { attributes: true } } },
+        });
+        console.log("Herd updated successfully:", {
+          id: updated.id,
+          newDinos: updated.dinos.map((d) => d.mint),
+        });
+        return updated;
+      } catch (error) {
+        console.error("Error updating herd:", error);
+        throw error;
+      }
     }),
 });

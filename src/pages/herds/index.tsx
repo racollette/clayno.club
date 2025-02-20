@@ -21,27 +21,6 @@ import { useToast } from "~/@/components/ui/use-toast";
 import { HiX, HiRefresh } from "react-icons/hi";
 import FilterDialog from "../../components/herds/FilterDialog";
 import MetaTags from "~/components/MetaTags";
-// const getHerdRarity = (herd: any) => {
-//   const total = herd.herd.reduce((sum: number, obj: any) => {
-//     if (obj.attributes.species !== "Dactyl") {
-//       if (obj.rarity) {
-//         return sum + obj.rarity;
-//       }
-//     }
-//     return sum;
-//   }, 0);
-
-//   return (total / 6).toFixed(0);
-// };
-
-type Owners =
-  | (User & {
-      discord: Discord | null;
-      twitter: Twitter | null;
-      telegram: Telegram | null;
-      wallets: Wallet[];
-    })[]
-  | undefined;
 
 type HerdWithIncludes =
   | HerdType & {
@@ -144,6 +123,12 @@ export default function Home() {
   const { user } = useUser();
   const { data: allHerds, isLoading: allHerdsLoading } =
     api.herd.getAllHerds.useQuery();
+  const { data: myHerds } = api.herd.getUserHerds.useQuery(
+    user?.wallets.map((w) => w.address) ?? [],
+    {
+      enabled: !!user?.wallets.length,
+    }
+  );
   const utils = api.useContext();
 
   const color = searchParams.get("color") || "all";
@@ -224,6 +209,11 @@ export default function Home() {
     !allHerdsLoading && filteredHerds && filteredHerds?.length > 0
       ? filteredHerds?.length
       : 0;
+
+  // Use the appropriate herds based on the toggle
+  const displayHerds = showMyHerds
+    ? myHerds
+    : allHerds?.filter((herd) => herd.type !== "Null");
 
   return (
     <>
@@ -369,7 +359,7 @@ export default function Home() {
                     </div>
                   )}
 
-                  {filteredHerds?.map((herd) => {
+                  {displayHerds?.map((herd) => {
                     const foundUser = owners?.find((user) => {
                       return user.wallets.some(
                         (wallet) => wallet.address === herd.owner
@@ -388,6 +378,7 @@ export default function Home() {
                           showOwner={true}
                           showPFP={showPFP}
                           owner={foundUser}
+                          currentUser={user}
                         />
                       </div>
                     );

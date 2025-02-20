@@ -49,27 +49,37 @@ type HerdProps = {
         wallets: Wallet[];
       }
     | undefined;
+  currentUser?: {
+    id: string;
+    wallets: Wallet[];
+  } | null;
 };
 
 export default function Herd(props: HerdProps) {
-  const { herd, showDactyl, showSaga, showOwner, showPFP, owner } = props;
+  const { herd, showDactyl, showSaga, showOwner, showPFP, owner, currentUser } =
+    props;
   const [filteredHerd, setFilteredHerd] = useState(herd);
   const [isHovered, setIsHovered] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDinos, setSelectedDinos] = useState<string[]>(
     herd.dinos.map((d) => d.mint)
   );
 
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const updateHerdMutation = api.herd.updateHerd.useMutation({
     onSuccess: () => {
       utils.herd.getAllHerds.invalidate();
-      setIsEditing(false);
+      utils.herd.getUserHerds.invalidate();
+      setIsDialogOpen(false);
     },
   });
 
   const { username, userHandle, userPFP, favoriteDomain } =
     extractProfileFromUser(owner);
+
+  const isHerdOwner = currentUser?.wallets.some(
+    (wallet) => wallet.address === herd.owner
+  );
 
   useEffect(() => {
     let filteredHerd = herd.dinos;
@@ -278,13 +288,12 @@ export default function Herd(props: HerdProps) {
         ))}
       </div>
 
-      {owner?.wallets.some((wallet) => wallet.address === herd.owner) && (
-        <Dialog>
+      {isHerdOwner && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
               variant="outline"
               className="mt-2 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
-              onClick={() => setIsEditing(true)}
             >
               Edit Herd
             </Button>
@@ -298,13 +307,21 @@ export default function Herd(props: HerdProps) {
                 owner={herd.owner}
                 currentHerd={herd.dinos}
                 onSelectionChange={setSelectedDinos}
-                wallets={owner.wallets}
+                wallets={currentUser?.wallets ?? []}
               />
               <Button
                 onClick={handleSaveEdit}
-                className="bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-800"
+                disabled={updateHerdMutation.isLoading}
               >
-                Save Changes
+                {updateHerdMutation.isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    Saving...
+                  </div>
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             </div>
           </DialogContent>
