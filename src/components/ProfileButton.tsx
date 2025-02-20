@@ -20,7 +20,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
 
   return (
     <Dropdown
-      className="rounded-lg border-neutral-700 bg-neutral-800 font-clayno"
+      className="m-0 border-none bg-transparent p-0 font-clayno"
       inline={true}
       arrowIcon={false}
       label={
