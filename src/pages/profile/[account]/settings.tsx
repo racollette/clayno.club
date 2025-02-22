@@ -340,6 +340,7 @@ const Settings = () => {
                       userId={userId}
                       currentAvatar={user?.image}
                       onSuccess={refetch}
+                      holderDinos={holderDinos}
                     />
                   </div>
                 )}
