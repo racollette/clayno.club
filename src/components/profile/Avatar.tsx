@@ -211,7 +211,7 @@ export default function Avatar({
             {holderDinos.length > 0 && (
               <div>
                 <h3 className="mb-2 text-sm font-medium">
-                  Select from Your Dinos
+                  Select from your Clayno PFPs
                 </h3>
                 <div className="grid grid-cols-3 gap-2">
                   {holderDinos.map((dino) => (
