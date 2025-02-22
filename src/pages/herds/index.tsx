@@ -479,10 +479,8 @@ export default function Home() {
                   {user && (
                     <button
                       onClick={() => setShowMyHerds(!showMyHerds)}
-                      className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium ${
-                        showMyHerds
-                          ? "bg-neutral-800 text-blue-500"
-                          : "bg-neutral-800 text-white"
+                      className={`flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium ${
+                        showMyHerds ? "text-[#00D1D1]" : "text-white"
                       } hover:bg-neutral-700`}
                     >
                       My Herds
