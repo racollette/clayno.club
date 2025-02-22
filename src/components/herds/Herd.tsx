@@ -56,15 +56,15 @@ type HerdProps = {
 };
 
 // First, let's add a helper function to get the border style based on tier
-const getHerdBorderStyle = (tier: number) => {
+const getHerdBorderStyle = (tier: string) => {
   switch (tier) {
-    case 1: // Basic
+    case "BASIC":
       return "border-2 border-neutral-400";
-    case 2: // Impressive
+    case "IMPRESSIVE":
       return "border-2 bg-gradient-to-r from-blue-500 via-cyan-300 to-blue-500 animate-gradient";
-    case 3: // Flawless
+    case "FLAWLESS":
       return "border-2 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animate-gradient";
-    case 4: // Perfect
+    case "PERFECT":
       return "border-2 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-gradient-fast";
     default:
       return "border-2 border-neutral-700";
@@ -150,18 +150,21 @@ export default function Herd(props: HerdProps) {
             filteredHerd.matches
           )}`}
         >
-          {filteredHerd.tier !== 4 && (
+          {filteredHerd.tier !== "BASIC" && (
             <div className="flex flex-row gap-1">
-              {filteredHerd.matches.split("_").map((trait, index) => (
-                <div
-                  className={`rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
-                    trait
-                  )}`}
-                  key={index}
-                >
-                  {trait}
-                </div>
-              ))}
+              {filteredHerd.matches.split("|").map((trait, index) => {
+                const [type, value] = trait.split(":");
+                return (
+                  <div
+                    className={`rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(
+                      value ?? ""
+                    )}`}
+                    key={index}
+                  >
+                    {value}
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -257,7 +260,7 @@ export default function Herd(props: HerdProps) {
 
           <div
             className={`rounded-md px-2 ${
-              filteredHerd.tier === 4 && "ml-auto"
+              filteredHerd.tier === "BASIC" && "ml-auto"
             } py-1 text-xs text-white  ${getRarityColor(herd.rarity)}`}
           >
             {herd.rarity}

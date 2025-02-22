@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import Herd from "~/components/Herd";
+import Herd from "~/components/herds/Herd";
 import Layout from "~/components/Layout";
 import Link from "next/link";
 import Image from "next/image";

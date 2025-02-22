@@ -9,7 +9,7 @@ import {
 } from "~/@/components/ui/dialog";
 import { HiAdjustments } from "react-icons/hi";
 import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
-import { BACKGROUNDS, SKINS, COLORS, TIERS, BELLY } from "~/utils/constants";
+import { BACKGROUNDS, SKINS, COLORS, BELLY } from "~/utils/constants";
 import { Label } from "~/@/components/ui/label";
 import Link from "next/link";
 
@@ -70,13 +70,14 @@ const FilterDialog = ({
     </div>
   );
 };
+
 type FilterGroupProps = {
   trait: "skin" | "color" | "background" | "tier" | "belly";
   params: {
-    skin: string;
-    color: string;
-    background: string;
-    tier: string;
+    skin: string | null;
+    color: string | null;
+    background: string | null;
+    tier: string | null;
     belly: string;
   };
 };
@@ -96,11 +97,11 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
     : isTraitBackground
     ? BACKGROUNDS
     : isTraitTier
-    ? TIERS
+    ? ["BASIC", "IMPRESSIVE", "FLAWLESS", "PERFECT"]
     : BELLY;
 
   const [traitSelected, setTraitSelected] = useState(
-    params[trait].toLowerCase()
+    (params[trait] ?? "all").toLowerCase()
   );
 
   const handleTraitSelect = (v: string) => {

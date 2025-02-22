@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import LoginModal from "./LoginModal";
+import LoginModal from "./profile/LoginModal";
 import { Navbar } from "flowbite-react";
 import Image from "next/image";
 import { NewsTicker } from "./attention/NewsTicker";

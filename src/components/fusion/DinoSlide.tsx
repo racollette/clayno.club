@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/@/components/ui/tooltip";
-import LoginModal from "../LoginModal";
+import LoginModal from "../profile/LoginModal";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 
 type DinoSlideProps = {

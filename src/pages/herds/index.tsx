@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import Herd from "../../components/Herd";
+import Herd from "../../components/herds/Herd";
 import Link from "next/link";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import { useSearchParams } from "next/navigation";
@@ -43,42 +43,23 @@ function filterHerds(
   return allHerds.filter((herd) => {
     // Filter by tier
     if (tier && tier !== "all") {
-      const tierNumber = parseInt(tier);
-      if (herd.tier !== tierNumber) return false;
+      if (herd.tier !== tier) return false;
     }
 
-    // Get the first dino's attributes as reference for matching traits
-    const referenceAttributes = herd.dinos[0]?.attributes;
-    if (!referenceAttributes) return false;
+    // Parse matches string into key-value pairs
+    const matches = Object.fromEntries(
+      herd.matches.split("|").map((match) => {
+        const [key, value] = match.split(":");
+        return [key, value];
+      })
+    );
 
     // Filter by matching traits
-    if (skin && skin !== "all") {
-      const allMatch = herd.dinos.every(
-        (dino) => dino.attributes?.skin === referenceAttributes.skin
-      );
-      if (!allMatch) return false;
-    }
-
-    if (color && color !== "all") {
-      const allMatch = herd.dinos.every(
-        (dino) => dino.attributes?.color === referenceAttributes.color
-      );
-      if (!allMatch) return false;
-    }
-
-    if (background && background !== "all") {
-      const allMatch = herd.dinos.every(
-        (dino) => dino.attributes?.background === referenceAttributes.background
-      );
-      if (!allMatch) return false;
-    }
-
-    if (belly === "on") {
-      const allMatch = herd.dinos.every(
-        (dino) => dino.attributes?.belly === referenceAttributes.belly
-      );
-      if (!allMatch) return false;
-    }
+    if (skin && skin !== "all" && matches.skin !== skin) return false;
+    if (color && color !== "all" && matches.color !== color) return false;
+    if (background && background !== "all" && matches.background !== background)
+      return false;
+    if (belly === "on" && !matches.belly) return false;
 
     return true;
   });
