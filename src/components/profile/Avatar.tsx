@@ -13,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/@/components/ui/dialog";
-import { Button } from "~/@/components/ui/button";
 
 interface AvatarProps {
   userId: string;
@@ -25,6 +24,60 @@ interface AvatarProps {
     name: string;
   }>;
 }
+
+const compressImage = async (
+  imageUrl: string,
+  maxSize: number = 200
+): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement("img");
+    img.crossOrigin = "anonymous"; // Important for CORS
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Failed to get canvas context"));
+        return;
+      }
+
+      // Calculate new dimensions while maintaining aspect ratio
+      let width = img.width;
+      let height = img.height;
+      if (width > height) {
+        if (width > maxSize) {
+          height = Math.round((height * maxSize) / width);
+          width = maxSize;
+        }
+      } else {
+        if (height > maxSize) {
+          width = Math.round((width * maxSize) / height);
+          height = maxSize;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw and compress
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Failed to compress image"));
+          }
+        },
+        "image/jpeg", // Use JPEG for better compression
+        0.8 // Quality (0.8 = 80% quality)
+      );
+    };
+
+    img.onerror = () => reject(new Error("Failed to load image"));
+    img.src = imageUrl;
+  });
+};
 
 export default function Avatar({
   userId,
@@ -80,22 +133,47 @@ export default function Avatar({
   };
 
   const handleDinoSelect = async (pfpUrl: string) => {
-    await handleAvatarUpdate(pfpUrl);
+    try {
+      setIsUploading(true);
+
+      // Compress the image
+      const compressedBlob = await compressImage(pfpUrl);
+      const compressedFile = new File(
+        [compressedBlob],
+        `avatar-${Date.now()}.jpg`,
+        {
+          type: "image/jpeg",
+        }
+      );
+
+      // Upload the compressed image to UploadThing
+      await startUpload([compressedFile]);
+    } catch (error) {
+      console.error("Error processing dino avatar:", error);
+      toast({
+        title: "Failed to process avatar",
+        variant: "destructive",
+      });
+      setIsUploading(false);
+    }
   };
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <div className="relative block h-20 w-20 cursor-pointer overflow-hidden rounded-full transition-opacity hover:opacity-80">
+        <div className="relative block h-12 w-12 cursor-pointer overflow-hidden rounded-full transition-opacity hover:opacity-80">
           {isUploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
               Uploading...
             </div>
           )}
           <Image
-            src={currentAvatar || "/images/default-avatar.png"}
+            src={
+              currentAvatar ? `${currentAvatar}` : "/images/default-avatar.png"
+            }
             alt="Avatar"
-            fill
+            width={50}
+            height={50}
             className="object-cover"
             onError={handleUserPFPDoesNotExist}
           />
@@ -145,7 +223,8 @@ export default function Avatar({
                       <Image
                         src={`https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${dino.pfp}`}
                         alt={dino.name}
-                        fill
+                        width={200}
+                        height={200}
                         className="object-cover"
                       />
                     </button>
