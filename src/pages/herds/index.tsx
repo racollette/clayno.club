@@ -42,7 +42,16 @@ function filterHerds(
 ): HerdWithIncludes[] {
   if (!allHerds) return [];
 
-  return allHerds.filter((herd) => {
+  // Define tier order for sorting
+  const tierOrder = {
+    PERFECT: 0,
+    FLAWLESS: 1,
+    IMPRESSIVE: 2,
+    BASIC: 3,
+  };
+
+  // Filter herds
+  const filtered = allHerds.filter((herd) => {
     // Filter by tier - use schema's tier field directly
     if (tier && tier !== "all") {
       if (herd.tier.toLowerCase() !== tier.toLowerCase()) return false;
@@ -93,6 +102,22 @@ function filterHerds(
     }
 
     return true;
+  });
+
+  // Sort herds by tier
+  return filtered.sort((a, b) => {
+    const tierA =
+      tierOrder[a.tier.toUpperCase() as keyof typeof tierOrder] ?? 999;
+    const tierB =
+      tierOrder[b.tier.toUpperCase() as keyof typeof tierOrder] ?? 999;
+
+    // First sort by tier
+    if (tierA !== tierB) {
+      return tierA - tierB;
+    }
+
+    // If tiers are equal, sort by rarity (assuming lower rarity is better)
+    return a.rarity - b.rarity;
   });
 }
 
