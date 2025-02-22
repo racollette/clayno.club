@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
 
 interface AvatarProps {
   userId: string;
@@ -163,8 +164,8 @@ export default function Avatar({
       <DialogTrigger asChild>
         <div className="relative block h-20 w-20 cursor-pointer overflow-hidden rounded-full transition-opacity hover:opacity-80">
           {isUploading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
-              Uploading...
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <Loader2 className="h-8 w-8 animate-spin text-white" />
             </div>
           )}
           <Image
