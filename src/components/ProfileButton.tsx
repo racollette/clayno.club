@@ -2,7 +2,7 @@ import { Dropdown } from "flowbite-react";
 import { HiCog, HiLogout, HiViewGrid, HiUser } from "react-icons/hi";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { handleUserPFPDoesNotExist, getUserAvatar } from "~/utils/images";
 import { shortAccount } from "~/utils/addresses";
 import { Skeleton } from "~/@/components/ui/skeleton";
 
@@ -12,10 +12,18 @@ type ProfileButtonProps = {
   handleSignout: () => void;
   sessionKey: string;
   isLoading?: boolean;
+  user?: {
+    image?: string | null;
+    twitter?: { image_url: string } | null;
+    discord?: { image_url: string } | null;
+    telegram?: { image_url: string; isActive: boolean } | null;
+    defaultAddress: string;
+  };
 };
 
 export default function ProfileButton(props: ProfileButtonProps) {
-  const { imageURL, username, handleSignout, sessionKey, isLoading } = props;
+  const { imageURL, username, handleSignout, sessionKey, isLoading, user } =
+    props;
   const router = useRouter();
 
   const displayName = username?.length > 30 ? shortAccount(username) : username;
@@ -36,7 +44,7 @@ export default function ProfileButton(props: ProfileButtonProps) {
       arrowIcon={false}
       label={
         <div className="flex items-center gap-2 rounded-lg bg-neutral-800 px-3 py-2 transition-all hover:bg-neutral-700">
-          <div className="relative h-6 w-6 overflow-hidden rounded-full ring-2 ring-neutral-600">
+          <div className="relative h-6 w-6 overflow-hidden rounded-full">
             <Image
               className="object-cover"
               src={imageURL}

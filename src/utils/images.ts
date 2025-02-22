@@ -15,3 +15,28 @@ export const handleUserPFPDoesNotExist: React.EventHandler<
   ];
   event.currentTarget.src = `/icons/${dinos[random]}_colored.svg`;
 };
+
+export const getUserAvatar = (user: {
+  image?: string | null;
+  defaultAddress: string;
+}) => {
+  console.log("user", user);
+  console.log("user.image", user?.image);
+  // Only use custom uploaded avatar, otherwise default to random dino
+  if (user?.image) {
+    return user.image;
+  }
+
+  // Default to random dino icon
+  const random = Math.floor(Math.random() * 7);
+  const dinos = [
+    "stego",
+    "trice",
+    "raptor",
+    "rex",
+    "bronto",
+    "dactyl",
+    "ankylo",
+  ];
+  return `/icons/${dinos[random]}_colored.svg`;
+};

@@ -4,6 +4,7 @@ import {
   type Telegram,
   type Wallet,
 } from "@prisma/client";
+import { getUserAvatar } from "./images";
 
 type UserWithSocials =
   | {
@@ -13,6 +14,7 @@ type UserWithSocials =
       id: string;
       defaultAddress: string;
       wallets: Wallet[];
+      image: string | null;
     }
   | undefined
   | null;
@@ -40,13 +42,10 @@ export const extractProfileFromUser = (user: UserWithSocials) => {
     : user?.telegram && user.telegram.isActive
     ? user.telegram.global_name
     : null;
-  const userPFP = user?.twitter
-    ? user.twitter.image_url
-    : user?.discord
-    ? user.discord.image_url
-    : user?.telegram && user.telegram.isActive
-    ? user.telegram.image_url
-    : null;
+  const userPFP = getUserAvatar({
+    image: user?.image,
+    defaultAddress: user?.defaultAddress ?? "",
+  });
 
   return {
     userId: user?.id ?? null,

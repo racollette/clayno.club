@@ -16,6 +16,7 @@ import { useUser } from "~/hooks/useUser";
 import { extractProfileFromUser } from "~/utils/wallet";
 import { useToast } from "~/@/components/ui/use-toast";
 import { Skeleton } from "~/@/components/ui/skeleton";
+import { handleUserPFPDoesNotExist, getUserAvatar } from "~/utils/images";
 
 const customTheme: CustomFlowbiteTheme["modal"] = {
   content: {
@@ -179,14 +180,14 @@ export default function LoginModal({
         <>
           {!isLoading && user ? (
             <ProfileButton
-              imageURL={
-                userPFP ??
-                `https://ui-avatars.com/api/?name=${
+              imageURL={getUserAvatar({
+                image: user?.image,
+                defaultAddress:
                   user?.defaultAddress ??
                   session?.user.name ??
-                  publicKey?.toString()
-                }&background=random`
-              }
+                  publicKey?.toString() ??
+                  "",
+              })}
               username={
                 username ??
                 shortAccount(user?.defaultAddress) ??

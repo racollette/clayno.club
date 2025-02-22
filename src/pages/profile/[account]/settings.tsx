@@ -17,6 +17,8 @@ import { handleUserPFPDoesNotExist } from "~/utils/images";
 import { LoginButton } from "@telegram-auth/react";
 import ToggleSwitch from "~/components/ToggleSwitch";
 import { useUser } from "~/hooks/useUser";
+import AvatarUpload from "~/components/profile/AvatarUpload";
+import Avatar from "~/components/profile/Avatar";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -238,6 +240,25 @@ const Settings = () => {
       <Layout>
         <div className="lg:w-1/2">
           <div>
+            <div className="text-xl font-extrabold">Avatar</div>
+            <div className="py-2 text-sm text-zinc-500">
+              Upload a custom profile picture that will be displayed across the
+              site.
+            </div>
+            <div className="flex-0 rounded-lg bg-neutral-800 p-4">
+              {userId && (
+                <div className="flex flex-col gap-4">
+                  <Avatar
+                    userId={userId}
+                    currentAvatar={user?.image}
+                    onSuccess={refetch}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-8">
             <div className="text-xl font-extrabold">Social Accounts</div>
             <div className="py-2 text-sm text-zinc-500">
               Verify your identity so we can display your name next to your

@@ -14,7 +14,7 @@ import { shortAccount } from "~/utils/addresses";
 import ImageExpander from "./Expander";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { fetchOtherWallets } from "~/utils/subdaos";
-import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { handleUserPFPDoesNotExist, getUserAvatar } from "~/utils/images";
 import { extractProfileFromUser } from "~/utils/wallet";
 
 type MemberProps = {
@@ -66,8 +66,13 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
   const { username, userHandle, userPFP, favoriteDomain } =
     extractProfileFromUser(user);
 
-  const avatar =
-    userPFP ?? `https://ui-avatars.com/api/?name=${owner}&background=random`;
+  const avatar = getUserAvatar({
+    image: user?.image,
+    twitter: user?.twitter,
+    discord: user?.discord,
+    telegram: user?.telegram,
+    defaultAddress: owner,
+  });
 
   const profile = username ?? owner;
 
