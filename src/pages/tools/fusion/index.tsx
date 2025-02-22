@@ -7,7 +7,7 @@ import DinoSlide from "~/components/fusion/DinoSlide";
 import useFusion from "~/hooks/useFusion";
 import { api } from "~/utils/api";
 import { useUser } from "~/hooks/useUser";
-import CollageModal from "~/components/CollageModal";
+import CollageModal from "~/components/fusion/CollageModal";
 import MusicModal from "~/components/fusion/MusicModal";
 import { HiSave, HiBan, HiXCircle } from "react-icons/hi";
 import {

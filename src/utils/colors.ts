@@ -88,6 +88,9 @@ export const getTraitBadgeColor = (trait: string) => {
       return "bg-amber-500";
     case "GoldClay/Maker":
       return "bg-yellow-500";
+    case "Pattern":
+    case "PatternOn":
+      return "bg-purple-600";
     // Default
     default:
       return "bg-slate-800";

@@ -10,8 +10,8 @@ import { truncateAccount } from "~/utils/addresses";
 import { Spinner } from "flowbite-react";
 import { getQueryString } from "~/utils/routes";
 import { CollagePreview } from "~/components/CollagePreview";
-import { type GridItemProps } from "~/components/CollageModal";
 import { handleUserPFPDoesNotExist, getUserAvatar } from "~/utils/images";
+import { type GridItemProps } from "~/components/fusion/CollageModal";
 import MetaTags from "~/components/MetaTags";
 import { extractProfileFromUser } from "~/utils/wallet";
 

@@ -68,9 +68,6 @@ const Member = ({ data, owner, acronym }: MemberProps) => {
 
   const avatar = getUserAvatar({
     image: user?.image,
-    twitter: user?.twitter,
-    discord: user?.discord,
-    telegram: user?.telegram,
     defaultAddress: owner,
   });
 

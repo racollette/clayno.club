@@ -14,7 +14,7 @@ type UserWithSocials =
       id: string;
       defaultAddress: string;
       wallets: Wallet[];
-      image: string | null;
+      image?: string | null;
     }
   | undefined
   | null;

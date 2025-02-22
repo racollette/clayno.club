@@ -36,30 +36,61 @@ function filterHerds(
   skin: string | null,
   background: string | null,
   tier: string | null,
-  belly: string | null
+  belly: string | null,
+  pattern: string | null,
+  qualifier: string | null
 ): HerdWithIncludes[] {
   if (!allHerds) return [];
 
   return allHerds.filter((herd) => {
-    // Filter by tier
+    // Filter by tier - use schema's tier field directly
     if (tier && tier !== "all") {
-      if (herd.tier !== tier) return false;
+      if (herd.tier.toLowerCase() !== tier.toLowerCase()) return false;
     }
 
-    // Parse matches string into key-value pairs
-    const matches = Object.fromEntries(
-      herd.matches.split("|").map((match) => {
-        const [key, value] = match.split(":");
-        return [key, value];
-      })
-    );
+    // Filter by qualifier - using schema's qualifier field
+    if (qualifier && qualifier !== "all") {
+      if (herd.qualifier?.toLowerCase() !== qualifier.toLowerCase()) {
+        return false;
+      }
+    }
 
     // Filter by matching traits
-    if (skin && skin !== "all" && matches.skin !== skin) return false;
-    if (color && color !== "all" && matches.color !== color) return false;
-    if (background && background !== "all" && matches.background !== background)
-      return false;
-    if (belly === "on" && !matches.belly) return false;
+    if (skin && skin !== "all") {
+      if (!herd.matches.toLowerCase().includes(`skin:${skin.toLowerCase()}`)) {
+        return false;
+      }
+    }
+
+    if (color && color !== "all") {
+      if (
+        !herd.matches.toLowerCase().includes(`color:${color.toLowerCase()}`)
+      ) {
+        return false;
+      }
+    }
+
+    if (background && background !== "all") {
+      if (
+        !herd.matches
+          .toLowerCase()
+          .includes(`background:${background.toLowerCase()}`)
+      ) {
+        return false;
+      }
+    }
+
+    if (belly === "on") {
+      if (!herd.matches.toLowerCase().includes("belly")) {
+        return false;
+      }
+    }
+
+    if (pattern === "on") {
+      if (!herd.matches.toLowerCase().includes("pattern")) {
+        return false;
+      }
+    }
 
     return true;
   });
@@ -92,15 +123,14 @@ export default function Home() {
   const tier = searchParams.get("tier") || "all";
   // switch 'on' to 'belly' for display purposes
   const belly = searchParams.get("belly") === "on" ? "belly" : "all";
+  const pattern = searchParams.get("pattern") === "on" ? "pattern" : "all";
+  const qualifier = searchParams.get("qualifier") ?? "all";
 
   const [showDactyl, setShowDactyl] = useState(true);
   const [showSaga, setShowSaga] = useState(true);
   const [showPFP, setShowPFP] = useState(false);
   const [showMyHerds, setShowMyHerds] = useState(false);
-
-  const [filteredHerds, setFilteredHerds] = useState<
-    HerdWithIncludes[] | undefined
-  >(filterHerds(allHerds, color, skin, background, tier, belly));
+  const [filteredHerds, setFilteredHerds] = useState<HerdWithIncludes[]>([]);
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
@@ -108,18 +138,16 @@ export default function Home() {
   const { data: owners } = useHerdOwners(allHerdAddresses);
 
   useEffect(() => {
-    setFilteredHerds(allHerds);
-  }, [allHerds]);
-
-  useEffect(() => {
     if (allHerds && !allHerdsLoading) {
       let filtered = filterHerds(
-        allHerds,
+        showMyHerds ? myHerds : allHerds,
         color,
         skin,
         background,
         tier,
-        belly
+        belly,
+        pattern,
+        qualifier
       );
 
       // Filter for user's herds if toggle is on
@@ -142,6 +170,9 @@ export default function Home() {
     allHerdsLoading,
     showMyHerds,
     user?.wallets,
+    qualifier,
+    myHerds,
+    pattern,
   ]);
 
   const toggleDactyl = (newToggleState: boolean) => {
@@ -157,18 +188,19 @@ export default function Home() {
   };
 
   const lastUpdated = useTimeSinceLastUpdate("herds");
-  const filtersActive = [color, skin, background, tier, belly].filter(
-    (filter) => filter !== "all"
-  ).length;
+  const filtersActive = [
+    color,
+    skin,
+    background,
+    tier,
+    belly,
+    pattern,
+    qualifier,
+  ].filter((filter) => filter !== "all").length;
   const filteredResults =
     !allHerdsLoading && filteredHerds && filteredHerds?.length > 0
       ? filteredHerds?.length
       : 0;
-
-  // Use the appropriate herds based on the toggle
-  const displayHerds = showMyHerds
-    ? myHerds
-    : allHerds?.filter((herd) => herd.type !== "Null");
 
   return (
     <>
@@ -335,7 +367,7 @@ export default function Home() {
                             <ul className="list-inside space-y-1 pl-4">
                               <li>
                                 <span className="font-semibold">Basic</span>:
-                                Any 1 matching core trait
+                                Matching Skin OR Color
                               </li>
                               <li>
                                 <span className="font-semibold">
@@ -349,8 +381,8 @@ export default function Home() {
                               </li>
                               <li>
                                 <span className="font-semibold">Perfect</span>:
-                                All core traits matching, plus any matching
-                                On/Off trait (Belly, Pattern, Back, or Details)
+                                All core traits matching, plus either Belly ON
+                                or Pattern ON
                               </li>
                             </ul>
                           </div>
@@ -384,7 +416,7 @@ export default function Home() {
                             <p className="text-sm">
                               A{" "}
                               <span className="font-clayno text-lg tracking-wide text-yellow-400">
-                                Mighty Flawless Herd
+                                Mighty Perfect Herd
                               </span>{" "}
                               would have:
                             </p>
@@ -392,6 +424,10 @@ export default function Home() {
                               <li>
                                 One of each OG species with matching Skin,
                                 Color, and Background
+                              </li>
+                              <li>
+                                Plus either Belly ON or Pattern ON across all
+                                dinos
                               </li>
                               <li>Plus either 2 Sagas or 1 Dactyl</li>
                             </ul>
@@ -406,11 +442,13 @@ export default function Home() {
                     background={background}
                     tier={tier}
                     belly={belly}
+                    pattern={pattern}
+                    qualifier={qualifier}
                     className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
                   />
                   {filtersActive > 0 && (
                     <Link
-                      href={`?skin=all&color=all&background=all&tier=all`}
+                      href={`?skin=all&color=all&background=all&tier=all&belly=all&pattern=all&qualifier=all`}
                       className="flex items-center gap-2 rounded-md bg-red-700/80 px-4 py-2 text-sm font-medium hover:bg-red-600"
                     >
                       Clear [{filtersActive}]

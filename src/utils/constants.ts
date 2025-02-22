@@ -53,7 +53,7 @@ export const SPECIES = [
   "Dactyl",
 ];
 
-export const TIERS = ["Insane", "Perfect", "Epic", "Rare", "Scrappy"];
+export const TIERS = ["Perfect", "Flawless", "Impressive", "Basic"];
 
 export const BELLY = ["On"];
 
@@ -91,3 +91,5 @@ export const CLAY_CLASS_RESOURCES: ClayClassResources = {
   defender: ["white", "green", "yellow"],
   tracker: ["red", "blue", "black"],
 };
+
+export const QUALIFIERS = ["Mighty", "Legendary"];

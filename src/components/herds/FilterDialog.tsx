@@ -9,18 +9,27 @@ import {
 } from "~/@/components/ui/dialog";
 import { HiAdjustments } from "react-icons/hi";
 import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
-import { BACKGROUNDS, SKINS, COLORS, BELLY } from "~/utils/constants";
+import {
+  BACKGROUNDS,
+  SKINS,
+  COLORS,
+  BELLY,
+  QUALIFIERS,
+  TIERS,
+} from "~/utils/constants";
 import { Label } from "~/@/components/ui/label";
 import Link from "next/link";
 
-type FilterDialogProps = {
-  skin: string | null;
-  color: string | null;
-  background: string | null;
-  tier: string | null;
-  belly: string | null;
+interface FilterDialogProps {
+  skin: string;
+  color: string;
+  background: string;
+  tier: string;
+  belly: string;
+  pattern: string;
+  qualifier: string;
   className?: string;
-};
+}
 
 const FilterDialog = ({
   skin,
@@ -28,6 +37,8 @@ const FilterDialog = ({
   background,
   tier,
   belly,
+  pattern,
+  qualifier,
   className,
 }: FilterDialogProps) => {
   const params = {
@@ -36,6 +47,8 @@ const FilterDialog = ({
     background: background,
     tier: tier,
     belly: belly === "belly" ? "on" : "all",
+    pattern: pattern === "pattern" ? "on" : "all",
+    qualifier: qualifier,
   };
   return (
     <div className="flex flex-col items-center gap-4">
@@ -60,10 +73,12 @@ const FilterDialog = ({
           </DialogDescription>
           <div className="flex flex-col flex-wrap gap-4 text-white">
             <FilterGroup trait={"tier"} params={params} />
+            <FilterGroup trait={"qualifier"} params={params} />
             <FilterGroup trait={"skin"} params={params} />
             <FilterGroup trait={"color"} params={params} />
             <FilterGroup trait={"background"} params={params} />
             <FilterGroup trait={"belly"} params={params} />
+            <FilterGroup trait={"pattern"} params={params} />
           </div>
         </DialogContent>
       </Dialog>
@@ -72,13 +87,22 @@ const FilterDialog = ({
 };
 
 type FilterGroupProps = {
-  trait: "skin" | "color" | "background" | "tier" | "belly";
+  trait:
+    | "skin"
+    | "color"
+    | "background"
+    | "tier"
+    | "belly"
+    | "qualifier"
+    | "pattern";
   params: {
     skin: string | null;
     color: string | null;
     background: string | null;
     tier: string | null;
     belly: string;
+    pattern: string;
+    qualifier: string | null;
   };
 };
 
@@ -88,7 +112,8 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
   const isTraitBackground = trait === "background";
   const isTraitTier = trait === "tier";
   const isTraitBelly = trait === "belly";
-  // const traitValue = params[trait];
+  const isTraitQualifier = trait === "qualifier";
+  const isTraitPattern = trait === "pattern";
 
   const config = isTraitColor
     ? COLORS
@@ -97,7 +122,13 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
     : isTraitBackground
     ? BACKGROUNDS
     : isTraitTier
-    ? ["BASIC", "IMPRESSIVE", "FLAWLESS", "PERFECT"]
+    ? TIERS
+    : isTraitPattern
+    ? ["All", "On"]
+    : isTraitBelly
+    ? ["All", "On"]
+    : isTraitQualifier
+    ? QUALIFIERS
     : BELLY;
 
   const [traitSelected, setTraitSelected] = useState(
@@ -127,7 +158,9 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
                   isTraitBackground ? "all" : params.background
                 }&tier=${isTraitTier ? "all" : params.tier}&belly=${
                   isTraitBelly ? "all" : params.belly
-                }`}
+                }&pattern=${
+                  isTraitPattern ? "all" : params.pattern
+                }&qualifier=${params.qualifier}`}
                 scroll={false}
                 className="flex items-center"
               >
@@ -154,7 +187,9 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
                     isTraitTier ? attribute.toLowerCase() : params.tier
                   }&belly=${
                     isTraitBelly ? attribute.toLowerCase() : params.belly
-                  }`}
+                  }&pattern=${
+                    isTraitPattern ? attribute.toLowerCase() : params.pattern
+                  }&qualifier=${params.qualifier}`}
                   scroll={false}
                   className="flex items-center"
                 >
