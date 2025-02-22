@@ -161,7 +161,7 @@ export default function Avatar({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <div className="relative block h-12 w-12 cursor-pointer overflow-hidden rounded-full transition-opacity hover:opacity-80">
+        <div className="relative block h-20 w-20 cursor-pointer overflow-hidden rounded-full transition-opacity hover:opacity-80">
           {isUploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
               Uploading...
@@ -172,8 +172,8 @@ export default function Avatar({
               currentAvatar ? `${currentAvatar}` : "/images/default-avatar.png"
             }
             alt="Avatar"
-            width={50}
-            height={50}
+            width={100}
+            height={100}
             className="object-cover"
             onError={handleUserPFPDoesNotExist}
           />
