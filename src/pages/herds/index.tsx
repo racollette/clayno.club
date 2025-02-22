@@ -89,14 +89,14 @@ function filterHerds(
       }
     }
 
-    if (belly === "on") {
-      if (!herd.matches.toLowerCase().includes("belly")) {
+    if (belly && belly !== "all") {
+      if (!herd.matches.toLowerCase().includes(`belly`)) {
         return false;
       }
     }
 
-    if (pattern === "on") {
-      if (!herd.matches.toLowerCase().includes("pattern")) {
+    if (pattern && pattern !== "all") {
+      if (!herd.matches.toLowerCase().includes(`pattern`)) {
         return false;
       }
     }

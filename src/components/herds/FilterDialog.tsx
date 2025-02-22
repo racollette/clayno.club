@@ -123,10 +123,8 @@ function FilterGroup({ trait, params }: FilterGroupProps) {
     ? BACKGROUNDS
     : isTraitTier
     ? TIERS
-    : isTraitPattern
-    ? ["All", "On"]
-    : isTraitBelly
-    ? ["All", "On"]
+    : isTraitPattern || isTraitBelly
+    ? ["On"]
     : isTraitQualifier
     ? QUALIFIERS
     : BELLY;
