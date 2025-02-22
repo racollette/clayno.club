@@ -329,7 +329,7 @@ const Settings = () => {
           <div className="lg:w-1/2">
             <div>
               <div className="text-xl font-extrabold">Avatar</div>
-              <div className="py-2 text-sm text-zinc-500">
+              <div className="py-1 text-sm text-zinc-500">
                 Upload a custom profile picture that will be displayed across
                 the site.
               </div>
@@ -348,7 +348,7 @@ const Settings = () => {
 
             <div className="mt-8">
               <div className="text-xl font-extrabold">Social Accounts</div>
-              <div className="py-2 text-sm text-zinc-500">
+              <div className="py-1 text-sm text-zinc-500">
                 Verify your identity so we can display your name next to your
                 dinos!
               </div>
@@ -563,7 +563,7 @@ const Settings = () => {
             </div>
             <div className="mt-8">
               <div className="text-xl font-extrabold">Wallets</div>
-              <div className="py-2 text-sm text-zinc-500">
+              <div className="py-1 text-sm text-zinc-500">
                 You can connect multiple wallets. All of these wallets will be
                 able to access your profile.
               </div>
@@ -646,7 +646,7 @@ const Settings = () => {
 
             <div className="mt-8">
               <div className="text-xl font-extrabold">Other Chains</div>
-              <div className="py-2 text-sm text-zinc-500">
+              <div className="py-1 text-sm text-zinc-500">
                 Submit wallet addresses from other networks. They may be used to
                 airdrop to Claynosaurz holders.
               </div>
@@ -693,7 +693,7 @@ const Settings = () => {
             {(user?.twitter || user?.telegram) && (
               <div className="mt-8">
                 <div className="text-xl font-extrabold">Privacy</div>
-                <div className="py-2 text-sm text-zinc-500">
+                <div className="py-1 text-sm text-zinc-500">
                   Choose which social accounts can be viewed by others.
                 </div>
                 <div className="flex flex-row gap-6 rounded-lg bg-neutral-800 p-4">
