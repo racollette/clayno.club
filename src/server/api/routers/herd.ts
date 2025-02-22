@@ -11,21 +11,24 @@ export const herdRouter = createTRPCRouter({
     return ctx.prisma.herd.findMany({
       where: {
         NOT: {
-          type: "Null",
+          matches: "None",
         },
       },
       include: {
         dinos: {
-          orderBy: {
-            attributes: {
-              background: "desc",
-            },
-          },
           include: {
             attributes: true,
           },
         },
       },
+      orderBy: [
+        {
+          tier: "asc",
+        },
+        {
+          rarity: "asc",
+        },
+      ],
     });
   }),
 
@@ -53,7 +56,7 @@ export const herdRouter = createTRPCRouter({
     }),
 
   getHerdTier: publicProcedure
-    .input(z.object({ tier: z.number() }))
+    .input(z.object({ tier: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.herd.findMany({
         where: {
@@ -94,11 +97,6 @@ export const herdRouter = createTRPCRouter({
         ],
         include: {
           dinos: {
-            orderBy: {
-              attributes: {
-                background: "desc",
-              },
-            },
             include: {
               attributes: true,
             },
@@ -136,17 +134,16 @@ export const herdRouter = createTRPCRouter({
       });
 
       // Get the new dinos
-      const newDinos = await ctx.prisma.dino.findMany({
+      const dinos = await ctx.prisma.dino.findMany({
         where: {
           mint: { in: input.dinoMints },
-          holderOwner: herd.owner,
         },
         include: { attributes: true },
       });
 
       console.log(
         "Found new dinos:",
-        newDinos.map((d) => ({
+        dinos.map((d) => ({
           mint: d.mint,
           species: d.attributes?.species,
           rarity: d.rarity,
@@ -154,10 +151,9 @@ export const herdRouter = createTRPCRouter({
       );
 
       // Calculate new herd stats
-      const { tier, type, matches, rarity } = calculateHerdStats(newDinos);
+      const { tier, matches, rarity } = calculateHerdStats(dinos);
       console.log("Calculated new herd stats:", {
         tier,
-        type,
         matches,
         rarity,
       });
@@ -170,8 +166,7 @@ export const herdRouter = createTRPCRouter({
             dinos: {
               set: input.dinoMints.map((mint) => ({ mint })),
             },
-            tier,
-            type,
+            tier: tier.toString(),
             matches,
             rarity,
             isEdited: true,

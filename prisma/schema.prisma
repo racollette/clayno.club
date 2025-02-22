@@ -26,7 +26,7 @@ model Dino {
   holderOwner String?
   rarity      Int?
   subDAOId    String?
-  herdId      String?
+  herdId      String?     // One-to-many relationship
   classPFP    String?
   attributes  Attributes?
   holder      Holder?     @relation(fields: [holderOwner], references: [owner])
@@ -57,34 +57,15 @@ model Attributes {
 }
 
 model Herd {
-  id        String   @id @default(cuid())
-  owner     String
-  tier      Int
-  type      String
-  matches   String
-  rarity    Int
-  key       String   @unique
-  isEdited  Boolean  @default(false)
-  dinos     Dino[]
-  voters    Voter[]
-}
-
-model Voter {
-  votesAvailable Int
-  votesCast      Int
-  userId         String  @id @unique
-  votesIssued    Boolean
-  votes          Herd[]
-  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model DinoToHerd {
-  A String
-  B String
-
-  @@unique([A, B], map: "_DinoToHerd_AB_unique")
-  @@index([B], map: "_DinoToHerd_B_index")
-  @@map("_DinoToHerd")
+  id          String   @id @default(cuid())
+  owner       String
+  tier        String   // "PERFECT", "FLAWLESS", "IMPRESSIVE", "BASIC"
+  matches     String   // "skin:Amazonia|color:Aqua|background:Mint"
+  rarity      Int      // Sum of all dino rarities in herd
+  isEdited    Boolean  @default(false)
+  qualifier   String?  // "Legendary", "Mighty", or null
+  dinoOrder   String   @db.Text // Comma-separated mint list
+  dinos       Dino[]   // One-to-many relationship
 }
 
 model Account {
@@ -119,7 +100,6 @@ model User {
   wallets        Wallet[]
   collages       Collage[]
   AudioFile      AudioFile[]
-  Voter          Voter?
 }
 
 model Discord {
@@ -307,15 +287,6 @@ model LastUpdated {
   clay       DateTime @default(now())
   claymakers DateTime @default(now())
   cosmetics  DateTime @default(now())
-}
-
-model HerdToVoter {
-  A String
-  B String
-
-  @@unique([A, B], map: "_HerdToVoter_AB_unique")
-  @@index([B], map: "_HerdToVoter_B_index")
-  @@map("_HerdToVoter")
 }
 
 model MoldedMeterSnapshot {
