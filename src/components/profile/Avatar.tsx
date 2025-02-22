@@ -27,7 +27,7 @@ interface AvatarProps {
 
 const compressImage = async (
   imageUrl: string,
-  maxSize: number = 200
+  maxSize = 200
 ): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const img = document.createElement("img");
