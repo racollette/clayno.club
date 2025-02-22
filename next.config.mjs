@@ -56,6 +56,11 @@ const config = {
         protocol: "https",
         hostname: "**.clayno.club",
       },
+      {
+        protocol: "https",
+        hostname: "uploadthing.com",
+        pathname: "/**",
+      },
     ],
     unoptimized: true,
   },

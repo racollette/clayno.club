@@ -97,6 +97,16 @@ module.exports = {
           "45%": { transform: "rotate(360deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        gradient: {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -108,6 +118,8 @@ module.exports = {
         "ticker-mobile": "ticker-mobile 10s linear infinite",
         "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "spin-bounce": "spin-bounce 5s ease-in-out infinite",
+        gradient: "gradient 6s linear infinite",
+        "gradient-fast": "gradient 3s linear infinite",
       },
     },
   },

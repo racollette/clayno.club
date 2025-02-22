@@ -27,7 +27,17 @@ const ToggleSwitch = ({
         checked={toggleState}
         onChange={handleToggle}
       />
-      <div className="peer h-6 w-11 rounded-lg bg-neutral-700 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-lg after:border after:border-zinc-600 after:bg-white after:transition-all after:content-[''] peer-checked:bg-sky-600 peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-zinc-600 dark:bg-neutral-700 dark:peer-focus:ring-sky-800"></div>
+      <div
+        className={`${
+          toggleState ? "bg-[#00D1D1]" : "bg-neutral-700"
+        } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#00D1D1] focus:ring-offset-2`}
+      >
+        <span
+          className={`${
+            toggleState ? "translate-x-6" : "translate-x-1"
+          } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+        />
+      </div>
       <span className="ml-2 text-sm font-medium text-white">{label}</span>
     </label>
   );

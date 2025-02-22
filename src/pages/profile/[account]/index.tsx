@@ -11,7 +11,7 @@ import { Spinner } from "flowbite-react";
 import { getQueryString } from "~/utils/routes";
 import { CollagePreview } from "~/components/CollagePreview";
 import { type GridItemProps } from "~/components/CollageModal";
-import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { handleUserPFPDoesNotExist, getUserAvatar } from "~/utils/images";
 import MetaTags from "~/components/MetaTags";
 import { extractProfileFromUser } from "~/utils/wallet";
 
@@ -40,7 +40,7 @@ export default function Profile() {
 
   const wallets = user?.wallets ?? [];
   const userHerds = api.useQueries((t) =>
-    wallets.map((wallet) => t.herd.getUserHerds(wallet.address))
+    wallets.map((wallet) => t.herd.getUserHerds([wallet.address]))
   );
   const totalHerds = userHerds.reduce((total, wallet) => {
     return total + (wallet.data?.length || 0);
@@ -65,7 +65,7 @@ export default function Profile() {
     isOwner: isOwner ? isOwner : false,
   });
 
-  const { data: walletHerds } = api.herd.getUserHerds.useQuery(queryString);
+  const { data: walletHerds } = api.herd.getUserHerds.useQuery([queryString]);
 
   useEffect(() => {
     setTimeout(async () => {
@@ -102,10 +102,10 @@ export default function Profile() {
                     <div className="mr-2 flex flex-col justify-center">
                       <Image
                         className="self-center rounded-full"
-                        src={
-                          userPFP ??
-                          `https://ui-avatars.com/api/?name=${user?.defaultAddress}&background=random`
-                        }
+                        src={getUserAvatar({
+                          image: user?.image ?? undefined,
+                          defaultAddress: user?.defaultAddress ?? "",
+                        })}
                         alt="Avatar"
                         width={75}
                         height={75}
@@ -198,7 +198,10 @@ export default function Profile() {
                     <div className="flex flex-col justify-center">
                       <Image
                         className="self-center rounded-full"
-                        src={`https://ui-avatars.com/api/?name=${queryString}&background=random`}
+                        src={getUserAvatar({
+                          image: undefined,
+                          defaultAddress: queryString,
+                        })}
                         alt="Avatar"
                         width={75}
                         height={75}

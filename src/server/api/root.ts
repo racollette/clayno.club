@@ -4,7 +4,6 @@ import { bindingRouter } from "./routers/binding";
 import { subdaoRouter } from "./routers/subdao";
 import { fusionRouter } from "./routers/fusion";
 import { generalRouter } from "./routers/general";
-// import { voteRouter } from "./routers/vote";
 import { statsRouter } from "./routers/stats";
 import { inventoryRouter } from "./routers/inventory";
 import { resourcesRouter } from "./routers/resources";
@@ -21,7 +20,6 @@ export const appRouter = createTRPCRouter({
   subdao: subdaoRouter,
   fusion: fusionRouter,
   general: generalRouter,
-  // vote: voteRouter,
   stats: statsRouter,
   inventory: inventoryRouter,
   resources: resourcesRouter,

@@ -5,6 +5,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { createUploadthing } from "uploadthing/next-legacy";
 
 const createUserRequestSchema = z.object({
   address: z.string(),
@@ -20,6 +21,8 @@ const linkSocialProfileRequestSchema = z.object({
   }),
 });
 
+const f = createUploadthing();
+
 export const bindingRouter = createTRPCRouter({
   createUser: publicProcedure
     .input(createUserRequestSchema)
@@ -34,23 +37,6 @@ export const bindingRouter = createTRPCRouter({
             },
           },
         });
-
-        const checkHolderStatus = await prisma.holder.findFirst({
-          where: {
-            owner: input.address,
-          },
-        });
-        const dinosOwned = checkHolderStatus?.amount || 0;
-        // const votesToIssue = dinosOwned > 0 ? 20 : 0;
-
-        // await prisma.voter.create({
-        //   data: {
-        //     userId: ctx.session.user.id,
-        //     votesAvailable: votesToIssue,
-        //     votesCast: 0,
-        //     votesIssued: votesToIssue > 0,
-        //   },
-        // });
 
         await prisma.account.create({
           data: {
@@ -550,6 +536,7 @@ export const bindingRouter = createTRPCRouter({
         discord: true,
         twitter: true,
         telegram: true,
+        image: true,
       },
     });
 
@@ -645,5 +632,19 @@ export const bindingRouter = createTRPCRouter({
         console.error("Error fetching Aptos wallet:", error);
         throw new Error("Failed to fetch Aptos wallet");
       }
+    }),
+
+  updateUserAvatar: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        imageUrl: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return prisma.user.update({
+        where: { id: input.userId },
+        data: { image: input.imageUrl },
+      });
     }),
 });

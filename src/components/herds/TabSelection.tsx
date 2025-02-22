@@ -39,25 +39,27 @@ const TabSelection = ({
 
   return (
     <>
-      <div className="mx-10 mt-2 grid grid-cols-2 justify-center gap-y-2 align-middle md:flex md:flex-row md:gap-x-6">
-        <ToggleSwitch
-          className=""
-          toggleState={showDactyl}
-          label={"Show Dactyls"}
-          onToggle={toggleDactyl}
-        />
-        <ToggleSwitch
-          className=""
-          toggleState={showSaga}
-          label={"Show Saga"}
-          onToggle={toggleSaga}
-        />
-        <ToggleSwitch
-          className=""
-          toggleState={showPFP}
-          label={"PFP Mode"}
-          onToggle={togglePFP}
-        />
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-row items-center justify-center gap-2 md:gap-4">
+          <ToggleSwitch
+            className=""
+            toggleState={showDactyl}
+            label={"Show Dactyls"}
+            onToggle={toggleDactyl}
+          />
+          <ToggleSwitch
+            className=""
+            toggleState={showSaga}
+            label={"Show Saga"}
+            onToggle={toggleSaga}
+          />
+          <ToggleSwitch
+            className=""
+            toggleState={showPFP}
+            label={"PFP Mode"}
+            onToggle={togglePFP}
+          />
+        </div>
       </div>
       <div className="p-4">{children}</div>
     </>

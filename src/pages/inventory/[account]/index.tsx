@@ -24,7 +24,7 @@ import { shortAccount } from "~/utils/addresses";
 import { getQueryString } from "~/utils/routes";
 import { useSession } from "next-auth/react";
 import { extractProfileFromUser } from "~/utils/wallet";
-import { handleUserPFPDoesNotExist } from "~/utils/images";
+import { handleUserPFPDoesNotExist, getUserAvatar } from "~/utils/images";
 import type { SubDAO } from "@prisma/client";
 import { Skeleton } from "~/@/components/ui/skeleton";
 import {
@@ -209,10 +209,10 @@ const Inventory = () => {
                     <div className="flex gap-3">
                       <Image
                         className="h-10 w-10 rounded-full md:h-[65px] md:w-[65px]"
-                        src={
-                          userPFP ??
-                          `https://ui-avatars.com/api/?name=${queryString}&background=random&size=300`
-                        }
+                        src={getUserAvatar({
+                          image: user?.image,
+                          defaultAddress: queryString,
+                        })}
                         alt="Avatar"
                         width={65}
                         height={65}
