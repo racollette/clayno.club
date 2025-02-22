@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import TabSelection from "../../components/herds/TabSelection";
 import Herd from "../../components/Herd";
-import Image from "next/image";
 import Link from "next/link";
 import { useTimeSinceLastUpdate } from "~/hooks/useUpdated";
 import { useSearchParams } from "next/navigation";
-import type {
-  Herd as HerdType,
-  Attributes,
-  Dino,
-  User,
-  Discord,
-  Twitter,
-  Wallet,
-  Telegram,
-} from "@prisma/client";
+import type { Herd as HerdType, Attributes, Dino } from "@prisma/client";
 import { useUser } from "~/hooks/useUser";
 import { useToast } from "~/@/components/ui/use-toast";
-import { HiX, HiRefresh } from "react-icons/hi";
+import { HiX, HiRefresh, HiInformationCircle } from "react-icons/hi";
 import FilterDialog from "../../components/herds/FilterDialog";
 import MetaTags from "~/components/MetaTags";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "~/@/components/ui/dialog";
+import ToggleSwitch from "../../components/ToggleSwitch";
+import { Skeleton } from "~/@/components/ui/skeleton";
 
 type HerdWithIncludes =
   | HerdType & {
@@ -38,75 +38,50 @@ function filterHerds(
   tier: string | null,
   belly: string | null
 ): HerdWithIncludes[] {
-  // Early return if allHerds is undefined or empty
-  if (!allHerds?.length) return [];
+  if (!allHerds) return [];
 
-  // First filter the herds
-  const filteredHerds = allHerds.filter((herd): herd is HerdWithIncludes => {
-    if (!herd?.matches) return false;
-
-    const herdMatchesLower = herd.matches.toLowerCase();
-    const colorFilter =
-      !color || color === "all" || herdMatchesLower.includes(color);
-    const skinFilter =
-      !skin || skin === "all" || herdMatchesLower.includes(skin);
-    const backgroundFilter =
-      !background ||
-      background === "all" ||
-      herdMatchesLower.includes(background);
-    const tierValue =
-      tier === "insane"
-        ? 0
-        : tier === "perfect"
-        ? 1
-        : tier === "epic"
-        ? 2
-        : tier === "rare"
-        ? 3
-        : tier === "scrappy"
-        ? 4
-        : 0;
-    const tierFilter =
-      !tier || tier === "all" ? herd.tier !== 4 : herd.tier === tierValue;
-    const bellyFilter =
-      !belly || belly === "all" || herdMatchesLower.includes(belly);
-
-    return (
-      colorFilter && skinFilter && backgroundFilter && tierFilter && bellyFilter
-    );
-  });
-
-  // Create separate arrays for each tier group
-  const topTierHerds = filteredHerds.filter((h) => h.tier <= 2);
-  const rareHerds = filteredHerds.filter((h) => h.tier === 3);
-  const scrappyHerds = filteredHerds.filter((h) => h.tier === 4);
-
-  // Sort top tier herds by rarity with randomization
-  const sortedTopTier = [...topTierHerds].sort((a, b) => {
-    const rarityDiff = a.rarity - b.rarity;
-    const aRandomFactor = Math.random() * (a.rarity + 1);
-    const bRandomFactor = Math.random() * (b.rarity + 1);
-    return rarityDiff + (aRandomFactor - bRandomFactor);
-  });
-
-  // Function to shuffle an array
-  function shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = shuffled[i]!;
-      shuffled[i] = shuffled[j]!;
-      shuffled[j] = temp;
+  return allHerds.filter((herd) => {
+    // Filter by tier
+    if (tier && tier !== "all") {
+      const tierNumber = parseInt(tier);
+      if (herd.tier !== tierNumber) return false;
     }
-    return shuffled;
-  }
 
-  // Combine all groups in order, ensuring each array exists
-  return [
-    ...sortedTopTier,
-    ...shuffleArray(rareHerds),
-    ...shuffleArray(scrappyHerds),
-  ];
+    // Get the first dino's attributes as reference for matching traits
+    const referenceAttributes = herd.dinos[0]?.attributes;
+    if (!referenceAttributes) return false;
+
+    // Filter by matching traits
+    if (skin && skin !== "all") {
+      const allMatch = herd.dinos.every(
+        (dino) => dino.attributes?.skin === referenceAttributes.skin
+      );
+      if (!allMatch) return false;
+    }
+
+    if (color && color !== "all") {
+      const allMatch = herd.dinos.every(
+        (dino) => dino.attributes?.color === referenceAttributes.color
+      );
+      if (!allMatch) return false;
+    }
+
+    if (background && background !== "all") {
+      const allMatch = herd.dinos.every(
+        (dino) => dino.attributes?.background === referenceAttributes.background
+      );
+      if (!allMatch) return false;
+    }
+
+    if (belly === "on") {
+      const allMatch = herd.dinos.every(
+        (dino) => dino.attributes?.belly === referenceAttributes.belly
+      );
+      if (!allMatch) return false;
+    }
+
+    return true;
+  });
 }
 
 function useHerdOwners(walletAddresses: string[]) {
@@ -129,7 +104,6 @@ export default function Home() {
       enabled: !!user?.wallets.length,
     }
   );
-  const utils = api.useContext();
 
   const color = searchParams.get("color") || "all";
   const skin = searchParams.get("skin") || "all";
@@ -221,15 +195,51 @@ export default function Home() {
         title="Claynosaurz Herds | Clayno Club"
         description="Who has the finest herd of Claynotopia? Find the most popular Claynosaurz collections."
       />
-      <main className="relative flex min-h-screen flex-col items-center  bg-black">
+      <main className="relative flex min-h-screen flex-col items-center  bg-black py-8">
         {allHerdsLoading ? (
-          <div className="relative mb-24 aspect-square w-1/2 overflow-clip rounded-full text-white md:w-1/4">
-            <Image
-              src="/gifs/TTT.gif"
-              alt="Loading"
-              fill
-              className="rounded-full"
-            />
+          <div className="flex w-full flex-col items-center gap-8 px-4 md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
+            {/* Controls Bar Skeleton */}
+            <div className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-9 w-9 rounded-md bg-neutral-800" />
+                <Skeleton className="h-9 w-24 rounded-md bg-neutral-800" />
+                <Skeleton className="h-9 w-24 rounded-md bg-neutral-800" />
+                <Skeleton className="h-9 w-32 rounded-md bg-neutral-800" />
+              </div>
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-6 w-28 rounded-md bg-neutral-800" />
+                <Skeleton className="h-6 w-24 rounded-md bg-neutral-800" />
+                <Skeleton className="h-6 w-24 rounded-md bg-neutral-800" />
+              </div>
+            </div>
+
+            {/* Herds Grid Skeleton */}
+            <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col gap-2 rounded-lg bg-neutral-800 p-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-20 rounded-md bg-neutral-700" />
+                    <Skeleton className="h-6 w-20 rounded-md bg-neutral-700" />
+                    <Skeleton className="h-6 w-20 rounded-md bg-neutral-700" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-1">
+                    {[...Array(6)].map((_, j) => (
+                      <Skeleton
+                        key={j}
+                        className="aspect-square rounded-md bg-neutral-700"
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-8 w-32 rounded-md bg-neutral-700" />
+                    <Skeleton className="h-8 w-8 rounded-full bg-neutral-700" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="flex w-full flex-col items-center justify-center py-2 md:px-4">
@@ -271,120 +281,244 @@ export default function Home() {
               </div>
             </div> */}
 
-            <section className="flex flex-row items-center justify-center gap-2 p-2 text-white md:gap-4 md:p-4">
-              <div className="flex flex-row items-center gap-2">
-                <FilterDialog
-                  color={color}
-                  skin={skin}
-                  background={background}
-                  tier={tier}
-                  belly={belly}
-                  className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
-                />
+            <section className="flex flex-col items-center gap-4 text-white md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
+              {/* Main Controls Bar */}
+              <div className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                {/* Left Side Controls */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button className="flex items-center gap-2 rounded-md bg-neutral-800 px-3 py-2 text-sm hover:bg-neutral-700">
+                        <HiInformationCircle
+                          size={24}
+                          className="text-[#00D1D1]"
+                        />
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="border-none bg-neutral-900/95 backdrop-blur-md">
+                      <DialogHeader className="relative">
+                        <DialogTitle className="font-clayno text-3xl tracking-wide text-white">
+                          Understanding{" "}
+                          <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                            Herds
+                          </span>
+                        </DialogTitle>
+                        <DialogClose className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-neutral-100">
+                          <HiX className="h-6 w-6 text-neutral-300" />
+                          <span className="sr-only">Close</span>
+                        </DialogClose>
+                      </DialogHeader>
+                      <DialogDescription className="text-neutral-200">
+                        <div className="space-y-4 pt-2">
+                          {/* Basic Description */}
+                          <div>
+                            <p className="mb-4 leading-relaxed text-neutral-200">
+                              A herd is defined as one of each original
+                              Claynosaurz species:{" "}
+                              <span className="font-clayno tracking-wide text-neutral-300">
+                                Rex, Raptor, Trice, Bronto, Stego,
+                              </span>{" "}
+                              and{" "}
+                              <span className="font-clayno tracking-wide text-neutral-300">
+                                Ankylo
+                              </span>
+                              .
+                            </p>
+                            <p>
+                              Herds are ranked by how many matching traits they
+                              share, with additional bonuses for owning matching
+                              Sagas (
+                              <span className="font-clayno tracking-wide text-neutral-300">
+                                Spino
+                              </span>{" "}
+                              and{" "}
+                              <span className="font-clayno tracking-wide text-neutral-300">
+                                Para
+                              </span>{" "}
+                              ) or{" "}
+                              <span className="font-clayno tracking-wide text-neutral-300">
+                                Dactyl.
+                              </span>
+                            </p>
+                          </div>
 
-                {user && (
-                  <button
-                    onClick={() => setShowMyHerds(!showMyHerds)}
-                    className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-colors ${
-                      showMyHerds
-                        ? "bg-neutral-800 text-cyan-400"
-                        : "bg-neutral-800 text-white"
-                    } hover:bg-neutral-700`}
-                  >
-                    {showMyHerds ? "All Herds" : "My Herds"}
-                  </button>
-                )}
-              </div>
+                          {/* Base Herds */}
+                          <div>
+                            <h3 className="mb-3 font-clayno text-xl tracking-wide text-white">
+                              Base Herds:
+                            </h3>
+                            <p className="mb-2 text-neutral-300">
+                              There are three core traits: Skin, Color, and
+                              Background
+                            </p>
+                            <ul className="list-inside space-y-1 pl-4">
+                              <li>
+                                <span className="font-semibold">Basic</span>:
+                                Any 1 matching core trait
+                              </li>
+                              <li>
+                                <span className="font-semibold">
+                                  Impressive
+                                </span>
+                                : Any 2 matching core traits
+                              </li>
+                              <li>
+                                <span className="font-semibold">Flawless</span>:
+                                All 3 core traits matching
+                              </li>
+                              <li>
+                                <span className="font-semibold">Perfect</span>:
+                                All core traits matching, plus any matching
+                                On/Off trait (Belly, Pattern, Back, or Details)
+                              </li>
+                            </ul>
+                          </div>
 
-              {filtersActive > 0 && (
-                <div className="flex flex-row flex-nowrap rounded-md bg-red-700 p-2 hover:bg-red-500">
-                  <Link
-                    href={`?skin=all&color=all&background=all&tier=all`}
-                    className="flex flex-row flex-nowrap items-center justify-center gap-2 text-sm font-bold text-white"
-                  >
-                    [{filtersActive}]
-                    <HiX size={20} className="text-white" />
-                  </Link>
+                          {/* Qualifiers */}
+                          <div>
+                            <h3 className="mb-3 font-clayno text-xl tracking-wide text-white">
+                              Herd Qualifiers:
+                            </h3>
+                            <ul className="list-inside list-disc space-y-1 pl-4">
+                              <li>
+                                <span className="font-semibold">Mighty</span>:
+                                if you own 2 Sagas{" "}
+                                <span className="text-yellow-400">OR</span> 1
+                                Dactyl
+                              </li>
+                              <li>
+                                <span className="font-semibold">Legendary</span>
+                                : if you own 2 Sagas{" "}
+                                <span className="text-yellow-400">AND</span> 1
+                                Dactyl
+                              </li>
+                            </ul>
+                          </div>
+
+                          {/* Example */}
+                          <div className="mt-2 rounded-lg bg-neutral-800/50 p-6">
+                            <p className="mb-2 font-clayno text-sm text-neutral-300">
+                              Example
+                            </p>
+                            <p className="text-sm">
+                              A{" "}
+                              <span className="font-clayno text-lg tracking-wide text-yellow-400">
+                                Mighty Flawless Herd
+                              </span>{" "}
+                              would have:
+                            </p>
+                            <ul className="mt-1 list-inside list-disc space-y-1 pl-4 text-sm text-neutral-300">
+                              <li>
+                                One of each OG species with matching Skin,
+                                Color, and Background
+                              </li>
+                              <li>Plus either 2 Sagas or 1 Dactyl</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </DialogDescription>
+                    </DialogContent>
+                  </Dialog>
+                  <FilterDialog
+                    color={color}
+                    skin={skin}
+                    background={background}
+                    tier={tier}
+                    belly={belly}
+                    className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
+                  />
+                  {filtersActive > 0 && (
+                    <Link
+                      href={`?skin=all&color=all&background=all&tier=all`}
+                      className="flex items-center gap-2 rounded-md bg-red-700/80 px-4 py-2 text-sm font-medium hover:bg-red-600"
+                    >
+                      Clear [{filtersActive}]
+                      <HiX size={20} />
+                    </Link>
+                  )}
+                  {user && (
+                    <button
+                      onClick={() => setShowMyHerds(!showMyHerds)}
+                      className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium ${
+                        showMyHerds
+                          ? "bg-neutral-800 text-blue-500"
+                          : "bg-neutral-800 text-white"
+                      } hover:bg-neutral-700`}
+                    >
+                      My Herds
+                    </button>
+                  )}
+                  <div className="text-sm font-medium">
+                    {filteredResults} herds
+                  </div>
+                  <div className="text-xs italic text-zinc-500">
+                    Updated {lastUpdated}
+                  </div>
                 </div>
-              )}
 
-              <div className="text-sm font-bold text-white">
-                <div>
-                  {filteredResults} herd{filteredResults !== 1 && "s"}
+                {/* Right Side Toggles */}
+                <div className="flex items-center gap-4">
+                  <ToggleSwitch
+                    className=""
+                    toggleState={showDactyl}
+                    label={"Show Dactyls"}
+                    onToggle={toggleDactyl}
+                  />
+                  <ToggleSwitch
+                    className=""
+                    toggleState={showSaga}
+                    label={"Show Saga"}
+                    onToggle={toggleSaga}
+                  />
+                  <ToggleSwitch
+                    className=""
+                    toggleState={showPFP}
+                    label={"PFP Mode"}
+                    onToggle={togglePFP}
+                  />
                 </div>
-              </div>
-
-              <div className="hidden text-right text-xs italic text-zinc-500 md:block">
-                {`Updated ${lastUpdated}`}
               </div>
             </section>
 
-            <section className="w-full md:w-4/5 lg:w-2/3 xl:w-3/5 2xl:w-1/2">
-              <TabSelection
-                labels={["Top Tier", "Rare", "Scrappy"]}
-                counts={[
-                  filteredHerds?.filter((h) => h.tier <= 2).length ?? 0,
-                  filteredHerds?.filter((h) => h.tier === 3).length ?? 0,
-                  filteredHerds?.filter((h) => h.tier === 4).length ?? 0,
-                ]}
-                showDactyl={showDactyl}
-                showSaga={showSaga}
-                showPFP={showPFP}
-                toggleDactyl={toggleDactyl}
-                toggleSaga={toggleSaga}
-                togglePFP={togglePFP}
-              >
-                <div className="mt-4 flex flex-col items-center justify-center gap-2">
-                  {filteredResults === 0 && (
-                    <div className="mt-10 flex flex-col items-center justify-center gap-2">
-                      {allHerdsLoading ? (
-                        <HiRefresh
-                          size={50}
-                          className="animate-spin text-white"
-                        />
-                      ) : (
-                        <>
-                          <Image
-                            src="/images/travolta.gif"
-                            width={200}
-                            height={200}
-                            alt="???"
-                            className="rounded-lg"
-                          />
-                          <p className="font-semibold text-white">
-                            No herds found!
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  )}
+            <section className="w-full md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {filteredResults === 0 && (
+                  <div className="mt-10 flex flex-col items-center justify-center gap-2 md:col-span-2 xl:col-span-3">
+                    {allHerdsLoading ? (
+                      <HiRefresh
+                        size={50}
+                        className="animate-spin text-white"
+                      />
+                    ) : (
+                      <p className="text-lg font-semibold text-neutral-300">
+                        No herds found matching these filters
+                      </p>
+                    )}
+                  </div>
+                )}
 
-                  {displayHerds?.map((herd) => {
-                    const foundUser = owners?.find((user) => {
-                      return user.wallets.some(
-                        (wallet) => wallet.address === herd.owner
-                      );
-                    });
-                    return (
-                      <div
-                        key={herd.id}
-                        className="mb-6 flex w-full flex-col items-center md:flex-row md:gap-8"
-                      >
-                        <Herd
-                          key={herd.id}
-                          herd={herd as HerdWithIncludes}
-                          showDactyl={showDactyl}
-                          showSaga={showSaga}
-                          showOwner={true}
-                          showPFP={showPFP}
-                          owner={foundUser}
-                          currentUser={user}
-                        />
-                      </div>
+                {filteredHerds?.map((herd) => {
+                  const foundUser = owners?.find((user) => {
+                    return user.wallets.some(
+                      (wallet) => wallet.address === herd.owner
                     );
-                  })}
-                </div>
-              </TabSelection>
+                  });
+                  return (
+                    <div key={herd.id} className="flex flex-col items-center">
+                      <Herd
+                        key={herd.id}
+                        herd={herd as HerdWithIncludes}
+                        showDactyl={showDactyl}
+                        showSaga={showSaga}
+                        showOwner={true}
+                        showPFP={showPFP}
+                        owner={foundUser}
+                        currentUser={user}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </section>
           </div>
         )}
