@@ -441,7 +441,7 @@ export default function Home() {
                             <p className="text-sm">
                               A{" "}
                               <span className="font-clayno text-lg tracking-wide text-yellow-400">
-                                Mighty Perfect Herd
+                                Mighty Flawless Herd
                               </span>{" "}
                               would have:
                             </p>
@@ -449,10 +449,6 @@ export default function Home() {
                               <li>
                                 One of each OG species with matching Skin,
                                 Color, and Background
-                              </li>
-                              <li>
-                                Plus either Belly ON or Pattern ON across all
-                                dinos
                               </li>
                               <li>Plus either 2 Sagas or 1 Dactyl</li>
                             </ul>
