@@ -54,8 +54,9 @@ export const SPECIES = [
 ];
 
 export const TIERS = ["Perfect", "Flawless", "Impressive", "Basic"];
-
+export const QUALIFIERS = ["Mighty", "Legendary"];
 export const BELLY = ["On"];
+export const PATTERN = ["On"];
 
 export const ORIGINAL_CLAY_SUPPLY = {
   red: 4942,
@@ -91,5 +92,3 @@ export const CLAY_CLASS_RESOURCES: ClayClassResources = {
   defender: ["white", "green", "yellow"],
   tracker: ["red", "blue", "black"],
 };
-
-export const QUALIFIERS = ["Mighty", "Legendary"];

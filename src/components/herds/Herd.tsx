@@ -127,7 +127,7 @@ export default function Herd(props: HerdProps) {
       >
         <div className="flex flex-row gap-1">
           {filteredHerd.matches.split("|").map((trait, index) => {
-            const [type, value] = trait.split(":");
+            const [type = "", value] = trait.split(":");
             if (!value || value.toLowerCase() === "off") return null;
 
             if (
