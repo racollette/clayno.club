@@ -5,6 +5,7 @@ import { useToast } from "~/@/components/ui/use-toast";
 import Image from "next/image";
 import { useUploadThing } from "~/utils/uploadthing";
 import { api } from "~/utils/api";
+import { handleUserPFPDoesNotExist } from "~/utils/images";
 
 interface AvatarProps {
   userId: string;
@@ -38,7 +39,8 @@ export default function Avatar({
       }
       setIsUploading(false);
     },
-    onUploadError: () => {
+    onUploadError: (error: Error) => {
+      console.error("Upload error:", error);
       toast({
         title: "Failed to upload image",
         variant: "destructive",
@@ -66,6 +68,7 @@ export default function Avatar({
         alt="Avatar"
         fill
         className="object-cover"
+        onError={handleUserPFPDoesNotExist}
       />
       <input
         type="file"
