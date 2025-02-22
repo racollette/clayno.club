@@ -326,11 +326,8 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-2">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <button className="flex items-center gap-2 rounded-md bg-neutral-800 px-3 py-2 text-sm hover:bg-neutral-700">
-                        <HiInformationCircle
-                          size={24}
-                          className="text-[#00D1D1]"
-                        />
+                      <button className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700">
+                        <HiInformationCircle size={20} />
                       </button>
                     </DialogTrigger>
                     <DialogContent className="border-none bg-neutral-900/95 backdrop-blur-md">
@@ -465,12 +462,12 @@ export default function Home() {
                     belly={belly}
                     pattern={pattern}
                     qualifier={qualifier}
-                    className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
+                    className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700"
                   />
                   {filtersActive > 0 && (
                     <Link
-                      href={`?skin=all&color=all&background=all&tier=all&belly=all&pattern=all&qualifier=all`}
-                      className="flex items-center gap-2 rounded-md bg-red-700/80 px-4 py-2 text-sm font-medium hover:bg-red-600"
+                      href="?"
+                      className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700"
                     >
                       Clear [{filtersActive}]
                       <HiX size={20} />
