@@ -128,7 +128,36 @@ export default function Herd(props: HerdProps) {
         <div className="flex flex-row gap-1">
           {filteredHerd.matches.split("|").map((trait, index) => {
             const [type, value] = trait.split(":");
-            if (!value) return null;
+            if (!value || value.toLowerCase() === "off") return null;
+
+            if (
+              type.toLowerCase() === "belly" &&
+              value.toLowerCase() === "on"
+            ) {
+              return (
+                <div
+                  className="rounded-md bg-rose-600 px-2 py-1 text-xs font-extrabold text-white"
+                  key={index}
+                >
+                  Belly
+                </div>
+              );
+            }
+
+            if (
+              type.toLowerCase() === "pattern" &&
+              value.toLowerCase() === "on"
+            ) {
+              return (
+                <div
+                  className="rounded-md bg-purple-600 px-2 py-1 text-xs font-extrabold text-white"
+                  key={index}
+                >
+                  Pattern
+                </div>
+              );
+            }
+
             return (
               <div
                 className={`rounded-md px-2 py-1 text-xs font-extrabold text-white ${getTraitBadgeColor(

@@ -8,7 +8,10 @@ export const getRarityColor = (rank: number) => {
 };
 
 export const getTraitBadgeColor = (trait: string) => {
-  switch (trait) {
+  // Normalize the trait string
+  const normalizedTrait = trait.trim();
+
+  switch (normalizedTrait) {
     // Colors
     case "Amethyst":
       return "bg-purple-500";
@@ -37,7 +40,7 @@ export const getTraitBadgeColor = (trait: string) => {
       return "bg-teal-600";
     case "Elektra":
       return "bg-indigo-600";
-    case "Cristalline":
+    case "Crystalline":
       return "bg-emerald-600";
     case "Coral":
       return "bg-cyan-600";
@@ -69,6 +72,10 @@ export const getTraitBadgeColor = (trait: string) => {
       return "bg-lime-900";
     case "Stego":
       return "bg-pink-500";
+    case "Para":
+      return "bg-blue-600";
+    case "Spino":
+      return "bg-purple-600";
     // Miscellaneous
     case "25":
       return "bg-sky-400";
@@ -91,9 +98,9 @@ export const getTraitBadgeColor = (trait: string) => {
     case "Pattern":
     case "PatternOn":
       return "bg-purple-600";
-    // Default
+    // Default fallback
     default:
-      return "bg-slate-800";
+      return "bg-neutral-600";
   }
 };
 
