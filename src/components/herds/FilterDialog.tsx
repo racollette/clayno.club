@@ -65,9 +65,11 @@ const FilterDialog = ({
             <HiAdjustments className="rotate-90" size={20} />
           </button>
         </DialogTrigger>
-        <DialogContent className="border-none bg-neutral-900/80">
+        <DialogContent className="mx-auto max-w-[95%] rounded-lg border-none bg-neutral-900/90 sm:max-w-[500px]">
           <DialogHeader className="relative">
-            <DialogTitle className="text-white">Filters</DialogTitle>
+            <DialogTitle className="self-start font-clayno text-white">
+              Filters
+            </DialogTitle>
             <DialogClose className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-neutral-100">
               <HiX className="h-6 w-6 text-neutral-300" />
               <span className="sr-only">Close</span>

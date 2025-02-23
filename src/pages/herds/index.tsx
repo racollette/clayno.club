@@ -25,6 +25,7 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import DinoSelector from "../../components/herds/DinoSelector";
 import { Button } from "~/@/components/ui/button";
+import InfoDialog from "../../components/herds/InfoDialog";
 
 type HerdWithIncludes =
   | HerdType & {
@@ -257,7 +258,7 @@ export default function Home() {
         title="Claynosaurz Herds | Clayno Club"
         description="Who has the finest herd of Claynotopia? Find the most popular Claynosaurz collections."
       />
-      <main className="relative flex min-h-screen flex-col items-center  bg-black py-8">
+      <main className="relative flex min-h-screen flex-col items-center bg-black px-3 py-0 md:py-8">
         {allHerdsLoading ? (
           <div className="flex w-full flex-col items-center gap-8 px-4 md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
             {/* Controls Bar Skeleton */}
@@ -304,7 +305,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="flex w-full flex-col items-center justify-center py-2 md:px-4">
+          <div className="flex w-full flex-col items-center justify-center py-2">
             {/* <div className="flex w-full flex-col flex-wrap items-center justify-center p-2">
               <div className="relative aspect-video w-full p-4 md:w-1/2">
                 <Image
@@ -348,136 +349,7 @@ export default function Home() {
               <div className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 {/* Left Side Controls */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700">
-                        <HiInformationCircle size={20} />
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className="border-none bg-neutral-900/95 backdrop-blur-md">
-                      <DialogHeader className="relative">
-                        <DialogTitle className="font-clayno text-3xl tracking-wide text-white">
-                          Understanding{" "}
-                          <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
-                            Herds
-                          </span>
-                        </DialogTitle>
-                        <DialogClose className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-neutral-100">
-                          <HiX className="h-6 w-6 text-neutral-300" />
-                          <span className="sr-only">Close</span>
-                        </DialogClose>
-                      </DialogHeader>
-                      <DialogDescription className="text-neutral-200">
-                        <div className="space-y-4 pt-2">
-                          {/* Basic Description */}
-                          <div>
-                            <p className="mb-4 leading-relaxed text-neutral-200">
-                              A herd is defined as one of each original
-                              Claynosaurz species:{" "}
-                              <span className="font-clayno tracking-wide text-neutral-300">
-                                Rex, Raptor, Trice, Bronto, Stego,
-                              </span>{" "}
-                              and{" "}
-                              <span className="font-clayno tracking-wide text-neutral-300">
-                                Ankylo
-                              </span>
-                              .
-                            </p>
-                            <p>
-                              Herds are ranked by how many matching traits they
-                              share, with additional bonuses for owning matching
-                              Sagas (
-                              <span className="font-clayno tracking-wide text-neutral-300">
-                                Spino
-                              </span>{" "}
-                              and{" "}
-                              <span className="font-clayno tracking-wide text-neutral-300">
-                                Para
-                              </span>{" "}
-                              ) or{" "}
-                              <span className="font-clayno tracking-wide text-neutral-300">
-                                Dactyl.
-                              </span>
-                            </p>
-                          </div>
-
-                          {/* Base Herds */}
-                          <div>
-                            <h3 className="mb-3 font-clayno text-xl tracking-wide text-white">
-                              Base Herds:
-                            </h3>
-                            <p className="mb-2 text-neutral-300">
-                              There are three core traits: Skin, Color, and
-                              Background
-                            </p>
-                            <ul className="list-inside space-y-1 pl-4">
-                              <li>
-                                <span className="font-semibold">Basic</span>:
-                                Matching Skin OR Color
-                              </li>
-                              <li>
-                                <span className="font-semibold">
-                                  Impressive
-                                </span>
-                                : Any 2 matching core traits
-                              </li>
-                              <li>
-                                <span className="font-semibold">Flawless</span>:
-                                All 3 core traits matching
-                              </li>
-                              <li>
-                                <span className="font-semibold">Perfect</span>:
-                                All core traits matching, plus either Belly ON
-                                or Pattern ON
-                              </li>
-                            </ul>
-                          </div>
-
-                          {/* Qualifiers */}
-                          <div>
-                            <h3 className="mb-3 font-clayno text-xl tracking-wide text-white">
-                              Herd Qualifiers:
-                            </h3>
-                            <ul className="list-inside list-disc space-y-1 pl-4">
-                              <li>
-                                <span className="font-semibold">Mighty</span>:
-                                if you own 2 Sagas{" "}
-                                <span className="text-yellow-400">OR</span> 1
-                                Dactyl
-                              </li>
-                              <li>
-                                <span className="font-semibold">Legendary</span>
-                                : if you own 2 Sagas{" "}
-                                <span className="text-yellow-400">AND</span> 1
-                                Dactyl
-                              </li>
-                            </ul>
-                          </div>
-
-                          {/* Example */}
-                          <div className="mt-2 rounded-lg bg-neutral-800/50 p-6">
-                            <p className="mb-2 font-clayno text-sm text-neutral-300">
-                              Example
-                            </p>
-                            <p className="text-sm">
-                              A{" "}
-                              <span className="font-clayno text-lg tracking-wide text-yellow-400">
-                                Mighty Flawless Herd
-                              </span>{" "}
-                              would have:
-                            </p>
-                            <ul className="mt-1 list-inside list-disc space-y-1 pl-4 text-sm text-neutral-300">
-                              <li>
-                                One of each OG species with matching Skin,
-                                Color, and Background
-                              </li>
-                              <li>Plus either 2 Sagas or 1 Dactyl</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </DialogDescription>
-                    </DialogContent>
-                  </Dialog>
+                  <InfoDialog />
                   <FilterDialog
                     color={color}
                     skin={skin}
@@ -520,7 +392,7 @@ export default function Home() {
                 </div>
 
                 {/* Right Side Toggles */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4">
                   <ToggleSwitch
                     checked={showDactyl}
                     onChange={setShowDactyl}
@@ -543,7 +415,7 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="w-full md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
+            <section className="mx-4 w-full md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -619,7 +491,7 @@ export default function Home() {
                         </div>
                       </motion.div>
                     </DialogTrigger>
-                    <DialogContent className="gap-0 border-neutral-700 bg-neutral-900 p-4 font-clayno text-white">
+                    <DialogContent className="mx-auto max-w-[95%] gap-0 rounded-lg border-neutral-700 bg-neutral-900 p-4 font-clayno text-white sm:max-w-[450px]">
                       <DialogHeader className="flex flex-row items-center justify-between">
                         <DialogTitle>Create New Herd</DialogTitle>
                       </DialogHeader>

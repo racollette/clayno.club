@@ -14,7 +14,7 @@ export default function ToggleSwitch({
   activeColor = "bg-blue-500",
 }: ToggleSwitchProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <button
         type="button"
         role="switch"

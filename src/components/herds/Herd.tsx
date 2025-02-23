@@ -454,9 +454,11 @@ export default function Herd(props: HerdProps) {
                   Edit Herd
                 </Button>
               </DialogTrigger>
-              <DialogContent className="gap-0 border-neutral-700 bg-neutral-900 p-4 font-clayno text-white">
+              <DialogContent className="mx-auto max-w-[95%] gap-0 rounded-lg border-neutral-700 bg-neutral-900 p-4 font-clayno text-white sm:max-w-[450px]">
                 <DialogHeader>
-                  <DialogTitle>Edit Herd</DialogTitle>
+                  <DialogTitle className="self-start font-clayno">
+                    Edit Herd
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex max-h-[80vh] flex-col gap-4 py-2">
                   <DinoSelector
@@ -495,9 +497,11 @@ export default function Herd(props: HerdProps) {
                   Delete Herd
                 </Button>
               </DialogTrigger>
-              <DialogContent className="border-neutral-700 bg-neutral-900 p-6 text-white">
+              <DialogContent className="mx-auto max-w-[95%] rounded-lg border-neutral-700 bg-neutral-900 p-6 text-white sm:max-w-[450px]">
                 <DialogHeader>
-                  <DialogTitle className="font-clayno">Delete Herd</DialogTitle>
+                  <DialogTitle className="self-start font-clayno">
+                    Delete Herd
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="py-2">
                   <p className="text-md font-semibold text-neutral-300">
