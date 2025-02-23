@@ -477,7 +477,7 @@ export default function Home() {
                   {filtersActive > 0 && (
                     <Link
                       href="?"
-                      className="flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700"
+                      className="flex items-center gap-2 rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
                     >
                       Clear [{filtersActive}]
                       <HiX size={20} />

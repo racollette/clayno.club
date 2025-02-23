@@ -6,8 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "~/@/components/ui/dialog";
-import { HiAdjustments } from "react-icons/hi";
+import { HiAdjustments, HiX } from "react-icons/hi";
 import { RadioGroup, RadioGroupItem } from "~/@/components/ui/radio-group";
 import {
   BACKGROUNDS,
@@ -65,8 +66,12 @@ const FilterDialog = ({
           </button>
         </DialogTrigger>
         <DialogContent className="border-none bg-neutral-900/80">
-          <DialogHeader>
+          <DialogHeader className="relative">
             <DialogTitle className="text-white">Filters</DialogTitle>
+            <DialogClose className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-neutral-100">
+              <HiX className="h-6 w-6 text-neutral-300" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
           </DialogHeader>
           <DialogDescription className="text-neutral-500">
             Filter herds by traits
