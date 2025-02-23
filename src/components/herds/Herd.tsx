@@ -100,6 +100,7 @@ export default function Herd(props: HerdProps) {
     onSuccess: () => {
       utils.herd.getAllHerds.invalidate();
       utils.herd.getUserHerds.invalidate();
+      utils.herd.getHerd.invalidate({ id: herd.id });
       setIsDialogOpen(false);
     },
   });
