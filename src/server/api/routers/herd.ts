@@ -6,6 +6,15 @@ import {
 } from "~/server/api/trpc";
 import { analyzeHerd } from "~/utils/analyzeHerd";
 
+const CORE_SPECIES = [
+  "Rex",
+  "Bronto",
+  "Raptor",
+  "Ankylo",
+  "Stego",
+  "Trice",
+] as const;
+
 export const herdRouter = createTRPCRouter({
   getAllHerds: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.herd.findMany({
@@ -242,5 +251,84 @@ export const herdRouter = createTRPCRouter({
         console.error("Error updating herd:", error);
         throw error;
       }
+    }),
+
+  createHerd: protectedProcedure
+    .input(
+      z.object({
+        owner: z.string(),
+        dinoMints: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Get the dinos data
+      const dinos = await ctx.prisma.dino.findMany({
+        where: {
+          mint: { in: input.dinoMints },
+        },
+        include: {
+          attributes: true,
+        },
+      });
+
+      // Analyze the herd
+      const analysis = analyzeHerd(dinos);
+
+      // Check if all core species are present
+      const coreDinos = dinos.filter(
+        (dino) =>
+          dino.attributes?.species &&
+          CORE_SPECIES.includes(
+            dino.attributes.species as (typeof CORE_SPECIES)[number]
+          )
+      );
+      const isBroken = coreDinos.length !== CORE_SPECIES.length;
+
+      // Create the herd with dinoOrder
+      return ctx.prisma.herd.create({
+        data: {
+          owner: input.owner,
+          dinos: {
+            connect: input.dinoMints.map((mint) => ({ mint })),
+          },
+          tier: analysis.tier,
+          qualifier: analysis.qualifier,
+          matches: analysis.matches,
+          rarity: analysis.rarity,
+          isEdited: true,
+          isBroken,
+          dinoOrder: input.dinoMints.join(","),
+        },
+        include: {
+          dinos: {
+            include: {
+              attributes: true,
+            },
+          },
+        },
+      });
+    }),
+
+  deleteHerd: protectedProcedure
+    .input(
+      z.object({
+        herdId: z.string(),
+        owner: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify the user owns the herd
+      const herd = await ctx.prisma.herd.findUnique({
+        where: { id: input.herdId },
+      });
+
+      if (!herd || herd.owner !== input.owner) {
+        throw new Error("Unauthorized to delete this herd");
+      }
+
+      // Delete the herd
+      return ctx.prisma.herd.delete({
+        where: { id: input.herdId },
+      });
     }),
 });

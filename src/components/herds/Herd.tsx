@@ -89,6 +89,13 @@ export default function Herd(props: HerdProps) {
     },
   });
 
+  const deleteHerdMutation = api.herd.deleteHerd.useMutation({
+    onSuccess: () => {
+      utils.herd.getAllHerds.invalidate();
+      utils.herd.getUserHerds.invalidate();
+    },
+  });
+
   const { username, userHandle, userPFP, favoriteDomain } =
     extractProfileFromUser(owner);
 
@@ -137,7 +144,7 @@ export default function Herd(props: HerdProps) {
     }>;
   } | null>(null);
 
-  console.log(pendingConflicts);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleSaveEdit = async () => {
     // Check for conflicts
@@ -207,6 +214,16 @@ export default function Herd(props: HerdProps) {
     );
 
     return CORE_SPECIES.filter((species) => !presentSpecies.has(species));
+  };
+
+  const handleDelete = () => {
+    if (!herd.id || !herd.owner) return;
+
+    deleteHerdMutation.mutate({
+      herdId: herd.id,
+      owner: herd.owner,
+    });
+    setIsDeleteDialogOpen(false);
   };
 
   return (
@@ -427,43 +444,103 @@ export default function Herd(props: HerdProps) {
         </div>
 
         {isHerdOwner && (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="mt-2 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
-              >
-                Edit Herd
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="gap-0 border-neutral-700 bg-neutral-900 p-4 font-clayno text-white">
-              <DialogHeader>
-                <DialogTitle>Edit Herd</DialogTitle>
-              </DialogHeader>
-              <div className="flex max-h-[80vh] flex-col gap-4 py-2">
-                <DinoSelector
-                  owner={herd.owner}
-                  currentHerd={herd.dinos}
-                  onSelectionChange={setSelectedDinos}
-                  wallets={currentUser?.wallets ?? []}
-                />
+          <div className="flex gap-2">
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
                 <Button
-                  onClick={handleSaveEdit}
-                  className="bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-800"
-                  disabled={updateHerdMutation.isLoading}
+                  variant="outline"
+                  className="mt-2 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
                 >
-                  {updateHerdMutation.isLoading ? (
-                    <div className="flex items-center gap-2">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                      Saving...
-                    </div>
-                  ) : (
-                    "Save Changes"
-                  )}
+                  Edit Herd
                 </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="gap-0 border-neutral-700 bg-neutral-900 p-4 font-clayno text-white">
+                <DialogHeader>
+                  <DialogTitle>Edit Herd</DialogTitle>
+                </DialogHeader>
+                <div className="flex max-h-[80vh] flex-col gap-4 py-2">
+                  <DinoSelector
+                    owner={herd.owner}
+                    currentHerd={herd.dinos}
+                    onSelectionChange={setSelectedDinos}
+                    wallets={currentUser?.wallets ?? []}
+                  />
+                  <Button
+                    onClick={handleSaveEdit}
+                    className="bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-800"
+                    disabled={updateHerdMutation.isLoading}
+                  >
+                    {updateHerdMutation.isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                        Saving...
+                      </div>
+                    ) : (
+                      "Save Changes"
+                    )}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="mt-2 border-red-900/50 bg-red-950/50 text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                >
+                  Delete Herd
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="border-neutral-700 bg-neutral-900 p-6 text-white">
+                <DialogHeader>
+                  <DialogTitle className="font-clayno">Delete Herd</DialogTitle>
+                </DialogHeader>
+                <div className="py-2">
+                  <p className="text-md font-semibold text-neutral-300">
+                    Are you sure you want to delete this herd? It can always be
+                    recreated.
+                  </p>
+                  {herd.matches && herd.matches !== "None" && (
+                    <div className="mt-4 flex flex-row items-center justify-center gap-3 rounded-md bg-yellow-900/30 p-2 text-sm text-yellow-200">
+                      <AlertTriangle className="h-10 w-10" />
+                      <p>
+                        This herd has matching traits. Deleting it will remove
+                        it from the public gallery (until detected again by the
+                        algorithm).
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="flex justify-end gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDeleteDialogOpen(false)}
+                    className="border-neutral-700 bg-neutral-800 font-clayno text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleDelete}
+                    className="bg-red-600 font-clayno text-white hover:bg-red-700 disabled:bg-red-800"
+                    disabled={deleteHerdMutation.isLoading}
+                  >
+                    {deleteHerdMutation.isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                        Deleting...
+                      </div>
+                    ) : (
+                      "Delete Herd"
+                    )}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         )}
 
         {pendingConflicts && (

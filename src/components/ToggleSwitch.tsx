@@ -1,46 +1,38 @@
 import React from "react";
 
 type ToggleSwitchProps = {
-  toggleState: boolean;
-  label: string;
-  onToggle: (toggleState: boolean) => void;
-  className: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label?: string;
+  activeColor?: string;
 };
 
-const ToggleSwitch = ({
-  toggleState,
-  onToggle,
+export default function ToggleSwitch({
+  checked,
+  onChange,
   label,
-  className,
-}: ToggleSwitchProps) => {
-  const handleToggle = () => {
-    onToggle(!toggleState);
-  };
-
+  activeColor = "bg-blue-500",
+}: ToggleSwitchProps) {
   return (
-    <label
-      className={`relative inline-flex cursor-pointer items-center ${className}`}
-    >
-      <input
-        type="checkbox"
-        className="peer sr-only"
-        checked={toggleState}
-        onChange={handleToggle}
-      />
-      <div
-        className={`${
-          toggleState ? "bg-[#00D1D1]" : "bg-neutral-700"
-        } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#00D1D1] focus:ring-offset-2`}
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+          checked ? activeColor : "bg-neutral-700"
+        }`}
+        onClick={() => onChange(!checked)}
       >
         <span
-          className={`${
-            toggleState ? "translate-x-6" : "translate-x-1"
-          } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+            checked ? "translate-x-4" : "translate-x-0"
+          }`}
         />
-      </div>
-      <span className="ml-2 text-sm font-medium text-white">{label}</span>
-    </label>
+      </button>
+      {label && (
+        <span className="text-sm font-medium text-neutral-300">{label}</span>
+      )}
+    </div>
   );
-};
-
-export default ToggleSwitch;
+}

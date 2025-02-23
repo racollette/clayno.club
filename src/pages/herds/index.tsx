@@ -22,6 +22,8 @@ import {
 import ToggleSwitch from "../../components/ToggleSwitch";
 import { Skeleton } from "~/@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import DinoSelector from "../../components/herds/DinoSelector";
 
 type HerdWithIncludes =
   | HerdType & {
@@ -165,11 +167,21 @@ export default function Home() {
   const [showPFP, setShowPFP] = useState(false);
   const [showMyHerds, setShowMyHerds] = useState(false);
   const [filteredHerds, setFilteredHerds] = useState<HerdWithIncludes[]>([]);
+  const [isCreateHerdOpen, setIsCreateHerdOpen] = useState(false);
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
 
   const { data: owners } = useHerdOwners(allHerdAddresses);
+
+  const utils = api.useUtils();
+  const createHerdMutation = api.herd.createHerd.useMutation({
+    onSuccess: () => {
+      utils.herd.getAllHerds.invalidate();
+      utils.herd.getUserHerds.invalidate();
+      setIsCreateHerdOpen(false);
+    },
+  });
 
   useEffect(() => {
     if (allHerds && !allHerdsLoading) {
@@ -484,14 +496,18 @@ export default function Home() {
                     </Link>
                   )}
                   {user && (
-                    <button
-                      onClick={() => setShowMyHerds(!showMyHerds)}
-                      className={`flex items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 text-sm font-medium ${
-                        showMyHerds ? "text-[#00D1D1]" : "text-white"
-                      } hover:bg-neutral-700`}
-                    >
-                      My Herds
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setShowMyHerds(!showMyHerds)}
+                        className={`flex items-center rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                          showMyHerds
+                            ? "bg-blue-500 text-white"
+                            : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                        }`}
+                      >
+                        My Herds
+                      </button>
+                    </div>
                   )}
                   <div className="text-sm font-medium">
                     {filteredResults} herds
@@ -504,22 +520,22 @@ export default function Home() {
                 {/* Right Side Toggles */}
                 <div className="flex items-center gap-4">
                   <ToggleSwitch
-                    className=""
-                    toggleState={showDactyl}
-                    label={"Show Dactyls"}
-                    onToggle={toggleDactyl}
+                    checked={showDactyl}
+                    onChange={setShowDactyl}
+                    label="Show Dactyl"
+                    activeColor="bg-blue-500"
                   />
                   <ToggleSwitch
-                    className=""
-                    toggleState={showSaga}
-                    label={"Show Saga"}
-                    onToggle={toggleSaga}
+                    checked={showSaga}
+                    onChange={setShowSaga}
+                    label="Show Saga"
+                    activeColor="bg-blue-500"
                   />
                   <ToggleSwitch
-                    className=""
-                    toggleState={showPFP}
-                    label={"PFP Mode"}
-                    onToggle={togglePFP}
+                    checked={showPFP}
+                    onChange={setShowPFP}
+                    label="Show PFP"
+                    activeColor="bg-blue-500"
                   />
                 </div>
               </div>
@@ -532,7 +548,7 @@ export default function Home() {
                 transition={{ duration: 0.4 }}
                 className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
               >
-                {filteredResults === 0 && (
+                {filteredResults === 0 && !showMyHerds && (
                   <div className="mt-10 flex flex-col items-center justify-center gap-2 md:col-span-2 xl:col-span-3">
                     {allHerdsLoading ? (
                       <HiRefresh
@@ -576,6 +592,53 @@ export default function Home() {
                     </motion.div>
                   );
                 })}
+
+                {/* Add Create Herd Card */}
+                {showMyHerds && user && (
+                  <Dialog
+                    open={isCreateHerdOpen}
+                    onOpenChange={setIsCreateHerdOpen}
+                  >
+                    <DialogTrigger asChild>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="group flex flex-col items-center"
+                      >
+                        <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-700 bg-neutral-800/50 p-8 transition-all duration-200 ease-out hover:border-blue-500 hover:bg-neutral-800">
+                          <Plus className="mb-2 h-12 w-12 text-neutral-400" />
+                          <span className="text-center font-clayno text-lg text-neutral-400">
+                            Create New Herd
+                          </span>
+                          <span className="mt-2 text-center text-sm text-neutral-500">
+                            Click to build a new herd from your collection
+                          </span>
+                        </div>
+                      </motion.div>
+                    </DialogTrigger>
+                    <DialogContent className="gap-0 border-neutral-700 bg-neutral-900 p-4 font-clayno text-white">
+                      <DialogHeader className="flex flex-row items-center justify-between">
+                        <DialogTitle>Create New Herd</DialogTitle>
+                      </DialogHeader>
+                      <div className="flex max-h-[80vh] flex-col gap-4 py-2">
+                        <DinoSelector
+                          owner={user.wallets[0]?.address}
+                          currentHerd={[]}
+                          onSelectionChange={(mints) => {
+                            if (mints.length > 0) {
+                              createHerdMutation.mutate({
+                                owner: user.wallets[0]?.address ?? "",
+                                dinoMints: mints,
+                              });
+                            }
+                          }}
+                          wallets={user.wallets}
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </motion.div>
             </section>
           </div>

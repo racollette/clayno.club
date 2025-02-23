@@ -38,14 +38,14 @@ export default function DinoSelector({
   wallets,
 }: DinoSelectorProps) {
   const [selectedSpecies, setSelectedSpecies] = useState<string | null>(null);
-  const [displayedHerd, setDisplayedHerd] = useState(currentHerd);
+  const [displayedHerd, setDisplayedHerd] = useState(currentHerd ?? []);
   const [selectedDinos, setSelectedDinos] = useState<Record<string, string>>(
-    currentHerd.reduce((acc, dino) => {
+    currentHerd?.reduce((acc, dino) => {
       if (dino.attributes?.species) {
         acc[dino.attributes.species] = dino.mint;
       }
       return acc;
-    }, {} as Record<string, string>)
+    }, {} as Record<string, string>) ?? {}
   );
 
   const { data: userDinos } = api.inventory.getUserItems.useQuery({
