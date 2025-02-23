@@ -24,6 +24,7 @@ import { Skeleton } from "~/@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import DinoSelector from "../../components/herds/DinoSelector";
+import { Button } from "~/@/components/ui/button";
 
 type HerdWithIncludes =
   | HerdType & {
@@ -168,6 +169,7 @@ export default function Home() {
   const [showMyHerds, setShowMyHerds] = useState(false);
   const [filteredHerds, setFilteredHerds] = useState<HerdWithIncludes[]>([]);
   const [isCreateHerdOpen, setIsCreateHerdOpen] = useState(false);
+  const [selectedDinos, setSelectedDinos] = useState<string[]>([]);
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
@@ -625,16 +627,33 @@ export default function Home() {
                         <DinoSelector
                           owner={user.wallets[0]?.address ?? ""}
                           currentHerd={[]}
-                          onSelectionChange={(mints) => {
-                            if (mints.length > 0 && user.wallets[0]?.address) {
+                          onSelectionChange={(mints) => setSelectedDinos(mints)}
+                          wallets={user.wallets}
+                        />
+                        <Button
+                          onClick={() => {
+                            if (
+                              selectedDinos.length > 0 &&
+                              user.wallets[0]?.address
+                            ) {
                               createHerdMutation.mutate({
                                 owner: user.wallets[0].address,
-                                dinoMints: mints,
+                                dinoMints: selectedDinos,
                               });
                             }
                           }}
-                          wallets={user.wallets}
-                        />
+                          className="bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-800"
+                          disabled={createHerdMutation.isLoading}
+                        >
+                          {createHerdMutation.isLoading ? (
+                            <div className="flex items-center gap-2">
+                              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                              Creating...
+                            </div>
+                          ) : (
+                            "Create Herd"
+                          )}
+                        </Button>
                       </div>
                     </DialogContent>
                   </Dialog>
