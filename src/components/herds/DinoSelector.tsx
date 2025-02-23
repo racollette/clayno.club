@@ -32,24 +32,6 @@ export default function DinoSelector({
   updateHerdMutation,
   filteredHerd,
 }: DinoSelectorProps) {
-  // Enhanced debug logs
-  console.log("DinoSelector - Initial currentHerd:", {
-    order: currentHerd.map((d) => d.mint).join(","),
-    species: currentHerd.map((d) => ({
-      species: d.attributes?.species,
-      mint: d.mint,
-      position: currentHerd.indexOf(d),
-    })),
-  });
-  console.log("DinoSelector - filteredHerd:", {
-    dinoOrder: filteredHerd?.dinoOrder,
-    species: filteredHerd?.dinos?.map((d: any) => ({
-      species: d.attributes?.species,
-      mint: d.mint,
-      position: filteredHerd.dinos.indexOf(d),
-    })),
-  });
-
   const sortDinosByOrder = (
     dinos: (Dino & { attributes: Attributes | null })[],
     dinoOrder?: string
@@ -73,16 +55,6 @@ export default function DinoSelector({
       .filter(
         (dino): dino is Dino & { attributes: Attributes | null } => !!dino
       );
-
-    console.log("DinoSelector - After sorting:", {
-      orderArray,
-      resultOrder: result.map((d) => d.mint).join(","),
-      resultSpecies: result.map((d) => ({
-        species: d.attributes?.species,
-        mint: d.mint,
-        position: result.indexOf(d),
-      })),
-    });
 
     return result;
   };

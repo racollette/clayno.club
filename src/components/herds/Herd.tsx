@@ -100,7 +100,6 @@ export default function Herd(props: HerdProps) {
     onSuccess: () => {
       utils.herd.getAllHerds.invalidate();
       utils.herd.getUserHerds.invalidate();
-      utils.herd.getHerd.invalidate({ id: herd.id });
       setIsDialogOpen(false);
     },
   });
@@ -121,16 +120,6 @@ export default function Herd(props: HerdProps) {
 
   useEffect(() => {
     let filteredDinos = herd.dinos;
-
-    console.log("Herd - Initial dinos:", {
-      order: herd.dinoOrder,
-      species: herd.dinos.map((d) => ({
-        species: d.attributes?.species,
-        mint: d.mint,
-        position: herd.dinos.indexOf(d),
-      })),
-    });
-
     if (!showDactyl && !showSaga) {
       filteredDinos = filteredDinos.filter(
         (dino) =>
@@ -152,16 +141,6 @@ export default function Herd(props: HerdProps) {
 
     // Sort the filtered dinos according to dinoOrder
     const orderedDinos = sortDinosByOrder(filteredDinos, herd.dinoOrder);
-
-    console.log("Herd - After filtering and sorting:", {
-      originalOrder: herd.dinoOrder,
-      filteredOrder: orderedDinos.map((d) => d.mint).join(","),
-      species: orderedDinos.map((d) => ({
-        species: d.attributes?.species,
-        mint: d.mint,
-        position: orderedDinos.indexOf(d),
-      })),
-    });
 
     setFilteredHerd({ ...herd, dinos: orderedDinos });
   }, [showDactyl, showSaga, herd]);
