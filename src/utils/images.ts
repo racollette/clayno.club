@@ -33,8 +33,6 @@ export const getUserAvatar = (user: {
   image?: string | null;
   defaultAddress: string;
 }) => {
-  console.log("user", user);
-  console.log("user.image", user?.image);
   // Only use custom uploaded avatar, otherwise default to deterministic dino
   if (user?.image) {
     return user.image;

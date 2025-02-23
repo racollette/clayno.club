@@ -4,7 +4,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { calculateHerdStats } from "~/utils/calculateHerdStats";
+import { analyzeHerd } from "~/utils/analyzeHerd";
 
 export const herdRouter = createTRPCRouter({
   getAllHerds: publicProcedure.query(({ ctx }) => {
@@ -105,60 +105,121 @@ export const herdRouter = createTRPCRouter({
       });
     }),
 
-  updateHerd: protectedProcedure
+  checkDinoConflicts: protectedProcedure
     .input(
       z.object({
         herdId: z.string(),
         dinoMints: z.array(z.string()),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      console.log("Starting herd update for:", input.herdId);
-      console.log("New dino mints:", input.dinoMints);
-
-      // Verify user owns the herd
-      const herd = await ctx.prisma.herd.findUnique({
-        where: { id: input.herdId },
-        include: { dinos: true },
-      });
-
-      if (!herd) {
-        console.error("Herd not found:", input.herdId);
-        throw new Error("Herd not found");
-      }
-
-      console.log("Current herd state:", {
-        id: herd.id,
-        owner: herd.owner,
-        currentDinos: herd.dinos.map((d) => d.mint),
-      });
-
-      // Get the new dinos
-      const dinos = await ctx.prisma.dino.findMany({
+    .query(async ({ ctx, input }) => {
+      const conflicts = await ctx.prisma.herd.findMany({
         where: {
-          mint: { in: input.dinoMints },
+          NOT: { id: input.herdId },
+          dinos: {
+            some: {
+              mint: { in: input.dinoMints },
+            },
+          },
         },
-        include: { attributes: true },
+        include: {
+          dinos: {
+            include: { attributes: true },
+          },
+        },
       });
 
-      console.log(
-        "Found new dinos:",
-        dinos.map((d) => ({
-          mint: d.mint,
-          species: d.attributes?.species,
-          rarity: d.rarity,
-        }))
+      return {
+        conflicts: conflicts.map((herd) => ({
+          herdId: herd.id,
+          tier: herd.tier,
+          qualifier: herd.qualifier === "None" ? null : herd.qualifier,
+          matches: herd.matches,
+          affectedDinos: herd.dinos
+            .filter((d) => input.dinoMints.includes(d.mint))
+            .map((d) => ({
+              mint: d.mint,
+              species: d.attributes?.species ?? "Unknown",
+              image: `https://prod-image-cdn.tensor.trade/images/slug=claynosaurz/400x400/freeze=false/${d.gif}`,
+            })),
+        })),
+      };
+    }),
+
+  updateHerd: protectedProcedure
+    .input(
+      z.object({
+        herdId: z.string(),
+        dinoMints: z.array(z.string()),
+        tier: z.enum(["PERFECT", "FLAWLESS", "IMPRESSIVE", "BASIC"]),
+        qualifier: z.enum(["None", "Mighty", "Legendary"]),
+        matches: z.string(),
+        rarity: z.number(),
+        isEdited: z.boolean(),
+        isBroken: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Find affected herds
+      const affectedHerds = await ctx.prisma.herd.findMany({
+        where: {
+          NOT: { id: input.herdId },
+          dinos: {
+            some: {
+              mint: { in: input.dinoMints },
+            },
+          },
+        },
+        include: {
+          dinos: {
+            include: { attributes: true },
+          },
+        },
+      });
+
+      // Update all affected herds first
+      await Promise.all(
+        affectedHerds.map(async (herd) => {
+          // Remove the transferred dinos
+          const remainingDinos = herd.dinos.filter(
+            (d) => !input.dinoMints.includes(d.mint)
+          );
+
+          // Check if any core species are being removed
+          const removedDinos = herd.dinos.filter((d) =>
+            input.dinoMints.includes(d.mint)
+          );
+          const removingCoreSpecies = removedDinos.some(
+            (d) =>
+              d.attributes?.species &&
+              ["Rex", "Bronto", "Raptor", "Ankylo", "Stego", "Trice"].includes(
+                d.attributes.species
+              )
+          );
+
+          // Analyze new state
+          const analysis = analyzeHerd(remainingDinos);
+
+          // Update the affected herd
+          await ctx.prisma.herd.update({
+            where: { id: herd.id },
+            data: {
+              dinos: {
+                set: remainingDinos.map((d) => ({ mint: d.mint })),
+              },
+              tier: analysis.tier,
+              qualifier: analysis.qualifier,
+              matches: analysis.matches,
+              rarity: analysis.rarity,
+              isEdited: true,
+              // Mark as broken if core species was removed
+              isBroken: removingCoreSpecies,
+            },
+          });
+        })
       );
 
-      // Calculate new herd stats
-      const { tier, matches, rarity } = calculateHerdStats(dinos);
-      console.log("Calculated new herd stats:", {
-        tier,
-        matches,
-        rarity,
-      });
-
-      // Update the herd
+      // Now update the target herd
       try {
         const updated = await ctx.prisma.herd.update({
           where: { id: input.herdId },
@@ -166,17 +227,16 @@ export const herdRouter = createTRPCRouter({
             dinos: {
               set: input.dinoMints.map((mint) => ({ mint })),
             },
-            tier: tier.toString(),
-            matches,
-            rarity,
-            isEdited: true,
+            tier: input.tier,
+            qualifier: input.qualifier,
+            matches: input.matches,
+            rarity: input.rarity,
+            isEdited: input.isEdited,
+            isBroken: false, // Reset broken state for the target herd
           },
           include: { dinos: { include: { attributes: true } } },
         });
-        console.log("Herd updated successfully:", {
-          id: updated.id,
-          newDinos: updated.dinos.map((d) => d.mint),
-        });
+
         return updated;
       } catch (error) {
         console.error("Error updating herd:", error);

@@ -57,4 +57,17 @@ export const inventoryRouter = createTRPCRouter({
       },
     });
   }),
+
+  getDinosByMints: publicProcedure
+    .input(z.object({ mints: z.array(z.string()) }))
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.dino.findMany({
+        where: {
+          mint: { in: input.mints },
+        },
+        include: {
+          attributes: true,
+        },
+      });
+    }),
 });

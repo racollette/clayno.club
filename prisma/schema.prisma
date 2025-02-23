@@ -62,10 +62,11 @@ model Herd {
   tier        String   // "PERFECT", "FLAWLESS", "IMPRESSIVE", "BASIC"
   matches     String   // "skin:Amazonia|color:Aqua|background:Mint"
   rarity      Int      // Sum of all dino rarities in herd
-  isEdited    Boolean  @default(false)
   qualifier   String?  // "Legendary", "Mighty", or null
   dinoOrder   String   @db.Text // Comma-separated mint list
   dinos       Dino[]   // One-to-many relationship
+  isEdited    Boolean  @default(false)
+  isBroken    Boolean  @default(false)
 }
 
 model Account {

@@ -28,12 +28,16 @@ import {
 import { Button } from "~/@/components/ui/button";
 import { api } from "~/utils/api";
 import DinoSelector from "./DinoSelector";
+import { analyzeHerd } from "~/utils/analyzeHerd";
+import ConfirmDialog from "./ConfirmDialog";
+import { AlertTriangle } from "lucide-react";
 
 type HerdProps = {
   herd: Herd & {
     dinos: (Dino & {
       attributes: Attributes | null;
     })[];
+    isBroken?: boolean;
   };
   showDactyl: boolean;
   showSaga: boolean;
@@ -54,6 +58,15 @@ type HerdProps = {
     wallets: Wallet[];
   } | null;
 };
+
+const CORE_SPECIES = [
+  "Rex",
+  "Bronto",
+  "Raptor",
+  "Ankylo",
+  "Stego",
+  "Trice",
+] as const;
 
 export default function Herd(props: HerdProps) {
   const { herd, showDactyl, showSaga, showOwner, showPFP, owner, currentUser } =
@@ -108,11 +121,92 @@ export default function Herd(props: HerdProps) {
     setFilteredHerd({ ...herd, dinos: filteredHerd });
   }, [showDactyl, showSaga, herd]);
 
-  const handleSaveEdit = () => {
-    updateHerdMutation.mutate({
+  // Add new state for confirm dialog
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [pendingConflicts, setPendingConflicts] = useState<{
+    conflicts: Array<{
+      herdId: string;
+      tier: string;
+      qualifier: string | null;
+      matches: string;
+      affectedDinos: Array<{
+        mint: string;
+        species: string;
+        image: string;
+      }>;
+    }>;
+  } | null>(null);
+
+  console.log(pendingConflicts);
+
+  const handleSaveEdit = async () => {
+    // Check for conflicts
+    const conflictCheck = await utils.herd.checkDinoConflicts.fetch({
       herdId: herd.id,
       dinoMints: selectedDinos,
     });
+
+    if (conflictCheck.conflicts.length > 0) {
+      setPendingConflicts(conflictCheck);
+      setConfirmDialogOpen(true);
+      return;
+    }
+
+    await saveHerdChanges();
+  };
+
+  const saveHerdChanges = async () => {
+    const newDinos = await utils.inventory.getDinosByMints.fetch({
+      mints: selectedDinos,
+    });
+
+    if (!newDinos) {
+      console.error("Failed to fetch dino data");
+      return;
+    }
+
+    const analysis = analyzeHerd(newDinos);
+
+    // Check if all core species are present by looking at the core dinos array length
+    const coreDinos = newDinos.filter(
+      (dino) =>
+        dino.attributes?.species &&
+        CORE_SPECIES.includes(
+          dino.attributes.species as (typeof CORE_SPECIES)[number]
+        )
+    );
+    const isBroken = coreDinos.length !== CORE_SPECIES.length;
+
+    updateHerdMutation.mutate({
+      herdId: herd.id,
+      dinoMints: selectedDinos,
+      tier: analysis.tier,
+      qualifier: analysis.qualifier,
+      matches: analysis.matches,
+      rarity: analysis.rarity,
+      isEdited: true,
+      isBroken,
+    });
+
+    setFilteredHerd({
+      ...filteredHerd,
+      tier: analysis.tier,
+      qualifier: analysis.qualifier,
+      matches: analysis.matches,
+      rarity: analysis.rarity,
+      dinos: newDinos,
+      isBroken,
+    });
+  };
+
+  const getMissingCoreSpecies = () => {
+    const presentSpecies = new Set(
+      filteredHerd.dinos
+        .map((dino) => dino.attributes?.species)
+        .filter((species): species is string => !!species)
+    );
+
+    return CORE_SPECIES.filter((species) => !presentSpecies.has(species));
   };
 
   return (
@@ -120,6 +214,13 @@ export default function Herd(props: HerdProps) {
       key={filteredHerd.id}
       className="relative mb-1 flex w-full flex-col rounded-lg border-2 border-neutral-700 bg-neutral-800 p-4 md:p-6"
     >
+      {filteredHerd.isBroken && (
+        <div className="mb-2 flex items-center gap-2 rounded-md bg-red-900/20 px-3 py-2 text-sm text-red-400">
+          <AlertTriangle className="h-5 w-5" />
+          This herd is missing core species and will be removed soon.
+        </div>
+      )}
+
       <div
         className={`mb-1 flex flex-none flex-wrap items-center justify-between rounded-md ${getBorderColor(
           filteredHerd.matches
@@ -316,7 +417,7 @@ export default function Herd(props: HerdProps) {
         ))}
       </div>
 
-      {/* {isHerdOwner && (
+      {isHerdOwner && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
@@ -354,7 +455,77 @@ export default function Herd(props: HerdProps) {
             </div>
           </DialogContent>
         </Dialog>
-      )} */}
+      )}
+
+      {pendingConflicts && (
+        <ConfirmDialog
+          isOpen={confirmDialogOpen}
+          onOpenChange={setConfirmDialogOpen}
+          title="Dino Reassignment"
+          message={
+            <div className="space-y-4">
+              {pendingConflicts.conflicts.map((c, i) => (
+                <div
+                  key={i}
+                  className="rounded-lg border border-neutral-700 p-3"
+                >
+                  <div className="mb-3 font-medium text-white">
+                    Reassigning from a{" "}
+                    {[c.qualifier, c.tier].filter(Boolean).join(" ")} herd
+                  </div>
+                  {c.matches && (
+                    <div className="mb-3 grid grid-cols-2 gap-2 rounded-md bg-neutral-800 p-2 text-sm">
+                      {c.matches.split("|").map((trait, index) => {
+                        const [category, value] = trait.trim().split(":");
+                        return (
+                          <div key={index}>
+                            <div className="text-neutral-400">
+                              {(category || "").charAt(0).toUpperCase() +
+                                (category || "").slice(1)}
+                            </div>
+                            <div className="text-white">{value}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {c.affectedDinos.map((d, j) => (
+                      <div key={j} className="flex items-center gap-2">
+                        <div className="h-10 w-10 overflow-hidden rounded-md">
+                          <Image
+                            src={d.image}
+                            alt={d.species}
+                            width={40}
+                            height={40}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="text-sm">
+                          <div className="text-white">{d.species}</div>
+                          <div className="text-xs text-neutral-400">
+                            {d.mint}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
+          confirmText="Yes, update all herds"
+          cancelText="Cancel"
+          onConfirm={() => {
+            setConfirmDialogOpen(false);
+            saveHerdChanges();
+          }}
+          onCancel={() => {
+            setConfirmDialogOpen(false);
+            setPendingConflicts(null);
+          }}
+        />
+      )}
     </div>
   );
 }
