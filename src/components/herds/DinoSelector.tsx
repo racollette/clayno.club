@@ -275,7 +275,7 @@ export default function DinoSelector({
           <div className="text-sm text-neutral-300">
             Select replacement {selectedSpecies}:
           </div>
-          <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-track-neutral-800 scrollbar-thumb-neutral-600">
+          <div className="flex-1 overflow-y-auto pr-2">
             <div className="grid grid-cols-4 gap-2">
               {dinosBySpecies[selectedSpecies]?.map((dino) => (
                 <div

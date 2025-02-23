@@ -186,7 +186,7 @@ export default function Avatar({
           <DialogTitle>Choose Avatar</DialogTitle>
         </DialogHeader>
 
-        <div className="-mr-2 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-track-neutral-800 scrollbar-thumb-neutral-600 hover:scrollbar-thumb-neutral-500">
+        <div className="-mr-2 max-h-[60vh] overflow-y-auto pr-2">
           <div className="flex flex-col gap-4">
             {/* Upload option */}
             <div>

@@ -66,12 +66,31 @@
 
     --ring: 12 6.5% 15.1%;
   }
+
+  /* Add global scrollbar styling */
+  * {
+    @apply border-border scrollbar-thin scrollbar-track-neutral-900 scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-600;
+  }
+
+  html,
+  body {
+    @apply scrollbar-thin scrollbar-track-neutral-900 scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-600;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2 bg-neutral-900;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-neutral-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-neutral-700 hover:bg-neutral-600;
+  }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
   }
