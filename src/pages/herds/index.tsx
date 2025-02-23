@@ -21,12 +21,14 @@ import {
 } from "~/@/components/ui/dialog";
 import ToggleSwitch from "../../components/ToggleSwitch";
 import { Skeleton } from "~/@/components/ui/skeleton";
+import { motion } from "framer-motion";
 
 type HerdWithIncludes =
   | HerdType & {
       dinos: (Dino & {
         attributes: Attributes | null;
       })[];
+      isBroken?: boolean;
     };
 
 // Custom hook to filter and sort herds
@@ -38,7 +40,8 @@ function filterHerds(
   tier: string | null,
   belly: string | null,
   pattern: string | null,
-  qualifier: string | null
+  qualifier: string | null,
+  showMyHerds: boolean
 ): HerdWithIncludes[] {
   if (!allHerds) return [];
 
@@ -52,6 +55,12 @@ function filterHerds(
 
   // Filter herds
   const filtered = allHerds.filter((herd) => {
+    // Filter out broken herds only when not showing "My Herds"
+    if (!showMyHerds && herd.isBroken) return false;
+
+    // Only filter out herds with no matches when not showing "My Herds"
+    if (!showMyHerds && !herd.matches) return false;
+
     // Filter by tier - use schema's tier field directly
     if (tier && tier !== "all") {
       if (herd.tier.toLowerCase() !== tier.toLowerCase()) return false;
@@ -172,7 +181,8 @@ export default function Home() {
         tier,
         belly,
         pattern,
-        qualifier
+        qualifier,
+        showMyHerds
       );
 
       // Filter for user's herds if toggle is on
@@ -516,7 +526,12 @@ export default function Home() {
             </section>
 
             <section className="w-full md:w-[90%] lg:w-[85%] xl:w-[95%] 2xl:w-[90%]">
-              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
+                className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+              >
                 {filteredResults === 0 && (
                   <div className="mt-10 flex flex-col items-center justify-center gap-2 md:col-span-2 xl:col-span-3">
                     {allHerdsLoading ? (
@@ -539,21 +554,29 @@ export default function Home() {
                     );
                   });
                   return (
-                    <div key={herd.id} className="flex flex-col items-center">
-                      <Herd
-                        key={herd.id}
-                        herd={herd as HerdWithIncludes}
-                        showDactyl={showDactyl}
-                        showSaga={showSaga}
-                        showOwner={true}
-                        showPFP={showPFP}
-                        owner={foundUser}
-                        currentUser={user}
-                      />
-                    </div>
+                    <motion.div
+                      key={herd.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="group flex flex-col items-center"
+                    >
+                      <div className="w-full transform transition-all duration-200 ease-out hover:scale-[1.02]">
+                        <Herd
+                          key={herd.id}
+                          herd={herd as HerdWithIncludes}
+                          showDactyl={showDactyl}
+                          showSaga={showSaga}
+                          showOwner={true}
+                          showPFP={showPFP}
+                          owner={foundUser}
+                          currentUser={user}
+                        />
+                      </div>
+                    </motion.div>
                   );
                 })}
-              </div>
+              </motion.div>
             </section>
           </div>
         )}
