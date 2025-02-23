@@ -166,6 +166,7 @@ export const herdRouter = createTRPCRouter({
         rarity: z.number(),
         isEdited: z.boolean(),
         isBroken: z.boolean(),
+        dinoOrder: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -241,7 +242,8 @@ export const herdRouter = createTRPCRouter({
             matches: input.matches,
             rarity: input.rarity,
             isEdited: input.isEdited,
-            isBroken: false, // Reset broken state for the target herd
+            isBroken: input.isBroken,
+            dinoOrder: input.dinoOrder,
           },
           include: { dinos: { include: { attributes: true } } },
         });

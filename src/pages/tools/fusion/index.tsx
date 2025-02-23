@@ -565,21 +565,3 @@ export default function FusionPage() {
     </>
   );
 }
-
-function convertToArray(grid: GridItemProps[][]) {
-  const dataArray: { motion: string; mint: string; imageURL: string }[] = [];
-  grid.forEach((row: any) => {
-    row.forEach((cell: any) => {
-      // Check if the cell has values for imageURL, motion, and mint
-      if (cell.imageURL && cell.motion && cell.mint) {
-        dataArray.push({
-          motion: cell.motion,
-          mint: cell.mint,
-          imageURL: cell.imageURL,
-        });
-      }
-    });
-  });
-
-  return dataArray;
-}

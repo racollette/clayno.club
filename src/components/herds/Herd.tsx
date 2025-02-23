@@ -38,6 +38,7 @@ type HerdProps = {
       attributes: Attributes | null;
     })[];
     isBroken?: boolean;
+    dinoOrder?: string;
   };
   showDactyl: boolean;
   showSaga: boolean;
@@ -67,6 +68,20 @@ const CORE_SPECIES = [
   "Stego",
   "Trice",
 ] as const;
+
+const sortDinosByOrder = (
+  dinos: (Dino & { attributes: Attributes | null })[],
+  dinoOrder?: string
+) => {
+  if (!dinoOrder) return dinos;
+
+  const orderArray = dinoOrder.split(",");
+  const dinoMap = new Map(dinos.map((dino) => [dino.mint, dino]));
+
+  return orderArray
+    .map((mint) => dinoMap.get(mint))
+    .filter((dino): dino is Dino & { attributes: Attributes | null } => !!dino);
+};
 
 export default function Herd(props: HerdProps) {
   const { herd, showDactyl, showSaga, showOwner, showPFP, owner, currentUser } =
@@ -104,28 +119,50 @@ export default function Herd(props: HerdProps) {
   );
 
   useEffect(() => {
-    let filteredHerd = herd.dinos;
+    let filteredDinos = herd.dinos;
+
+    console.log("Herd - Initial dinos:", {
+      order: herd.dinoOrder,
+      species: herd.dinos.map((d) => ({
+        species: d.attributes?.species,
+        mint: d.mint,
+        position: herd.dinos.indexOf(d),
+      })),
+    });
 
     if (!showDactyl && !showSaga) {
-      filteredHerd = filteredHerd.filter(
+      filteredDinos = filteredDinos.filter(
         (dino) =>
           dino.attributes?.species !== "Para" &&
           dino.attributes?.species !== "Spino" &&
           dino.attributes?.species !== "Dactyl"
       );
     } else if (!showDactyl) {
-      filteredHerd = filteredHerd.filter(
+      filteredDinos = filteredDinos.filter(
         (dino) => dino.attributes?.species !== "Dactyl"
       );
     } else if (!showSaga) {
-      filteredHerd = filteredHerd.filter(
+      filteredDinos = filteredDinos.filter(
         (dino) =>
           dino.attributes?.species !== "Para" &&
           dino.attributes?.species !== "Spino"
       );
     }
 
-    setFilteredHerd({ ...herd, dinos: filteredHerd });
+    // Sort the filtered dinos according to dinoOrder
+    const orderedDinos = sortDinosByOrder(filteredDinos, herd.dinoOrder);
+
+    console.log("Herd - After filtering and sorting:", {
+      originalOrder: herd.dinoOrder,
+      filteredOrder: orderedDinos.map((d) => d.mint).join(","),
+      species: orderedDinos.map((d) => ({
+        species: d.attributes?.species,
+        mint: d.mint,
+        position: orderedDinos.indexOf(d),
+      })),
+    });
+
+    setFilteredHerd({ ...herd, dinos: orderedDinos });
   }, [showDactyl, showSaga, herd]);
 
   // Add new state for confirm dialog
@@ -159,10 +196,7 @@ export default function Herd(props: HerdProps) {
       return;
     }
 
-    await saveHerdChanges();
-  };
-
-  const saveHerdChanges = async () => {
+    // Get the dinos data using the tRPC endpoint
     const newDinos = await utils.inventory.getDinosByMints.fetch({
       mints: selectedDinos,
     });
@@ -174,15 +208,19 @@ export default function Herd(props: HerdProps) {
 
     const analysis = analyzeHerd(newDinos);
 
-    // Check if all core species are present by looking at the core dinos array length
-    const coreDinos = newDinos.filter(
-      (dino) =>
-        dino.attributes?.species &&
-        CORE_SPECIES.includes(
-          dino.attributes.species as (typeof CORE_SPECIES)[number]
-        )
+    // Check if all core species are present
+    const presentSpecies = new Set(
+      newDinos
+        .map((dino) => dino.attributes?.species)
+        .filter((species): species is string => !!species)
     );
-    const isBroken = coreDinos.length !== CORE_SPECIES.length;
+
+    const isBroken = CORE_SPECIES.some(
+      (species) => !presentSpecies.has(species)
+    );
+
+    // Use selectedDinos array directly as the new order
+    const newDinoOrder = selectedDinos.join(",");
 
     updateHerdMutation.mutate({
       herdId: herd.id,
@@ -193,6 +231,7 @@ export default function Herd(props: HerdProps) {
       rarity: analysis.rarity,
       isEdited: true,
       isBroken,
+      dinoOrder: newDinoOrder, // This will now reflect the current display order
     });
 
     setFilteredHerd({
@@ -203,6 +242,7 @@ export default function Herd(props: HerdProps) {
       rarity: analysis.rarity,
       dinos: newDinos,
       isBroken,
+      dinoOrder: newDinoOrder,
     });
   };
 
@@ -231,20 +271,19 @@ export default function Herd(props: HerdProps) {
       <div
         className={`relative mb-1 flex w-full flex-col rounded-lg border-2 border-neutral-700 bg-neutral-800 p-2  md:p-3 lg:p-4`}
       >
-        {(!herd.matches || herd.matches.length === 0) && isHerdOwner && (
-          <div className="mb-1 flex items-center gap-1 rounded-md bg-yellow-900/30 px-2 py-1.5 text-xs text-yellow-200 md:mb-1.5 md:gap-2 md:px-3 md:py-2 md:text-sm">
-            <AlertTriangle className="h-3 w-3 md:h-4 md:w-4" />
-            <span>
-              No matching traits. Will not be visible in public gallery.
-            </span>
-          </div>
-        )}
-
-        {filteredHerd.isBroken && (
+        {filteredHerd.isBroken ? (
           <div className="mb-1 flex items-center gap-1 rounded-md bg-red-900/20 px-2 py-1.5 text-xs text-red-400 md:mb-1.5 md:gap-2 md:px-3 md:py-2 md:text-sm">
             <AlertTriangle className="h-3 w-3 md:h-4 md:w-4" />
-            This herd is missing core species and will be removed soon.
+            This herd is missing core species. Will not be visible in gallery.
           </div>
+        ) : (
+          (!herd.matches || herd.matches.length === 0) &&
+          isHerdOwner && (
+            <div className="mb-1 flex items-center gap-1 rounded-md bg-yellow-900/30 px-2 py-1.5 text-xs text-yellow-200 md:mb-1.5 md:gap-2 md:px-3 md:py-2 md:text-sm">
+              <AlertTriangle className="h-3 w-3 md:h-4 md:w-4" />
+              <span>No matching traits. Will not be visible in gallery.</span>
+            </div>
+          )
         )}
 
         <div
@@ -366,7 +405,10 @@ export default function Herd(props: HerdProps) {
         </div>
 
         <div className={`grid grid-cols-3 gap-0.5 md:gap-1`} key={herd.id}>
-          {filteredHerd.dinos.map((dino) => (
+          {(herd.dinoOrder
+            ? sortDinosByOrder(filteredHerd.dinos, herd.dinoOrder)
+            : filteredHerd.dinos
+          ).map((dino) => (
             <div key={dino.mint}>
               {dino.attributes && (
                 <div
@@ -424,10 +466,12 @@ export default function Herd(props: HerdProps) {
                 </DialogHeader>
                 <div className="flex max-h-[80vh] flex-col gap-4 py-2">
                   <DinoSelector
-                    owner={herd.owner}
                     currentHerd={herd.dinos}
                     onSelectionChange={setSelectedDinos}
                     wallets={currentUser?.wallets ?? []}
+                    herdId={herd.id}
+                    updateHerdMutation={updateHerdMutation}
+                    filteredHerd={filteredHerd}
                   />
                   <Button
                     onClick={handleSaveEdit}
@@ -570,7 +614,7 @@ export default function Herd(props: HerdProps) {
             cancelText="Cancel"
             onConfirm={() => {
               setConfirmDialogOpen(false);
-              saveHerdChanges();
+              handleSaveEdit();
             }}
             onCancel={() => {
               setConfirmDialogOpen(false);

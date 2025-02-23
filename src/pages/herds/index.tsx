@@ -171,6 +171,9 @@ export default function Home() {
   const [filteredHerds, setFilteredHerds] = useState<HerdWithIncludes[]>([]);
   const [isCreateHerdOpen, setIsCreateHerdOpen] = useState(false);
   const [selectedDinos, setSelectedDinos] = useState<string[]>([]);
+  const [selectedDinoOwner, setSelectedDinoOwner] = useState<string | null>(
+    null
+  );
 
   const allHerdAddressesSet = new Set(allHerds?.map((herd) => herd.owner));
   const allHerdAddresses = [...allHerdAddressesSet];
@@ -504,19 +507,20 @@ export default function Home() {
                       </DialogHeader>
                       <div className="flex max-h-[80vh] flex-col gap-4 py-2">
                         <DinoSelector
-                          owner={user.wallets[0]?.address ?? ""}
                           currentHerd={[]}
-                          onSelectionChange={(mints) => setSelectedDinos(mints)}
+                          onSelectionChange={(mints, owner) => {
+                            setSelectedDinos(mints);
+                            if (owner) {
+                              setSelectedDinoOwner(owner);
+                            }
+                          }}
                           wallets={user.wallets}
                         />
                         <Button
                           onClick={() => {
-                            if (
-                              selectedDinos.length > 0 &&
-                              user.wallets[0]?.address
-                            ) {
+                            if (selectedDinos.length > 0 && selectedDinoOwner) {
                               createHerdMutation.mutate({
-                                owner: user.wallets[0].address,
+                                owner: selectedDinoOwner,
                                 dinoMints: selectedDinos,
                               });
                             }
