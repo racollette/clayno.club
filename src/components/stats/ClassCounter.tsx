@@ -38,6 +38,7 @@ const ClassCounter = () => {
   const speciesBarRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef<HTMLDivElement>(null);
   const [topClass, setTopClass] = useState(0);
+  const [currentIconIndex, setCurrentIconIndex] = useState(0);
   const {
     data,
     // isLoading,
@@ -51,6 +52,47 @@ const ClassCounter = () => {
     setTopClass(largestTotal);
   }, [data]);
 
+  useEffect(() => {
+    if (!data?.classes || !Array.isArray(data.classes)) return;
+
+    const interval = setInterval(() => {
+      setCurrentIconIndex((prev) =>
+        prev >= (data.classes as Array<{ [key: string]: ClassItem }>).length - 1
+          ? 0
+          : prev + 1
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [data?.classes]);
+
+  const calculateSpeciesTotals = (
+    classes: Array<{ [key: string]: ClassItem }> | undefined
+  ) => {
+    if (!classes) return {};
+    return classes.reduce((totals: { [key: string]: number }, classItem) => {
+      const speciesList = Object.values(classItem)[0] as ClassItem;
+      if (!speciesList) return totals;
+
+      Object.entries(speciesList).forEach(([species, count]) => {
+        if (species !== "Total") {
+          totals[species] = (totals[species] || 0) + count;
+        }
+      });
+      return totals;
+    }, {});
+  };
+
+  const calculateTotalClasses = (
+    classes: Array<{ [key: string]: ClassItem }> | undefined
+  ) => {
+    if (!classes) return 0;
+    return classes.reduce((total, classItem) => {
+      const classType = Object.keys(classItem)[0] ?? "";
+      return total + (classItem[classType]?.Total || 0);
+    }, 0);
+  };
+
   return (
     <div className="flex w-full flex-col gap-2">
       <h1 className="p-4 text-center font-clayno text-2xl hover:animate-wiggle md:text-4xl">
@@ -59,7 +101,7 @@ const ClassCounter = () => {
         <span className="text-red-400">ses</span>
       </h1>
       <div
-        className="flex w-full flex-col items-center gap-8 md:container"
+        className="flex w-full flex-col items-center gap-6 md:container"
         ref={containerWidth}
       >
         {data &&
@@ -140,52 +182,14 @@ const ClassCounter = () => {
                       <span>{total}</span>
                       <span className="hidden md:block">{classType}s</span>
                     </p>
-                    <div className="relative h-[55px] w-[55px] md:h-[75px] md:w-[75px]">
+                    <div className="relative h-[35px] w-[35px] md:h-[50px] md:w-[50px]">
                       <Image
                         src={`/images/${classType?.toLowerCase()}.png`}
                         fill
                         alt={`Class ${classType} Placeholder`}
                       />
-                      <div className="relative flex cursor-pointer items-center justify-center opacity-0 hover:opacity-100">
-                        <div className="relative h-[55px] w-[55px] animate-spin-slow md:h-[75px] md:w-[75px]">
-                          <div className="absolute -top-8 left-3 h-[30px] w-[30px] md:-top-14 md:left-5 md:h-[50px] md:w-[50px]">
-                            <Image
-                              src={`/images/${
-                                CLAY_CLASS_RESOURCES[
-                                  classType?.toLowerCase()
-                                ]?.[0]
-                              }.png`}
-                              alt={`Clay`}
-                              fill
-                              className="rounded-full"
-                            />
-                          </div>
-                          <div className="absolute right-14 top-3 h-[30px] w-[30px] md:left-20 md:top-3 md:h-[50px] md:w-[50px]">
-                            <Image
-                              src={`/images/${
-                                CLAY_CLASS_RESOURCES[
-                                  classType?.toLowerCase()
-                                ]?.[1]
-                              }.png`}
-                              alt={`Clay`}
-                              fill
-                              className="rounded-full"
-                            />
-                          </div>
-                          <div className="absolute left-3 top-14 h-[30px] w-[30px] md:left-5 md:top-20 md:h-[50px] md:w-[50px]">
-                            <Image
-                              src={`/images/${
-                                CLAY_CLASS_RESOURCES[
-                                  classType?.toLowerCase()
-                                ]?.[2]
-                              }.png`}
-                              alt={`Clay`}
-                              fill
-                              className="rounded-full"
-                            />
-                          </div>
-                        </div>
-                        <h1 className="absolute right-0 top-4 animate-none rounded-lg bg-black p-1 font-clayno text-xs md:hidden">
+                      <div className="relative flex items-center justify-center">
+                        <h1 className="absolute right-0 top-4 rounded-lg bg-black p-1 font-clayno text-xs md:hidden">
                           {classType}
                         </h1>
                       </div>
@@ -194,6 +198,82 @@ const ClassCounter = () => {
                 </div>
               );
             })}
+
+        {data && (
+          <div className="flex min-w-[60%] flex-row items-center self-start">
+            <div className="flex w-full flex-row items-center justify-center">
+              <div className="flex w-full flex-row overflow-hidden rounded-l-3xl">
+                {Object.entries(
+                  calculateSpeciesTotals(
+                    data?.classes as
+                      | Array<{ [key: string]: ClassItem }>
+                      | undefined
+                  )
+                )
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([species, count]) => (
+                    <div
+                      key={species}
+                      className={`flex min-w-fit cursor-pointer flex-row items-center justify-center px-2 font-clayno hover:animate-pulse md:gap-1 md:px-4 ${getBgColor(
+                        species
+                      )}`}
+                      style={{
+                        width: `${
+                          (count /
+                            calculateTotalClasses(
+                              data?.classes as
+                                | Array<{ [key: string]: ClassItem }>
+                                | undefined
+                            )) *
+                          100
+                        }%`,
+                      }}
+                    >
+                      <p className="md:text-md text-sm">{count}</p>
+                      <div
+                        className={`relative h-[35px] w-[35px] hover:animate-wiggle md:h-[50px] md:w-[50px]`}
+                      >
+                        <Image
+                          src={`/icons/${species.toLowerCase()}_colored.svg`}
+                          fill
+                          alt={`${species} Icon`}
+                        />
+                      </div>
+                      <p className="hidden md:block">{species}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+            <div className="relative flex h-[35px] flex-row items-center gap-2 rounded-r-full bg-gray-300 md:h-[50px]">
+              <p className="flex flex-row flex-nowrap gap-2 whitespace-nowrap px-4 text-right font-clayno text-black">
+                <span>
+                  {calculateTotalClasses(
+                    data?.classes as
+                      | Array<{ [key: string]: ClassItem }>
+                      | undefined
+                  )}
+                </span>
+                <span className="hidden md:block">Total</span>
+              </p>
+              <div className="relative h-[35px] w-[35px] md:h-[50px] md:w-[50px]">
+                {(data?.classes as Array<{ [key: string]: ClassItem }>)?.[
+                  currentIconIndex
+                ] && (
+                  <Image
+                    src={`/images/${Object.keys(
+                      (data?.classes as Array<{ [key: string]: ClassItem }>)[
+                        currentIconIndex
+                      ] || {}
+                    )[0]?.toLowerCase()}.png`}
+                    fill
+                    alt="Total Classes"
+                    className="transition-opacity duration-500"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
