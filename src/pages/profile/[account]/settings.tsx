@@ -700,28 +700,28 @@ const Settings = () => {
                 <div className="flex flex-row gap-6 rounded-lg bg-neutral-800 p-4">
                   {user?.twitter && (
                     <ToggleSwitch
-                      className="self-end"
-                      toggleState={!privacyStatus.twitter}
-                      label={"Twitter"}
-                      onToggle={() =>
+                      checked={!privacyStatus.twitter}
+                      onChange={() =>
                         handleTogglePrivacyStatus(
                           "twitter",
                           !privacyStatus.twitter
                         )
                       }
+                      label="Twitter"
+                      activeColor="bg-blue-500"
                     />
                   )}
                   {user?.telegram && (
                     <ToggleSwitch
-                      className="self-end"
-                      toggleState={!privacyStatus.telegram}
-                      label={"Telegram"}
-                      onToggle={() =>
+                      checked={!privacyStatus.telegram}
+                      onChange={() =>
                         handleTogglePrivacyStatus(
                           "telegram",
                           !privacyStatus.telegram
                         )
                       }
+                      label="Telegram"
+                      activeColor="bg-blue-500"
                     />
                   )}
                 </div>

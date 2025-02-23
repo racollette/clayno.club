@@ -449,7 +449,7 @@ export default function Herd(props: HerdProps) {
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="mt-2 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                  className="mt-2 border-neutral-700 bg-neutral-800/50 font-clayno text-neutral-300 transition-colors hover:border-blue-500 hover:bg-neutral-800 hover:text-white"
                 >
                   Edit Herd
                 </Button>
@@ -490,7 +490,7 @@ export default function Herd(props: HerdProps) {
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="mt-2 border-red-900/50 bg-red-950/50 text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                  className="mt-2 border-red-900/50 bg-neutral-800/50 font-clayno text-red-400 transition-colors hover:border-red-500 hover:bg-neutral-800 hover:text-red-300"
                 >
                   Delete Herd
                 </Button>

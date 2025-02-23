@@ -623,12 +623,12 @@ export default function Home() {
                       </DialogHeader>
                       <div className="flex max-h-[80vh] flex-col gap-4 py-2">
                         <DinoSelector
-                          owner={user.wallets[0]?.address}
+                          owner={user.wallets[0]?.address ?? ""}
                           currentHerd={[]}
                           onSelectionChange={(mints) => {
-                            if (mints.length > 0) {
+                            if (mints.length > 0 && user.wallets[0]?.address) {
                               createHerdMutation.mutate({
-                                owner: user.wallets[0]?.address ?? "",
+                                owner: user.wallets[0].address,
                                 dinoMints: mints,
                               });
                             }

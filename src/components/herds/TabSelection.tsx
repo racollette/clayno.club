@@ -42,22 +42,22 @@ const TabSelection = ({
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-row items-center justify-center gap-2 md:gap-4">
           <ToggleSwitch
-            className=""
-            toggleState={showDactyl}
-            label={"Show Dactyls"}
-            onToggle={toggleDactyl}
+            checked={showDactyl}
+            onChange={toggleDactyl}
+            label="Show Dactyls"
+            activeColor="bg-blue-500"
           />
           <ToggleSwitch
-            className=""
-            toggleState={showSaga}
-            label={"Show Saga"}
-            onToggle={toggleSaga}
+            checked={showSaga}
+            onChange={toggleSaga}
+            label="Show Saga"
+            activeColor="bg-blue-500"
           />
           <ToggleSwitch
-            className=""
-            toggleState={showPFP}
-            label={"PFP Mode"}
-            onToggle={togglePFP}
+            checked={showPFP}
+            onChange={togglePFP}
+            label="PFP Mode"
+            activeColor="bg-blue-500"
           />
         </div>
       </div>

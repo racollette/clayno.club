@@ -179,10 +179,10 @@ export default function DinoSlide({
                   <Tooltip>
                     <TooltipTrigger>
                       <ToggleSwitch
-                        className="self-end"
-                        toggleState={showPFP}
-                        label={"PFP"}
-                        onToggle={togglePFP}
+                        checked={showPFP}
+                        onChange={togglePFP}
+                        label="PFP"
+                        activeColor="bg-blue-500"
                       />
                     </TooltipTrigger>
                     <TooltipContent>
