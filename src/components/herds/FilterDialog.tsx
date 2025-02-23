@@ -61,8 +61,8 @@ const FilterDialog = ({
               "flex flex-row items-center gap-2 rounded-md bg-neutral-800 px-4 py-2 font-medium hover:bg-neutral-700"
             }
           >
-            Filters
             <HiAdjustments className="rotate-90" size={20} />
+            Filters
           </button>
         </DialogTrigger>
         <DialogContent className="mx-auto max-w-[95%] rounded-lg border-none bg-neutral-900/90 sm:max-w-[500px]">

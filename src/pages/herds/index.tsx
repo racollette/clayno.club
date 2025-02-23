@@ -22,7 +22,7 @@ import {
 import ToggleSwitch from "../../components/ToggleSwitch";
 import { Skeleton } from "~/@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Plus, FolderHeart } from "lucide-react";
 import DinoSelector from "../../components/herds/DinoSelector";
 import { Button } from "~/@/components/ui/button";
 import InfoDialog from "../../components/herds/InfoDialog";
@@ -373,12 +373,13 @@ export default function Home() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setShowMyHerds(!showMyHerds)}
-                        className={`flex items-center rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                           showMyHerds
                             ? "bg-blue-500 text-white"
-                            : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                            : "bg-neutral-800 hover:bg-neutral-700"
                         }`}
                       >
+                        <FolderHeart className="h-4 w-4" />
                         My Herds
                       </button>
                     </div>
@@ -392,25 +393,31 @@ export default function Home() {
                 </div>
 
                 {/* Right Side Toggles */}
-                <div className="flex items-center gap-2 md:gap-4">
-                  <ToggleSwitch
-                    checked={showDactyl}
-                    onChange={setShowDactyl}
-                    label="Show Dactyl"
-                    activeColor="bg-blue-500"
-                  />
-                  <ToggleSwitch
-                    checked={showSaga}
-                    onChange={setShowSaga}
-                    label="Show Saga"
-                    activeColor="bg-blue-500"
-                  />
-                  <ToggleSwitch
-                    checked={showPFP}
-                    onChange={setShowPFP}
-                    label="Show PFP"
-                    activeColor="bg-blue-500"
-                  />
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <ToggleSwitch
+                      checked={showDactyl}
+                      onChange={setShowDactyl}
+                      label="Dactyl"
+                      activeColor="bg-blue-500"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ToggleSwitch
+                      checked={showSaga}
+                      onChange={setShowSaga}
+                      label="Saga"
+                      activeColor="bg-blue-500"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ToggleSwitch
+                      checked={showPFP}
+                      onChange={setShowPFP}
+                      label="PFP"
+                      activeColor="bg-blue-500"
+                    />
+                  </div>
                 </div>
               </div>
             </section>
