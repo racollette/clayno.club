@@ -28,9 +28,14 @@ import {
 import { Button } from "~/@/components/ui/button";
 import { api } from "~/utils/api";
 import DinoSelector from "./DinoSelector";
-import { analyzeHerd } from "~/utils/analyzeHerd";
 import ConfirmDialog from "./ConfirmDialog";
 import { AlertTriangle } from "lucide-react";
+import {
+  calculateScoreBreakdown,
+  analyzeHerd,
+  REQUIRED_SPECIES,
+} from "~/utils/herd";
+import ScoreBadge from "./ScoreBadge";
 
 type HerdProps = {
   herd: Herd & {
@@ -59,15 +64,6 @@ type HerdProps = {
     wallets: Wallet[];
   } | null;
 };
-
-const CORE_SPECIES = [
-  "Rex",
-  "Bronto",
-  "Raptor",
-  "Ankylo",
-  "Stego",
-  "Trice",
-] as const;
 
 const sortDinosByOrder = (
   dinos: (Dino & { attributes: Attributes | null })[],
@@ -163,6 +159,13 @@ export default function Herd(props: HerdProps) {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  // Calculate score breakdown
+  const scoreBreakdown = calculateScoreBreakdown(
+    herd.tier,
+    herd.qualifier ?? "None",
+    herd.rarity
+  );
+
   const handleSaveEdit = async () => {
     // Check for conflicts
     const conflictCheck = await utils.herd.checkDinoConflicts.fetch({
@@ -195,12 +198,19 @@ export default function Herd(props: HerdProps) {
         .filter((species): species is string => !!species)
     );
 
-    const isBroken = CORE_SPECIES.some(
+    const isBroken = REQUIRED_SPECIES.some(
       (species) => !presentSpecies.has(species)
     );
 
     // Use selectedDinos array directly as the new order
     const newDinoOrder = selectedDinos.join(",");
+
+    // Calculate the new score
+    const newScore = calculateScoreBreakdown(
+      analysis.tier,
+      analysis.qualifier,
+      analysis.rarity
+    ).totalScore;
 
     updateHerdMutation.mutate({
       herdId: herd.id,
@@ -211,7 +221,8 @@ export default function Herd(props: HerdProps) {
       rarity: analysis.rarity,
       isEdited: true,
       isBroken,
-      dinoOrder: newDinoOrder, // This will now reflect the current display order
+      dinoOrder: newDinoOrder,
+      score: newScore,
     });
 
     setFilteredHerd({
@@ -223,17 +234,8 @@ export default function Herd(props: HerdProps) {
       dinos: newDinos,
       isBroken,
       dinoOrder: newDinoOrder,
+      score: newScore,
     });
-  };
-
-  const getMissingCoreSpecies = () => {
-    const presentSpecies = new Set(
-      filteredHerd.dinos
-        .map((dino) => dino.attributes?.species)
-        .filter((species): species is string => !!species)
-    );
-
-    return CORE_SPECIES.filter((species) => !presentSpecies.has(species));
   };
 
   const handleDelete = () => {
@@ -374,13 +376,12 @@ export default function Herd(props: HerdProps) {
               })}
             </div>
 
-            <div
-              className={`rounded-md px-1.5 py-0.5 text-xs text-white md:px-2 md:py-1 ${getRarityColor(
-                herd.rarity
-              )}`}
-            >
-              {herd.rarity}
-            </div>
+            <ScoreBadge
+              score={scoreBreakdown}
+              tier={herd.tier}
+              qualifier={herd.qualifier ?? "None"}
+              rarity={herd.rarity}
+            />
           </div>
         </div>
 

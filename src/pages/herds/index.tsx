@@ -117,19 +117,23 @@ function filterHerds(
     return true;
   });
 
-  // Sort herds by tier
+  // Sort herds by score first, then tier, then rarity
   return filtered.sort((a, b) => {
+    // Sort by score (higher scores first)
+    if (a.score !== b.score) {
+      return b.score - a.score;
+    }
+
+    // If scores are equal, sort by tier
     const tierA =
       tierOrder[a.tier.toUpperCase() as keyof typeof tierOrder] ?? 999;
     const tierB =
       tierOrder[b.tier.toUpperCase() as keyof typeof tierOrder] ?? 999;
-
-    // First sort by tier
     if (tierA !== tierB) {
       return tierA - tierB;
     }
 
-    // If tiers are equal, sort by rarity (assuming lower rarity is better)
+    // If tiers are equal, sort by rarity
     return a.rarity - b.rarity;
   });
 }

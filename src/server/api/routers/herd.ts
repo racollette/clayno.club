@@ -4,16 +4,25 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { analyzeHerd } from "~/utils/analyzeHerd";
+import { analyzeHerd, REQUIRED_SPECIES } from "~/utils/herd";
 
-const CORE_SPECIES = [
-  "Rex",
-  "Bronto",
-  "Raptor",
-  "Ankylo",
-  "Stego",
-  "Trice",
-] as const;
+// Helper function to ensure dinoOrder matches connected dinos
+const validateDinoOrder = (dinoOrder: string, dinoMints: string[]) => {
+  const orderMints = dinoOrder.split(",");
+  const mintSet = new Set(dinoMints);
+
+  // Check if all mints in dinoOrder exist in dinoMints
+  const validOrder = orderMints.every((mint) => mintSet.has(mint));
+  // Check if lengths match (ensures no missing mints in order)
+  const hasAllMints = orderMints.length === dinoMints.length;
+
+  if (!validOrder || !hasAllMints) {
+    // If there's a mismatch, create a new order from dinoMints
+    return dinoMints.join(",");
+  }
+
+  return dinoOrder;
+};
 
 export const herdRouter = createTRPCRouter({
   getAllHerds: publicProcedure.query(({ ctx }) => {
@@ -31,6 +40,9 @@ export const herdRouter = createTRPCRouter({
         },
       },
       orderBy: [
+        {
+          score: "desc",
+        },
         {
           tier: "asc",
         },
@@ -167,6 +179,7 @@ export const herdRouter = createTRPCRouter({
         isEdited: z.boolean(),
         isBroken: z.boolean(),
         dinoOrder: z.string(),
+        score: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -202,8 +215,8 @@ export const herdRouter = createTRPCRouter({
           const removingCoreSpecies = removedDinos.some(
             (d) =>
               d.attributes?.species &&
-              ["Rex", "Bronto", "Raptor", "Ankylo", "Stego", "Trice"].includes(
-                d.attributes.species
+              REQUIRED_SPECIES.includes(
+                d.attributes.species as (typeof REQUIRED_SPECIES)[number]
               )
           );
 
@@ -231,6 +244,12 @@ export const herdRouter = createTRPCRouter({
 
       // Now update the target herd
       try {
+        // Validate and potentially fix dinoOrder
+        const validatedDinoOrder = validateDinoOrder(
+          input.dinoOrder,
+          input.dinoMints
+        );
+
         const updated = await ctx.prisma.herd.update({
           where: { id: input.herdId },
           data: {
@@ -243,7 +262,8 @@ export const herdRouter = createTRPCRouter({
             rarity: input.rarity,
             isEdited: input.isEdited,
             isBroken: input.isBroken,
-            dinoOrder: input.dinoOrder,
+            dinoOrder: validatedDinoOrder,
+            score: input.score,
           },
           include: { dinos: { include: { attributes: true } } },
         });
@@ -263,7 +283,7 @@ export const herdRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Get the dinos data
+      // Get the dinos data and verify they exist
       const dinos = await ctx.prisma.dino.findMany({
         where: {
           mint: { in: input.dinoMints },
@@ -273,6 +293,10 @@ export const herdRouter = createTRPCRouter({
         },
       });
 
+      // Create dinoOrder only from dinos that actually exist
+      const existingMints = dinos.map((dino) => dino.mint);
+      const dinoOrder = existingMints.join(",");
+
       // Analyze the herd
       const analysis = analyzeHerd(dinos);
 
@@ -280,18 +304,18 @@ export const herdRouter = createTRPCRouter({
       const coreDinos = dinos.filter(
         (dino) =>
           dino.attributes?.species &&
-          CORE_SPECIES.includes(
-            dino.attributes.species as (typeof CORE_SPECIES)[number]
+          REQUIRED_SPECIES.includes(
+            dino.attributes.species as (typeof REQUIRED_SPECIES)[number]
           )
       );
-      const isBroken = coreDinos.length !== CORE_SPECIES.length;
+      const isBroken = coreDinos.length !== REQUIRED_SPECIES.length;
 
       // Create the herd with dinoOrder
       return ctx.prisma.herd.create({
         data: {
           owner: input.owner,
           dinos: {
-            connect: input.dinoMints.map((mint) => ({ mint })),
+            connect: existingMints.map((mint) => ({ mint })),
           },
           tier: analysis.tier,
           qualifier: analysis.qualifier,
@@ -299,7 +323,7 @@ export const herdRouter = createTRPCRouter({
           rarity: analysis.rarity,
           isEdited: true,
           isBroken,
-          dinoOrder: input.dinoMints.join(","),
+          dinoOrder,
         },
         include: {
           dinos: {

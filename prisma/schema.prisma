@@ -67,6 +67,7 @@ model Herd {
   dinos       Dino[]   // One-to-many relationship
   isEdited    Boolean  @default(false)
   isBroken    Boolean  @default(false)
+  score       Int      @default(0)
 }
 
 model Account {

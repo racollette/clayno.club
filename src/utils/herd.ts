@@ -1,6 +1,7 @@
 import type { Dino, Attributes } from "@prisma/client";
 
-const REQUIRED_SPECIES = [
+// Constants
+export const REQUIRED_SPECIES = [
   "Rex",
   "Bronto",
   "Raptor",
@@ -9,8 +10,22 @@ const REQUIRED_SPECIES = [
   "Trice",
 ] as const;
 
-const OPTIONAL_SPECIES = ["Dactyl", "Spino", "Para"] as const;
+export const OPTIONAL_SPECIES = ["Dactyl", "Spino", "Para"] as const;
 
+export const TIER_SCORES = {
+  PERFECT: 900,
+  FLAWLESS: 750,
+  IMPRESSIVE: 500,
+  BASIC: 250,
+} as const;
+
+export const QUALIFIER_SCORES = {
+  Legendary: 200,
+  Mighty: 100,
+  None: 0,
+} as const;
+
+// Types
 type HerdAnalysis = {
   tier: "PERFECT" | "FLAWLESS" | "IMPRESSIVE" | "BASIC";
   qualifier: "None" | "Mighty" | "Legendary";
@@ -18,6 +33,14 @@ type HerdAnalysis = {
   rarity: number;
 };
 
+export type ScoreBreakdown = {
+  tierScore: number;
+  qualifierScore: number;
+  rarityScore: number;
+  totalScore: number;
+};
+
+// Functions
 export function analyzeHerd(
   dinos: (Dino & { attributes: Attributes | null })[]
 ): HerdAnalysis {
@@ -89,5 +112,23 @@ export function analyzeHerd(
     qualifier,
     matches: matchingTraits.join(" | "),
     rarity: averageRarity,
+  };
+}
+
+export function calculateScoreBreakdown(
+  tier: string,
+  qualifier: string,
+  rarity: number
+): ScoreBreakdown {
+  const tierScore = TIER_SCORES[tier as keyof typeof TIER_SCORES] ?? 0;
+  const qualifierScore =
+    QUALIFIER_SCORES[qualifier as keyof typeof QUALIFIER_SCORES] ?? 0;
+  const rarityScore = Math.max(0, Math.round((10000 - rarity) / 10));
+
+  return {
+    tierScore,
+    qualifierScore,
+    rarityScore,
+    totalScore: tierScore + qualifierScore + rarityScore,
   };
 }
